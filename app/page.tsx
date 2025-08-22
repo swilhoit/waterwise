@@ -3,10 +3,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users } from "lucide-react"
-import { client } from "@/lib/sanity"
+import { client, isSanityConfigured } from "@/lib/sanity"
 import { getProducts } from "@/lib/shopify"
 
 async function getHeroContent() {
+  if (!isSanityConfigured()) {
+    return null
+  }
   try {
     const hero = await client.fetch(`*[_type == "hero"][0]{
       title,
@@ -23,6 +26,9 @@ async function getHeroContent() {
 }
 
 async function getBenefits() {
+  if (!isSanityConfigured()) {
+    return []
+  }
   try {
     const benefits = await client.fetch(`*[_type == "benefit"] | order(order asc){
       title,
