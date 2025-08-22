@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, Droplets, Home, Leaf, DollarSign, TreePine, Users } from "lucide-react"
+import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users } from "lucide-react"
 import { client } from "@/lib/sanity"
 import { getProducts } from "@/lib/shopify"
 
@@ -41,7 +41,7 @@ const iconMap: { [key: string]: any } = {
   dollar: DollarSign,
   leaf: Leaf,
   tree: TreePine,
-  home: Home,
+  home: HomeIcon,
   users: Users,
 }
 
