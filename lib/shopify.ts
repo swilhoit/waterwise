@@ -1,12 +1,26 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client'
 
+const storeDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'dummy-store.myshopify.com'
+const publicAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN || 'dummy-token'
+
 const client = createStorefrontApiClient({
-  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!,
+  storeDomain,
   apiVersion: '2024-01',
-  publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
+  publicAccessToken,
 })
 
+export function isShopifyConfigured() {
+  return process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN && 
+         process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN !== 'waterwisegroup.myshopify.com' &&
+         process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN &&
+         process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN !== 'your_storefront_access_token'
+}
+
 export async function getProducts() {
+  if (!isShopifyConfigured()) {
+    return []
+  }
+
   const query = `
     query getProducts {
       products(first: 10) {
@@ -50,6 +64,10 @@ export async function getProducts() {
 }
 
 export async function getProduct(handle: string) {
+  if (!isShopifyConfigured()) {
+    return null
+  }
+
   const query = `
     query getProduct($handle: String!) {
       product(handle: $handle) {
@@ -104,6 +122,10 @@ export async function getProduct(handle: string) {
 }
 
 export async function createCheckout(variantId: string, quantity: number = 1) {
+  if (!isShopifyConfigured()) {
+    return null
+  }
+
   const mutation = `
     mutation checkoutCreate($input: CheckoutCreateInput!) {
       checkoutCreate(input: $input) {
