@@ -3,8 +3,9 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
 
-export default async function ProductPage({ params }: { params: { handle: string } }) {
-  const product = await getProduct(params.handle)
+export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
+  const { handle } = await params
+  const product = await getProduct(handle)
 
   if (!product) {
     notFound()
