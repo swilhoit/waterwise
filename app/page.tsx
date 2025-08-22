@@ -154,7 +154,7 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayBenefits.map((benefit, index) => {
+            {displayBenefits.map((benefit: any, index: number) => {
               const IconComponent = iconMap[benefit.icon] || Droplets
               return (
                 <Card key={index}>
