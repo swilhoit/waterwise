@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users } from "lucide-react"
 import { client, isSanityConfigured } from "@/lib/sanity"
 import { getProducts } from "@/lib/shopify"
+import { Testimonials } from "@/components/testimonials"
 
 async function getHeroContent() {
   if (!isSanityConfigured()) {
@@ -71,19 +72,20 @@ export default async function Home() {
 
   return (
     <div>
-      <section className="relative bg-gradient-to-b from-blue-50 to-white py-20 lg:py-32">
+      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <div className="animate-fade-in">
+              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 {hero?.title || (
                   <>
                     Turn Every Drop Into A{" "}
-                    <span className="text-blue-600">Sustainable Solution</span>
+                    <span className="text-gradient">Sustainable Solution</span>
                   </>
                 )}
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 {hero?.subtitle || "Water Wise Group is on a mission to help you save water, lower your bills, and grow healthier landscapes—without compromising on simplicity or sustainability."}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -107,13 +109,14 @@ export default async function Home() {
                 </div>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative animate-slide-in-right">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur-2xl opacity-20" />
               <Image
                 src="/images/aqua2use-greywater-recycling-sytem.png"
                 alt="Aqua2use Greywater System"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-xl"
+                className="rounded-lg shadow-2xl relative z-10 hover-lift"
               />
             </div>
           </div>
@@ -163,7 +166,7 @@ export default async function Home() {
             {displayBenefits.map((benefit: any, index: number) => {
               const IconComponent = iconMap[benefit.icon] || Droplets
               return (
-                <Card key={index}>
+                <Card key={index} className="hover-lift transition-all duration-300 hover:shadow-lg border-gray-100">
                   <CardHeader>
                     <IconComponent className="h-10 w-10 text-blue-600 mb-4" />
                     <CardTitle>{benefit.title}</CardTitle>
@@ -192,7 +195,7 @@ export default async function Home() {
           {products.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {products.slice(0, 2).map((product: any) => (
-                <Card key={product.id}>
+                <Card key={product.id} className="hover-lift transition-all duration-300 hover:shadow-lg">
                   <CardHeader>
                     {product.images?.edges?.[0]?.node && (
                       <Image
@@ -221,7 +224,7 @@ export default async function Home() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              <Card>
+              <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
                 <CardHeader>
                   <Image
                     src="/images/gwdd-gravity.jpg"
@@ -254,7 +257,7 @@ export default async function Home() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
                 <CardHeader>
                   <Image
                     src="/images/gwdd-ug.jpg"
@@ -348,22 +351,26 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-blue-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+      <Testimonials />
+
+      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl lg:text-5xl font-bold mb-6 animate-fade-in">
             Ready to Start Saving Water?
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl mb-10 max-w-2xl mx-auto opacity-90">
             Get a personalized quote for your greywater recycling system today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/contact">Get Your Quote</Link>
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-lg hover-lift" asChild>
+              <Link href="/contact">Get Your Free Quote</Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-blue-600" asChild>
+            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
               <Link href="/products">View Products</Link>
             </Button>
           </div>
+          <p className="mt-8 text-sm opacity-75">No obligation • Expert consultation • Same-day response</p>
         </div>
       </section>
     </div>

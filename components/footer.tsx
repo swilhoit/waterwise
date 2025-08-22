@@ -4,8 +4,8 @@ import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-gradient-to-b from-gray-900 to-black text-white">
+      <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <Image
@@ -19,13 +19,13 @@ export function Footer() {
               Leading provider of greywater recycling systems for homes, RVs, and sustainable developments.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="text-gray-400 hover:text-white">
+              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white">
+              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform">
                 <Instagram className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white">
+              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform">
                 <Youtube className="h-5 w-5" />
               </Link>
             </div>
@@ -104,10 +104,10 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-800">
+        <div className="mt-12 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400">
-              © 2024 Water Wise Group. All rights reserved.
+              © 2024 Water Wise Group. All rights reserved. | Saving Water, One Drop at a Time
             </p>
             <div className="flex gap-6">
               <Link href="/privacy" className="text-sm text-gray-400 hover:text-white">
