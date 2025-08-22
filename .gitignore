@@ -32,6 +32,14 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env.local
+
+# sanity
+/sanity/dist
+/sanity/.sanity
+
+# claude
+.claude/
 
 # vercel
 .vercel
