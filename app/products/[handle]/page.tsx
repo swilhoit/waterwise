@@ -8,16 +8,16 @@ import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
 import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare } from 'lucide-react'
 
-// Comprehensive fallback product data with variants
+// Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
   "aqua2use-gwdd": {
-    id: "gid://shopify/Product/1",
-    title: "Aqua2use GWDD Gravity System",
-    description: "The Aqua2use Greywater Diversion Device (GWDD) Gravity System is perfect for homes and cabins with gravity-fed water systems. This innovative system processes up to 150 gallons per day using our proven progressive filtration technology, requiring no electricity to operate.",
+    id: "gid://shopify/Product/7459820208334",
+    title: "Aqua2use Grey Water Diversion System", 
+    description: "The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for treating greywater from your laundry, bathroom sinks and showers.",
     handle: "aqua2use-gwdd",
     priceRange: {
       minVariantPrice: {
-        amount: "899.99",
+        amount: "599.99",
         currencyCode: "USD"
       }
     },
@@ -25,14 +25,14 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            url: "/images/gwdd-gravity.jpg",
-            altText: "Aqua2use GWDD Gravity System"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
+            altText: "Greywater System Aqua2use"
           }
         },
         {
           node: {
-            url: "/images/aqua2use-greywater-recycling-sytem.png",
-            altText: "Aqua2use System Installation"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pump.jpg?v=1719253734",
+            altText: "Greywater System Aqua2use with pump"
           }
         }
       ]
@@ -41,35 +41,24 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            id: "gid://shopify/ProductVariant/1",
-            title: "Standard Kit",
+            id: "gid://shopify/ProductVariant/42716695429326",
+            title: "Gravity - No Pump Included",
             priceV2: {
-              amount: "1999.00",
+              amount: "599.99",
               currencyCode: "USD"
             },
-            availableForSale: true
+            availableForSale: false
           }
         },
         {
           node: {
-            id: "gid://shopify/ProductVariant/2",
-            title: "Standard Kit + Installation Manual",
+            id: "gid://shopify/ProductVariant/42716695462094",
+            title: "GWDD - Includes Pump",
             priceV2: {
-              amount: "2099.00",
+              amount: "899.99",
               currencyCode: "USD"
             },
-            availableForSale: true
-          }
-        },
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/3",
-            title: "Premium Kit with Extra Filters",
-            priceV2: {
-              amount: "2299.00",
-              currencyCode: "USD"
-            },
-            availableForSale: true
+            availableForSale: false
           }
         }
       ]
@@ -130,9 +119,9 @@ const fallbackProducts: { [key: string]: any } = {
     }
   },
   "aqua2use-pro": {
-    id: "gid://shopify/Product/3",
-    title: "Aqua2use Pro Commercial System",
-    description: "The Aqua2use Pro is our high-capacity system designed for larger properties, multi-family units, and commercial applications. With advanced multi-stage filtration technology and commercial-grade components, it can process up to 500 gallons per day.",
+    id: "gid://shopify/Product/7459819061454",
+    title: "Aqua2use Pro",
+    description: "The Aqua2use Pro (also called Aqua2use UG) is capable of handling large volume of greywater, up to 25 gallons per minute. The system is using the same type of filtration as the Aqua2use GWDD, but it is bigger in size to handle the commercial and multi-family applications. The system needs 110v power outlet to run its submersible pump.",
     handle: "aqua2use-pro",
     priceRange: {
       minVariantPrice: {
@@ -144,8 +133,8 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            url: "/images/gwdd-ug.jpg",
-            altText: "Aqua2use Pro Commercial System"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-ug.jpg?v=1719241821",
+            altText: "Greywater System Aqua2use Pro"
           }
         },
         {
@@ -160,35 +149,13 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            id: "gid://shopify/ProductVariant/6",
-            title: "Pro System - Standard",
+            id: "gid://shopify/ProductVariant/42713618972878",
+            title: "Default Title",
             priceV2: {
-              amount: "3999.00",
+              amount: "2699.00",
               currencyCode: "USD"
             },
-            availableForSale: true
-          }
-        },
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/7",
-            title: "Pro System - With Installation Service",
-            priceV2: {
-              amount: "4999.00",
-              currencyCode: "USD"
-            },
-            availableForSale: true
-          }
-        },
-        {
-          node: {
-            id: "gid://shopify/ProductVariant/8",
-            title: "Pro System - Complete Package",
-            priceV2: {
-              amount: "5499.00",
-              currencyCode: "USD"
-            },
-            availableForSale: true
+            availableForSale: false
           }
         }
       ]
@@ -254,9 +221,9 @@ const fallbackProducts: { [key: string]: any } = {
     }
   },
   "replacement-greywater-pump": {
-    id: "gid://shopify/Product/5",
+    id: "gid://shopify/Product/7559824703694",
     title: "Greywater Pump Replacement for the Aqua2use GWDD",
-    description: "Official replacement pump for your Aqua2use GWDD system. This high-quality submersible pump is designed specifically for greywater applications and includes electronic controller for automatic operation.",
+    description: "High-Performance Submersible Pump for Effortless Water Reuse. Dealing with a failing greywater pump? Restore your system in minutes with this direct replacement for the Aqua2use GWDD. Designed for quick installation and reliable performance, this pump ensures your greywater recycling continues seamlessly.",
     handle: "replacement-greywater-pump",
     priceRange: {
       minVariantPrice: {
@@ -268,8 +235,14 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            url: "/images/gwdd-pump.jpg",
-            altText: "Aqua2use Replacement Greywater Pump"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+            altText: "Greywater Pump Replacement for Aqua2use GWDD"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use_GWDD_pump_performance_and_specifications.jpg?v=1742748645",
+            altText: "Aqua2use GWDD pump performance and specifications"
           }
         }
       ]
@@ -278,13 +251,13 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            id: "gid://shopify/ProductVariant/12",
-            title: "Standard Replacement Pump",
+            id: "gid://shopify/ProductVariant/42992180723918",
+            title: "Default Title",
             priceV2: {
               amount: "399.99",
               currencyCode: "USD"
             },
-            availableForSale: true
+            availableForSale: false
           }
         }
       ]
