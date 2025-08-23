@@ -3,8 +3,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar, User, ArrowRight } from "lucide-react"
+import { getBlogPosts } from "@/lib/blog"
 
-const blogPosts = [
+const defaultBlogPosts = [
   {
     id: 1,
     title: "10 Ways Greywater Recycling Can Transform Your Home",
@@ -67,7 +68,26 @@ const blogPosts = [
   }
 ]
 
-export default function Blog() {
+export default async function Blog() {
+  const sanityPosts = await getBlogPosts()
+  
+  // Transform Sanity posts to match our expected format
+  const sanityPostsFormatted = sanityPosts.map((post: any) => ({
+    id: post._id,
+    title: post.title,
+    excerpt: post.excerpt,
+    image: post.mainImage?.asset?.url || "/images/gwdd-gravity.jpg",
+    author: post.author || "Water Wise Team",
+    date: post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }) : "Recent",
+    readTime: `${post.readTime || 5} min read`,
+    slug: post.slug?.current || `blog-post-${post._id}`
+  }))
+  
+  const blogPosts = sanityPostsFormatted.length > 0 ? sanityPostsFormatted : defaultBlogPosts
   return (
     <div>
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">

@@ -1,15 +1,17 @@
-export default {
-  name: 'blogPost',
-  title: 'Blog Post',
+import { defineField, defineType } from 'sanity'
+
+export default defineType({
+  name: 'blogArticle',
+  title: 'Blog Article',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: Rule => Rule.required()
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -17,42 +19,42 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: Rule => Rule.required()
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'string',
       initialValue: 'Water Wise Team'
-    },
-    {
-      name: 'publishedAt',
-      title: 'Published at',
-      type: 'datetime',
-      initialValue: () => new Date().toISOString()
-    },
-    {
-      name: 'mainImage',
-      title: 'Main image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
-    },
-    {
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'text',
       rows: 3,
-      validation: (Rule: any) => Rule.required().max(200)
-    },
-    {
+      validation: Rule => Rule.required().max(200)
+    }),
+    defineField({
+      name: 'mainImage',
+      title: 'Main Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
+      initialValue: () => new Date().toISOString()
+    }),
+    defineField({
       name: 'readTime',
       title: 'Read Time (minutes)',
       type: 'number',
       initialValue: 5
-    },
-    {
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
@@ -64,8 +66,8 @@ export default {
           { title: 'Case Studies', value: 'case-studies' }
         ]
       }
-    },
-    {
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
@@ -73,29 +75,51 @@ export default {
       options: {
         layout: 'tags'
       }
-    },
-    {
-      name: 'featured',
-      title: 'Featured Article',
-      type: 'boolean',
-      initialValue: false
-    },
-    {
+    }),
+    defineField({
       name: 'body',
       title: 'Body',
       type: 'array',
       of: [
         {
-          type: 'block',
+          type: 'block'
         },
         {
           type: 'image',
-          options: {
-            hotspot: true,
-          },
-        },
-      ],
-    },
+          options: { hotspot: true }
+        }
+      ]
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Article',
+      type: 'boolean',
+      initialValue: false
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'metaTitle',
+          title: 'Meta Title',
+          type: 'string'
+        }),
+        defineField({
+          name: 'metaDescription',
+          title: 'Meta Description',
+          type: 'text',
+          rows: 2
+        }),
+        defineField({
+          name: 'keywords',
+          title: 'Keywords',
+          type: 'array',
+          of: [{ type: 'string' }]
+        })
+      ]
+    })
   ],
   preview: {
     select: {
@@ -104,7 +128,7 @@ export default {
       media: 'mainImage',
       publishedAt: 'publishedAt'
     },
-    prepare(selection: any) {
+    prepare(selection) {
       const { author, publishedAt } = selection
       const date = publishedAt ? new Date(publishedAt).toLocaleDateString() : 'No date'
       return Object.assign({}, selection, {
@@ -112,4 +136,4 @@ export default {
       })
     }
   }
-}
+})
