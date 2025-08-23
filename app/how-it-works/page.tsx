@@ -65,7 +65,7 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden shadow-2xl">
+            <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
               <Image
                 src="/images/maxresdefault.jpg"
                 alt="How Greywater Recycling Works - Complete Process"
@@ -131,7 +131,7 @@ export default function HowItWorks() {
                 alt="Aqua2use Greywater System Components"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-2xl relative z-10"
+                className="rounded-lg relative z-10"
               />
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function HowItWorks() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Droplets className="h-12 w-12 text-blue-600 mb-4" />
                 <CardTitle>What is Greywater?</CardTitle>
@@ -167,7 +167,7 @@ export default function HowItWorks() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Leaf className="h-12 w-12 text-green-600 mb-4" />
                 <CardTitle>Benefits</CardTitle>
@@ -184,7 +184,7 @@ export default function HowItWorks() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Wrench className="h-12 w-12 text-purple-600 mb-4" />
                 <CardTitle>System Details</CardTitle>
@@ -230,7 +230,7 @@ export default function HowItWorks() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-lg hover-lift" asChild>
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
                 <Link href="/products">View Our Systems</Link>
               </Button>
               <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>

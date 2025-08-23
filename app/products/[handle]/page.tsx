@@ -656,7 +656,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <div className="relative">
                 {product.images?.edges?.length > 0 ? (
                   <>
-                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-2xl border">
+                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border">
                       <Image
                         src={product.images.edges[0].node.url}
                         alt={product.images.edges[0].node.altText || product.title}
@@ -671,7 +671,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     {product.images.edges.length > 1 && (
                       <div className="grid grid-cols-3 gap-3 mt-4">
                         {product.images.edges.slice(1).map((edge: any, index: number) => (
-                          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-white shadow-md border hover:shadow-lg transition-all duration-300 cursor-pointer">
+                          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-white border transition-all duration-300 cursor-pointer">
                             <Image
                               src={edge.node.url}
                               alt={edge.node.altText || product.title}
@@ -686,7 +686,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     )}
                   </>
                 ) : (
-                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl border">
+                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border">
                     <div className="flex items-center justify-center h-full text-gray-400">
                       <div className="text-center">
                         <Droplets className="h-16 w-16 mx-auto mb-4 text-blue-300" />
@@ -736,7 +736,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </div>
 
                 {/* Key Features Grid */}
-                <div className="bg-white rounded-xl border shadow-sm p-6">
+                <div className="bg-white rounded-xl border p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <Settings className="h-5 w-5 text-blue-600" />
                     Key Features
@@ -791,7 +791,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         
             {/* How It Works & Maintenance Section */}
             <div className="grid lg:grid-cols-2 gap-8">
-              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <Zap className="h-5 w-5 text-blue-600" />
@@ -829,7 +829,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <Wrench className="h-5 w-5 text-blue-600" />
@@ -871,7 +871,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* Technical Specifications Section */}
-            <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+            <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
               <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl">
                   <Settings className="h-6 w-6 text-blue-600" />
@@ -905,7 +905,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Installation & Documentation Section */}
             <div className="grid lg:grid-cols-2 gap-8">
-              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <Wrench className="h-5 w-5 text-blue-600" />
@@ -946,7 +946,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <MessageSquare className="h-5 w-5 text-blue-600" />
@@ -996,7 +996,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Customer Reviews Section */}
             <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <Star className="h-5 w-5 text-blue-600" />
@@ -1020,7 +1020,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <Star className="h-5 w-5 text-blue-600" />
@@ -1088,7 +1088,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* FAQ Section */}
-            <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+            <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
               <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl">
                   <MessageSquare className="h-6 w-6 text-blue-600" />

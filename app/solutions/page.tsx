@@ -117,7 +117,7 @@ export default function Solutions() {
             {solutions.map((solution, index) => {
               const IconComponent = solution.icon
               return (
-                <Card key={index} className="hover-lift transition-all duration-300 hover:shadow-lg">
+                <Card key={index} className="hover-lift transition-all duration-300">
                   <CardHeader>
                     <div className="relative mb-4">
                       <Image
@@ -127,7 +127,7 @@ export default function Solutions() {
                         height={250}
                         className="rounded-lg w-full h-48 object-cover"
                       />
-                      <div className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
+                      <div className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center">
                         <IconComponent className="h-6 w-6 text-blue-600" />
                       </div>
                     </div>
@@ -233,7 +233,7 @@ export default function Solutions() {
                 alt="Aqua2use Expert Consultation"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-2xl relative z-10"
+                className="rounded-lg relative z-10"
               />
             </div>
           </div>
@@ -249,7 +249,7 @@ export default function Solutions() {
             Join thousands of property owners who are saving water and money with our proven solutions
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-lg hover-lift" asChild>
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Quote Today</Link>
             </Button>
             <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>

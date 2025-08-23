@@ -52,7 +52,7 @@ export function PageTemplate({
                   alt={heroImageAlt || title}
                   width={600}
                   height={400}
-                  className="rounded-lg shadow-2xl relative z-10 hover-lift"
+                  className="rounded-lg relative z-10 hover-lift"
                 />
               </div>
             )}
@@ -79,7 +79,7 @@ export function PageTemplate({
               {ctaSubtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-lg hover-lift" asChild>
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
                 <Link href={ctaButtonLink}>{ctaButtonText}</Link>
               </Button>
               <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
@@ -104,7 +104,7 @@ interface FeatureCardProps {
 
 export function FeatureCard({ title, description, icon, image, imageAlt }: FeatureCardProps) {
   return (
-    <Card className="hover-lift transition-all duration-300 hover:shadow-lg border-gray-100">
+    <Card className="hover-lift transition-all duration-300 border-gray-100">
       <CardHeader>
         {image && (
           <Image

@@ -40,7 +40,7 @@ export function Testimonials() {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="hover-lift transition-all duration-300 hover:shadow-lg bg-white">
+            <Card key={index} className="hover-lift transition-all duration-300 bg-white">
               <CardContent className="p-6">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (

@@ -22,7 +22,7 @@ export function Header() {
   const { totalItems } = useCart()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-md shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center">
@@ -41,7 +41,7 @@ export function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>How it Works</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 md:w-[400px] bg-white shadow-lg border rounded-lg">
+                    <ul className="grid gap-3 p-4 md:w-[400px] bg-white  border rounded-lg">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link href="/what-is-greywater" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
@@ -77,7 +77,7 @@ export function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Products</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 md:w-[400px] bg-white shadow-lg border rounded-lg">
+                    <ul className="grid gap-3 p-4 md:w-[400px] bg-white  border rounded-lg">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link href="/products/aqua2use-gwdd" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
@@ -113,7 +113,7 @@ export function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Solutions For</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 md:w-[500px] lg:w-[600px] lg:grid-cols-2 bg-white shadow-lg border rounded-lg">
+                    <ul className="grid gap-3 p-4 md:w-[500px] lg:w-[600px] lg:grid-cols-2 bg-white  border rounded-lg">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link href="/solutions" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">

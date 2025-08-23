@@ -43,13 +43,13 @@ export default function GreywaterLaws() {
               {metadata.title}
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <div className="bg-white rounded-lg px-4 py-2 shadow-sm">
+              <div className="bg-white rounded-lg px-4 py-2">
                 <span className="text-gray-500">Last Updated:</span> <span className="font-semibold">{metadata.lastUpdated}</span>
               </div>
-              <div className="bg-white rounded-lg px-4 py-2 shadow-sm">
+              <div className="bg-white rounded-lg px-4 py-2">
                 <span className="text-gray-500">Total States:</span> <span className="font-semibold">{metadata.totalStates}</span>
               </div>
-              <div className="bg-white rounded-lg px-4 py-2 shadow-sm">
+              <div className="bg-white rounded-lg px-4 py-2">
                 <span className="text-gray-500">Data Source:</span> <span className="font-semibold">{metadata.dataSource}</span>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function GreywaterLaws() {
               </Card>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div className="bg-white rounded-lg overflow-hidden">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-2xl font-bold text-gray-900">
                   All States Directory
@@ -162,7 +162,7 @@ export default function GreywaterLaws() {
                         href={`/greywater-laws/${getStateSlug(stateName)}`}
                         className="group"
                       >
-                        <Card className="hover-lift transition-all duration-300 hover:shadow-lg h-full">
+                        <Card className="hover-lift transition-all duration-300 h-full">
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between mb-2">
                               <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">

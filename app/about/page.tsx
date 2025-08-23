@@ -52,7 +52,7 @@ export default function About() {
                 alt="Water Wise Group Mission"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-2xl relative z-10"
+                className="rounded-lg relative z-10"
               />
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function About() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Award className="h-10 w-10 text-blue-600 mb-4" />
                 <CardTitle>Industry Leaders</CardTitle>
@@ -81,7 +81,7 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Users className="h-10 w-10 text-blue-600 mb-4" />
                 <CardTitle>Expert Support</CardTitle>
@@ -91,7 +91,7 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Leaf className="h-10 w-10 text-blue-600 mb-4" />
                 <CardTitle>Eco-Friendly Focus</CardTitle>
@@ -101,7 +101,7 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Home className="h-10 w-10 text-blue-600 mb-4" />
                 <CardTitle>Versatile Solutions</CardTitle>
@@ -111,7 +111,7 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <CheckCircle className="h-10 w-10 text-blue-600 mb-4" />
                 <CardTitle>Proven Results</CardTitle>
@@ -121,7 +121,7 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+            <Card className="hover-lift transition-all duration-300">
               <CardHeader>
                 <Heart className="h-10 w-10 text-blue-600 mb-4" />
                 <CardTitle>Customer First</CardTitle>
@@ -154,7 +154,7 @@ export default function About() {
                   alt="Water Wise Group Owner"
                   width={500}
                   height={600}
-                  className="rounded-lg shadow-2xl relative z-10"
+                  className="rounded-lg relative z-10"
                 />
               </div>
               <div>
@@ -169,7 +169,7 @@ export default function About() {
                   "Over the past decade, I've had the privilege of helping thousands of families, businesses, and communities implement greywater systems. Each installation represents not just water savings, but a step toward a more sustainable future for our children."
                 </p>
 
-                <div className="bg-white rounded-lg p-6 shadow-lg">
+                <div className="bg-white rounded-lg p-6">
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                       <div className="text-2xl font-bold text-blue-600 mb-1">15+</div>
@@ -188,7 +188,7 @@ export default function About() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-8 shadow-lg">
+            <div className="bg-white rounded-lg p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Commitment to You</h3>
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="text-center">
@@ -252,7 +252,7 @@ export default function About() {
                   alt="Aqua2use Innovation"
                   width={500}
                   height={350}
-                  className="rounded-lg shadow-lg"
+                  className="rounded-lg"
                 />
               </div>
             </div>

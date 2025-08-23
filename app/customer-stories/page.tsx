@@ -139,7 +139,7 @@ export default function CustomerStories() {
 
           <div className="grid gap-12 max-w-6xl mx-auto">
             {stories.map((story, index) => (
-              <Card key={story.id} className={`overflow-hidden hover-lift transition-all duration-300 hover:shadow-xl ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+              <Card key={story.id} className={`overflow-hidden hover-lift transition-all duration-300 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
                 <div className="lg:flex">
                   <div className="lg:w-1/2">
                     <Image
@@ -256,7 +256,7 @@ export default function CustomerStories() {
             Get a personalized quote and start your water savings journey today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-lg hover-lift" asChild>
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
             <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>

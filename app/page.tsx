@@ -72,7 +72,7 @@ export default async function Home() {
                 alt="Aqua2use Greywater System"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-2xl relative z-10 hover-lift"
+                className="rounded-lg relative z-10 hover-lift"
               />
             </div>
           </div>
@@ -122,7 +122,7 @@ export default async function Home() {
             {displayBenefits.map((benefit: any, index: number) => {
               const IconComponent = iconMap[benefit.icon] || Droplets
               return (
-                <Card key={index} className="hover-lift transition-all duration-300 hover:shadow-lg border-gray-100">
+                <Card key={index} className="hover-lift transition-all duration-300 border-gray-100">
                   <CardHeader>
                     <IconComponent className="h-10 w-10 text-blue-600 mb-4" />
                     <CardTitle>{benefit.title}</CardTitle>
@@ -151,7 +151,7 @@ export default async function Home() {
           {products.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {products.slice(0, 2).map((product: any) => (
-                <Card key={product.id} className="hover-lift transition-all duration-300 hover:shadow-lg">
+                <Card key={product.id} className="hover-lift transition-all duration-300">
                   <CardHeader>
                     {product.images?.edges?.[0]?.node && (
                       <Image
@@ -180,7 +180,7 @@ export default async function Home() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+              <Card className="hover-lift transition-all duration-300">
                 <CardHeader>
                   <Image
                     src="/images/gwdd-gravity.jpg"
@@ -213,7 +213,7 @@ export default async function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="hover-lift transition-all duration-300 hover:shadow-lg">
+              <Card className="hover-lift transition-all duration-300">
                 <CardHeader>
                   <Image
                     src="/images/gwdd-ug.jpg"
@@ -319,7 +319,7 @@ export default async function Home() {
             Get a personalized quote for your greywater recycling system today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold shadow-lg hover-lift" asChild>
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
             <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
