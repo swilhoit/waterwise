@@ -2,7 +2,7 @@ import { getProduct } from '@/lib/shopify'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+// Removed tabs import - using open layout instead
 import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
@@ -808,354 +808,363 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         </div>
       </div>
 
-      {/* Product Details Section */}
+      {/* Product Details Section - Open Layout */}
       <div className="border-t bg-gray-50">
         <div className="container mx-auto px-4 py-16">
-          <div className="max-w-6xl mx-auto">
-            <Tabs defaultValue="overview" className="w-full">
-              <div className="flex justify-center mb-12">
-                <TabsList className="grid grid-cols-5 bg-white shadow-lg rounded-xl p-2 border">
-                  <TabsTrigger value="overview" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
-                    Overview
-                  </TabsTrigger>
-                  <TabsTrigger value="specifications" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
-                    Specifications
-                  </TabsTrigger>
-                  <TabsTrigger value="installation" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
-                    Installation
-                  </TabsTrigger>
-                  <TabsTrigger value="reviews" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
-                    Reviews
-                  </TabsTrigger>
-                  <TabsTrigger value="faq" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
-                    FAQ
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+          <div className="max-w-6xl mx-auto space-y-16">
         
-              <TabsContent value="overview" className="mt-0">
-                <div className="grid lg:grid-cols-2 gap-8">
-                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-6">
-                      <CardTitle className="flex items-center gap-3 text-xl">
-                        <div className="p-2 bg-blue-600 rounded-lg">
-                          <Zap className="h-5 w-5 text-white" />
-                        </div>
-                        How It Works
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6 p-8">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                          <span className="text-sm font-bold text-white">1</span>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 mb-2">Collect</h4>
-                          <p className="text-gray-600 leading-relaxed">Divert water from laundry, wash basins, bath, and shower into the treatment system</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                          <span className="text-sm font-bold text-white">2</span>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 mb-2">Filter</h4>
-                          <p className="text-gray-600 leading-relaxed">Advanced filter mats remove impurities with 4-stage progressive filtration technology</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                          <span className="text-sm font-bold text-white">3</span>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 mb-2">Flourish</h4>
-                          <p className="text-gray-600 leading-relaxed">Pump clean, filtered water to your subsurface irrigation system</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 pb-6">
-                      <CardTitle className="flex items-center gap-3 text-xl">
-                        <div className="p-2 bg-green-600 rounded-lg">
-                          <Wrench className="h-5 w-5 text-white" />
-                        </div>
-                        Maintenance Schedule
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-8">
-                      <div className="space-y-6">
-                        <div className="flex justify-between items-center p-4 bg-blue-50 rounded-xl">
-                          <div>
-                            <span className="font-medium text-gray-900">Clean filters</span>
-                            <p className="text-sm text-gray-600 mt-1">Simple rinse and reinstall</p>
-                          </div>
-                          <Badge variant="default" className="bg-blue-600 text-white px-3 py-1">Every 4-6 months</Badge>
-                        </div>
-                        <div className="flex justify-between items-center p-4 bg-purple-50 rounded-xl">
-                          <div>
-                            <span className="font-medium text-gray-900">Replace filters</span>
-                            <p className="text-sm text-gray-600 mt-1">Full filter replacement</p>
-                          </div>
-                          <Badge variant="default" className="bg-purple-600 text-white px-3 py-1">Every 3 years</Badge>
-                        </div>
-                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-4 rounded-xl">
-                          <div className="flex items-start gap-3">
-                            <div className="text-amber-600 flex-shrink-0 mt-0.5">
-                              ⚠️
-                            </div>
-                            <div>
-                              <p className="text-amber-800 font-medium mb-1">Important Safety Note</p>
-                              <p className="text-amber-700 text-sm leading-relaxed">
-                                Do not store filtered greywater for more than 24 hours to prevent bacterial growth
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="specifications" className="mt-0">
-                <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                  <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 pb-6">
-                    <CardTitle className="flex items-center gap-3 text-2xl">
-                      <div className="p-2 bg-slate-600 rounded-lg">
-                        <Settings className="h-6 w-6 text-white" />
-                      </div>
-                      Technical Specifications
-                    </CardTitle>
-                    <CardDescription className="text-gray-600 mt-2">
-                      Detailed technical information and performance specifications
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-8">
-                    <div className="grid lg:grid-cols-2 gap-8">
-                      <div className="space-y-4">
-                        {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                          <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-                            <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                            <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="space-y-4">
-                        {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                          <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
-                            <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                            <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
-                          </div>
-                        ))}
-                      </div>
+            {/* How It Works & Maintenance Section */}
+            <div className="grid lg:grid-cols-2 gap-8">
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-blue-600 rounded-lg">
+                      <Zap className="h-5 w-5 text-white" />
                     </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="installation" className="mt-0">
-                <div className="grid lg:grid-cols-2 gap-8">
-                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 pb-6">
-                      <CardTitle className="flex items-center gap-3 text-xl">
-                        <div className="p-2 bg-orange-600 rounded-lg">
-                          <Wrench className="h-5 w-5 text-white" />
-                        </div>
-                        Installation Guide
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6 p-8">
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                          <Users className="h-5 w-5 text-blue-600" />
-                          Professional Installation Recommended
-                        </h4>
-                        <p className="text-gray-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
-                      </div>
-                      <div className="space-y-5">
-                        <div className="flex items-start gap-4 p-4 bg-green-50 rounded-xl">
-                          <div className="p-2 bg-green-600 rounded-lg flex-shrink-0">
-                            <CheckCircle className="h-4 w-4 text-white" />
-                          </div>
-                          <div>
-                            <h5 className="font-semibold text-gray-900 mb-2">Site Assessment</h5>
-                            <p className="text-gray-600">Evaluate plumbing connections and installation location</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-xl">
-                          <div className="p-2 bg-blue-600 rounded-lg flex-shrink-0">
-                            <CheckCircle className="h-4 w-4 text-white" />
-                          </div>
-                          <div>
-                            <h5 className="font-semibold text-gray-900 mb-2">System Installation</h5>
-                            <p className="text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
-                          <div className="p-2 bg-purple-600 rounded-lg flex-shrink-0">
-                            <CheckCircle className="h-4 w-4 text-white" />
-                          </div>
-                          <div>
-                            <h5 className="font-semibold text-gray-900 mb-2">Testing & Commissioning</h5>
-                            <p className="text-gray-600">Verify proper operation and flow rates</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50 pb-6">
-                      <CardTitle className="flex items-center gap-3 text-xl">
-                        <div className="p-2 bg-purple-600 rounded-lg">
-                          <MessageSquare className="h-5 w-5 text-white" />
-                        </div>
-                        Documentation & Support
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4 p-8">
-                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">📋</span>
-                          <div>
-                            <div className="font-medium">Assembly Guide</div>
-                            <div className="text-sm text-gray-500">Step-by-step installation</div>
-                          </div>
-                        </div>
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-green-50 hover:border-green-300 transition-all duration-200">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">🔧</span>
-                          <div>
-                            <div className="font-medium">Operating Instructions</div>
-                            <div className="text-sm text-gray-500">Daily operation guide</div>
-                          </div>
-                        </div>
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">📖</span>
-                          <div>
-                            <div className="font-medium">Technical Brochure</div>
-                            <div className="text-sm text-gray-500">Complete specifications</div>
-                          </div>
-                        </div>
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition-all duration-200">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">🛠️</span>
-                          <div>
-                            <div className="font-medium">Maintenance Schedule</div>
-                            <div className="text-sm text-gray-500">Keep your system running</div>
-                          </div>
-                        </div>
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-        <TabsContent value="reviews" className="mt-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Customer Reviews</CardTitle>
-                <div className="flex items-center gap-2">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-600">10 reviews • 100% positive</span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
-                  <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-4' : 'pb-4'}`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium">{review.name}</span>
-                    </div>
-                    <p className="text-sm text-gray-600">"{review.review}"</p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Review Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Performance</span>
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Easy Installation</span>
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Value for Money</span>
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Customer Support</span>
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 pt-4 border-t">
-                  <h4 className="font-medium mb-2">Common Highlights:</h4>
-                  <div className="space-y-1 text-sm text-gray-600">
-                    <div>• Excellent long-term performance</div>
-                    <div>• Significant water savings</div>
-                    <div>• Low maintenance requirements</div>
-                    <div>• Great customer support</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="faq" className="mt-8">
-          <div className="space-y-6">
-            {productContent.faq.map((item: any, index: number) => (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{item.question}</CardTitle>
+                    How It Works
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">{item.answer}</p>
+                <CardContent className="space-y-6 p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <span className="text-sm font-bold text-white">1</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 mb-2">Collect</h4>
+                      <p className="text-gray-600 leading-relaxed">Divert water from laundry, wash basins, bath, and shower into the treatment system</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <span className="text-sm font-bold text-white">2</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 mb-2">Filter</h4>
+                      <p className="text-gray-600 leading-relaxed">Advanced filter mats remove impurities with 4-stage progressive filtration technology</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <span className="text-sm font-bold text-white">3</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 mb-2">Flourish</h4>
+                      <p className="text-gray-600 leading-relaxed">Pump clean, filtered water to your subsurface irrigation system</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </TabsContent>
-            </Tabs>
+
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-green-600 rounded-lg">
+                      <Wrench className="h-5 w-5 text-white" />
+                    </div>
+                    Maintenance Schedule
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center p-4 bg-blue-50 rounded-xl">
+                      <div>
+                        <span className="font-medium text-gray-900">Clean filters</span>
+                        <p className="text-sm text-gray-600 mt-1">Simple rinse and reinstall</p>
+                      </div>
+                      <Badge variant="default" className="bg-blue-600 text-white px-3 py-1">Every 4-6 months</Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-4 bg-purple-50 rounded-xl">
+                      <div>
+                        <span className="font-medium text-gray-900">Replace filters</span>
+                        <p className="text-sm text-gray-600 mt-1">Full filter replacement</p>
+                      </div>
+                      <Badge variant="default" className="bg-purple-600 text-white px-3 py-1">Every 3 years</Badge>
+                    </div>
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-4 rounded-xl">
+                      <div className="flex items-start gap-3">
+                        <div className="text-amber-600 flex-shrink-0 mt-0.5">
+                          ⚠️
+                        </div>
+                        <div>
+                          <p className="text-amber-800 font-medium mb-1">Important Safety Note</p>
+                          <p className="text-amber-700 text-sm leading-relaxed">
+                            Do not store filtered greywater for more than 24 hours to prevent bacterial growth
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Technical Specifications Section */}
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 pb-6">
+                <CardTitle className="flex items-center gap-3 text-2xl">
+                  <div className="p-2 bg-slate-600 rounded-lg">
+                    <Settings className="h-6 w-6 text-white" />
+                  </div>
+                  Technical Specifications
+                </CardTitle>
+                <CardDescription className="text-gray-600 mt-2">
+                  Detailed technical information and performance specifications
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid lg:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
+                      <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                        <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                        <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-4">
+                    {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
+                      <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
+                        <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                        <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Installation & Documentation Section */}
+            <div className="grid lg:grid-cols-2 gap-8">
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-orange-600 rounded-lg">
+                      <Wrench className="h-5 w-5 text-white" />
+                    </div>
+                    Installation Guide
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 p-8">
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <Users className="h-5 w-5 text-blue-600" />
+                      Professional Installation Recommended
+                    </h4>
+                    <p className="text-gray-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
+                  </div>
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-4 p-4 bg-green-50 rounded-xl">
+                      <div className="p-2 bg-green-600 rounded-lg flex-shrink-0">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-2">Site Assessment</h5>
+                        <p className="text-gray-600">Evaluate plumbing connections and installation location</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-xl">
+                      <div className="p-2 bg-blue-600 rounded-lg flex-shrink-0">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-2">System Installation</h5>
+                        <p className="text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
+                      <div className="p-2 bg-purple-600 rounded-lg flex-shrink-0">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-2">Testing & Commissioning</h5>
+                        <p className="text-gray-600">Verify proper operation and flow rates</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-purple-600 rounded-lg">
+                      <MessageSquare className="h-5 w-5 text-white" />
+                    </div>
+                    Documentation & Support
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 p-8">
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">📋</span>
+                      <div>
+                        <div className="font-medium">Assembly Guide</div>
+                        <div className="text-sm text-gray-500">Step-by-step installation</div>
+                      </div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-green-50 hover:border-green-300 transition-all duration-200">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">🔧</span>
+                      <div>
+                        <div className="font-medium">Operating Instructions</div>
+                        <div className="text-sm text-gray-500">Daily operation guide</div>
+                      </div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">📖</span>
+                      <div>
+                        <div className="font-medium">Technical Brochure</div>
+                        <div className="text-sm text-gray-500">Complete specifications</div>
+                      </div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition-all duration-200">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">🛠️</span>
+                      <div>
+                        <div className="font-medium">Maintenance Schedule</div>
+                        <div className="text-sm text-gray-500">Keep your system running</div>
+                      </div>
+                    </div>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Customer Reviews Section */}
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-yellow-600 rounded-lg">
+                      <Star className="h-5 w-5 text-white" />
+                    </div>
+                    Customer Reviews
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 p-8">
+                  {productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
+                    <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-6' : 'pb-2'}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          ))}
+                        </div>
+                        <span className="font-semibold text-gray-900">{review.name}</span>
+                      </div>
+                      <p className="text-gray-600 leading-relaxed">"{review.review}"</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-blue-600 rounded-lg">
+                      <Star className="h-5 w-5 text-white" />
+                    </div>
+                    Review Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                      <span className="font-medium text-gray-900">Performance</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                      <span className="font-medium text-gray-900">Easy Installation</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                      <span className="font-medium text-gray-900">Value for Money</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                      <span className="font-medium text-gray-900">Customer Support</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      Common Highlights
+                    </h4>
+                    <div className="space-y-3 text-gray-700">
+                      <div className="flex items-center gap-3 p-2 bg-green-50 rounded-lg">
+                        <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <span>Excellent long-term performance</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2 bg-blue-50 rounded-lg">
+                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <span>Significant water savings</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2 bg-purple-50 rounded-lg">
+                        <CheckCircle className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                        <span>Low maintenance requirements</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-2 bg-orange-50 rounded-lg">
+                        <CheckCircle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                        <span>Great customer support</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* FAQ Section */}
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 pb-6">
+                <CardTitle className="flex items-center gap-3 text-2xl">
+                  <div className="p-2 bg-indigo-600 rounded-lg">
+                    <MessageSquare className="h-6 w-6 text-white" />
+                  </div>
+                  Frequently Asked Questions
+                </CardTitle>
+                <CardDescription className="text-gray-600 mt-2">
+                  Everything you need to know about this greywater system
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="space-y-6">
+                  {productContent.faq.map((item: any, index: number) => (
+                    <div key={index} className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-xl border border-gray-100">
+                      <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-start gap-3">
+                        <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs font-bold text-white">Q</span>
+                        </div>
+                        {item.question}
+                      </h4>
+                      <div className="ml-9">
+                        <p className="text-gray-600 leading-relaxed">{item.answer}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
