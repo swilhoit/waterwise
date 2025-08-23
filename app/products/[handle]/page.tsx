@@ -673,282 +673,416 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const productContent = getProductContent(handle)
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="grid lg:grid-cols-2 gap-12 mb-16">
-        {/* Product Images */}
-        <div className="space-y-4">
-          {product.images?.edges?.length > 0 ? (
-            <>
-              <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                <Image
-                  src={product.images.edges[0].node.url}
-                  alt={product.images.edges[0].node.altText || product.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover"
-                  priority
-                  unoptimized
-                />
-              </div>
-              
-              {product.images.edges.length > 1 && (
-                <div className="grid grid-cols-2 gap-4">
-                  {product.images.edges.slice(1).map((edge: any, index: number) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+    <div className="bg-white">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Product Images */}
+              <div className="relative">
+                {product.images?.edges?.length > 0 ? (
+                  <>
+                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-2xl border">
                       <Image
-                        src={edge.node.url}
-                        alt={edge.node.altText || product.title}
+                        src={product.images.edges[0].node.url}
+                        alt={product.images.edges[0].node.altText || product.title}
                         fill
-                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                        className="object-cover hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                        priority
                         unoptimized
                       />
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-              <div className="flex items-center justify-center h-full text-gray-400">
-                <span>No image available</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Product Info */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Badge variant="secondary">WaterMark Approved</Badge>
-            <Badge variant="outline">12 Month Warranty</Badge>
-          </div>
-          
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            {product.title}
-          </h1>
-          
-          {product.priceRange?.minVariantPrice && (
-            <div className="text-3xl font-bold text-blue-600 mb-6">
-              ${product.priceRange.minVariantPrice.amount} {product.priceRange.minVariantPrice.currencyCode}
-            </div>
-          )}
-
-          <div className="prose prose-lg mb-8">
-            <p>{product.description}</p>
-          </div>
-
-          {/* Key Features */}
-          <div className="mb-8">
-            <h3 className="font-semibold mb-4">Key Features:</h3>
-            <div className="grid grid-cols-1 gap-2">
-              {productContent.features.map((feature: string, index: number) => (
-                <div key={index} className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {product.variants?.edges?.length > 0 && (
-            <div className="mb-8">
-              <h3 className="font-semibold mb-4">Product Options:</h3>
-              <div className="space-y-2">
-                {product.variants.edges.map((edge: any) => (
-                  <div key={edge.node.id} className="flex justify-between items-center p-3 border rounded hover:bg-gray-50">
-                    <span>{edge.node.title}</span>
-                    <span className="font-semibold text-blue-600">
-                      ${edge.node.priceV2.amount}
-                    </span>
+                    
+                    {product.images.edges.length > 1 && (
+                      <div className="grid grid-cols-3 gap-3 mt-4">
+                        {product.images.edges.slice(1).map((edge: any, index: number) => (
+                          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-white shadow-md border hover:shadow-lg transition-all duration-300 cursor-pointer">
+                            <Image
+                              src={edge.node.url}
+                              alt={edge.node.altText || product.title}
+                              fill
+                              sizes="(max-width: 768px) 33vw, (max-width: 1200px) 16vw, 12vw"
+                              className="object-cover hover:scale-110 transition-transform duration-300"
+                              unoptimized
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl border">
+                    <div className="flex items-center justify-center h-full text-gray-400">
+                      <div className="text-center">
+                        <Droplets className="h-16 w-16 mx-auto mb-4 text-blue-300" />
+                        <span className="text-lg font-medium">Product Image Coming Soon</span>
+                      </div>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
-            </div>
-          )}
 
-          <AddToCartButton product={product} />
-          
-          {/* Trust Signals */}
-          <div className="flex items-center gap-6 mt-6 pt-6 border-t">
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-green-600" />
-              <span className="text-sm">12 Month Warranty</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Truck className="h-5 w-5 text-blue-600" />
-              <span className="text-sm">Free Shipping</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-purple-600" />
-              <span className="text-sm">Expert Support</span>
+              {/* Product Info */}
+              <div className="space-y-6">
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <Badge variant="default" className="bg-green-100 text-green-800 border-green-200 hover:bg-green-200 px-3 py-1">
+                    <Shield className="h-3 w-3 mr-1" />
+                    WaterMark Approved
+                  </Badge>
+                  <Badge variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50 px-3 py-1">
+                    <Zap className="h-3 w-3 mr-1" />
+                    12 Month Warranty
+                  </Badge>
+                </div>
+                
+                {/* Title */}
+                <div>
+                  <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
+                    {product.title}
+                  </h1>
+                  
+                  {/* Price */}
+                  {product.priceRange?.minVariantPrice && (
+                    <div className="flex items-baseline gap-2 mb-6">
+                      <span className="text-4xl font-bold text-blue-600">
+                        ${product.priceRange.minVariantPrice.amount}
+                      </span>
+                      <span className="text-lg text-gray-500 font-medium">
+                        {product.priceRange.minVariantPrice.currencyCode}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Description */}
+                <div className="prose prose-xl text-gray-600 leading-relaxed max-w-none">
+                  <p>{product.description}</p>
+                </div>
+
+                {/* Key Features Grid */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <Settings className="h-5 w-5 text-blue-600" />
+                    Key Features
+                  </h3>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {productContent.features.slice(0, 6).map((feature: string, index: number) => (
+                      <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-blue-50 transition-colors">
+                        <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm text-gray-700 leading-relaxed">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {productContent.features.length > 6 && (
+                    <div className="mt-4 pt-4 border-t">
+                      <p className="text-sm text-gray-500">
+                        +{productContent.features.length - 6} more features in detailed specifications
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Product Variants */}
+                {product.variants?.edges?.length > 0 && (
+                  <div className="bg-gray-50 rounded-xl border p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Calculator className="h-5 w-5 text-blue-600" />
+                      Available Options
+                    </h3>
+                    <div className="space-y-3">
+                      {product.variants.edges.map((edge: any) => (
+                        <div key={edge.node.id} className="flex justify-between items-center p-4 bg-white rounded-lg border hover:shadow-md transition-all duration-200 cursor-pointer">
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-900">{edge.node.title}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-xl font-bold text-blue-600">
+                              ${edge.node.priceV2.amount}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* CTA Button */}
+                <div className="space-y-4">
+                  <AddToCartButton product={product} />
+                  
+                  {/* Trust Signals */}
+                  <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Shield className="h-4 w-4 text-green-600" />
+                      <span>12 Month Warranty</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Truck className="h-4 w-4 text-blue-600" />
+                      <span>Free Shipping</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Users className="h-4 w-4 text-purple-600" />
+                      <span>Expert Support</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Product Details Tabs */}
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="specifications">Specifications</TabsTrigger>
-          <TabsTrigger value="installation">Installation</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="faq">FAQ</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview" className="mt-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                  How It Works
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-xs font-bold text-blue-600">1</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Collect</h4>
-                    <p className="text-sm text-gray-600">Divert water from laundry, wash basins, bath, and shower</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-xs font-bold text-blue-600">2</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Filter</h4>
-                    <p className="text-sm text-gray-600">Advanced filter mats remove impurities with 4-stage progressive filtration</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-xs font-bold text-blue-600">3</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Flourish</h4>
-                    <p className="text-sm text-gray-600">Pump filtered water to subsurface irrigation system</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-green-600" />
-                  Maintenance
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Clean filters</span>
-                    <Badge variant="outline">Every 4-6 months</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Replace filters</span>
-                    <Badge variant="outline">Every 3 years</Badge>
-                  </div>
-                  <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded">
-                    ⚠️ Do not store filtered greywater over 24 hours
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="specifications" className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Technical Specifications</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                    <div key={key} className="flex justify-between border-b pb-2">
-                      <span className="font-medium">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                      <span>{value}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-4">
-                  {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                    <div key={key} className="flex justify-between border-b pb-2">
-                      <span className="font-medium">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                      <span>{value}</span>
-                    </div>
-                  ))}
-                </div>
+      {/* Product Details Section */}
+      <div className="border-t bg-gray-50">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-6xl mx-auto">
+            <Tabs defaultValue="overview" className="w-full">
+              <div className="flex justify-center mb-12">
+                <TabsList className="grid grid-cols-5 bg-white shadow-lg rounded-xl p-2 border">
+                  <TabsTrigger value="overview" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
+                    Overview
+                  </TabsTrigger>
+                  <TabsTrigger value="specifications" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
+                    Specifications
+                  </TabsTrigger>
+                  <TabsTrigger value="installation" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
+                    Installation
+                  </TabsTrigger>
+                  <TabsTrigger value="reviews" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
+                    Reviews
+                  </TabsTrigger>
+                  <TabsTrigger value="faq" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg font-medium px-6 py-3">
+                    FAQ
+                  </TabsTrigger>
+                </TabsList>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        
+              <TabsContent value="overview" className="mt-0">
+                <div className="grid lg:grid-cols-2 gap-8">
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-6">
+                      <CardTitle className="flex items-center gap-3 text-xl">
+                        <div className="p-2 bg-blue-600 rounded-lg">
+                          <Zap className="h-5 w-5 text-white" />
+                        </div>
+                        How It Works
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6 p-8">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                          <span className="text-sm font-bold text-white">1</span>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900 mb-2">Collect</h4>
+                          <p className="text-gray-600 leading-relaxed">Divert water from laundry, wash basins, bath, and shower into the treatment system</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                          <span className="text-sm font-bold text-white">2</span>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900 mb-2">Filter</h4>
+                          <p className="text-gray-600 leading-relaxed">Advanced filter mats remove impurities with 4-stage progressive filtration technology</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                          <span className="text-sm font-bold text-white">3</span>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900 mb-2">Flourish</h4>
+                          <p className="text-gray-600 leading-relaxed">Pump clean, filtered water to your subsurface irrigation system</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-        <TabsContent value="installation" className="mt-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Installation Guide</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-blue-50 p-4 rounded">
-                  <h4 className="font-semibold mb-2">Professional Installation Recommended</h4>
-                  <p className="text-sm text-gray-600">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 pb-6">
+                      <CardTitle className="flex items-center gap-3 text-xl">
+                        <div className="p-2 bg-green-600 rounded-lg">
+                          <Wrench className="h-5 w-5 text-white" />
+                        </div>
+                        Maintenance Schedule
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-8">
+                      <div className="space-y-6">
+                        <div className="flex justify-between items-center p-4 bg-blue-50 rounded-xl">
+                          <div>
+                            <span className="font-medium text-gray-900">Clean filters</span>
+                            <p className="text-sm text-gray-600 mt-1">Simple rinse and reinstall</p>
+                          </div>
+                          <Badge variant="default" className="bg-blue-600 text-white px-3 py-1">Every 4-6 months</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-4 bg-purple-50 rounded-xl">
+                          <div>
+                            <span className="font-medium text-gray-900">Replace filters</span>
+                            <p className="text-sm text-gray-600 mt-1">Full filter replacement</p>
+                          </div>
+                          <Badge variant="default" className="bg-purple-600 text-white px-3 py-1">Every 3 years</Badge>
+                        </div>
+                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-4 rounded-xl">
+                          <div className="flex items-start gap-3">
+                            <div className="text-amber-600 flex-shrink-0 mt-0.5">
+                              ⚠️
+                            </div>
+                            <div>
+                              <p className="text-amber-800 font-medium mb-1">Important Safety Note</p>
+                              <p className="text-amber-700 text-sm leading-relaxed">
+                                Do not store filtered greywater for more than 24 hours to prevent bacterial growth
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <h5 className="font-medium">Site Assessment</h5>
-                      <p className="text-sm text-gray-600">Evaluate plumbing connections and installation location</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <h5 className="font-medium">System Installation</h5>
-                      <p className="text-sm text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <h5 className="font-medium">Testing & Commissioning</h5>
-                      <p className="text-sm text-gray-600">Verify proper operation and flow rates</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </TabsContent>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Documentation</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full justify-start">
-                  📋 Assembly Guide
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  🔧 Operating Instructions
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  📖 Technical Brochure
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  🛠️ Maintenance Schedule
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+              <TabsContent value="specifications" className="mt-0">
+                <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 pb-6">
+                    <CardTitle className="flex items-center gap-3 text-2xl">
+                      <div className="p-2 bg-slate-600 rounded-lg">
+                        <Settings className="h-6 w-6 text-white" />
+                      </div>
+                      Technical Specifications
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 mt-2">
+                      Detailed technical information and performance specifications
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-8">
+                    <div className="grid lg:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
+                          <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                            <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                            <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="space-y-4">
+                        {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
+                          <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
+                            <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                            <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="installation" className="mt-0">
+                <div className="grid lg:grid-cols-2 gap-8">
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 pb-6">
+                      <CardTitle className="flex items-center gap-3 text-xl">
+                        <div className="p-2 bg-orange-600 rounded-lg">
+                          <Wrench className="h-5 w-5 text-white" />
+                        </div>
+                        Installation Guide
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6 p-8">
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <Users className="h-5 w-5 text-blue-600" />
+                          Professional Installation Recommended
+                        </h4>
+                        <p className="text-gray-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
+                      </div>
+                      <div className="space-y-5">
+                        <div className="flex items-start gap-4 p-4 bg-green-50 rounded-xl">
+                          <div className="p-2 bg-green-600 rounded-lg flex-shrink-0">
+                            <CheckCircle className="h-4 w-4 text-white" />
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-gray-900 mb-2">Site Assessment</h5>
+                            <p className="text-gray-600">Evaluate plumbing connections and installation location</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-xl">
+                          <div className="p-2 bg-blue-600 rounded-lg flex-shrink-0">
+                            <CheckCircle className="h-4 w-4 text-white" />
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-gray-900 mb-2">System Installation</h5>
+                            <p className="text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
+                          <div className="p-2 bg-purple-600 rounded-lg flex-shrink-0">
+                            <CheckCircle className="h-4 w-4 text-white" />
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-gray-900 mb-2">Testing & Commissioning</h5>
+                            <p className="text-gray-600">Verify proper operation and flow rates</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50 pb-6">
+                      <CardTitle className="flex items-center gap-3 text-xl">
+                        <div className="p-2 bg-purple-600 rounded-lg">
+                          <MessageSquare className="h-5 w-5 text-white" />
+                        </div>
+                        Documentation & Support
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 p-8">
+                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">📋</span>
+                          <div>
+                            <div className="font-medium">Assembly Guide</div>
+                            <div className="text-sm text-gray-500">Step-by-step installation</div>
+                          </div>
+                        </div>
+                      </Button>
+                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-green-50 hover:border-green-300 transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">🔧</span>
+                          <div>
+                            <div className="font-medium">Operating Instructions</div>
+                            <div className="text-sm text-gray-500">Daily operation guide</div>
+                          </div>
+                        </div>
+                      </Button>
+                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">📖</span>
+                          <div>
+                            <div className="font-medium">Technical Brochure</div>
+                            <div className="text-sm text-gray-500">Complete specifications</div>
+                          </div>
+                        </div>
+                      </Button>
+                      <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">🛠️</span>
+                          <div>
+                            <div className="font-medium">Maintenance Schedule</div>
+                            <div className="text-sm text-gray-500">Keep your system running</div>
+                          </div>
+                        </div>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
 
         <TabsContent value="reviews" className="mt-8">
           <div className="grid md:grid-cols-2 gap-8">
