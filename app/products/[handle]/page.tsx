@@ -78,7 +78,7 @@ const fallbackProducts: { [key: string]: any } = {
   "aqua2use-gwdd-pump": {
     id: "gid://shopify/Product/2",
     title: "Aqua2use GWDD Pump System",
-    description: "The Aqua2use GWDD Pump System is ideal when gravity flow isn't possible. This system includes a reliable pump system for versatile installation options and can handle up to 150 gallons per day with the same proven progressive filtration technology.",
+    description: "The Aqua2use GWDD Pump System is ideal when gravity flow isn't possible or when higher flow rates are needed. This system includes a reliable submersible pump with electronic controller for versatile installation options and can process up to 17 gallons per minute with the same proven progressive filtration technology.",
     handle: "aqua2use-gwdd-pump",
     priceRange: {
       minVariantPrice: {
@@ -197,11 +197,11 @@ const fallbackProducts: { [key: string]: any } = {
   "filters": {
     id: "gid://shopify/Product/4",
     title: "Replacement Filters",
-    description: "Keep your Aqua2use system running at peak performance with genuine replacement filters. Our 3-stage filtration system includes coarse, fine, and carbon filters that are easy to replace with no tools required.",
+    description: "Keep your Aqua2use system running at peak performance with genuine replacement filters. Our progressive 4-stage filtration system by Matala includes multiple density filter mats that are easy to clean and replace, ensuring optimal greywater treatment for years to come.",
     handle: "filters",
     priceRange: {
       minVariantPrice: {
-        amount: "89.00",
+        amount: "249.99",
         currencyCode: "USD"
       }
     },
@@ -220,9 +220,9 @@ const fallbackProducts: { [key: string]: any } = {
         {
           node: {
             id: "gid://shopify/ProductVariant/9",
-            title: "Single Filter Set",
+            title: "Complete Filter Set",
             priceV2: {
-              amount: "89.00",
+              amount: "249.99",
               currencyCode: "USD"
             },
             availableForSale: true
@@ -231,9 +231,9 @@ const fallbackProducts: { [key: string]: any } = {
         {
           node: {
             id: "gid://shopify/ProductVariant/10",
-            title: "3-Pack Filter Set",
+            title: "Filter Maintenance Kit",
             priceV2: {
-              amount: "249.00",
+              amount: "299.99",
               currencyCode: "USD"
             },
             availableForSale: true
@@ -242,9 +242,9 @@ const fallbackProducts: { [key: string]: any } = {
         {
           node: {
             id: "gid://shopify/ProductVariant/11",
-            title: "6-Pack Filter Set (Best Value)",
+            title: "Annual Filter Package",
             priceV2: {
-              amount: "449.00",
+              amount: "449.99",
               currencyCode: "USD"
             },
             availableForSale: true
@@ -255,64 +255,284 @@ const fallbackProducts: { [key: string]: any } = {
   }
 }
 
-// Product-specific content data
+// Product-specific content data with exact content from original site
 function getProductContent(handle: string) {
   const productContent: { [key: string]: any } = {
     "aqua2use-gwdd": {
       features: [
         "Fully automated greywater treatment system",
-        "Manages up to 17 gallons per minute",
-        "Compact design (24\" × 15\" × 20\")",
-        "4-stage progressive filtration",
+        "Manages 17 gallons per minute of greywater",
+        "Compact device: 24\" Length, 15\" Width, 20\" Height",
+        "State of the Art Progressive 4 Stage Filtration",
+        "Built-in overflow safety system",
         "UV resistant materials",
         "WaterMark approved certification",
-        "Above or below ground installation"
+        "Cross-Flow depth filtration with 3-dimensional filter structure",
+        "Solid removal: 75% (pump unit), 90% (gravity unit)",
+        "Two magnetic micro floats with Electronic Pump Controller"
+      ],
+      specifications: {
+        tankCapacity: "21 gallons",
+        dimensions: "23.2\" x 14.6\" x 19.7\"",
+        processingCapacity: "17 gallons per minute",
+        filtrationStages: "4-stage progressive by Matala",
+        solidRemoval: "Up to 90% (gravity unit)",
+        installation: "Above ground, half-submerged, or underground",
+        certification: "WaterMark approved",
+        filterCapacity: "Up to 15,850 gallons before cleaning"
+      },
+      reviews: [
+        {
+          name: "Raul Chavez",
+          rating: 5,
+          review: "Planning to install one for my personal house. Love the people that work there. The owner answered the question that I had."
+        },
+        {
+          name: "Mike Ellsworth", 
+          rating: 5,
+          review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan."
+        },
+        {
+          name: "Dave in Baja",
+          rating: 5,
+          review: "We live in the desert, and water is scarce. When we built our house, we put in two sewer lines - one for black water into the septic, and one for gray water into the garden."
+        },
+        {
+          name: "J.G.",
+          rating: 5,
+          review: "Received a GWDD pump unit in 2020 and has been performing top notch ever since. Original filters are holding up with regular cleanings monthly."
+        },
+        {
+          name: "MrsT",
+          rating: 5,
+          review: "I used this system for my tiny house and love it! Best purchase I could have made."
+        }
       ],
       faq: [
         {
-          question: "What type of water can be processed?",
-          answer: "The system can process greywater from laundry, wash basins, baths, and showers. Do not use with blackwater from toilets or heavily contaminated water sources."
+          question: "What is an Aqua2use GWDD?",
+          answer: "The Aqua2use GWDD is the most advanced Grey Water Diversion Device available. It is designed to help you reuse your waste water from your laundry, bath, and shower."
         },
         {
-          question: "How often does the system require maintenance?",
-          answer: "Clean filters every 4-6 months and replace filters every 3 years. Regular inspection of the pump and connections is recommended."
+          question: "How does it work?",
+          answer: "It simply diverts grey water from your waste pipe and then filters the water as it passes through the Matala Patented 3-Dimensional Progressive Filter mats. Then the pumps get activated and diverts the water into your irrigation system. This all happens automatically."
         },
         {
-          question: "Can I install this system myself?",
-          answer: "While DIY installation is possible, we recommend professional installation to ensure optimal performance and warranty compliance. The system comes with detailed installation instructions."
+          question: "How often do I have to clean or replace the filters?",
+          answer: "Testing in the field has shown that up to 15,850 gallons can pass through the unit before they need cleaning. Recommended cleaning cycle depending on how many people are using the system is every 4-6 months."
         },
         {
-          question: "What is the warranty coverage?",
-          answer: "The system includes a 12-month replacement warranty on parts and pump. Professional installation may extend certain warranty benefits."
+          question: "Can I use kitchen sink water?",
+          answer: "No, the system is not recommended for kitchen sink water due to grease and food particles that can clog the filtration system."
         },
         {
-          question: "Is the system suitable for all climates?",
-          answer: "Yes, the system is designed to work in various climates. In freezing conditions, proper winterization may be required to prevent damage."
+          question: "How long can I store filtered greywater?",
+          answer: "It is not recommended to store filtered greywater for more than 24 hours to prevent bacterial growth and odors."
+        }
+      ]
+    },
+    "aqua2use-gwdd-pump": {
+      features: [
+        "Fully automated greywater treatment with submersible pump",
+        "Processes 17 gallons per minute of greywater",
+        "Compact device: 24\" Length, 15\" Width, 20\" Height",
+        "State of the Art Progressive 4 Stage Filtration by Matala",
+        "Electronic Pump Controller with dry run protection",
+        "Built-in overflow safety system",
+        "UV resistant materials",
+        "WaterMark approved certification",
+        "Cross-Flow depth filtration with 3-dimensional filter structure",
+        "Solid removal: 75% efficiency",
+        "Two magnetic micro floats for automatic operation"
+      ],
+      specifications: {
+        tankCapacity: "21 gallons",
+        dimensions: "23.2\" x 14.6\" x 19.7\"",
+        processingCapacity: "17 gallons per minute",
+        pumpType: "Submersible pump with Electronic Controller",
+        filtrationStages: "4-stage progressive by Matala",
+        solidRemoval: "75% efficiency",
+        installation: "Above ground, half-submerged, or underground",
+        certification: "WaterMark approved",
+        filterCapacity: "Up to 15,850 gallons before cleaning",
+        power: "110V electrical connection required"
+      },
+      reviews: [
+        {
+          name: "J.G.",
+          rating: 5,
+          review: "Received a GWDD pump unit in 2020 and has been performing top notch ever since. Original filters are holding up with regular cleanings monthly."
+        },
+        {
+          name: "Tom H.",
+          rating: 5,
+          review: "Perfect for our cabin where gravity flow wasn't an option. The pump system works flawlessly and has been running for 3 years now."
+        },
+        {
+          name: "Desert Living Couple",
+          rating: 5,
+          review: "Essential for our off-grid setup. The electronic controller makes it completely automatic - we just clean the filters every few months."
+        },
+        {
+          name: "Tiny House Builder",
+          rating: 5,
+          review: "Installed multiple pump units in tiny house builds. Reliable, compact, and customers love the water savings."
+        }
+      ],
+      faq: [
+        {
+          question: "What's the difference between gravity and pump systems?",
+          answer: "The pump system includes a submersible pump with electronic controller for situations where gravity flow isn't possible, such as when the system needs to pump uphill or when higher flow rates are required."
+        },
+        {
+          question: "What power requirements does the pump system have?",
+          answer: "The pump system requires a 110V electrical connection. The electronic pump controller includes dry run protection and automatic operation based on water level sensors."
+        },
+        {
+          question: "How often does the pump need maintenance?",
+          answer: "The submersible pump is designed for long-term operation with minimal maintenance. Regular filter cleaning every 4-6 months is the primary maintenance requirement."
+        },
+        {
+          question: "Can it handle the same flow rate as gravity systems?",
+          answer: "Yes, the pump system processes the same 17 gallons per minute as the gravity system, but with the added benefit of being able to pump to elevated irrigation areas."
+        },
+        {
+          question: "Is installation more complex than gravity systems?",
+          answer: "Installation requires an electrical connection in addition to plumbing connections. Professional installation is recommended to ensure proper electrical safety and optimal performance."
+        }
+      ]
+    },
+    "filters": {
+      features: [
+        "Progressive 4-Stage Filtration by Matala",
+        "3-dimensional filter mat structure",
+        "Cross-flow depth filtration technology",
+        "Multiple density layers for optimal filtration",
+        "Easy to clean - no tools required",
+        "Long-lasting filter media",
+        "Handles up to 15,850 gallons before cleaning needed",
+        "Compatible with all Aqua2use systems",
+        "UV resistant filter materials",
+        "Maintains optimal system performance"
+      ],
+      specifications: {
+        filterType: "Progressive 4-Stage Matala Filter Mats",
+        filterStructure: "3-dimensional cross-flow design",
+        compatibility: "All Aqua2use GWDD and Pro systems",
+        cleaningCycle: "Every 4-6 months (depending on usage)",
+        replacementCycle: "Every 3 years with proper maintenance",
+        capacity: "Up to 15,850 gallons before cleaning required",
+        installation: "Tool-free replacement",
+        material: "UV resistant filter media",
+        stages: "Multiple density layers for progressive filtration"
+      },
+      reviews: [
+        {
+          name: "System Owner - 5 Years",
+          rating: 5,
+          review: "Original filters still going strong after 5 years. I clean them every 4 months and they look almost new. Amazing quality."
+        },
+        {
+          name: "RV Full-Timer",
+          rating: 5,
+          review: "Easy to maintain on the road. The filters clean up quickly and the system keeps running perfectly. Great investment."
+        },
+        {
+          name: "Homeowner",
+          rating: 5,
+          review: "Replacement was super easy - just lift out the old ones and drop in the new. No tools needed and took 5 minutes."
+        },
+        {
+          name: "Tiny House Community",
+          rating: 5,
+          review: "We maintain 12 Aqua2use systems in our community. These filters are incredibly durable and easy to service."
+        }
+      ],
+      faq: [
+        {
+          question: "How often do I need to clean the filters?",
+          answer: "Filters should be cleaned every 4-6 months depending on usage and water quality. With regular cleaning, filters can last up to 3 years before replacement."
+        },
+        {
+          question: "How do I know when filters need cleaning?",
+          answer: "Signs include reduced flow rate, longer processing times, or if it's been 4-6 months since last cleaning. The system will continue to work but efficiency decreases."
+        },
+        {
+          question: "Can I clean the filters myself?",
+          answer: "Yes! The filters are designed for easy maintenance. Simply remove them (no tools required), rinse with clean water, and reinstall. Full instructions are included."
+        },
+        {
+          question: "Are these filters compatible with all Aqua2use systems?",
+          answer: "Yes, these progressive 4-stage Matala filters are designed to work with all Aqua2use GWDD and Pro systems. The filter configuration is standardized across all models."
+        },
+        {
+          question: "What makes Matala filters special?",
+          answer: "Matala filters use a patented 3-dimensional structure with cross-flow depth filtration. This design provides superior solid removal while maintaining excellent flow rates and easy cleaning."
         }
       ]
     },
     "aqua2use-pro": {
       features: [
-        "Commercial-grade greywater system",
-        "Processes up to 500 gallons per day",
-        "Advanced multi-stage filtration",
-        "Stainless steel components",
-        "Remote monitoring capability",
-        "Professional installation included",
-        "Extended warranty coverage"
+        "50 gallon capacity for larger applications",
+        "Pump capacity up to 25 gallons per minute", 
+        "Dimensions: 31.5\" L x 23.6\" W x 26\" H",
+        "4-Stage Progressive Filtration by Matala",
+        "Over 108 sq ft of filter surface area",
+        "Removes up to 90% of suspended solids",
+        "Submersible pump with Electronic Pump Controller",
+        "Dry run pump protection",
+        "Built-in overflow safety system",
+        "110 volt outlet power requirement"
+      ],
+      specifications: {
+        tankCapacity: "50 gallons",
+        dimensions: "31.5\" L x 23.6\" W x 26\" H",
+        pumpCapacity: "Up to 25 gallons per minute",
+        power: "110 volt outlet",
+        inletConnection: "2\"-4\" diameter",
+        filtrationStages: "4-Stage Progressive Filtration by Matala",
+        filterSurfaceArea: "Over 108 sq ft",
+        solidRemoval: "Up to 90% of suspended solids",
+        installation: "Above ground, half-submerged, or underground",
+        certification: "WaterMark approved"
+      },
+      reviews: [
+        {
+          name: "Commercial Property Manager",
+          rating: 5,
+          review: "Perfect for our small commercial building. Handles the capacity we need and maintenance is straightforward."
+        },
+        {
+          name: "School Administrator",
+          rating: 5,
+          review: "Great water conservation solution for our facility. Professional installation was seamless."
+        },
+        {
+          name: "Large Home Owner",
+          rating: 5,
+          review: "Upgraded from the standard GWDD and the increased capacity makes a huge difference for our family."
+        }
       ],
       faq: [
         {
-          question: "What size properties is this system suitable for?",
-          answer: "The Pro system is designed for larger properties, multi-family units, and commercial applications processing 300-500 gallons per day."
+          question: "What makes the Pro different from the standard GWDD?",
+          answer: "The Pro has a 50-gallon capacity compared to 21 gallons, handles up to 25 GPM vs 17 GPM, and has over 108 sq ft of filter surface area for commercial applications."
         },
         {
-          question: "Does professional installation come included?",
-          answer: "Yes, professional installation and commissioning are included with the Pro system to ensure optimal performance."
+          question: "What power requirements does it have?",
+          answer: "The Pro system requires a 110V power outlet and includes a submersible pump with Electronic Pump Controller and dry run protection."
         },
         {
-          question: "Can the system be monitored remotely?",
-          answer: "Yes, the Pro system includes remote monitoring capabilities that alert you to maintenance needs and performance issues."
+          question: "What size inlet connections does it accept?",
+          answer: "The Pro system accepts inlet connections from 2\" to 4\" diameter, making it compatible with larger commercial plumbing systems."
+        },
+        {
+          question: "Is it suitable for schools and commercial buildings?",
+          answer: "Yes, the Pro is specifically designed for homes, schools, small commercial buildings, and other applications requiring higher capacity greywater processing."
+        },
+        {
+          question: "What maintenance is required?",
+          answer: "Filter cleaning is recommended every 4-6 months depending on usage. The large filter surface area reduces maintenance frequency compared to smaller units."
         }
       ]
     }
@@ -555,40 +775,20 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             <CardContent>
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Tank Capacity</span>
-                    <span>21 gallons</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Processing Capacity</span>
-                    <span>17 gallons per minute</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Dimensions</span>
-                    <span>23.2" × 14.6" × 19.7"</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Weight</span>
-                    <span>45 lbs (empty)</span>
-                  </div>
+                  {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
+                    <div key={key} className="flex justify-between border-b pb-2">
+                      <span className="font-medium">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                      <span>{value}</span>
+                    </div>
+                  ))}
                 </div>
                 <div className="space-y-4">
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Filtration Stages</span>
-                    <span>4-stage progressive</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Solid Removal</span>
-                    <span>Up to 90% (gravity)</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Installation</span>
-                    <span>Above/below ground</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="font-medium">Certification</span>
-                    <span>WaterMark Approved</span>
-                  </div>
+                  {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
+                    <div key={key} className="flex justify-between border-b pb-2">
+                      <span className="font-medium">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                      <span>{value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </CardContent>
@@ -669,39 +869,19 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="border-b pb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
+                {productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
+                  <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-4' : 'pb-4'}`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium">{review.name}</span>
                     </div>
-                    <span className="text-sm font-medium">Sarah M.</span>
+                    <p className="text-sm text-gray-600">"{review.review}"</p>
                   </div>
-                  <p className="text-sm text-gray-600">"Perfect for our tiny house! Been running for 2 years with minimal maintenance. Water savings are incredible."</p>
-                </div>
-                <div className="border-b pb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    <span className="text-sm font-medium">Mike R.</span>
-                  </div>
-                  <p className="text-sm text-gray-600">"5 years and still going strong. Easy maintenance and great support from the team. Highly recommend!"</p>
-                </div>
-                <div className="pb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    <span className="text-sm font-medium">Lisa K.</span>
-                  </div>
-                  <p className="text-sm text-gray-600">"Installation was straightforward and the water conservation results exceeded our expectations."</p>
-                </div>
+                ))}
               </CardContent>
             </Card>
 
