@@ -165,7 +165,7 @@ export default function Contact() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold text-gray-900">1-800-XXX-XXXX</p>
+                  <p className="text-2xl font-bold text-gray-900">(678) 809-3008</p>
                   <p className="text-gray-600">Mon-Fri 8AM-6PM PST</p>
                   <p className="text-gray-600">Sat 9AM-4PM PST</p>
                 </CardContent>
@@ -179,7 +179,7 @@ export default function Contact() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg font-semibold text-gray-900">info@waterwisegroup.com</p>
+                  <p className="text-lg font-semibold text-gray-900">sales@waterwisegroup.com</p>
                   <p className="text-gray-600">We respond within 24 hours</p>
                 </CardContent>
               </Card>
@@ -192,7 +192,8 @@ export default function Contact() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-900">California, USA</p>
+                  <p className="text-gray-900">4708 Three Springs Ct</p>
+                  <p className="text-gray-900">Marietta, GA 30062</p>
                   <p className="text-gray-600">Serving customers nationwide</p>
                 </CardContent>
               </Card>

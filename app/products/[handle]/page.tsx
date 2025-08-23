@@ -17,7 +17,7 @@ const fallbackProducts: { [key: string]: any } = {
     handle: "aqua2use-gwdd",
     priceRange: {
       minVariantPrice: {
-        amount: "1999.00",
+        amount: "899.99",
         currencyCode: "USD"
       }
     },
@@ -136,7 +136,7 @@ const fallbackProducts: { [key: string]: any } = {
     handle: "aqua2use-pro",
     priceRange: {
       minVariantPrice: {
-        amount: "3999.00",
+        amount: "2699.00",
         currencyCode: "USD"
       }
     },
@@ -245,6 +245,43 @@ const fallbackProducts: { [key: string]: any } = {
             title: "Annual Filter Package",
             priceV2: {
               amount: "449.99",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    }
+  },
+  "replacement-greywater-pump": {
+    id: "gid://shopify/Product/5",
+    title: "Greywater Pump Replacement for the Aqua2use GWDD",
+    description: "Official replacement pump for your Aqua2use GWDD system. This high-quality submersible pump is designed specifically for greywater applications and includes electronic controller for automatic operation.",
+    handle: "replacement-greywater-pump",
+    priceRange: {
+      minVariantPrice: {
+        amount: "399.99",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "/images/gwdd-pump.jpg",
+            altText: "Aqua2use Replacement Greywater Pump"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/12",
+            title: "Standard Replacement Pump",
+            priceV2: {
+              amount: "399.99",
               currencyCode: "USD"
             },
             availableForSale: true
@@ -468,6 +505,65 @@ function getProductContent(handle: string) {
         {
           question: "What makes Matala filters special?",
           answer: "Matala filters use a patented 3-dimensional structure with cross-flow depth filtration. This design provides superior solid removal while maintaining excellent flow rates and easy cleaning."
+        }
+      ]
+    },
+    "replacement-greywater-pump": {
+      features: [
+        "Direct replacement for Aqua2use GWDD systems",
+        "Submersible pump design for reliable operation",
+        "Electronic pump controller included",
+        "Automatic operation with water level sensors",
+        "Dry run protection to prevent damage",
+        "110V power requirement",
+        "Easy installation with included fittings",
+        "Compatible with all Aqua2use GWDD models",
+        "Professional-grade construction",
+        "12-month manufacturer warranty"
+      ],
+      specifications: {
+        type: "Submersible Greywater Pump",
+        power: "110V electrical connection",
+        controller: "Electronic Pump Controller included",
+        protection: "Dry run protection",
+        compatibility: "All Aqua2use GWDD systems",
+        installation: "Direct replacement",
+        warranty: "12 months",
+        operation: "Automatic with water level sensors"
+      },
+      reviews: [
+        {
+          name: "Replacement Customer",
+          rating: 5,
+          review: "Perfect replacement for my 3-year-old system. Installed in 30 minutes and works exactly like the original."
+        },
+        {
+          name: "DIY Homeowner",
+          rating: 5,
+          review: "Easy to install and the electronic controller makes it completely automatic. Great quality pump."
+        },
+        {
+          name: "System Maintenance",
+          rating: 5,
+          review: "Keep this as a spare. When pumps eventually wear out, having a replacement ready means no downtime."
+        }
+      ],
+      faq: [
+        {
+          question: "Is this compatible with my existing Aqua2use system?",
+          answer: "Yes, this pump is designed as a direct replacement for all Aqua2use GWDD systems, both gravity and pump models."
+        },
+        {
+          question: "Does it include the electronic controller?",
+          answer: "Yes, the replacement pump comes with the electronic pump controller and all necessary fittings for installation."
+        },
+        {
+          question: "How difficult is the installation?",
+          answer: "Installation is straightforward for most DIY homeowners. Basic plumbing and electrical connections are required. Professional installation is available if preferred."
+        },
+        {
+          question: "What's the expected lifespan of the pump?",
+          answer: "With proper maintenance and regular filter cleaning, the pump typically lasts 5-7 years depending on usage frequency and water conditions."
         }
       ]
     },
