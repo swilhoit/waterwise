@@ -116,7 +116,7 @@ export default async function Blog() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {blogPosts.map((post) => (
+            {blogPosts.map((post: any) => (
               <Card key={post.id} className="hover-lift transition-all duration-300 hover:shadow-lg overflow-hidden">
                 <CardHeader className="p-0">
                   <div className="relative">

@@ -5,7 +5,7 @@ const publicAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKE
 
 const client = createStorefrontApiClient({
   storeDomain,
-  apiVersion: '2024-01',
+  apiVersion: '2024-10',
   publicAccessToken,
 })
 
