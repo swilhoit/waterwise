@@ -65,7 +65,7 @@ export function Header() {
                       </li>
                       <li>
                         <NavigationMenuLink asChild>
-                          <Link href="/greywater-state-laws" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                          <Link href="/greywater-laws" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                             <div className="text-sm font-medium leading-none">Greywater State Laws</div>
                           </Link>
                         </NavigationMenuLink>
@@ -220,6 +220,9 @@ export function Header() {
                 </Link>
                 <Link href="/solutions" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
                   Solutions
+                </Link>
+                <Link href="/greywater-laws" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                  Greywater Laws
                 </Link>
                 <Link href="/customer-stories" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
                   Customer Stories
