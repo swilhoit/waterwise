@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sanity:dev": "sanity dev --port 3333",
+    "sanity:build": "sanity build",
+    "sanity:deploy": "sanity deploy"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -31,6 +34,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sanity": "^4.5.0",
+    "styled-components": "^6.1.19",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
