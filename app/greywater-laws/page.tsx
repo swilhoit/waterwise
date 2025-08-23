@@ -1,9 +1,16 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, XCircle, AlertTriangle, MapPin, FileText, Phone } from "lucide-react"
 import { getAllStates, getStateInfo, getStateSlug, getMetadata, getStatesByLegalStatus, getProgressiveStates, getRestrictiveStates } from "@/lib/greywater-laws"
+
+export const metadata: Metadata = {
+  title: "Greywater Laws by State - Complete Directory | Water Wise Group",
+  description: "Complete state-by-state directory of greywater laws and regulations. Find permit requirements, legal status, and contact information for all 50 states.",
+  keywords: "greywater laws, state regulations, permits, water reuse, greywater systems, legal requirements",
+}
 
 export default function GreywaterLaws() {
   const metadata = getMetadata()

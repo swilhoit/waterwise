@@ -1,11 +1,43 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, CheckCircle, XCircle, AlertTriangle, MapPin, FileText, Phone, Globe, Home, Droplets, TreePine, Building } from "lucide-react"
 import { getAllStates, getStateInfo, getStateFromSlug, getStateSlug } from "@/lib/greywater-laws"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string }>
+}): Promise<Metadata> {
+  const { state: stateSlug } = await params
+  const stateName = getStateFromSlug(stateSlug)
+  
+  if (!stateName) {
+    return {
+      title: "State Not Found | Water Wise Group",
+      description: "The requested state greywater laws page could not be found.",
+    }
+  }
+  
+  const stateInfo = getStateInfo(stateName)
+  
+  if (!stateInfo) {
+    return {
+      title: `${stateName} Greywater Laws | Water Wise Group`,
+      description: `Greywater laws and regulations information for ${stateName}.`,
+    }
+  }
+
+  return {
+    title: `${stateName} Greywater Laws & Regulations | Water Wise Group`,
+    description: `Complete guide to ${stateName} greywater laws, permits, and regulations. Status: ${stateInfo.legalStatus}. ${stateInfo.summary.substring(0, 120)}...`,
+    keywords: `${stateName} greywater laws, ${stateName} water reuse, greywater permits ${stateName}, ${stateName} regulations`,
+  }
+}
 
 export default async function StatePage({
   params,
