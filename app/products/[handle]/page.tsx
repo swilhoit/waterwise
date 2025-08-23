@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
-import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare } from 'lucide-react'
+import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText } from 'lucide-react'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
@@ -758,30 +758,6 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   )}
                 </div>
 
-                {/* Product Variants */}
-                {product.variants?.edges?.length > 0 && (
-                  <div className="bg-gray-50 rounded-xl border p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Calculator className="h-5 w-5 text-blue-600" />
-                      Available Options
-                    </h3>
-                    <div className="space-y-3">
-                      {product.variants.edges.map((edge: any) => (
-                        <div key={edge.node.id} className="flex justify-between items-center p-4 bg-white rounded-lg border hover:shadow-md transition-all duration-200 cursor-pointer">
-                          <div className="flex-1">
-                            <span className="font-medium text-gray-900">{edge.node.title}</span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-xl font-bold text-blue-600">
-                              ${edge.node.priceV2.amount}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* CTA Button */}
                 <div className="space-y-4">
                   <AddToCartButton product={product} />
@@ -815,18 +791,16 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         
             {/* How It Works & Maintenance Section */}
             <div className="grid lg:grid-cols-2 gap-8">
-              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-6">
+              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-blue-600 rounded-lg">
-                      <Zap className="h-5 w-5 text-white" />
-                    </div>
+                    <Zap className="h-5 w-5 text-blue-600" />
                     How It Works
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-white">1</span>
                     </div>
                     <div className="flex-1">
@@ -835,7 +809,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-white">2</span>
                     </div>
                     <div className="flex-1">
@@ -844,7 +818,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-white">3</span>
                     </div>
                     <div className="flex-1">
@@ -855,32 +829,30 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 pb-6">
+              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-green-600 rounded-lg">
-                      <Wrench className="h-5 w-5 text-white" />
-                    </div>
+                    <Wrench className="h-5 w-5 text-blue-600" />
                     Maintenance Schedule
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8">
                   <div className="space-y-6">
-                    <div className="flex justify-between items-center p-4 bg-blue-50 rounded-xl">
+                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <div>
                         <span className="font-medium text-gray-900">Clean filters</span>
                         <p className="text-sm text-gray-600 mt-1">Simple rinse and reinstall</p>
                       </div>
-                      <Badge variant="default" className="bg-blue-600 text-white px-3 py-1">Every 4-6 months</Badge>
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-900 px-3 py-1 border border-gray-200">Every 4-6 months</Badge>
                     </div>
-                    <div className="flex justify-between items-center p-4 bg-purple-50 rounded-xl">
+                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <div>
                         <span className="font-medium text-gray-900">Replace filters</span>
                         <p className="text-sm text-gray-600 mt-1">Full filter replacement</p>
                       </div>
-                      <Badge variant="default" className="bg-purple-600 text-white px-3 py-1">Every 3 years</Badge>
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-900 px-3 py-1 border border-gray-200">Every 3 years</Badge>
                     </div>
-                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-4 rounded-xl">
+                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
                       <div className="flex items-start gap-3">
                         <div className="text-amber-600 flex-shrink-0 mt-0.5">
                           ⚠️
@@ -899,12 +871,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* Technical Specifications Section */}
-            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 pb-6">
+            <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className="p-2 bg-slate-600 rounded-lg">
-                    <Settings className="h-6 w-6 text-white" />
-                  </div>
+                  <Settings className="h-6 w-6 text-blue-600" />
                   Technical Specifications
                 </CardTitle>
                 <CardDescription className="text-gray-600 mt-2">
@@ -912,20 +882,20 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-8">
-                <div className="grid lg:grid-cols-2 gap-8">
-                  <div className="space-y-4">
+                <div className="grid lg:grid-cols-2 gap-6">
+                  <div className="space-y-3">
                     {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                      <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-                        <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                        <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
+                      <div key={key} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-gray-700">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                        <span className="text-gray-900 font-semibold text-right flex-shrink-0 ml-4">{value}</span>
                       </div>
                     ))}
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                      <div key={key} className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
-                        <span className="font-semibold text-gray-900">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                        <span className="text-gray-700 font-medium text-right flex-shrink-0 ml-4">{value}</span>
+                      <div key={key} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-gray-700">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                        <span className="text-gray-900 font-semibold text-right flex-shrink-0 ml-4">{value}</span>
                       </div>
                     ))}
                   </div>
@@ -935,48 +905,40 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Installation & Documentation Section */}
             <div className="grid lg:grid-cols-2 gap-8">
-              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 pb-6">
+              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-orange-600 rounded-lg">
-                      <Wrench className="h-5 w-5 text-white" />
-                    </div>
+                    <Wrench className="h-5 w-5 text-blue-600" />
                     Installation Guide
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
                     <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                       <Users className="h-5 w-5 text-blue-600" />
                       Professional Installation Recommended
                     </h4>
                     <p className="text-gray-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
                   </div>
-                  <div className="space-y-5">
-                    <div className="flex items-start gap-4 p-4 bg-green-50 rounded-xl">
-                      <div className="p-2 bg-green-600 rounded-lg flex-shrink-0">
-                        <CheckCircle className="h-4 w-4 text-white" />
-                      </div>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-4">
+                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-2">Site Assessment</h5>
+                        <h5 className="font-semibold text-gray-900 mb-1">Site Assessment</h5>
                         <p className="text-gray-600">Evaluate plumbing connections and installation location</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-xl">
-                      <div className="p-2 bg-blue-600 rounded-lg flex-shrink-0">
-                        <CheckCircle className="h-4 w-4 text-white" />
-                      </div>
+                    <div className="flex items-start gap-4">
+                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-2">System Installation</h5>
+                        <h5 className="font-semibold text-gray-900 mb-1">System Installation</h5>
                         <p className="text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
-                      <div className="p-2 bg-purple-600 rounded-lg flex-shrink-0">
-                        <CheckCircle className="h-4 w-4 text-white" />
-                      </div>
+                    <div className="flex items-start gap-4">
+                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-2">Testing & Commissioning</h5>
+                        <h5 className="font-semibold text-gray-900 mb-1">Testing & Commissioning</h5>
                         <p className="text-gray-600">Verify proper operation and flow rates</p>
                       </div>
                     </div>
@@ -984,46 +946,44 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50 pb-6">
+              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-purple-600 rounded-lg">
-                      <MessageSquare className="h-5 w-5 text-white" />
-                    </div>
+                    <MessageSquare className="h-5 w-5 text-blue-600" />
                     Documentation & Support
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 p-8">
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200">
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
-                      <span className="text-lg">📋</span>
+                      <FileText className="h-5 w-5 text-gray-600" />
                       <div>
                         <div className="font-medium">Assembly Guide</div>
                         <div className="text-sm text-gray-500">Step-by-step installation</div>
                       </div>
                     </div>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-green-50 hover:border-green-300 transition-all duration-200">
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
-                      <span className="text-lg">🔧</span>
+                      <Settings className="h-5 w-5 text-gray-600" />
                       <div>
                         <div className="font-medium">Operating Instructions</div>
                         <div className="text-sm text-gray-500">Daily operation guide</div>
                       </div>
                     </div>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
-                      <span className="text-lg">📖</span>
+                      <FileText className="h-5 w-5 text-gray-600" />
                       <div>
                         <div className="font-medium">Technical Brochure</div>
                         <div className="text-sm text-gray-500">Complete specifications</div>
                       </div>
                     </div>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition-all duration-200">
+                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
-                      <span className="text-lg">🛠️</span>
+                      <Wrench className="h-5 w-5 text-gray-600" />
                       <div>
                         <div className="font-medium">Maintenance Schedule</div>
                         <div className="text-sm text-gray-500">Keep your system running</div>
@@ -1036,12 +996,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Customer Reviews Section */}
             <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 pb-6">
+              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-yellow-600 rounded-lg">
-                      <Star className="h-5 w-5 text-white" />
-                    </div>
+                    <Star className="h-5 w-5 text-blue-600" />
                     Customer Reviews
                   </CardTitle>
                 </CardHeader>
@@ -1062,43 +1020,41 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-6">
+              <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-blue-600 rounded-lg">
-                      <Star className="h-5 w-5 text-white" />
-                    </div>
+                    <Star className="h-5 w-5 text-blue-600" />
                     Review Summary
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                      <span className="font-medium text-gray-900">Performance</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Performance</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                      <span className="font-medium text-gray-900">Easy Installation</span>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Easy Installation</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                      <span className="font-medium text-gray-900">Value for Money</span>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Value for Money</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                      <span className="font-medium text-gray-900">Customer Support</span>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Customer Support</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -1107,25 +1063,22 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     </div>
                   </div>
                   <div className="mt-6 pt-6 border-t border-gray-200">
-                    <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      Common Highlights
-                    </h4>
-                    <div className="space-y-3 text-gray-700">
-                      <div className="flex items-center gap-3 p-2 bg-green-50 rounded-lg">
-                        <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                    <h4 className="font-semibold text-gray-900 mb-4">Common Highlights</h4>
+                    <div className="space-y-2 text-gray-700">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         <span>Excellent long-term performance</span>
                       </div>
-                      <div className="flex items-center gap-3 p-2 bg-blue-50 rounded-lg">
+                      <div className="flex items-center gap-3">
                         <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         <span>Significant water savings</span>
                       </div>
-                      <div className="flex items-center gap-3 p-2 bg-purple-50 rounded-lg">
-                        <CheckCircle className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         <span>Low maintenance requirements</span>
                       </div>
-                      <div className="flex items-center gap-3 p-2 bg-orange-50 rounded-lg">
-                        <CheckCircle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         <span>Great customer support</span>
                       </div>
                     </div>
@@ -1135,12 +1088,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* FAQ Section */}
-            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 pb-6">
+            <Card className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+              <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl">
-                  <div className="p-2 bg-indigo-600 rounded-lg">
-                    <MessageSquare className="h-6 w-6 text-white" />
-                  </div>
+                  <MessageSquare className="h-6 w-6 text-blue-600" />
                   Frequently Asked Questions
                 </CardTitle>
                 <CardDescription className="text-gray-600 mt-2">
@@ -1148,18 +1099,13 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-8">
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {productContent.faq.map((item: any, index: number) => (
-                    <div key={index} className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-xl border border-gray-100">
-                      <h4 className="font-semibold text-gray-900 text-lg mb-3 flex items-start gap-3">
-                        <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-bold text-white">Q</span>
-                        </div>
+                    <div key={index} className="border border-gray-200 p-6 rounded-lg hover:bg-gray-50 transition-colors">
+                      <h4 className="font-semibold text-gray-900 text-lg mb-3">
                         {item.question}
                       </h4>
-                      <div className="ml-9">
-                        <p className="text-gray-600 leading-relaxed">{item.answer}</p>
-                      </div>
+                      <p className="text-gray-600 leading-relaxed">{item.answer}</p>
                     </div>
                   ))}
                 </div>
