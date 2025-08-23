@@ -11,9 +11,9 @@ const client = createStorefrontApiClient({
 
 export function isShopifyConfigured() {
   return process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN && 
-         process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN !== 'waterwisegroup.myshopify.com' &&
+         process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN !== 'dummy-store.myshopify.com' &&
          process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN &&
-         process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN !== 'your_storefront_access_token'
+         process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN !== 'dummy-token'
 }
 
 export async function getProducts() {

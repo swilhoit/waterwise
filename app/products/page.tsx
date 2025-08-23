@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, Droplets, Home as HomeIcon, Building } from "lucide-react"
+import { QuickAddToCart } from './quick-add-to-cart'
 
 export default async function ProductsPage() {
   const products = await getProducts()
@@ -99,6 +100,7 @@ export default async function ProductsPage() {
                       width={600}
                       height={400}
                       className="rounded-lg w-full h-64 object-cover"
+                      unoptimized
                     />
                   </div>
                   <CardTitle className="text-2xl">{product.title}</CardTitle>
@@ -126,11 +128,17 @@ export default async function ProductsPage() {
                     </ul>
                   )}
                   
-                  <Button className="w-full" size="lg" asChild>
-                    <Link href={`/products/${product.handle}`}>
-                      Learn More & Buy
-                    </Link>
-                  </Button>
+                  <div className="space-y-3">
+                    <Button className="w-full" size="lg" asChild>
+                      <Link href={`/products/${product.handle}`}>
+                        Learn More
+                      </Link>
+                    </Button>
+                    
+                    {!product.variants && (
+                      <QuickAddToCart product={product} />
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}

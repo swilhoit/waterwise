@@ -134,6 +134,96 @@ export default function About() {
         </div>
       </section>
 
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Meet the Owner
+              </h2>
+              <p className="text-xl text-gray-600">
+                Passion for water conservation drives everything we do
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-green-400 rounded-lg blur-2xl opacity-20" />
+                <Image
+                  src="/images/bg-logo_web-large.png"
+                  alt="Water Wise Group Owner"
+                  width={500}
+                  height={600}
+                  className="rounded-lg shadow-2xl relative z-10"
+                />
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">A Personal Mission</h3>
+                <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                  "I started Water Wise Group because I witnessed firsthand the impact of water scarcity during extended droughts in California. Traditional approaches to water conservation often felt like restrictions – shorter showers, brown lawns, higher bills. I knew there had to be a better way."
+                </p>
+                <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                  "When I discovered greywater recycling technology, it was a revelation. Here was a solution that didn't ask people to sacrifice comfort or beauty – it actually enhanced both while saving significant amounts of water and money."
+                </p>
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                  "Over the past decade, I've had the privilege of helping thousands of families, businesses, and communities implement greywater systems. Each installation represents not just water savings, but a step toward a more sustainable future for our children."
+                </p>
+
+                <div className="bg-white rounded-lg p-6 shadow-lg">
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600 mb-1">15+</div>
+                      <div className="text-sm text-gray-600">Years Experience</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-green-600 mb-1">10K+</div>
+                      <div className="text-sm text-gray-600">Happy Customers</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-600 mb-1">50M+</div>
+                      <div className="text-sm text-gray-600">Gallons Saved</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-8 shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Commitment to You</h3>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Quality First</h4>
+                  <p className="text-gray-600 text-sm">
+                    We stand behind every system with comprehensive warranties and ongoing support
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Personal Service</h4>
+                  <p className="text-gray-600 text-sm">
+                    Every customer receives personalized consultation and installation support
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Leaf className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Sustainable Future</h4>
+                  <p className="text-gray-600 text-sm">
+                    Together, we're building a more water-conscious and sustainable world
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
