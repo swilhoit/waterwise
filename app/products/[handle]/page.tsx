@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
-import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings } from 'lucide-react'
+import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare } from 'lucide-react'
 
 // Comprehensive fallback product data with variants
 const fallbackProducts: { [key: string]: any } = {
@@ -1182,7 +1182,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             ))}
           </div>
         </TabsContent>
-      </Tabs>
+            </Tabs>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
