@@ -1,7 +1,10 @@
 import { client, isSanityConfigured } from './sanity'
 
 export async function getBlogPosts() {
-  if (!isSanityConfigured()) {
+  // Additional safety check
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 
+      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'your_sanity_project_id' ||
+      !isSanityConfigured()) {
     return []
   }
   
@@ -27,7 +30,7 @@ export async function getBlogPosts() {
         }
       }
     `)
-    return posts
+    return posts || []
   } catch (error) {
     console.error('Failed to fetch blog posts:', error)
     return []
