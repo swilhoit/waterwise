@@ -3,45 +3,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users } from "lucide-react"
-import { client, isSanityConfigured } from "@/lib/sanity"
 import { getProducts } from "@/lib/shopify"
 import { Testimonials } from "@/components/testimonials"
 
-async function getHeroContent() {
-  if (!isSanityConfigured()) {
-    return null
-  }
-  try {
-    const hero = await client.fetch(`*[_type == "hero"][0]{
-      title,
-      subtitle,
-      ctaText,
-      ctaLink,
-      image
-    }`)
-    return hero
-  } catch (error) {
-    console.error('Failed to fetch hero content:', error)
-    return null
-  }
-}
-
-async function getBenefits() {
-  if (!isSanityConfigured()) {
-    return []
-  }
-  try {
-    const benefits = await client.fetch(`*[_type == "benefit"] | order(order asc){
-      title,
-      description,
-      icon
-    }`)
-    return benefits
-  } catch (error) {
-    console.error('Failed to fetch benefits:', error)
-    return []
-  }
-}
 
 const iconMap: { [key: string]: any } = {
   droplets: Droplets,
@@ -53,11 +17,7 @@ const iconMap: { [key: string]: any } = {
 }
 
 export default async function Home() {
-  const [hero, benefits, products] = await Promise.all([
-    getHeroContent(),
-    getBenefits(),
-    getProducts()
-  ])
+  const products = await getProducts()
 
   const defaultBenefits = [
     { title: "Save 50% on Water Usage", description: "Recycle water from showers, washing machines, and sinks to irrigate your garden", icon: "droplets" },
@@ -68,7 +28,7 @@ export default async function Home() {
     { title: "Trusted by Thousands", description: "Join our growing community of water-conscious property owners", icon: "users" }
   ]
 
-  const displayBenefits = benefits.length > 0 ? benefits : defaultBenefits
+  const displayBenefits = defaultBenefits
 
   return (
     <div>
@@ -78,20 +38,16 @@ export default async function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                {hero?.title || (
-                  <>
-                    Turn Every Drop Into A{" "}
-                    <span className="text-gradient">Sustainable Solution</span>
-                  </>
-                )}
+                Turn Every Drop Into A{" "}
+                <span className="text-gradient">Sustainable Solution</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                {hero?.subtitle || "Water Wise Group is on a mission to help you save water, lower your bills, and grow healthier landscapes—without compromising on simplicity or sustainability."}
+                Water Wise Group is on a mission to help you save water, lower your bills, and grow healthier landscapes—without compromising on simplicity or sustainability.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button size="lg" asChild>
-                  <Link href={hero?.ctaLink || "/products"}>
-                    {hero?.ctaText || "Explore Systems"}
+                  <Link href="/products">
+                    Explore Systems
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>

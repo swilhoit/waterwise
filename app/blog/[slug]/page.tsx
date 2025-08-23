@@ -4,8 +4,7 @@ import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, User, ArrowLeft, Clock } from "lucide-react"
-import { getBlogPost, getBlogPosts } from "@/lib/blog"
-// Note: PortableText will be imported when Sanity content is properly set up
+import { getBlogArticle, getBlogArticles } from "@/lib/shopify"
 
 // Default blog post content for fallback
 const defaultBlogPosts: { [key: string]: any } = {
@@ -121,14 +120,25 @@ export default async function BlogPost({
   const { slug } = await params
   let post = null
   
-  // Try to get post from Sanity first
+  // Try to get post from Shopify first
   try {
-    post = await getBlogPost(slug)
+    const article = await getBlogArticle(slug)
+    if (article) {
+      post = {
+        title: article.title,
+        author: article.author || "Water Wise Team",
+        publishedAt: article.published_at || new Date().toISOString(),
+        readTime: 5,
+        mainImage: article.image?.src || "/images/gwdd-gravity.jpg",
+        excerpt: article.summary || "",
+        body: article.content || article.content_html || ""
+      }
+    }
   } catch (error) {
-    console.error('Failed to fetch blog post from Sanity:', error)
+    console.error('Failed to fetch blog post from Shopify:', error)
   }
   
-  // Fall back to default content if no Sanity post found
+  // Fall back to default content if no Shopify post found
   if (!post && defaultBlogPosts[slug]) {
     post = defaultBlogPosts[slug]
   }
@@ -269,10 +279,10 @@ export default async function BlogPost({
 // Generate static params for known blog posts
 export async function generateStaticParams() {
   try {
-    const posts = await getBlogPosts()
-    if (posts && posts.length > 0) {
-      return posts.map((post: any) => ({
-        slug: post.slug?.current || post.slug
+    const articles = await getBlogArticles()
+    if (articles && articles.length > 0) {
+      return articles.map((article: any) => ({
+        slug: article.handle || article.slug
       }))
     }
   } catch (error) {

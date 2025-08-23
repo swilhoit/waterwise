@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar, User, ArrowRight } from "lucide-react"
-import { getBlogPosts } from "@/lib/blog"
+import { getBlogArticles } from "@/lib/shopify"
 
 const defaultBlogPosts = [
   {
@@ -72,29 +72,29 @@ export default async function Blog() {
   let blogPosts = defaultBlogPosts
   
   try {
-    const sanityPosts = await getBlogPosts()
+    const shopifyArticles = await getBlogArticles()
     
-    if (sanityPosts && sanityPosts.length > 0) {
-      // Transform Sanity posts to match our expected format
-      const sanityPostsFormatted = sanityPosts.map((post: any) => ({
-        id: post._id,
-        title: post.title,
-        excerpt: post.excerpt,
-        image: post.mainImage?.asset?.url || "/images/gwdd-gravity.jpg",
-        author: post.author || "Water Wise Team",
-        date: post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-US', {
+    if (shopifyArticles && shopifyArticles.length > 0) {
+      // Transform Shopify articles to match our expected format
+      const shopifyPostsFormatted = shopifyArticles.map((article: any) => ({
+        id: article.id,
+        title: article.title,
+        excerpt: article.summary || article.content?.substring(0, 150) + '...' || "Read more about this topic...",
+        image: article.image?.src || "/images/gwdd-gravity.jpg",
+        author: article.author || "Water Wise Team",
+        date: article.published_at ? new Date(article.published_at).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric'
         }) : "Recent",
-        readTime: `${post.readTime || 5} min read`,
-        slug: post.slug?.current || `blog-post-${post._id}`
+        readTime: "5 min read",
+        slug: article.handle || `article-${article.id}`
       }))
       
-      blogPosts = sanityPostsFormatted
+      blogPosts = shopifyPostsFormatted
     }
   } catch (error) {
-    console.error('Failed to load blog posts from Sanity, using default posts:', error)
+    console.error('Failed to load blog posts from Shopify, using default posts:', error)
     // Fall back to default posts
   }
   return (

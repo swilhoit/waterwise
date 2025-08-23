@@ -166,3 +166,103 @@ export async function createCheckout(variantId: string, quantity: number = 1) {
     return null
   }
 }
+
+// Blog functions using Shopify Admin API
+export async function getBlogs() {
+  if (!isShopifyConfigured()) {
+    return []
+  }
+
+  const shopDomain = process.env.SHOPIFY_SHOP_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
+  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
+
+  if (!accessToken) {
+    console.error('SHOPIFY_ACCESS_TOKEN is required for blog access')
+    return []
+  }
+
+  try {
+    const response = await fetch(`https://${shopDomain}/admin/api/2024-01/blogs.json`, {
+      headers: {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      console.error('Failed to fetch blogs:', response.statusText)
+      return []
+    }
+
+    const data = await response.json()
+    return data.blogs || []
+  } catch (error) {
+    console.error('Failed to fetch blogs:', error)
+    return []
+  }
+}
+
+export async function getBlogArticles(blogId?: string) {
+  if (!isShopifyConfigured()) {
+    return []
+  }
+
+  const shopDomain = process.env.SHOPIFY_SHOP_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
+  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
+
+  if (!accessToken) {
+    console.error('SHOPIFY_ACCESS_TOKEN is required for blog access')
+    return []
+  }
+
+  try {
+    // If no blogId provided, fetch all articles from all blogs
+    let allArticles: any[] = []
+    
+    if (!blogId) {
+      const blogs = await getBlogs()
+      for (const blog of blogs) {
+        const response = await fetch(`https://${shopDomain}/admin/api/2024-01/blogs/${blog.id}/articles.json?limit=250`, {
+          headers: {
+            'X-Shopify-Access-Token': accessToken,
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          allArticles = [...allArticles, ...data.articles]
+        }
+      }
+    } else {
+      const response = await fetch(`https://${shopDomain}/admin/api/2024-01/blogs/${blogId}/articles.json?limit=250`, {
+        headers: {
+          'X-Shopify-Access-Token': accessToken,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        console.error('Failed to fetch articles:', response.statusText)
+        return []
+      }
+
+      const data = await response.json()
+      allArticles = data.articles || []
+    }
+
+    return allArticles
+  } catch (error) {
+    console.error('Failed to fetch blog articles:', error)
+    return []
+  }
+}
+
+export async function getBlogArticle(handle: string) {
+  if (!isShopifyConfigured()) {
+    return null
+  }
+
+  const articles = await getBlogArticles()
+  return articles.find((article: any) => article.handle === handle) || null
+}
