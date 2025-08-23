@@ -57,7 +57,7 @@ export default function RVSolutions() {
             <FeatureCard
               title="Extended Boondocking"
               description="Stay off-grid longer without worrying about water capacity"
-              icon={<MapPin className="h-10 w-10 text-blue-600" />}
+              icon={<MapPin className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Cost Savings"
@@ -72,7 +72,7 @@ export default function RVSolutions() {
             <FeatureCard
               title="Freedom & Flexibility"
               description="Camp anywhere with confident water management"
-              icon={<Truck className="h-10 w-10 text-blue-600" />}
+              icon={<Truck className="h-10 w-10 text-gray-600" />}
             />
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function RVSolutions() {
             <Card className="hover-lift">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Droplets className="h-6 w-6 text-blue-600" />
+                  <Droplets className="h-6 w-6 text-gray-600" />
                   Portable Filtration Systems
                 </CardTitle>
                 <CardDescription>Perfect for occasional RV trips and rentals</CardDescription>
@@ -119,7 +119,7 @@ export default function RVSolutions() {
             <Card className="hover-lift">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Truck className="h-6 w-6 text-blue-600" />
+                  <Truck className="h-6 w-6 text-gray-600" />
                   Integrated RV Systems
                 </CardTitle>
                 <CardDescription>Professional installation for full-time RVers</CardDescription>
@@ -235,7 +235,7 @@ export default function RVSolutions() {
             <Button size="lg" asChild>
               <Link href="/contact">Get RV Consultation</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/products">View Systems</Link>
             </Button>
           </div>

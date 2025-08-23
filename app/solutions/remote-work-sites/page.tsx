@@ -66,7 +66,7 @@ export default function RemoteWorkSites() {
             <FeatureCard
               title="Oil & Gas Sites"
               description="Drilling operations, worker camps, and environmental protection"
-              icon={<Wrench className="h-10 w-10 text-blue-600" />}
+              icon={<Wrench className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Remote Facilities"
@@ -81,7 +81,7 @@ export default function RemoteWorkSites() {
             <FeatureCard
               title="Event Sites"
               description="Large outdoor events, festivals, and temporary installations"
-              icon={<Droplets className="h-10 w-10 text-blue-600" />}
+              icon={<Droplets className="h-10 w-10 text-gray-600" />}
             />
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function RemoteWorkSites() {
                 <div className="text-sm text-gray-600">Reduction in water delivery costs</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-blue-600 mb-2">60-80%</div>
+                <div className="text-3xl font-bold text-gray-600 mb-2">60-80%</div>
                 <div className="text-sm text-gray-600">Less wastewater disposal volume</div>
               </div>
               <div>
@@ -253,7 +253,7 @@ export default function RemoteWorkSites() {
           <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">1</span>
+                <span className="text-sm font-bold text-gray-600">1</span>
               </div>
               <div>
                 <h4 className="font-semibold">Site Assessment</h4>
@@ -263,7 +263,7 @@ export default function RemoteWorkSites() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">2</span>
+                <span className="text-sm font-bold text-gray-600">2</span>
               </div>
               <div>
                 <h4 className="font-semibold">Regulatory Review</h4>
@@ -273,7 +273,7 @@ export default function RemoteWorkSites() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">3</span>
+                <span className="text-sm font-bold text-gray-600">3</span>
               </div>
               <div>
                 <h4 className="font-semibold">System Design</h4>
@@ -283,7 +283,7 @@ export default function RemoteWorkSites() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">4</span>
+                <span className="text-sm font-bold text-gray-600">4</span>
               </div>
               <div>
                 <h4 className="font-semibold">Installation & Commissioning</h4>
@@ -293,7 +293,7 @@ export default function RemoteWorkSites() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">5</span>
+                <span className="text-sm font-bold text-gray-600">5</span>
               </div>
               <div>
                 <h4 className="font-semibold">Training & Support</h4>

@@ -21,7 +21,7 @@ export default function TinyHouseSystems() {
             <FeatureCard
               title="Limited Water Storage"
               description="Maximize your 20-40 gallon fresh water capacity"
-              icon={<Droplets className="h-10 w-10 text-blue-600" />}
+              icon={<Droplets className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Off-Grid Living"
@@ -85,7 +85,7 @@ export default function TinyHouseSystems() {
             <Card className="hover-lift">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Wrench className="h-6 w-6 text-blue-600" />
+                  <Wrench className="h-6 w-6 text-gray-600" />
                   Compact Integrated Systems
                 </CardTitle>
                 <CardDescription>All-in-one solutions designed for tiny houses</CardDescription>
@@ -336,7 +336,7 @@ export default function TinyHouseSystems() {
             <Card className="text-center border-blue-200 bg-blue-50">
               <CardHeader>
                 <CardTitle>Compact System</CardTitle>
-                <div className="text-3xl font-bold text-blue-600">$800-$1,500</div>
+                <div className="text-3xl font-bold text-gray-600">$800-$1,500</div>
               </CardHeader>
               <CardContent>
                 <ul className="text-sm text-gray-600 space-y-1">

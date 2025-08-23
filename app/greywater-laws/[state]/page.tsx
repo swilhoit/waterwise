@@ -69,7 +69,7 @@ export default async function StatePage({
   const getStatusIcon = (status: string) => {
     const lowerStatus = status.toLowerCase()
     if (lowerStatus.includes('legal') && !lowerStatus.includes('illegal')) return <CheckCircle className="h-6 w-6 text-green-600" />
-    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return <CheckCircle className="h-6 w-6 text-blue-600" />
+    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return <CheckCircle className="h-6 w-6 text-gray-600" />
     if (lowerStatus.includes('limited') || lowerStatus.includes('unclear')) return <AlertTriangle className="h-6 w-6 text-yellow-600" />
     if (lowerStatus.includes('prohibited') || lowerStatus.includes('no formal') || lowerStatus.includes('no specific')) return <XCircle className="h-6 w-6 text-red-600" />
     return <AlertTriangle className="h-6 w-6 text-gray-600" />
@@ -80,7 +80,7 @@ export default async function StatePage({
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-12 lg:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <Link href="/greywater-laws" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-8 transition-colors">
+            <Link href="/greywater-laws" className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-700 mb-8 transition-colors">
               <ArrowLeft className="h-4 w-4" />
               Back to All States
             </Link>
@@ -101,7 +101,7 @@ export default async function StatePage({
                 <div className="hidden lg:block">
                   <Card className="bg-white/80 backdrop-blur">
                     <CardContent className="p-4">
-                      <MapPin className="h-12 w-12 text-blue-600 mx-auto" />
+                      <MapPin className="h-12 w-12 text-gray-600 mx-auto" />
                     </CardContent>
                   </Card>
                 </div>
@@ -126,7 +126,7 @@ export default async function StatePage({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-blue-600" />
+                    <FileText className="h-5 w-5 text-gray-600" />
                     Regulatory Information
                   </CardTitle>
                 </CardHeader>
@@ -155,7 +155,7 @@ export default async function StatePage({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Building className="h-5 w-5 text-blue-600" />
+                    <Building className="h-5 w-5 text-gray-600" />
                     Agency Contact
                   </CardTitle>
                 </CardHeader>
@@ -186,7 +186,7 @@ export default async function StatePage({
                         href={stateInfo.governmentWebsite} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-700 flex items-center gap-2 text-sm"
+                        className="text-gray-600 hover:text-blue-700 flex items-center gap-2 text-sm"
                       >
                         <Globe className="h-4 w-4" />
                         Visit Official Website
@@ -260,7 +260,7 @@ export default async function StatePage({
             <Card className="mb-12">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Droplets className="h-5 w-5 text-blue-600" />
+                  <Droplets className="h-5 w-5 text-gray-600" />
                   Approved Uses
                 </CardTitle>
               </CardHeader>
@@ -268,7 +268,7 @@ export default async function StatePage({
                 {stateInfo.approvedUses.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {stateInfo.approvedUses.map((use, index) => (
-                      <Badge key={index} variant="outline" className="px-3 py-1">
+                      <Badge key={index} variant="secondary" className="px-3 py-1">
                         {use}
                       </Badge>
                     ))}
@@ -306,7 +306,7 @@ export default async function StatePage({
               <Card className="mb-12 border-blue-200 bg-blue-50/30">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-blue-600" />
+                    <FileText className="h-5 w-5 text-gray-600" />
                     Recent Changes
                   </CardTitle>
                 </CardHeader>
@@ -332,7 +332,7 @@ export default async function StatePage({
               <Button size="lg" asChild>
                 <Link href="/contact">Get Expert Guidance</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="secondary" asChild>
                 <Link href="/products">View Systems</Link>
               </Button>
             </div>

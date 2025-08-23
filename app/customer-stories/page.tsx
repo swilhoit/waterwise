@@ -158,7 +158,7 @@ export default function CustomerStories() {
                     </div>
                     
                     <div className="flex items-start gap-3 mb-4">
-                      <Quote className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                      <Quote className="h-6 w-6 text-gray-600 mt-1 flex-shrink-0" />
                       <p className="text-lg text-gray-700 italic leading-relaxed">
                         "{story.quote}"
                       </p>
@@ -167,7 +167,7 @@ export default function CustomerStories() {
                     <div className="mb-6">
                       <h3 className="text-xl font-bold text-gray-900">{story.name}</h3>
                       <p className="text-gray-600">{story.location}</p>
-                      <p className="text-sm text-blue-600 font-semibold">{story.system}</p>
+                      <p className="text-sm text-gray-600 font-semibold">{story.system}</p>
                       <p className="text-sm text-green-600 font-semibold mt-1">{story.savings}</p>
                     </div>
 
@@ -213,7 +213,7 @@ export default function CustomerStories() {
 
             <Card className="text-center hover-lift transition-all duration-300">
               <CardHeader>
-                <Droplets className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Droplets className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Water Reduction</CardTitle>
               </CardHeader>
               <CardContent>
@@ -256,10 +256,10 @@ export default function CustomerStories() {
             Get a personalized quote and start your water savings journey today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
+            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
               <Link href="/products">View Our Systems</Link>
             </Button>
           </div>

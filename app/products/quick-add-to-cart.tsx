@@ -40,7 +40,6 @@ export function QuickAddToCart({ product }: QuickAddToCartProps) {
 
   return (
     <Button 
-      variant="outline"
       size="sm"
       className="w-full" 
       onClick={handleAddToCart}

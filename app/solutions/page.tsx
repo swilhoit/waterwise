@@ -128,7 +128,7 @@ export default function Solutions() {
                         className="rounded-lg w-full h-48 object-cover"
                       />
                       <div className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                        <IconComponent className="h-6 w-6 text-blue-600" />
+                        <IconComponent className="h-6 w-6 text-gray-600" />
                       </div>
                     </div>
                     <CardTitle className="text-xl">{solution.title}</CardTitle>
@@ -169,7 +169,7 @@ export default function Solutions() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">50%</span>
+                  <span className="text-2xl font-bold text-gray-600">50%</span>
                 </div>
                 <h3 className="font-semibold mb-2">Average Water Savings</h3>
                 <p className="text-sm text-gray-600">Typical reduction in outdoor water usage</p>
@@ -220,7 +220,7 @@ export default function Solutions() {
                 <Button size="lg" asChild>
                   <Link href="/contact">Get Free Consultation</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="secondary" asChild>
                   <Link href="/products">View All Systems</Link>
                 </Button>
               </div>
@@ -249,10 +249,10 @@ export default function Solutions() {
             Join thousands of property owners who are saving water and money with our proven solutions
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
+            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Quote Today</Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
               <Link href="/customer-stories">Read Success Stories</Link>
             </Button>
           </div>

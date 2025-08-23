@@ -21,7 +21,7 @@ export default function ReplacementPumps() {
             <FeatureCard
               title="Reliable Distribution"
               description="Consistent water pressure and flow to all irrigation zones"
-              icon={<Zap className="h-10 w-10 text-blue-600" />}
+              icon={<Zap className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="System Efficiency"
@@ -49,7 +49,7 @@ export default function ReplacementPumps() {
             <Card className="hover-lift">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-6 w-6 text-blue-600" />
+                  <Zap className="h-6 w-6 text-gray-600" />
                   Diaphragm Pumps
                 </CardTitle>
                 <CardDescription>Self-priming pumps ideal for intermittent greywater applications</CardDescription>
@@ -324,7 +324,7 @@ export default function ReplacementPumps() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Wrench className="h-6 w-6 text-blue-600" />
+                <Wrench className="h-6 w-6 text-gray-600" />
                 Professional Installation Recommended
               </CardTitle>
             </CardHeader>
@@ -335,37 +335,37 @@ export default function ReplacementPumps() {
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-xs font-bold text-blue-600">1</span>
+                        <span className="text-xs font-bold text-gray-600">1</span>
                       </div>
                       <span className="text-sm text-gray-700">Calculate system requirements</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-xs font-bold text-blue-600">2</span>
+                        <span className="text-xs font-bold text-gray-600">2</span>
                       </div>
                       <span className="text-sm text-gray-700">Select appropriate pump type and size</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-xs font-bold text-blue-600">3</span>
+                        <span className="text-xs font-bold text-gray-600">3</span>
                       </div>
                       <span className="text-sm text-gray-700">Install proper electrical connections</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-xs font-bold text-blue-600">4</span>
+                        <span className="text-xs font-bold text-gray-600">4</span>
                       </div>
                       <span className="text-sm text-gray-700">Connect suction and discharge piping</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-xs font-bold text-blue-600">5</span>
+                        <span className="text-xs font-bold text-gray-600">5</span>
                       </div>
                       <span className="text-sm text-gray-700">Install controls and safety devices</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-xs font-bold text-blue-600">6</span>
+                        <span className="text-xs font-bold text-gray-600">6</span>
                       </div>
                       <span className="text-sm text-gray-700">Test operation and performance</span>
                     </div>
@@ -444,7 +444,7 @@ export default function ReplacementPumps() {
                   <li>• Engineering support included</li>
                 </ul>
                 <div className="mt-4">
-                  <Button className="w-full" size="sm" variant="outline" asChild>
+                  <Button className="w-full" size="sm" variant="secondary" asChild>
                     <Link href="/contact">Get Consultation</Link>
                   </Button>
                 </div>

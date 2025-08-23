@@ -82,7 +82,7 @@ export function PageTemplate({
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
                 <Link href={ctaButtonLink}>{ctaButtonText}</Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+              <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
                 <Link href="/products">View Products</Link>
               </Button>
             </div>

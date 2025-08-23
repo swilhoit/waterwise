@@ -22,7 +22,7 @@ export default function GreywaterLaws() {
   const getStatusColor = (status: string) => {
     const lowerStatus = status.toLowerCase()
     if (lowerStatus.includes('legal') && !lowerStatus.includes('illegal')) return 'text-green-600'
-    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return 'text-blue-600'
+    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return 'text-gray-600'
     if (lowerStatus.includes('limited') || lowerStatus.includes('unclear')) return 'text-yellow-600'
     if (lowerStatus.includes('prohibited') || lowerStatus.includes('no formal') || lowerStatus.includes('no specific')) return 'text-red-600'
     return 'text-gray-600'
@@ -31,7 +31,7 @@ export default function GreywaterLaws() {
   const getStatusIcon = (status: string) => {
     const lowerStatus = status.toLowerCase()
     if (lowerStatus.includes('legal') && !lowerStatus.includes('illegal')) return <CheckCircle className="h-5 w-5 text-green-600" />
-    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return <CheckCircle className="h-5 w-5 text-blue-600" />
+    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return <CheckCircle className="h-5 w-5 text-gray-600" />
     if (lowerStatus.includes('limited') || lowerStatus.includes('unclear')) return <AlertTriangle className="h-5 w-5 text-yellow-600" />
     if (lowerStatus.includes('prohibited') || lowerStatus.includes('no formal') || lowerStatus.includes('no specific')) return <XCircle className="h-5 w-5 text-red-600" />
     return <AlertTriangle className="h-5 w-5 text-gray-600" />
@@ -172,7 +172,7 @@ export default function GreywaterLaws() {
                         <Card className="hover-lift transition-all duration-300 h-full">
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between mb-2">
-                              <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                              <h4 className="font-semibold text-gray-900 group-hover:text-gray-600 transition-colors">
                                 {stateName}
                               </h4>
                               {getStatusIcon(stateInfo.legalStatus)}
@@ -210,7 +210,7 @@ export default function GreywaterLaws() {
               <Button size="lg" asChild>
                 <Link href="/contact">Get Expert Consultation</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="secondary" asChild>
                 <Link href="/products">View Compliant Systems</Link>
               </Button>
             </div>

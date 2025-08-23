@@ -36,7 +36,7 @@ export default function HowItWorks() {
             <div className="grid md:grid-cols-3 gap-8 mb-16">
               <div className="text-center group">
                 <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors">
-                  <Droplets className="h-12 w-12 text-blue-600" />
+                  <Droplets className="h-12 w-12 text-gray-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Collect</h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
@@ -152,7 +152,7 @@ export default function HowItWorks() {
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Droplets className="h-12 w-12 text-blue-600 mb-4" />
+                <Droplets className="h-12 w-12 text-gray-600 mb-4" />
                 <CardTitle>What is Greywater?</CardTitle>
                 <CardDescription>
                   Learn about greywater sources, safety, and environmental impact
@@ -230,10 +230,10 @@ export default function HowItWorks() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
+              <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
                 <Link href="/products">View Our Systems</Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+              <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
                 <Link href="/contact">Get Free Consultation</Link>
               </Button>
             </div>

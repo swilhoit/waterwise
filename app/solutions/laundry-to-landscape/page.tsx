@@ -21,12 +21,12 @@ export default function LaundryToLandscape() {
             <FeatureCard
               title="Easiest Installation"
               description="Simple 3-way valve system - no complex plumbing required"
-              icon={<Wrench className="h-10 w-10 text-blue-600" />}
+              icon={<Wrench className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Most Water Savings"
               description="Washing machines use 15-40 gallons per load - the biggest single source"
-              icon={<Droplets className="h-10 w-10 text-blue-600" />}
+              icon={<Droplets className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Legal Everywhere"
@@ -43,7 +43,7 @@ export default function LaundryToLandscape() {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">1</span>
+                  <span className="text-2xl font-bold text-gray-600">1</span>
                 </div>
                 <h3 className="font-semibold mb-2">Three-Way Valve</h3>
                 <p className="text-gray-600">
@@ -52,7 +52,7 @@ export default function LaundryToLandscape() {
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">2</span>
+                  <span className="text-2xl font-bold text-gray-600">2</span>
                 </div>
                 <h3 className="font-semibold mb-2">Distribution</h3>
                 <p className="text-gray-600">
@@ -61,7 +61,7 @@ export default function LaundryToLandscape() {
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">3</span>
+                  <span className="text-2xl font-bold text-gray-600">3</span>
                 </div>
                 <h3 className="font-semibold mb-2">Irrigation</h3>
                 <p className="text-gray-600">
@@ -154,7 +154,7 @@ export default function LaundryToLandscape() {
           <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">1</span>
+                <span className="text-sm font-bold text-gray-600">1</span>
               </div>
               <div>
                 <h4 className="font-semibold">Planning & Permits</h4>
@@ -164,7 +164,7 @@ export default function LaundryToLandscape() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">2</span>
+                <span className="text-sm font-bold text-gray-600">2</span>
               </div>
               <div>
                 <h4 className="font-semibold">Valve Installation</h4>
@@ -174,7 +174,7 @@ export default function LaundryToLandscape() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">3</span>
+                <span className="text-sm font-bold text-gray-600">3</span>
               </div>
               <div>
                 <h4 className="font-semibold">Distribution System</h4>
@@ -184,7 +184,7 @@ export default function LaundryToLandscape() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">4</span>
+                <span className="text-sm font-bold text-gray-600">4</span>
               </div>
               <div>
                 <h4 className="font-semibold">Mulch Basins</h4>
@@ -194,7 +194,7 @@ export default function LaundryToLandscape() {
             
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-sm font-bold text-blue-600">5</span>
+                <span className="text-sm font-bold text-gray-600">5</span>
               </div>
               <div>
                 <h4 className="font-semibold">Testing & Optimization</h4>
@@ -276,7 +276,7 @@ export default function LaundryToLandscape() {
               </CardHeader>
               <CardContent>
                 <div className="text-center mb-4">
-                  <span className="text-3xl font-bold text-blue-600">$800-$1,500</span>
+                  <span className="text-3xl font-bold text-gray-600">$800-$1,500</span>
                   <p className="text-sm text-gray-600">Including installation</p>
                 </div>
                 <BenefitList

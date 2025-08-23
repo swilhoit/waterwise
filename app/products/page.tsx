@@ -72,8 +72,7 @@ export default async function ProductsPage() {
 
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+      <section className="relative bg-white py-20 lg:py-32 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
@@ -108,11 +107,11 @@ export default async function ProductsPage() {
                 </CardHeader>
                 <CardContent>
                   {product.priceRange?.minVariantPrice ? (
-                    <div className="text-2xl font-bold text-blue-600 mb-4">
+                    <div className="text-2xl font-bold text-gray-600 mb-4">
                       From ${product.priceRange.minVariantPrice.amount}
                     </div>
                   ) : (
-                    <div className="text-2xl font-bold text-blue-600 mb-4">
+                    <div className="text-2xl font-bold text-gray-600 mb-4">
                       {product.price}
                     </div>
                   )}
@@ -160,40 +159,40 @@ export default async function ProductsPage() {
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="text-center hover-lift transition-all duration-300">
               <CardHeader>
-                <HomeIcon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <HomeIcon className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Homes & Cabins</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
                   Perfect for single-family homes, vacation cabins, and off-grid properties
                 </p>
-                <p className="text-sm text-blue-600 font-semibold">Recommended: Aqua2use GWDD</p>
+                <p className="text-sm text-gray-600 font-semibold">Recommended: Aqua2use GWDD</p>
               </CardContent>
             </Card>
 
             <Card className="text-center hover-lift transition-all duration-300">
               <CardHeader>
-                <Droplets className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Droplets className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>High Usage Properties</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
                   Ideal for larger homes, guest houses, or properties with high water usage
                 </p>
-                <p className="text-sm text-blue-600 font-semibold">Recommended: Aqua2use Pro</p>
+                <p className="text-sm text-gray-600 font-semibold">Recommended: Aqua2use Pro</p>
               </CardContent>
             </Card>
 
             <Card className="text-center hover-lift transition-all duration-300">
               <CardHeader>
-                <Building className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Building className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Commercial Properties</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
                   Designed for apartments, hotels, developments, and commercial buildings
                 </p>
-                <p className="text-sm text-blue-600 font-semibold">Recommended: Aqua2use Pro</p>
+                <p className="text-sm text-gray-600 font-semibold">Recommended: Aqua2use Pro</p>
               </CardContent>
             </Card>
           </div>
@@ -218,10 +217,10 @@ export default async function ProductsPage() {
             Get a personalized quote for your greywater recycling system today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
+            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
               <Link href="/how-it-works">Learn How It Works</Link>
             </Button>
           </div>

@@ -705,7 +705,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     <Shield className="h-3 w-3 mr-1" />
                     WaterMark Approved
                   </Badge>
-                  <Badge variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50 px-3 py-1">
+                  <Badge variant="secondary" className="border-blue-200 text-blue-700 hover:bg-blue-50 px-3 py-1">
                     <Zap className="h-3 w-3 mr-1" />
                     12 Month Warranty
                   </Badge>
@@ -720,7 +720,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   {/* Price */}
                   {product.priceRange?.minVariantPrice && (
                     <div className="flex items-baseline gap-2 mb-6">
-                      <span className="text-4xl font-bold text-blue-600">
+                      <span className="text-4xl font-bold text-gray-600">
                         ${product.priceRange.minVariantPrice.amount}
                       </span>
                       <span className="text-lg text-gray-500 font-medium">
@@ -738,7 +738,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 {/* Key Features Grid */}
                 <div className="bg-white rounded-xl border p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Settings className="h-5 w-5 text-blue-600" />
+                    <Settings className="h-5 w-5 text-gray-600" />
                     Key Features
                   </h3>
                   <div className="grid sm:grid-cols-2 gap-3">
@@ -769,7 +769,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       <span>12 Month Warranty</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Truck className="h-4 w-4 text-blue-600" />
+                      <Truck className="h-4 w-4 text-gray-600" />
                       <span>Free Shipping</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -794,7 +794,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Zap className="h-5 w-5 text-blue-600" />
+                    <Zap className="h-5 w-5 text-gray-600" />
                     How It Works
                   </CardTitle>
                 </CardHeader>
@@ -832,7 +832,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Wrench className="h-5 w-5 text-blue-600" />
+                    <Wrench className="h-5 w-5 text-gray-600" />
                     Maintenance Schedule
                   </CardTitle>
                 </CardHeader>
@@ -874,7 +874,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
               <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl">
-                  <Settings className="h-6 w-6 text-blue-600" />
+                  <Settings className="h-6 w-6 text-gray-600" />
                   Technical Specifications
                 </CardTitle>
                 <CardDescription className="text-gray-600 mt-2">
@@ -908,35 +908,35 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Wrench className="h-5 w-5 text-blue-600" />
+                    <Wrench className="h-5 w-5 text-gray-600" />
                     Installation Guide
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
                   <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
                     <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Users className="h-5 w-5 text-blue-600" />
+                      <Users className="h-5 w-5 text-gray-600" />
                       Professional Installation Recommended
                     </h4>
                     <p className="text-gray-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
                       <div>
                         <h5 className="font-semibold text-gray-900 mb-1">Site Assessment</h5>
                         <p className="text-gray-600">Evaluate plumbing connections and installation location</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
                       <div>
                         <h5 className="font-semibold text-gray-900 mb-1">System Installation</h5>
                         <p className="text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
                       <div>
                         <h5 className="font-semibold text-gray-900 mb-1">Testing & Commissioning</h5>
                         <p className="text-gray-600">Verify proper operation and flow rates</p>
@@ -949,12 +949,12 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <MessageSquare className="h-5 w-5 text-blue-600" />
+                    <MessageSquare className="h-5 w-5 text-gray-600" />
                     Documentation & Support
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 p-8">
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-gray-600" />
                       <div>
@@ -963,7 +963,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       </div>
                     </div>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
                       <Settings className="h-5 w-5 text-gray-600" />
                       <div>
@@ -972,7 +972,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       </div>
                     </div>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-gray-600" />
                       <div>
@@ -981,7 +981,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       </div>
                     </div>
                   </Button>
-                  <Button variant="outline" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
                     <div className="flex items-center gap-3">
                       <Wrench className="h-5 w-5 text-gray-600" />
                       <div>
@@ -999,7 +999,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Star className="h-5 w-5 text-blue-600" />
+                    <Star className="h-5 w-5 text-gray-600" />
                     Customer Reviews
                   </CardTitle>
                 </CardHeader>
@@ -1023,7 +1023,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Star className="h-5 w-5 text-blue-600" />
+                    <Star className="h-5 w-5 text-gray-600" />
                     Review Summary
                   </CardTitle>
                 </CardHeader>
@@ -1066,19 +1066,19 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     <h4 className="font-semibold text-gray-900 mb-4">Common Highlights</h4>
                     <div className="space-y-2 text-gray-700">
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
                         <span>Excellent long-term performance</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
                         <span>Significant water savings</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
                         <span>Low maintenance requirements</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
                         <span>Great customer support</span>
                       </div>
                     </div>
@@ -1091,7 +1091,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
               <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl">
-                  <MessageSquare className="h-6 w-6 text-blue-600" />
+                  <MessageSquare className="h-6 w-6 text-gray-600" />
                   Frequently Asked Questions
                 </CardTitle>
                 <CardDescription className="text-gray-600 mt-2">

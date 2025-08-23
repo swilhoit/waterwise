@@ -160,7 +160,7 @@ export default function Contact() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Phone className="h-5 w-5 text-blue-600" />
+                    <Phone className="h-5 w-5 text-gray-600" />
                     Call Us
                   </CardTitle>
                 </CardHeader>
@@ -174,7 +174,7 @@ export default function Contact() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Mail className="h-5 w-5 text-blue-600" />
+                    <Mail className="h-5 w-5 text-gray-600" />
                     Email Us
                   </CardTitle>
                 </CardHeader>
@@ -187,21 +187,7 @@ export default function Contact() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-blue-600" />
-                    Visit Us
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-900">4708 Three Springs Ct</p>
-                  <p className="text-gray-900">Marietta, GA 30062</p>
-                  <p className="text-gray-600">Serving customers nationwide</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-blue-600" />
+                    <Clock className="h-5 w-5 text-gray-600" />
                     Response Time
                   </CardTitle>
                 </CardHeader>
@@ -229,7 +215,7 @@ export default function Contact() {
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="text-center hover-lift transition-all duration-300">
               <CardHeader>
-                <MessageSquare className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <MessageSquare className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Free Consultation</CardTitle>
               </CardHeader>
               <CardContent>

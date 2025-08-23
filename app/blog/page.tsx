@@ -160,7 +160,7 @@ export default async function Blog() {
                   
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">{post.readTime}</span>
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="secondary" size="sm" asChild>
                       <Link href={`/blog/${post.slug}`}>
                         Read More <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -188,7 +188,7 @@ export default async function Blog() {
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-2">Installation Guides</h3>
                   <p className="text-sm text-gray-600 mb-4">Step-by-step installation tutorials and tips</p>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="secondary" size="sm" asChild>
                     <Link href="/blog/category/installation">Browse</Link>
                   </Button>
                 </CardContent>
@@ -198,7 +198,7 @@ export default async function Blog() {
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-2">Water Conservation</h3>
                   <p className="text-sm text-gray-600 mb-4">Tips and strategies for saving water</p>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="secondary" size="sm" asChild>
                     <Link href="/blog/category/conservation">Browse</Link>
                   </Button>
                 </CardContent>
@@ -208,7 +208,7 @@ export default async function Blog() {
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-2">System Maintenance</h3>
                   <p className="text-sm text-gray-600 mb-4">Keep your system running efficiently</p>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="secondary" size="sm" asChild>
                     <Link href="/blog/category/maintenance">Browse</Link>
                   </Button>
                 </CardContent>
@@ -218,7 +218,7 @@ export default async function Blog() {
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-2">Case Studies</h3>
                   <p className="text-sm text-gray-600 mb-4">Real-world success stories</p>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="secondary" size="sm" asChild>
                     <Link href="/blog/category/case-studies">Browse</Link>
                   </Button>
                 </CardContent>

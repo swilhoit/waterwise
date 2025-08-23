@@ -21,7 +21,7 @@ export default function ReplacementFilters() {
             <FeatureCard
               title="System Performance"
               description="Maintain optimal filtration efficiency and water quality"
-              icon={<Filter className="h-10 w-10 text-blue-600" />}
+              icon={<Filter className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Equipment Protection"
@@ -36,7 +36,7 @@ export default function ReplacementFilters() {
             <FeatureCard
               title="System Longevity"
               description="Extend the life of your greywater system components"
-              icon={<Clock className="h-10 w-10 text-blue-600" />}
+              icon={<Clock className="h-10 w-10 text-gray-600" />}
             />
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function ReplacementFilters() {
             <Card className="hover-lift">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-6 w-6 text-blue-600" />
+                  <Filter className="h-6 w-6 text-gray-600" />
                   Pre-Filters (Coarse Filtration)
                 </CardTitle>
                 <CardDescription>First stage filtration for larger particles and debris</CardDescription>
@@ -178,7 +178,7 @@ export default function ReplacementFilters() {
             <div className="grid md:grid-cols-4 gap-6">
               <Card className="text-center">
                 <CardHeader>
-                  <div className="text-2xl font-bold text-blue-600">Monthly</div>
+                  <div className="text-2xl font-bold text-gray-600">Monthly</div>
                   <CardTitle className="text-lg">Visual Inspection</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -285,7 +285,7 @@ export default function ReplacementFilters() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Wrench className="h-6 w-6 text-blue-600" />
+                <Wrench className="h-6 w-6 text-gray-600" />
                 Step-by-Step Replacement
               </CardTitle>
             </CardHeader>
@@ -293,7 +293,7 @@ export default function ReplacementFilters() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-blue-600">1</span>
+                    <span className="text-sm font-bold text-gray-600">1</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">System Shutdown</h4>
@@ -303,7 +303,7 @@ export default function ReplacementFilters() {
                 
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-blue-600">2</span>
+                    <span className="text-sm font-bold text-gray-600">2</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">Drain System</h4>
@@ -313,7 +313,7 @@ export default function ReplacementFilters() {
                 
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-blue-600">3</span>
+                    <span className="text-sm font-bold text-gray-600">3</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">Remove Old Filters</h4>
@@ -323,7 +323,7 @@ export default function ReplacementFilters() {
                 
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-blue-600">4</span>
+                    <span className="text-sm font-bold text-gray-600">4</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">Clean Housings</h4>
@@ -333,7 +333,7 @@ export default function ReplacementFilters() {
                 
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-blue-600">5</span>
+                    <span className="text-sm font-bold text-gray-600">5</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">Install New Filters</h4>
@@ -343,7 +343,7 @@ export default function ReplacementFilters() {
                 
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-blue-600">6</span>
+                    <span className="text-sm font-bold text-gray-600">6</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">System Restart</h4>
@@ -409,7 +409,7 @@ export default function ReplacementFilters() {
                   <li>• Professional consultation included</li>
                 </ul>
                 <div className="mt-4">
-                  <Button className="w-full" size="sm" variant="outline" asChild>
+                  <Button className="w-full" size="sm" variant="secondary" asChild>
                     <Link href="/contact">Get Consultation</Link>
                   </Button>
                 </div>

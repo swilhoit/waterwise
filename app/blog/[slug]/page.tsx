@@ -162,7 +162,7 @@ export default async function BlogPost({
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-12 lg:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <Link href="/blog" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-8 transition-colors">
+            <Link href="/blog" className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-700 mb-8 transition-colors">
               <ArrowLeft className="h-4 w-4" />
               Back to Blog
             </Link>
@@ -263,7 +263,7 @@ export default async function BlogPost({
                   <Button size="lg" asChild>
                     <Link href="/products">View Products</Link>
                   </Button>
-                  <Button variant="outline" size="lg" asChild>
+                  <Button variant="secondary" size="lg" asChild>
                     <Link href="/contact">Get Expert Advice</Link>
                   </Button>
                 </div>

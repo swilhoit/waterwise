@@ -91,7 +91,7 @@ export default function GreywaterStateLaws() {
         {/* Important Notice */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-12">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+            <AlertTriangle className="h-6 w-6 text-gray-600 mt-1 flex-shrink-0" />
             <div>
               <h3 className="text-lg font-semibold text-blue-800 mb-2">Important Legal Notice</h3>
               <p className="text-blue-700 leading-relaxed">
@@ -155,7 +155,7 @@ export default function GreywaterStateLaws() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-blue-600" />
+                  <BookOpen className="h-5 w-5 text-gray-600" />
                   Permit Requirements
                 </CardTitle>
               </CardHeader>
@@ -250,7 +250,7 @@ export default function GreywaterStateLaws() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-blue-600">1</span>
+                <span className="text-xl font-bold text-gray-600">1</span>
               </div>
               <h3 className="font-semibold mb-2">Research Local Laws</h3>
               <p className="text-gray-600 text-sm">
@@ -259,7 +259,7 @@ export default function GreywaterStateLaws() {
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-blue-600">2</span>
+                <span className="text-xl font-bold text-gray-600">2</span>
               </div>
               <h3 className="font-semibold mb-2">Choose Compliant System</h3>
               <p className="text-gray-600 text-sm">
@@ -268,7 +268,7 @@ export default function GreywaterStateLaws() {
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-blue-600">3</span>
+                <span className="text-xl font-bold text-gray-600">3</span>
               </div>
               <h3 className="font-semibold mb-2">Obtain Permits</h3>
               <p className="text-gray-600 text-sm">
@@ -277,7 +277,7 @@ export default function GreywaterStateLaws() {
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-blue-600">4</span>
+                <span className="text-xl font-bold text-gray-600">4</span>
               </div>
               <h3 className="font-semibold mb-2">Professional Install</h3>
               <p className="text-gray-600 text-sm">

@@ -35,22 +35,22 @@ export default function WhatIsGreywater() {
             <FeatureCard
               title="Bathroom Sinks"
               description="Hand washing and teeth brushing water"
-              icon={<Droplets className="h-10 w-10 text-blue-600" />}
+              icon={<Droplets className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Showers & Tubs"
               description="Bathing water from your daily routine"
-              icon={<Home className="h-10 w-10 text-blue-600" />}
+              icon={<Home className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Washing Machines"
               description="Rinse and wash cycle water (with eco-friendly detergents)"
-              icon={<Shield className="h-10 w-10 text-blue-600" />}
+              icon={<Shield className="h-10 w-10 text-gray-600" />}
             />
             <FeatureCard
               title="Utility Sinks"
               description="Laundry room and utility room sinks"
-              icon={<Leaf className="h-10 w-10 text-blue-600" />}
+              icon={<Leaf className="h-10 w-10 text-gray-600" />}
             />
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function WhatIsGreywater() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600">1</span>
+                <span className="text-2xl font-bold text-gray-600">1</span>
               </div>
               <h3 className="font-semibold mb-2">Collection</h3>
               <p className="text-gray-600">
@@ -124,7 +124,7 @@ export default function WhatIsGreywater() {
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600">2</span>
+                <span className="text-2xl font-bold text-gray-600">2</span>
               </div>
               <h3 className="font-semibold mb-2">Filtration</h3>
               <p className="text-gray-600">
@@ -133,7 +133,7 @@ export default function WhatIsGreywater() {
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600">3</span>
+                <span className="text-2xl font-bold text-gray-600">3</span>
               </div>
               <h3 className="font-semibold mb-2">Distribution</h3>
               <p className="text-gray-600">
@@ -193,7 +193,7 @@ export default function WhatIsGreywater() {
             <Button size="lg" asChild>
               <Link href="/how-it-works">How It Works</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="secondary" asChild>
               <Link href="/products">View Systems</Link>
             </Button>
           </div>

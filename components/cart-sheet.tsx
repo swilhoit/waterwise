@@ -84,7 +84,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                     <div className="flex items-center gap-2 mt-2">
                       <Button
                         size="sm"
-                        variant="outline"
+                        variant="secondary"
                         onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
                         className="h-8 w-8 p-0"
                       >
@@ -95,7 +95,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                       
                       <Button
                         size="sm"
-                        variant="outline"
+                        variant="secondary"
                         onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
                         className="h-8 w-8 p-0"
                       >
@@ -139,7 +139,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                   
                   <Button
                     onClick={clearCart}
-                    variant="outline"
+                    variant="secondary"
                     className="w-full"
                     size="sm"
                   >

@@ -36,11 +36,11 @@ export default function About() {
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
+                  <div className="text-3xl font-bold text-gray-600 mb-2">10,000+</div>
                   <div className="text-sm text-gray-600">Systems Installed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">50%</div>
+                  <div className="text-3xl font-bold text-gray-600 mb-2">50%</div>
                   <div className="text-sm text-gray-600">Average Water Savings</div>
                 </div>
               </div>
@@ -73,7 +73,7 @@ export default function About() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Award className="h-10 w-10 text-blue-600 mb-4" />
+                <Award className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Industry Leaders</CardTitle>
               </CardHeader>
               <CardContent>
@@ -83,7 +83,7 @@ export default function About() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Users className="h-10 w-10 text-blue-600 mb-4" />
+                <Users className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Expert Support</CardTitle>
               </CardHeader>
               <CardContent>
@@ -93,7 +93,7 @@ export default function About() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Leaf className="h-10 w-10 text-blue-600 mb-4" />
+                <Leaf className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Eco-Friendly Focus</CardTitle>
               </CardHeader>
               <CardContent>
@@ -103,7 +103,7 @@ export default function About() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Home className="h-10 w-10 text-blue-600 mb-4" />
+                <Home className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Versatile Solutions</CardTitle>
               </CardHeader>
               <CardContent>
@@ -113,7 +113,7 @@ export default function About() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <CheckCircle className="h-10 w-10 text-blue-600 mb-4" />
+                <CheckCircle className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Proven Results</CardTitle>
               </CardHeader>
               <CardContent>
@@ -123,7 +123,7 @@ export default function About() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Heart className="h-10 w-10 text-blue-600 mb-4" />
+                <Heart className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Customer First</CardTitle>
               </CardHeader>
               <CardContent>
@@ -172,7 +172,7 @@ export default function About() {
                 <div className="bg-white rounded-lg p-6">
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
-                      <div className="text-2xl font-bold text-blue-600 mb-1">15+</div>
+                      <div className="text-2xl font-bold text-gray-600 mb-1">15+</div>
                       <div className="text-sm text-gray-600">Years Experience</div>
                     </div>
                     <div>
@@ -193,7 +193,7 @@ export default function About() {
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="h-8 w-8 text-blue-600" />
+                    <CheckCircle className="h-8 w-8 text-gray-600" />
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">Quality First</h4>
                   <p className="text-gray-600 text-sm">
@@ -268,7 +268,7 @@ export default function About() {
                 <Button size="lg" asChild>
                   <Link href="/products">View Our Systems</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="secondary" asChild>
                   <Link href="/contact">Get Expert Consultation</Link>
                 </Button>
               </div>

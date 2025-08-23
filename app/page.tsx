@@ -50,7 +50,7 @@ export default async function Home() {
                     Explore Systems
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="secondary" asChild>
                   <Link href="/how-it-works">How It Works</Link>
                 </Button>
               </div>
@@ -124,7 +124,7 @@ export default async function Home() {
               return (
                 <Card key={index} className="hover-lift transition-all duration-300 border-gray-100">
                   <CardHeader>
-                    <IconComponent className="h-10 w-10 text-blue-600 mb-4" />
+                    <IconComponent className="h-10 w-10 text-gray-600 mb-4" />
                     <CardTitle>{benefit.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -167,7 +167,7 @@ export default async function Home() {
                   </CardHeader>
                   <CardContent>
                     {product.priceRange?.minVariantPrice && (
-                      <div className="text-2xl font-bold text-blue-600 mb-4">
+                      <div className="text-2xl font-bold text-gray-600 mb-4">
                         From ${product.priceRange.minVariantPrice.amount}
                       </div>
                     )}
@@ -275,7 +275,7 @@ export default async function Home() {
             <div className="grid md:grid-cols-3 gap-8 mt-12">
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">1</span>
+                  <span className="text-2xl font-bold text-gray-600">1</span>
                 </div>
                 <h3 className="font-semibold mb-2">Collect</h3>
                 <p className="text-gray-600">
@@ -285,7 +285,7 @@ export default async function Home() {
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">2</span>
+                  <span className="text-2xl font-bold text-gray-600">2</span>
                 </div>
                 <h3 className="font-semibold mb-2">Filter</h3>
                 <p className="text-gray-600">
@@ -295,7 +295,7 @@ export default async function Home() {
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-blue-600">3</span>
+                  <span className="text-2xl font-bold text-gray-600">3</span>
                 </div>
                 <h3 className="font-semibold mb-2">Irrigate</h3>
                 <p className="text-gray-600">
@@ -321,14 +321,14 @@ export default async function Home() {
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <BookOpen className="h-10 w-10 text-blue-600 mb-4" />
+                <BookOpen className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>What is Greywater?</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Learn the basics of greywater recycling and how it can benefit your home
                 </CardDescription>
-                <Button variant="outline" asChild className="w-full">
+                <Button variant="secondary" asChild className="w-full">
                   <Link href="/what-is-greywater">Learn More</Link>
                 </Button>
               </CardContent>
@@ -336,14 +336,14 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Wrench className="h-10 w-10 text-blue-600 mb-4" />
+                <Wrench className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>How It Works</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Understand the process and technology behind greywater systems
                 </CardDescription>
-                <Button variant="outline" asChild className="w-full">
+                <Button variant="secondary" asChild className="w-full">
                   <Link href="/how-it-works">Learn More</Link>
                 </Button>
               </CardContent>
@@ -351,14 +351,14 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Shield className="h-10 w-10 text-blue-600 mb-4" />
+                <Shield className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>State Laws</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Check your state's greywater regulations and permit requirements
                 </CardDescription>
-                <Button variant="outline" asChild className="w-full">
+                <Button variant="secondary" asChild className="w-full">
                   <Link href="/greywater-laws">Check Laws</Link>
                 </Button>
               </CardContent>
@@ -381,14 +381,14 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <HomeIcon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <HomeIcon className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Tiny Homes & RVs</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Compact systems designed for mobile living and small spaces
                 </CardDescription>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="secondary" size="sm" asChild>
                   <Link href="/tiny-house-systems">Learn More</Link>
                 </Button>
               </CardContent>
@@ -396,14 +396,14 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Droplets className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Droplets className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Drought Areas</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Maximize water conservation in water-scarce regions
                 </CardDescription>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="secondary" size="sm" asChild>
                   <Link href="/solutions">Learn More</Link>
                 </Button>
               </CardContent>
@@ -411,14 +411,14 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Globe className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Globe className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Septic Homes</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Reduce load on septic systems and extend their lifespan
                 </CardDescription>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="secondary" size="sm" asChild>
                   <Link href="/solutions">Learn More</Link>
                 </Button>
               </CardContent>
@@ -426,14 +426,14 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Mountain className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Mountain className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Remote Locations</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
                   Self-sufficient water solutions for off-grid properties
                 </CardDescription>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="secondary" size="sm" asChild>
                   <Link href="/solutions/remote-work-sites">Learn More</Link>
                 </Button>
               </CardContent>
@@ -455,7 +455,7 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-blue-600 mb-2">50%</div>
+              <div className="text-4xl lg:text-6xl font-bold text-gray-600 mb-2">50%</div>
               <div className="text-lg font-semibold mb-2">Water Savings</div>
               <div className="text-gray-600">Average household water usage reduction</div>
             </div>
@@ -495,7 +495,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Award className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Award className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Industry Leading Warranty</CardTitle>
               </CardHeader>
               <CardContent>
@@ -507,7 +507,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Shield className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Shield className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Certified & Compliant</CardTitle>
               </CardHeader>
               <CardContent>
@@ -519,7 +519,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <CardTitle>Expert Support</CardTitle>
               </CardHeader>
               <CardContent>
@@ -546,7 +546,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Wrench className="h-10 w-10 text-blue-600 mb-4" />
+                <Wrench className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Professional Installation</CardTitle>
               </CardHeader>
               <CardContent>
@@ -573,7 +573,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <Users className="h-10 w-10 text-blue-600 mb-4" />
+                <Users className="h-10 w-10 text-gray-600 mb-4" />
                 <CardTitle>Ongoing Support</CardTitle>
               </CardHeader>
               <CardContent>
@@ -683,10 +683,10 @@ export default async function Home() {
             Get a personalized quote for your greywater recycling system today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
+            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
               <Link href="/products">View Products</Link>
             </Button>
           </div>
