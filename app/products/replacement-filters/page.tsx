@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -21,22 +23,22 @@ export default function ReplacementFilters() {
             <FeatureCard
               title="System Performance"
               description="Maintain optimal filtration efficiency and water quality"
-              icon={<Filter className="h-10 w-10 text-gray-600" />}
+              icon={Filter}
             />
             <FeatureCard
               title="Equipment Protection"
               description="Prevent clogs and damage to pumps and distribution systems"
-              icon={<ShieldCheck className="h-10 w-10 text-green-600" />}
+              icon={ShieldCheck}
             />
             <FeatureCard
               title="Plant Health"
               description="Ensure clean, safe water for your landscape irrigation"
-              icon={<CheckCircle className="h-10 w-10 text-green-600" />}
+              icon={CheckCircle}
             />
             <FeatureCard
               title="System Longevity"
               description="Extend the life of your greywater system components"
-              icon={<Clock className="h-10 w-10 text-gray-600" />}
+              icon={Clock}
             />
           </div>
         </div>

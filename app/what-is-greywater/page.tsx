@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -35,22 +37,22 @@ export default function WhatIsGreywater() {
             <FeatureCard
               title="Bathroom Sinks"
               description="Hand washing and teeth brushing water"
-              icon={<Droplets className="h-10 w-10 text-gray-600" />}
+              icon={Droplets}
             />
             <FeatureCard
               title="Showers & Tubs"
               description="Bathing water from your daily routine"
-              icon={<Home className="h-10 w-10 text-gray-600" />}
+              icon={Home}
             />
             <FeatureCard
               title="Washing Machines"
               description="Rinse and wash cycle water (with eco-friendly detergents)"
-              icon={<Shield className="h-10 w-10 text-gray-600" />}
+              icon={Shield}
             />
             <FeatureCard
               title="Utility Sinks"
               description="Laundry room and utility room sinks"
-              icon={<Leaf className="h-10 w-10 text-gray-600" />}
+              icon={Leaf}
             />
           </div>
         </div>

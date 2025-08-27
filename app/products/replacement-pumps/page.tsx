@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -21,22 +23,22 @@ export default function ReplacementPumps() {
             <FeatureCard
               title="Reliable Distribution"
               description="Consistent water pressure and flow to all irrigation zones"
-              icon={<Zap className="h-10 w-10 text-gray-600" />}
+              icon={Zap}
             />
             <FeatureCard
               title="System Efficiency"
               description="Optimal energy usage and reduced operational costs"
-              icon={<Settings className="h-10 w-10 text-green-600" />}
+              icon={Settings}
             />
             <FeatureCard
               title="Corrosion Resistance"
               description="Built to handle greywater's unique chemical properties"
-              icon={<Shield className="h-10 w-10 text-purple-600" />}
+              icon={Shield}
             />
             <FeatureCard
               title="Long Service Life"
               description="Designed for continuous operation in greywater applications"
-              icon={<CheckCircle className="h-10 w-10 text-green-600" />}
+              icon={CheckCircle}
             />
           </div>
         </div>

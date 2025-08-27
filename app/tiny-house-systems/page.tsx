@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -21,22 +23,22 @@ export default function TinyHouseSystems() {
             <FeatureCard
               title="Limited Water Storage"
               description="Maximize your 20-40 gallon fresh water capacity"
-              icon={<Droplets className="h-10 w-10 text-gray-600" />}
+              icon={Droplets}
             />
             <FeatureCard
               title="Off-Grid Living"
               description="Essential for remote locations without utilities"
-              icon={<Home className="h-10 w-10 text-green-600" />}
+              icon={Home}
             />
             <FeatureCard
               title="Cost Efficiency"
               description="Reduce utility costs and extend tank life"
-              icon={<DollarSign className="h-10 w-10 text-green-600" />}
+              icon={DollarSign}
             />
             <FeatureCard
               title="Sustainability Goals"
               description="Align with eco-friendly tiny house values"
-              icon={<Leaf className="h-10 w-10 text-green-600" />}
+              icon={Leaf}
             />
           </div>
         </div>

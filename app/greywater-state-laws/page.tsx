@@ -1,3 +1,5 @@
+"use client"
+
 import { PageTemplate, FeatureCard } from "@/components/page-template"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Shield, AlertTriangle, CheckCircle, BookOpen } from "lucide-react"
@@ -110,17 +112,17 @@ export default function GreywaterStateLaws() {
             <FeatureCard
               title="Fully Legal States"
               description="Comprehensive regulations allowing various greywater systems with proper permits"
-              icon={<CheckCircle className="h-10 w-10 text-green-600" />}
+              icon={CheckCircle}
             />
             <FeatureCard
               title="Restricted States"
               description="Limited greywater use, often only laundry-to-landscape systems allowed"
-              icon={<AlertTriangle className="h-10 w-10 text-yellow-600" />}
+              icon={AlertTriangle}
             />
             <FeatureCard
               title="Prohibited States"
               description="Greywater systems not currently permitted or highly restricted"
-              icon={<Shield className="h-10 w-10 text-red-600" />}
+              icon={Shield}
             />
           </div>
         </div>
