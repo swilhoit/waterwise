@@ -131,7 +131,7 @@ export default async function BlogPost({
         readTime: 5,
         mainImage: article.image?.src || "/images/gwdd-gravity.jpg",
         excerpt: article.summary || "",
-        body: article.content || article.content_html || ""
+        body: article.body_html || article.content || ""
       }
     }
   } catch (error) {
@@ -260,10 +260,10 @@ export default async function BlogPost({
                   Explore our range of greywater recycling systems and find the perfect solution for your home.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" asChild>
+                  <Button size="lg" asChild className="bg-green-600 hover:bg-green-700 text-white">
                     <Link href="/products">View Products</Link>
                   </Button>
-                  <Button variant="secondary" size="lg" asChild>
+                  <Button size="lg" asChild className="bg-black hover:bg-gray-800 text-white">
                     <Link href="/contact">Get Expert Advice</Link>
                   </Button>
                 </div>
