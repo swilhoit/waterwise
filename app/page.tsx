@@ -391,7 +391,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <HomeIcon className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <Image src="/images/solutions/situation-tiny-rv.jpg" alt="Tiny homes and RVs" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Tiny Homes & RVs</CardTitle>
               </CardHeader>
               <CardContent>
@@ -406,7 +406,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Droplets className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <Image src="/images/solutions/situation-drought.jpg" alt="Drought areas" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Drought Areas</CardTitle>
               </CardHeader>
               <CardContent>
@@ -421,7 +421,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Globe className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <Image src="/images/solutions/situation-septic.jpg" alt="Septic homes" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Septic Homes</CardTitle>
               </CardHeader>
               <CardContent>
@@ -436,7 +436,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Mountain className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <Image src="/images/solutions/situation-remote.jpg" alt="Remote locations" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Remote Locations</CardTitle>
               </CardHeader>
               <CardContent>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g)"/>
+  <g opacity="0.08" fill="#ffffff">
+    <rect x="140" y="180" width="160" height="200" rx="8"/>
+    <rect x="340" y="160" width="160" height="220" rx="8"/>
+    <rect x="540" y="200" width="120" height="180" rx="8"/>
+  </g>
+  <text x="400" y="250" text-anchor="middle" font-family="-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial" font-size="48" fill="#FFFFFF" font-weight="700">Commercial</text>
+  <text x="400" y="300" text-anchor="middle" font-family="-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial" font-size="18" fill="#FFFFFF" opacity="0.9">Apartments • Hotels • Offices</text>
+</svg>
+
