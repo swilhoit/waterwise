@@ -1,8 +1,11 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, LucideIcon } from "lucide-react"
+import React from "react"
 
 interface PageTemplateProps {
   title: string
@@ -99,7 +102,7 @@ export function PageTemplate({
 interface FeatureCardProps {
   title: string
   description: string
-  icon?: React.ReactNode
+  icon?: LucideIcon
   image?: string
   imageAlt?: string
 }
@@ -117,7 +120,11 @@ export function FeatureCard({ title, description, icon, image, imageAlt }: Featu
             className="rounded-lg mb-4 w-full h-48 object-cover"
           />
         )}
-        {icon && <div className="mb-4">{icon}</div>}
+        {icon && (
+          <div className="mb-4">
+            {React.createElement(icon, { className: "h-8 w-8 text-blue-600" })}
+          </div>
+        )}
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
