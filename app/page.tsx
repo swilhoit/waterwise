@@ -388,66 +388,86 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="hover-lift transition-all duration-300 text-center">
-              <CardHeader>
-                <Image src="/images/solutions/situation-tiny-rv-ai.jpg" alt="Tiny homes and RVs" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
-                <CardTitle>Tiny Homes & RVs</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Compact systems designed for mobile living and small spaces
-                </CardDescription>
-                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
-                  <Link href="/tiny-house-systems">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link href="/tiny-house-systems" className="group block">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+                <div className="relative h-64">
+                  <Image 
+                    src="/images/solutions/situation-tiny-rv-ai.jpg" 
+                    alt="Tiny homes and RVs" 
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-0 p-6 text-white">
+                    <h3 className="text-xl font-bold mb-2">Tiny Homes & RVs</h3>
+                    <p className="text-sm text-gray-200">
+                      Compact systems designed for mobile living and small spaces
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
 
-            <Card className="hover-lift transition-all duration-300 text-center">
-              <CardHeader>
-                <Image src="/images/solutions/situation-drought-ai.jpg" alt="Drought areas" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
-                <CardTitle>Drought Areas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Maximize water conservation in water-scarce regions
-                </CardDescription>
-                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
-                  <Link href="/solutions">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            <Link href="/solutions" className="group block">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+                <div className="relative h-64">
+                  <Image 
+                    src="/images/solutions/situation-drought-ai.jpg" 
+                    alt="Drought areas" 
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-0 p-6 text-white">
+                    <h3 className="text-xl font-bold mb-2">Drought Areas</h3>
+                    <p className="text-sm text-gray-200">
+                      Maximize water conservation in water-scarce regions
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
 
-            <Card className="hover-lift transition-all duration-300 text-center">
-              <CardHeader>
-                <Image src="/images/solutions/situation-septic-ai.jpg" alt="Septic homes" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
-                <CardTitle>Septic Homes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Reduce load on septic systems and extend their lifespan
-                </CardDescription>
-                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
-                  <Link href="/solutions">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            <Link href="/solutions" className="group block">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+                <div className="relative h-64">
+                  <Image 
+                    src="/images/solutions/situation-septic-ai.jpg" 
+                    alt="Septic homes" 
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-0 p-6 text-white">
+                    <h3 className="text-xl font-bold mb-2">Septic Homes</h3>
+                    <p className="text-sm text-gray-200">
+                      Reduce load on septic systems and extend their lifespan
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
 
-            <Card className="hover-lift transition-all duration-300 text-center">
-              <CardHeader>
-                <Image src="/images/solutions/situation-remote-ai.jpg" alt="Remote locations" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
-                <CardTitle>Remote Locations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Self-sufficient water solutions for off-grid properties
-                </CardDescription>
-                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
-                  <Link href="/solutions/remote-work-sites">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            <Link href="/solutions/remote-work-sites" className="group block">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+                <div className="relative h-64">
+                  <Image 
+                    src="/images/solutions/situation-remote-ai.jpg" 
+                    alt="Remote locations" 
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-0 p-6 text-white">
+                    <h3 className="text-xl font-bold mb-2">Remote Locations</h3>
+                    <p className="text-sm text-gray-200">
+                      Self-sufficient water solutions for off-grid properties
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
