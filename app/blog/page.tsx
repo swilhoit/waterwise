@@ -99,21 +99,7 @@ export default async function Blog() {
   }
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
-              Water Conservation <span className="text-gradient">Blog</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed animate-slide-up">
-              Expert insights, tips, and guides for sustainable water management and greywater recycling.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20">
+      <section className="py-20 pt-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
