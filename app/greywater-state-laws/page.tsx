@@ -1,8 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import { PageTemplate, FeatureCard } from "@/components/page-template"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Shield, AlertTriangle, CheckCircle, BookOpen } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Shield, AlertTriangle, CheckCircle, BookOpen, Grid3X3, Table } from "lucide-react"
 
 const stateData = [
   {
@@ -81,6 +83,8 @@ const getStatusColor = (status: string) => {
 }
 
 export default function GreywaterStateLaws() {
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('card')
+  
   return (
     <PageTemplate
       title="Greywater State Laws & Regulations"
@@ -129,25 +133,77 @@ export default function GreywaterStateLaws() {
 
         {/* State-by-State Breakdown */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">State-by-State Regulations</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stateData.map((state, index) => (
-              <Card key={index} className="hover-lift transition-all duration-300">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <CardTitle className="text-lg">{state.state}</CardTitle>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(state.status)}`}>
-                      {state.status}
-                    </span>
-                  </div>
-                  <CardDescription>{state.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600">{state.details}</p>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+            <h2 className="text-3xl font-bold text-gray-900">State-by-State Regulations</h2>
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === 'card' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('card')}
+                className="flex items-center gap-2"
+              >
+                <Grid3X3 className="h-4 w-4" />
+                Cards
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className="flex items-center gap-2"
+              >
+                <Table className="h-4 w-4" />
+                Table
+              </Button>
+            </div>
           </div>
+
+          {viewMode === 'card' ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {stateData.map((state, index) => (
+                <Card key={index} className="hover-lift transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-lg">{state.state}</CardTitle>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(state.status)}`}>
+                        {state.status}
+                      </span>
+                    </div>
+                    <CardDescription>{state.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">{state.details}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-4 font-semibold text-gray-900">State</th>
+                    <th className="text-left p-4 font-semibold text-gray-900">Status</th>
+                    <th className="text-left p-4 font-semibold text-gray-900">Description</th>
+                    <th className="text-left p-4 font-semibold text-gray-900 hidden lg:table-cell">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stateData.map((state, index) => (
+                    <tr key={index} className="border-b hover:bg-gray-50 transition-colors">
+                      <td className="p-4 font-medium">{state.state}</td>
+                      <td className="p-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium border inline-block ${getStatusColor(state.status)}`}>
+                          {state.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-sm text-gray-600">{state.description}</td>
+                      <td className="p-4 text-sm text-gray-600 hidden lg:table-cell">{state.details}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Common Requirements */}
