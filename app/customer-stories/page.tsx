@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Star, Quote, Home as HomeIcon, TreePine, DollarSign, Droplets } from "lucide-react"
+import { Star, Quote, Home as HomeIcon, TreePine, DollarSign, Droplets, CheckCircle } from "lucide-react"
 
 const stories = [
   {
@@ -196,40 +196,41 @@ export default function CustomerStories() {
             </h3>
           </div>
 
-          <div className="grid gap-12 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {stories.map((story, index) => (
-              <Card key={story.id} className="overflow-hidden hover-lift transition-all duration-300">
-                <div className="p-8">
-                    <div className="flex items-center gap-2 mb-4">
+              <Card key={story.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-green-50 pb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1">
                       {[...Array(story.rating)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    
-                    <div className="flex items-start gap-3 mb-4">
-                      <Quote className="h-6 w-6 text-gray-600 mt-1 flex-shrink-0" />
-                      <p className="text-lg text-gray-700 italic leading-relaxed">
-                        "{story.quote}"
-                      </p>
-                    </div>
-
-                    <div className="mb-6">
-                      <h3 className="text-xl font-bold text-gray-900">{story.name}</h3>
-                      <p className="text-gray-600">{story.location}</p>
-                      <p className="text-sm text-gray-600 font-semibold">{story.system}</p>
-                      <p className="text-sm text-green-600 font-semibold mt-1">{story.savings}</p>
-                    </div>
-
+                    <span className="text-sm font-bold text-green-600">{story.savings}</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">{story.name}</h3>
+                  <p className="text-sm text-gray-600">{story.location}</p>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="mb-4">
+                    <Quote className="h-4 w-4 text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-700 italic leading-relaxed line-clamp-3">
+                      {story.quote}
+                    </p>
+                  </div>
+                  
+                  <div className="border-t pt-4">
+                    <p className="text-xs text-gray-600 font-semibold mb-3">System: {story.system}</p>
                     <div className="space-y-2">
-                      <h4 className="font-semibold text-gray-900 mb-2">Project Details:</h4>
-                      {story.details.slice(0, 3).map((detail, i) => (
-                        <div key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                          <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                          <span>{detail}</span>
+                      {story.details.slice(0, 2).map((detail, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <CheckCircle className="h-3 w-3 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span className="text-xs text-gray-600 leading-tight">{detail}</span>
                         </div>
                       ))}
                     </div>
-                </div>
+                  </div>
+                </CardContent>
               </Card>
             ))}
           </div>

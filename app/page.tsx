@@ -391,7 +391,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Image src="/images/gwdd-gravity.jpg" alt="Tiny homes and RVs" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
+                <Image src="/images/solutions/situation-tiny-rv-ai.jpg" alt="Tiny homes and RVs" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Tiny Homes & RVs</CardTitle>
               </CardHeader>
               <CardContent>
@@ -406,7 +406,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Image src="/images/family-garden.jpg" alt="Drought areas" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
+                <Image src="/images/solutions/situation-drought-ai.jpg" alt="Drought areas" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Drought Areas</CardTitle>
               </CardHeader>
               <CardContent>
@@ -421,7 +421,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Image src="/images/water-reuse.jpg" alt="Septic homes" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
+                <Image src="/images/solutions/situation-septic-ai.jpg" alt="Septic homes" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Septic Homes</CardTitle>
               </CardHeader>
               <CardContent>
@@ -436,7 +436,7 @@ export default async function Home() {
 
             <Card className="hover-lift transition-all duration-300 text-center">
               <CardHeader>
-                <Image src="/images/cabin-greywater.jpg" alt="Remote locations" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
+                <Image src="/images/solutions/situation-remote-ai.jpg" alt="Remote locations" width={400} height={250} className="rounded-lg mb-4 w-full h-40 object-cover" />
                 <CardTitle>Remote Locations</CardTitle>
               </CardHeader>
               <CardContent>

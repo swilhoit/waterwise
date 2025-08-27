@@ -220,7 +220,7 @@ export default async function BlogPost({
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700 prose-p:leading-relaxed prose-ul:my-6 prose-li:text-gray-700 prose-strong:text-gray-900">
               {post.body ? (
                 <div className="space-y-6">
                   {Array.isArray(post.body) ? post.body.map((block: any, index: number) => {
@@ -233,7 +233,7 @@ export default async function BlogPost({
                     }
                     return null
                   }) : (
-                    <div dangerouslySetInnerHTML={{ __html: post.body }} />
+                    <div className="[&>p]:mb-4 [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:mt-6 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:space-y-2" dangerouslySetInnerHTML={{ __html: post.body }} />
                   )}
                 </div>
               ) : (

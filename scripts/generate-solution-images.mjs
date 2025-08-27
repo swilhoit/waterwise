@@ -5,6 +5,9 @@ dotenv.config({ path: '.env.local' })
 import OpenAI from 'openai'
 
 const outDir = path.resolve('public/images/solutions')
+const OVERWRITE = process.env.OVERWRITE === '1' || process.env.OVERWRITE === 'true'
+const NO_FALLBACK = process.env.NO_FALLBACK === '1' || process.env.NO_FALLBACK === 'true'
+const PREFERRED_MODEL = process.env.IMAGE_MODEL || 'gpt-image-1'
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true })
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -25,7 +28,7 @@ const prompts = [
 async function generateAll() {
   for (const { file, prompt } of prompts) {
     const filePath = path.join(outDir, file)
-    if (fs.existsSync(filePath)) {
+    if (!OVERWRITE && fs.existsSync(filePath)) {
       console.log('exists, skipping', file)
       continue
     }
@@ -33,12 +36,12 @@ async function generateAll() {
     let image
     try {
       image = await client.images.generate({
-        model: 'gpt-image-1',
+        model: PREFERRED_MODEL,
         prompt,
         size: '1536x1024'
       })
     } catch (err) {
-      if (err?.status === 403) {
+      if (!NO_FALLBACK && err?.status === 403) {
         console.warn('gpt-image-1 blocked; falling back to dall-e-3')
         image = await client.images.generate({
           model: 'dall-e-3',
