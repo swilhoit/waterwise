@@ -3,6 +3,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 dotenv.config({ path: '.env.local' })
 import OpenAI from 'openai'
+import FormData from 'form-data'
 
 const outDir = path.resolve('public/images/solutions')
 const OVERWRITE = process.env.OVERWRITE === '1' || process.env.OVERWRITE === 'true'
@@ -17,7 +18,8 @@ async function editWithImage(sourcePath, prompt) {
   form.append('model', PREFERRED_MODEL)
   form.append('prompt', prompt)
   form.append('size', '1536x1024')
-  form.append('image', fs.createReadStream(sourcePath))
+  const filename = path.basename(sourcePath)
+  form.append('image', fs.createReadStream(sourcePath), { filename, contentType: 'image/png' })
   const res = await fetch('https://api.openai.com/v1/images/edits', {
     method: 'POST',
     headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },

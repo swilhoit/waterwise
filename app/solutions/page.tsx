@@ -59,19 +59,6 @@ export default function Solutions() {
       href: "/solutions/cabins"
     },
     {
-      title: "Commercial Properties",
-      description: "High-capacity systems for apartments, hotels, and businesses",
-      icon: Building,
-      image: "/images/solutions/commercial-ai.jpg",
-      benefits: [
-        "Handle high-volume usage",
-        "Professional installation",
-        "Significant cost savings", 
-        "Environmental compliance"
-      ],
-      href: "/solutions/commercial"
-    },
-    {
       title: "Custom Applications",
       description: "Tailored solutions for unique properties and special requirements",
       icon: Car,
@@ -96,7 +83,7 @@ export default function Solutions() {
               <span className="text-gradient">Solutions</span> for Every Property
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed animate-slide-up">
-              From tiny homes to commercial developments, we have greywater recycling solutions tailored to your needs.
+              From tiny homes to remote properties, we have greywater recycling solutions tailored to your needs.
             </p>
           </div>
         </div>
