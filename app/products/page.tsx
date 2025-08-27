@@ -92,17 +92,21 @@ export default async function ProductsPage() {
             {displayProducts.map((product: any, index: number) => (
               <Card key={product.id || index} className="hover-lift transition-all duration-300">
                 <CardHeader>
-                  <div className="relative mb-4 aspect-square">
-                    <Image
-                      src={product.images?.edges?.[0]?.node?.url || product.image}
-                      alt={product.images?.edges?.[0]?.node?.altText || product.title}
-                      fill
-                      className="rounded-lg object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      unoptimized
-                    />
-                  </div>
-                  <CardTitle className="text-2xl">{product.title}</CardTitle>
+                  <Link href={`/products/${product.handle}`} className="block">
+                    <div className="relative mb-4 aspect-square h-64">
+                      <Image
+                        src={product.images?.edges?.[0]?.node?.url || product.image}
+                        alt={product.images?.edges?.[0]?.node?.altText || product.title}
+                        fill
+                        className="rounded-lg object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        unoptimized
+                      />
+                    </div>
+                  </Link>
+                  <Link href={`/products/${product.handle}`} className="hover:text-blue-600 transition-colors">
+                    <CardTitle className="text-2xl">{product.title}</CardTitle>
+                  </Link>
                   <CardDescription className="text-lg">{product.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -127,19 +131,9 @@ export default async function ProductsPage() {
                     </ul>
                   )}
                   
-                  <div className="flex gap-3">
-                    <Button className="flex-1 bg-black hover:bg-gray-800 text-white" size="lg" asChild>
-                      <Link href={`/products/${product.handle}`}>
-                        Learn More
-                      </Link>
-                    </Button>
-                    
-                    {!product.variants && (
-                      <div className="flex-1">
-                        <QuickAddToCart product={product} />
-                      </div>
-                    )}
-                  </div>
+                  {!product.variants && (
+                    <QuickAddToCart product={product} />
+                  )}
                 </CardContent>
               </Card>
             ))}

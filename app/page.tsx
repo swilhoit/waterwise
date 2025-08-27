@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain } from "lucide-react"
+import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain, Play } from "lucide-react"
 import { getProducts } from "@/lib/shopify"
 import { Testimonials } from "@/components/testimonials"
 
@@ -262,7 +262,12 @@ export default async function Home() {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
+            <a 
+              href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block relative aspect-video bg-gray-200 rounded-lg overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+            >
               <Image
                 src="/images/maxresdefault.jpg"
                 alt="How Greywater Works Video"
@@ -270,7 +275,12 @@ export default async function Home() {
                 height={450}
                 className="w-full h-full object-cover"
               />
-            </div>
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                <div className="bg-white rounded-full p-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
+                </div>
+              </div>
+            </a>
 
             <div className="grid md:grid-cols-3 gap-8 mt-12">
               <div className="text-center">
