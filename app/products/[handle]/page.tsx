@@ -162,7 +162,7 @@ const fallbackProducts: { [key: string]: any } = {
     }
   },
   "filters": {
-    id: "gid://shopify/Product/4",
+    id: "gid://shopify/Product/7463774912718",
     title: "Replacement Filters",
     description: "Keep your Aqua2use system running at peak performance with genuine replacement filters. Our progressive 4-stage filtration system by Matala includes multiple density filter mats that are easy to clean and replace, ensuring optimal greywater treatment for years to come.",
     handle: "filters",
@@ -176,8 +176,14 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            url: "/images/gwdd-gravity.jpg",
-            altText: "Aqua2use Replacement Filters"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+            altText: "aqua2use replacement filters"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/description-gwdd-image.jpg?v=1719592385",
+            altText: "replacement filters for gwdd"
           }
         }
       ]
@@ -262,6 +268,49 @@ const fallbackProducts: { [key: string]: any } = {
         }
       ]
     }
+  },
+  "replacement-filters": {
+    id: "gid://shopify/Product/7463774912718",
+    title: "Replacement Filters",
+    description: "Easy Replacement – No Service Necessary Complete Set of 6 Filters Works with Aqua2use Gravity and GWDD No more cleaning of the filters every 6 months Simply remove the old filters and install the new ones in your unit",
+    handle: "replacement-filters",
+    priceRange: {
+      minVariantPrice: {
+        amount: "249.99",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+            altText: "aqua2use replacement filters"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/description-gwdd-image.jpg?v=1719592385",
+            altText: "replacement filters for gwdd"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/42721174552782",
+            title: "Default Title",
+            priceV2: {
+              amount: "249.99",
+              currencyCode: "USD"
+            },
+            availableForSale: false
+          }
+        }
+      ]
+    }
   }
 }
 
@@ -338,6 +387,50 @@ function getProductContent(handle: string) {
         {
           question: "How long can I store filtered greywater?",
           answer: "It is not recommended to store filtered greywater for more than 24 hours to prevent bacterial growth and odors."
+        },
+        {
+          question: "Is it safe to use the Aqua2use to irrigate my garden?",
+          answer: "It is absolutely safe to use greywater to water your plants and your trees. Your system needs to be connected to a drip irrigation system, and you should use low phosphate detergent. The filtering system of the Aqua2use is the best on the market, and will intercept lint and other impurities."
+        },
+        {
+          question: "Does the water look grey?",
+          answer: "No, you will be surprised by how clear the water looks like after filtration by the Aqua2use. You will not water your plants with soapy and 'grey looking' water!"
+        },
+        {
+          question: "What can I connect my unit to?",
+          answer: "You can connect your unit to any grey waste water from your house, that includes the water coming from your laundry, bath and shower. This EXCLUDES water from the kitchen sink, dishwashers and toilets, which is classed as black water."
+        },
+        {
+          question: "What do I need before I connect my unit?",
+          answer: "You will need a 110 volt power outlet. The unit comes with a 16′ long extension cord that is ready to plug right into your GFI outlet. You need to be able to access your waste plumbing pipes."
+        },
+        {
+          question: "Is the Aqua2use an Approved Greywater Device?",
+          answer: "Yes, it has the Australian Water Mark for a Pumped system and a Gravity system. There is currently no national approval agency in the US for a greywater system."
+        },
+        {
+          question: "How is the Aqua2use different from other Greywater Diversion Devices?",
+          answer: "The New Aqua2use is designed to be the most efficient and advanced Grey Water Diversion Device available on the market. The Aqua2use is also simple to connect to a drip irrigation system, and requires very low maintenance."
+        },
+        {
+          question: "What is the warranty?",
+          answer: "All parts and the pump are covered by a 12 month replacement warranty."
+        },
+        {
+          question: "How effective are the filters?",
+          answer: "Independent laboratory tests have shown that the Aqua2use can remove up to 90% of suspended solids. There is nothing on the market that comes close to this amount of filtration."
+        },
+        {
+          question: "How much water does my unit save me?",
+          answer: "Independent tests have shown you can expect to save approximately 30 gallons per person per day."
+        },
+        {
+          question: "What are the dimensions?",
+          answer: "Length 24″, Width 15″, Height 20″ for the standard GWDD unit."
+        },
+        {
+          question: "Does this unit break down in the sun?",
+          answer: "No, it is made of UV resistant High Grade Poly Ethylene."
         }
       ]
     },
@@ -481,6 +574,53 @@ function getProductContent(handle: string) {
         }
       ]
     },
+    "replacement-filters": {
+      features: [
+        "Progressive 4-Stage Filtration by Matala",
+        "3-dimensional filter mat structure",
+        "Cross-flow depth filtration technology",
+        "Multiple density layers for optimal filtration",
+        "Easy to clean - no tools required",
+        "Long-lasting filter media",
+        "Handles up to 15,850 gallons before cleaning needed",
+        "Compatible with all Aqua2use systems",
+        "UV resistant filter materials",
+        "Maintains optimal system performance"
+      ],
+      specifications: {
+        filterType: "Progressive 4-Stage Matala Filter Mats",
+        filterStructure: "3-dimensional cross-flow design",
+        compatibility: "All Aqua2use GWDD and Pro systems",
+        cleaningCycle: "Every 4-6 months (depending on usage)",
+        replacementCycle: "Every 3 years with proper maintenance",
+        capacity: "Up to 15,850 gallons before cleaning required",
+        installation: "Tool-free replacement",
+        material: "UV resistant filter media",
+        stages: "Multiple density layers for progressive filtration"
+      },
+      reviews: [
+        {
+          name: "System Owner - 5 Years",
+          rating: 5,
+          review: "Original filters still going strong after 5 years. I clean them every 4 months and they look almost new. Amazing quality."
+        },
+        {
+          name: "RV Full-Timer",
+          rating: 5,
+          review: "Easy to maintain on the road. The filters clean up quickly and the system keeps running perfectly. Great investment."
+        }
+      ],
+      faq: [
+        {
+          question: "How often do I need to clean the filters?",
+          answer: "Filters should be cleaned every 4-6 months depending on usage and water quality. With regular cleaning, filters can last up to 3 years before replacement."
+        },
+        {
+          question: "Are these filters compatible with all Aqua2use systems?",
+          answer: "Yes, these progressive 4-stage Matala filters are designed to work with all Aqua2use GWDD and Pro systems. The filter configuration is standardized across all models."
+        }
+      ]
+    },
     "replacement-greywater-pump": {
       features: [
         "Direct replacement for Aqua2use GWDD systems",
@@ -584,24 +724,100 @@ function getProductContent(handle: string) {
       ],
       faq: [
         {
-          question: "What makes the Pro different from the standard GWDD?",
-          answer: "The Pro has a 50-gallon capacity compared to 21 gallons, handles up to 25 GPM vs 17 GPM, and has over 108 sq ft of filter surface area for commercial applications."
+          question: "What is the Aqua2use?",
+          answer: "The Aqua2use is the most advanced Grey Water Diversion Device on the market. It is designed to help you easily reuse your waste water from your laundry, bath and shower."
         },
         {
-          question: "What power requirements does it have?",
-          answer: "The Pro system requires a 110V power outlet and includes a submersible pump with Electronic Pump Controller and dry run protection."
+          question: "Is it safe to use the Aqua2use to irrigate my garden?",
+          answer: "It is absolutely safe to use greywater to water your plants and your trees. Your system needs to be connected to a drip irrigation system, and you should use low phosphate detergent. The filtering system of the Aqua2use is the best on the market, and will intercept lint and other impurities."
         },
         {
-          question: "What size inlet connections does it accept?",
-          answer: "The Pro system accepts inlet connections from 2\" to 4\" diameter, making it compatible with larger commercial plumbing systems."
+          question: "Does the water look grey?",
+          answer: "No, you will be surprised by how clear the water looks like after filtration by the Aqua2use. You will not water your plants with soapy and 'grey looking' water!"
         },
         {
-          question: "Is it suitable for schools and commercial buildings?",
-          answer: "Yes, the Pro is specifically designed for homes, schools, small commercial buildings, and other applications requiring higher capacity greywater processing."
+          question: "How does it work?",
+          answer: "After being installed by one of our preferred installer or your plumber, the Aqua2use is connected and the water coming from your laundry, bath or shower flows into the unit. The greywater is filtered through the unique 4 Stage filtration system stage. The level detecting pump then pumps the filtered water into your irrigation system. This all happens automatically."
         },
         {
-          question: "What maintenance is required?",
-          answer: "Filter cleaning is recommended every 4-6 months depending on usage. The large filter surface area reduces maintenance frequency compared to smaller units."
+          question: "What can I connect my unit to?",
+          answer: "You can connect your unit to any grey waste water from your house, that includes the water coming from your laundry, bath and shower. This EXCLUDES water from the kitchen sink, dishwashers and toilets, which is classed as black water. Check your local regulations with your plumber or local water authority."
+        },
+        {
+          question: "What do I need before I connect my unit?",
+          answer: "You will need a 110 volt power outlet. The unit comes with a 16′ long extension cord that is ready to plug right into your GFI outlet. You need to be able to access your waste plumbing pipes."
+        },
+        {
+          question: "Why can't I connect it to my sink in the kitchen?",
+          answer: "It is not advisable to try to reuse sink water. This water may contain many nutrients, food particles, oil and harsh detergents, which are not suitable for reuse. Sink water and dishwasher discharge water is considered to be Black Water and is considered waste."
+        },
+        {
+          question: "Is the Aqua2use an Approved Greywater Device?",
+          answer: "Yes, it has the Australian Water Mark for a Pumped system and a Gravity system. There is currently no national approval agency in the US for a greywater system."
+        },
+        {
+          question: "How is the Aqua2use different from other Greywater Diversion Devices?",
+          answer: "The New Aqua2use is designed to be the most efficient and advanced Grey Water Diversion Device available on the market. The Aqua2use is also simple to connect to a drip irrigation system, and requires very low maintenance."
+        },
+        {
+          question: "What is the warranty?",
+          answer: "All parts and the pump are covered by a 12 month replacement warranty."
+        },
+        {
+          question: "How effective are the filters?",
+          answer: "The Aqua2use has over 108 sqft of surface area ensuring the best filtration available for recycled greywater. Standard types of filtration such as mesh filters are prone to blocking by the nature of what is in greywater. Lint is especially good at blocking single dimensional screen filters. Independent laboratory tests have shown that the Aqua2use can remove up to 90% of suspended solids. There is nothing on the market that comes close to this amount of filtration."
+        },
+        {
+          question: "How often do I have to replace or clean the filters?",
+          answer: "The filters are designed to be cleaned over and over so you don't need to replace them. Testing in the field has shown that up to 15,000 gallons can pass through the unit before they need cleaning. The recommended cleaning cycle is from 4-6 months, depending on how many people are using the system. Dispose of waste thoughtfully and wear protective gloves when cleaning."
+        },
+        {
+          question: "How is the pump in your unit different from other pumps?",
+          answer: "The pump is different in 3 ways: 1. There are two magnetic micro floats that activate the control box that senses the water level, allowing for full capacity use and proper distribution. 2. The control box switches the pump on independently of the magnetic floats to ensure minimum residual remains. 3. There are no external timers - the control box automatically turns on the pump 4 times a day to check for residual water."
+        },
+        {
+          question: "Why don't you use a low voltage pump like a 12volt unit?",
+          answer: "Low voltage pumps have a very limited service life and generally won't do the hours expected in this type of installation. The Matala pump is a high quality pump that is designed for continuous operation and was specifically designed by MATALA for this application."
+        },
+        {
+          question: "Who can service the pump?",
+          answer: "The pump requires no servicing other than a cleaning once every six months. One of our preferred installer or your local plumber can easily service the Aqua2use."
+        },
+        {
+          question: "What is the best way to disperse the greywater?",
+          answer: "Water authorities recommend dispersal of greywater via drip system. Each garden has different requirements. Your installer should advise you on this."
+        },
+        {
+          question: "Can I store the water once it has been through the Aqua2use?",
+          answer: "It is not advisable to store greywater from any greywater diversion device for more than 24 hours. The Aqua2use will empty on demand if there is sufficient water to activate the upper float switch, or automatically on a 24 hour cycle with the 'smart' controller."
+        },
+        {
+          question: "How much water does my unit save me?",
+          answer: "Independent tests have shown you can expect to save approximately 30 gallons per person per day."
+        },
+        {
+          question: "Can the unit handle hot water?",
+          answer: "Yes the pump and filters can handle water at elevated temperatures. Boiling water should not be discharged into any greywater diversion device."
+        },
+        {
+          question: "Can the unit overflow?",
+          answer: "No, the unit has an inbuilt overflow so if you accidentally leave the power switched off to your unit it will simply send the water to waste. This is a requirement of the Watermark and all water authorities."
+        },
+        {
+          question: "Does it work with my water softener?",
+          answer: "The Aqua2use will work with your water softener. Using potassium instead of salt inside your water softener will guarantee that your plants stay healthy."
+        },
+        {
+          question: "Can I buy spare parts for my unit?",
+          answer: "We can provide spare filters and all other parts in the unit."
+        },
+        {
+          question: "What are the dimensions?",
+          answer: "Length 31.5″, Width 23.6″, Height 26″"
+        },
+        {
+          question: "Does this unit break down in the sun?",
+          answer: "No, it is made of UV resistant High Grade Poly Ethylene."
         }
       ]
     }
@@ -654,37 +870,19 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Product Images */}
               <div className="relative">
+
                 {product.images?.edges?.length > 0 ? (
-                  <>
-                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border">
-                      <Image
-                        src={product.images.edges[0].node.url}
-                        alt={product.images.edges[0].node.altText || product.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover"
-                        priority
-                        unoptimized
-                      />
-                    </div>
-                    
-                    {product.images.edges.length > 1 && (
-                      <div className="grid grid-cols-3 gap-3 mt-4">
-                        {product.images.edges.slice(1).map((edge: any, index: number) => (
-                          <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-white border transition-all duration-300 cursor-pointer">
-                            <Image
-                              src={edge.node.url}
-                              alt={edge.node.altText || product.title}
-                              fill
-                              sizes="(max-width: 768px) 33vw, (max-width: 1200px) 16vw, 12vw"
-                              className="object-cover hover:scale-110 transition-transform duration-300"
-                              unoptimized
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </>
+                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border">
+                    <Image
+                      src={product.images.edges[0].node.url}
+                      alt={product.images.edges[0].node.altText || product.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      priority
+                      unoptimized
+                    />
+                  </div>
                 ) : (
                   <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border">
                     <div className="flex items-center justify-center h-full text-gray-400">
@@ -799,6 +997,18 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
+                  {/* How It Works Diagram */}
+                  <div className="mb-6">
+                    <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white border">
+                      <Image
+                        src="/docs/Aqua2use-How-It-Works.jpg"
+                        alt="How Aqua2use Greywater System Works"
+                        fill
+                        className="object-contain p-2"
+                        unoptimized
+                      />
+                    </div>
+                  </div>
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-white">1</span>
@@ -870,6 +1080,137 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               </Card>
             </div>
 
+            {/* Assembly Guide & Technical Images Section */}
+            {(handle === 'aqua2use-gwdd' || handle === 'aqua2use-pro' || handle === 'replacement-greywater-pump') && (
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <Wrench className="h-6 w-6 text-gray-600" />
+                    {handle === 'replacement-greywater-pump' ? 'Performance Specifications' : 'Assembly Guide & Technical Diagrams'}
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 mt-2">
+                    {handle === 'replacement-greywater-pump' 
+                      ? 'Detailed pump performance specifications and installation guidelines'
+                      : 'Visual guides and technical diagrams for installation and setup'
+                    }
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-8">
+                  {handle === 'replacement-greywater-pump' ? (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-900">Pump Performance Chart</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                        <Image
+                          src="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg"
+                          alt="Pump Performance and Specifications"
+                          fill
+                          className="object-contain p-4"
+                          unoptimized
+                        />
+                      </div>
+                      <a 
+                        href="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        <FileText className="h-4 w-4" />
+                        View Full Size Performance Chart
+                      </a>
+                    </div>
+                  ) : handle === 'aqua2use-pro' ? (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <h4 className="font-semibold text-gray-900">Assembly Guide</h4>
+                        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                          <Image
+                            src="/docs/Aqua2use-Pro-Assembly-Guide.jpg"
+                            alt="Aqua2use Pro Assembly Guide"
+                            fill
+                            className="object-contain p-4"
+                            unoptimized
+                          />
+                        </div>
+                        <a 
+                          href="/docs/Aqua2use-Pro-Assembly-Guide.jpg" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          <FileText className="h-4 w-4" />
+                          View Full Size Assembly Guide
+                        </a>
+                      </div>
+                      <div className="space-y-4">
+                        <h4 className="font-semibold text-gray-900">Performance Curve</h4>
+                        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                          <Image
+                            src="/docs/Aqua2use-Pro-Performance-Curve.jpg"
+                            alt="Aqua2use Pro Performance Curve"
+                            fill
+                            className="object-contain p-4"
+                            unoptimized
+                          />
+                        </div>
+                        <a 
+                          href="/docs/Aqua2use-Pro-Performance-Curve.jpg" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          <FileText className="h-4 w-4" />
+                          View Performance Curve
+                        </a>
+                      </div>
+                      <div className="md:col-span-2 space-y-4">
+                        <h4 className="font-semibold text-gray-900">Pro Features & Specifications</h4>
+                        <div className="relative aspect-[5/2] rounded-lg overflow-hidden bg-white border">
+                          <Image
+                            src="/docs/Aqua2use-Pro-Features.jpg"
+                            alt="Aqua2use Pro Features"
+                            fill
+                            className="object-contain p-4"
+                            unoptimized
+                          />
+                        </div>
+                        <a 
+                          href="/docs/Aqua2use-Pro-Features.jpg" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          <FileText className="h-4 w-4" />
+                          View Features Diagram
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-900">Assembly Guide</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                        <Image
+                          src="/docs/Aqua2use-GWDD-Assembly-Guide.jpg"
+                          alt="Aqua2use GWDD Assembly Guide"
+                          fill
+                          className="object-contain p-4"
+                          unoptimized
+                        />
+                      </div>
+                      <a 
+                        href="/docs/Aqua2use-GWDD-Assembly-Guide.jpg" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        <FileText className="h-4 w-4" />
+                        View Full Size Assembly Guide
+                      </a>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Technical Specifications Section */}
             <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
               <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
@@ -882,6 +1223,22 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-8">
+                {/* Filtration System Diagram */}
+                <div className="mb-8">
+                  <h4 className="font-semibold text-gray-900 mb-4">Progressive 4-Stage Filtration System</h4>
+                  <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white border mb-4">
+                    <Image
+                      src="/docs/Aqua2use-Filtration-System.png"
+                      alt="Aqua2use 4-Stage Progressive Filtration System"
+                      fill
+                      className="object-contain p-4"
+                      unoptimized
+                    />
+                  </div>
+                  <p className="text-sm text-gray-600 mb-6">
+                    State-of-the-art Matala 3D progressive filtration technology with cross-flow depth filtration
+                  </p>
+                </div>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
