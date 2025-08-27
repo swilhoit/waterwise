@@ -954,41 +954,49 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 p-8">
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-gray-600" />
-                      <div>
-                        <div className="font-medium">Assembly Guide</div>
-                        <div className="text-sm text-gray-500">Step-by-step installation</div>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                    <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD' : handle === 'aqua2use-pro' ? 'Pro' : 'GWDD'}-Assembly-Guide.jpg`} target="_blank" rel="noopener noreferrer">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-gray-600" />
+                        <div>
+                          <div className="font-medium">Assembly Guide</div>
+                          <div className="text-sm text-gray-500">Step-by-step installation</div>
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </Button>
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
-                    <div className="flex items-center gap-3">
-                      <Settings className="h-5 w-5 text-gray-600" />
-                      <div>
-                        <div className="font-medium">Operating Instructions</div>
-                        <div className="text-sm text-gray-500">Daily operation guide</div>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                    <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD' : handle === 'aqua2use-pro' ? 'Pro' : 'GWDD'}-Installation-${handle === 'aqua2use-pro' ? 'Manual' : 'Instructions'}.pdf`} target="_blank" rel="noopener noreferrer">
+                      <div className="flex items-center gap-3">
+                        <Settings className="h-5 w-5 text-gray-600" />
+                        <div>
+                          <div className="font-medium">Operating Instructions</div>
+                          <div className="text-sm text-gray-500">Daily operation guide</div>
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </Button>
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-gray-600" />
-                      <div>
-                        <div className="font-medium">Technical Brochure</div>
-                        <div className="text-sm text-gray-500">Complete specifications</div>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                    <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD-Technical-Brochure' : handle === 'aqua2use-pro' ? 'Pro-Dimensions' : 'GWDD-Technical-Brochure'}.pdf`} target="_blank" rel="noopener noreferrer">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-gray-600" />
+                        <div>
+                          <div className="font-medium">Technical Brochure</div>
+                          <div className="text-sm text-gray-500">Complete specifications</div>
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </Button>
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200">
-                    <div className="flex items-center gap-3">
-                      <Wrench className="h-5 w-5 text-gray-600" />
-                      <div>
-                        <div className="font-medium">Maintenance Schedule</div>
-                        <div className="text-sm text-gray-500">Keep your system running</div>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                    <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD' : handle === 'aqua2use-pro' ? 'Pro' : 'GWDD'}-Installation-${handle === 'aqua2use-pro' ? 'Manual' : 'Instructions'}.pdf`} target="_blank" rel="noopener noreferrer">
+                      <div className="flex items-center gap-3">
+                        <Wrench className="h-5 w-5 text-gray-600" />
+                        <div>
+                          <div className="font-medium">Maintenance Schedule</div>
+                          <div className="text-sm text-gray-500">Keep your system running</div>
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </Button>
                 </CardContent>
               </Card>

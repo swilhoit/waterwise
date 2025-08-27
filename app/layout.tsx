@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart-context";
+import { TopBanner } from "@/components/top-banner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <CartProvider>
+          <TopBanner />
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
