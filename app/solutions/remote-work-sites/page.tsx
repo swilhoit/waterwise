@@ -58,32 +58,32 @@ export default function RemoteWorkSites() {
             <FeatureCard
               title="Construction Sites"
               description="Temporary facilities, wash stations, and dust control for construction projects"
-              icon={<HardHat className="h-10 w-10 text-orange-600" />}
+              icon={HardHat}
             />
             <FeatureCard
               title="Mining Operations"
               description="Process water recycling and environmental compliance for extraction sites"
-              icon={<Truck className="h-10 w-10 text-gray-600" />}
+              icon={Truck}
             />
             <FeatureCard
               title="Oil & Gas Sites"
               description="Drilling operations, worker camps, and environmental protection"
-              icon={<Wrench className="h-10 w-10 text-gray-600" />}
+              icon={Wrench}
             />
             <FeatureCard
               title="Remote Facilities"
               description="Research stations, military bases, and temporary installations"
-              icon={<Shield className="h-10 w-10 text-green-600" />}
+              icon={Shield}
             />
             <FeatureCard
               title="Worker Camps"
               description="Temporary housing facilities with showers, kitchens, and laundry"
-              icon={<Users className="h-10 w-10 text-purple-600" />}
+              icon={Users}
             />
             <FeatureCard
               title="Event Sites"
               description="Large outdoor events, festivals, and temporary installations"
-              icon={<Droplets className="h-10 w-10 text-gray-600" />}
+              icon={Droplets}
             />
           </div>
         </div>

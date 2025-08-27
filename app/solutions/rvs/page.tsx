@@ -59,22 +59,22 @@ export default function RVSolutions() {
             <FeatureCard
               title="Extended Boondocking"
               description="Stay off-grid longer without worrying about water capacity"
-              icon={<MapPin className="h-10 w-10 text-gray-600" />}
+              icon={MapPin}
             />
             <FeatureCard
               title="Cost Savings"
               description="Reduce campground fees and dump station costs"
-              icon={<DollarSign className="h-10 w-10 text-green-600" />}
+              icon={DollarSign}
             />
             <FeatureCard
               title="Environmental Impact"
               description="Leave no trace with responsible water management"
-              icon={<Leaf className="h-10 w-10 text-green-600" />}
+              icon={Leaf}
             />
             <FeatureCard
               title="Freedom & Flexibility"
               description="Camp anywhere with confident water management"
-              icon={<Truck className="h-10 w-10 text-gray-600" />}
+              icon={Truck}
             />
           </div>
         </div>

@@ -23,17 +23,17 @@ export default function LaundryToLandscape() {
             <FeatureCard
               title="Easiest Installation"
               description="Simple 3-way valve system - no complex plumbing required"
-              icon={<Wrench className="h-10 w-10 text-gray-600" />}
+              icon={Wrench}
             />
             <FeatureCard
               title="Most Water Savings"
               description="Washing machines use 15-40 gallons per load - the biggest single source"
-              icon={<Droplets className="h-10 w-10 text-gray-600" />}
+              icon={Droplets}
             />
             <FeatureCard
               title="Legal Everywhere"
               description="Permitted in most states without complex permits"
-              icon={<CheckCircle className="h-10 w-10 text-green-600" />}
+              icon={CheckCircle}
             />
           </div>
         </div>
