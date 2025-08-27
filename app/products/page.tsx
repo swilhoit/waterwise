@@ -72,7 +72,7 @@ export default async function ProductsPage() {
 
   return (
     <div>
-      <section className="relative bg-white py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-white py-12 lg:py-16 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
@@ -85,7 +85,7 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-12">
         <div className="container mx-auto px-4">
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
