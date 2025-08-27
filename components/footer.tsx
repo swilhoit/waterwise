@@ -75,11 +75,6 @@ export function Footer() {
                   Customer Stories
                 </Link>
               </li>
-              <li>
-                <Link href="/about" className="text-gray-300 hover:text-white text-sm">
-                  About Us
-                </Link>
-              </li>
             </ul>
           </div>
 

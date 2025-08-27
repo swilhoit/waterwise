@@ -10,7 +10,7 @@ export default function Solutions() {
       title: "Homes",
       description: "Perfect for single-family homes with standard plumbing systems",
       icon: HomeIcon,
-      image: "/images/solutions/homes.jpg",
+      image: "/images/family-garden.jpg",
       benefits: [
         "Reduce water bills by 40-60%",
         "Easy DIY installation",
@@ -23,7 +23,7 @@ export default function Solutions() {
       title: "Tiny Homes", 
       description: "Compact systems designed for space-efficient living",
       icon: TreePine,
-      image: "/images/solutions/tiny-homes.jpg",
+      image: "/images/aqua2use-greywater-recycling-sytem.png",
       benefits: [
         "Space-efficient design",
         "Off-grid compatible",
@@ -36,7 +36,7 @@ export default function Solutions() {
       title: "RVs & Mobile Living",
       description: "Portable greywater solutions for life on the road",
       icon: Truck,
-      image: "/images/solutions/rvs.jpg", 
+      image: "/images/gwdd-ug.jpg", 
       benefits: [
         "Portable and lightweight",
         "Extends boondocking time",
@@ -49,7 +49,7 @@ export default function Solutions() {
       title: "Cabins & Remote Properties",
       description: "Reliable systems for weekend getaways and remote locations",
       icon: Mountain,
-      image: "/images/solutions/cabins.jpg",
+      image: "/images/cabin-greywater.jpg",
       benefits: [
         "Off-grid operation available",
         "Minimal maintenance required",
@@ -62,7 +62,7 @@ export default function Solutions() {
       title: "Commercial Properties",
       description: "High-capacity systems for apartments, hotels, and businesses",
       icon: Building,
-      image: "/images/solutions/commercial.jpg",
+      image: "/images/gwdd-ug.jpg",
       benefits: [
         "Handle high-volume usage",
         "Professional installation",
@@ -75,7 +75,7 @@ export default function Solutions() {
       title: "Custom Applications",
       description: "Tailored solutions for unique properties and special requirements",
       icon: Car,
-      image: "/images/solutions/custom.jpg",
+      image: "/images/water-reuse.jpg",
       benefits: [
         "Custom engineering available",
         "Unique property solutions",

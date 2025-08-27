@@ -106,13 +106,6 @@ export function Header() {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link href="/about" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                      About Us
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
 
@@ -159,9 +152,6 @@ export function Header() {
                 </Link>
                 <Link href="/blog" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
                   Blog
-                </Link>
-                <Link href="/about" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  About Us
                 </Link>
                 <Button asChild className="mt-4 bg-black hover:bg-gray-800 text-white">
                   <Link href="/contact">Get Quote</Link>
