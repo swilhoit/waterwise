@@ -1,8 +1,8 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Star, Quote, Home as HomeIcon, TreePine, DollarSign, Droplets } from "lucide-react"
-import Link from "next/link"
 
 const stories = [
   {
@@ -130,11 +130,70 @@ export default function CustomerStories() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Success Stories from Across America
+              Featured Success Stories
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From tiny homes to large estates, see how our customers are transforming their water usage
+              Real customers sharing their greywater journey and incredible results
             </p>
+          </div>
+
+          {/* Featured Stories */}
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <div className="relative h-48 mb-4">
+                  <Image
+                    src="/images/tiny-home-customer.jpg"
+                    alt="California homeowner story"
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+                <CardTitle className="text-xl">California Homeowner Saves Trees During Drought</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Jay installed an Aqua2use system to protect his 60-year-old redwoods and camellias during California's severe droughts. Now 90% of his household water is reused for irrigation.
+                </p>
+                <blockquote className="italic text-gray-700 border-l-4 border-blue-600 pl-4 mb-4">
+                  "If you're even a little handy and care about saving water, Aqua2use is an affordable way to make a big impact."
+                </blockquote>
+                <Button asChild className="w-full">
+                  <Link href="/customer-stories/california-homeowner">Read Full Story</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <div className="relative h-48 mb-4">
+                  <Image
+                    src="/images/rv-customer.jpg"
+                    alt="RV owner story"
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+                <CardTitle className="text-xl">RV Owner Transforms Waste into Garden Paradise</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">
+                  Jay Linden solved his RV's drainage problems with an Aqua2use GWDD, turning muddy puddles and odors into a thriving garden using recycled greywater.
+                </p>
+                <blockquote className="italic text-gray-700 border-l-4 border-green-600 pl-4 mb-4">
+                  "I've been happy with the results. The plants are healthy and around my trailer is dry."
+                </blockquote>
+                <Button asChild className="w-full">
+                  <Link href="/customer-stories/rv-owner">Read Full Story</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              More Success Stories from Our Community
+            </h3>
           </div>
 
           <div className="grid gap-12 max-w-6xl mx-auto">

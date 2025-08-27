@@ -16,42 +16,42 @@ export function Footer() {
               className="h-10 w-auto mb-4 brightness-0 invert"
             />
             <p className="text-sm text-gray-300 mb-4">
-              Leading provider of greywater recycling systems for homes, RVs, and sustainable developments.
+              Wholesale distributor of greywater systems. Start reusing laundry, shower, and bath water to irrigate your yard every day.
+            </p>
+            <p className="text-sm text-gray-400 mb-4 italic">
+              Collect. Filter. Flourish.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform">
+              <Link href="https://www.facebook.com/waterwisegroup" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform">
-                <Instagram className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform">
+              <Link href="https://www.youtube.com/user/WaterWiseGroup" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 transform" target="_blank" rel="noopener noreferrer">
                 <Youtube className="h-5 w-5" />
               </Link>
             </div>
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">Products</h3>
+            <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/products/aqua2use-gwdd" className="text-gray-300 hover:text-white text-sm">
-                  Aqua2use GWDD
+                <Link href="/products" className="text-gray-300 hover:text-white text-sm">
+                  Greywater Pumps
                 </Link>
               </li>
               <li>
-                <Link href="/products/aqua2use-pro" className="text-gray-300 hover:text-white text-sm">
-                  Aqua2use Pro
+                <Link href="/solutions/tiny-homes" className="text-gray-300 hover:text-white text-sm">
+                  Greywater System for Tiny Homes
                 </Link>
               </li>
               <li>
-                <Link href="/products/filters" className="text-gray-300 hover:text-white text-sm">
-                  Replacement Filters
+                <Link href="/solutions/rvs" className="text-gray-300 hover:text-white text-sm">
+                  Greywater System for RVs
                 </Link>
               </li>
               <li>
-                <Link href="/products/pumps" className="text-gray-300 hover:text-white text-sm">
-                  Replacement Pumps
+                <Link href="/solutions/residential" className="text-gray-300 hover:text-white text-sm">
+                  Greywater System for Homes
                 </Link>
               </li>
             </ul>
@@ -61,18 +61,23 @@ export function Footer() {
             <h3 className="font-semibold text-lg mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/how-it-works" className="text-gray-300 hover:text-white text-sm">
-                  How It Works
+                <Link href="/privacy-policy" className="text-gray-300 hover:text-white text-sm">
+                  Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-300 hover:text-white text-sm">
-                  Blog
+                <Link href="/refund-policy" className="text-gray-300 hover:text-white text-sm">
+                  Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/customer-stories" className="text-gray-300 hover:text-white text-sm">
-                  Customer Stories
+                <Link href="/terms-of-service" className="text-gray-300 hover:text-white text-sm">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping-policy" className="text-gray-300 hover:text-white text-sm">
+                  Shipping Policy
                 </Link>
               </li>
             </ul>
@@ -83,16 +88,16 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Phone className="h-4 w-4 mt-0.5 text-gray-400" />
-                <span className="text-sm text-gray-300">1-800-XXX-XXXX</span>
+                <span className="text-sm text-gray-300">(678) 809-3008</span>
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 text-gray-400" />
-                <span className="text-sm text-gray-300">info@waterwisegroup.com</span>
+                <span className="text-sm text-gray-300">sales@waterwisegroup.com</span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 text-gray-400" />
                 <span className="text-sm text-gray-300">
-                  California, USA
+                  Marietta, GA 30068
                 </span>
               </li>
             </ul>
@@ -102,14 +107,23 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400">
-              © 2024 Water Wise Group. All rights reserved. | Saving Water, One Drop at a Time
+              © 2025, Water Wise Group
             </p>
-            <div className="flex gap-6">
-              <Link href="/privacy" className="text-sm text-gray-400 hover:text-white">
-                Privacy Policy
+            <div className="flex flex-wrap gap-4">
+              <Link href="/refund-policy" className="text-sm text-gray-400 hover:text-white">
+                Refund policy
               </Link>
-              <Link href="/terms" className="text-sm text-gray-400 hover:text-white">
-                Terms of Service
+              <Link href="/privacy-policy" className="text-sm text-gray-400 hover:text-white">
+                Privacy policy
+              </Link>
+              <Link href="/terms-of-service" className="text-sm text-gray-400 hover:text-white">
+                Terms of service
+              </Link>
+              <Link href="/contact" className="text-sm text-gray-400 hover:text-white">
+                Contact information
+              </Link>
+              <Link href="/shipping-policy" className="text-sm text-gray-400 hover:text-white">
+                Shipping policy
               </Link>
             </div>
           </div>
