@@ -196,20 +196,10 @@ export default function CustomerStories() {
             </h3>
           </div>
 
-          <div className="grid gap-12 max-w-6xl mx-auto">
+          <div className="grid gap-12 max-w-4xl mx-auto">
             {stories.map((story, index) => (
-              <Card key={story.id} className={`overflow-hidden hover-lift transition-all duration-300 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-                <div className="lg:flex">
-                  <div className="lg:w-1/2">
-                    <Image
-                      src={story.image}
-                      alt={`${story.name}'s ${story.system}`}
-                      width={600}
-                      height={400}
-                      className="w-full h-64 lg:h-full object-cover"
-                    />
-                  </div>
-                  <div className="lg:w-1/2 p-8">
+              <Card key={story.id} className="overflow-hidden hover-lift transition-all duration-300">
+                <div className="p-8">
                     <div className="flex items-center gap-2 mb-4">
                       {[...Array(story.rating)].map((_, i) => (
                         <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
@@ -239,7 +229,6 @@ export default function CustomerStories() {
                         </div>
                       ))}
                     </div>
-                  </div>
                 </div>
               </Card>
             ))}
