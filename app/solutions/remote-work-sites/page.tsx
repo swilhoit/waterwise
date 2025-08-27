@@ -1,3 +1,5 @@
+"use client"
+
 import { PageTemplate, FeatureCard, BenefitList } from "@/components/page-template"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { HardHat, Droplets, Shield, Users, Truck, Wrench } from "lucide-react"
