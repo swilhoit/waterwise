@@ -45,23 +45,23 @@ export default async function Home() {
                 Water Wise Group is on a mission to help you save water, lower your bills, and grow healthier landscapes—without compromising on simplicity or sustainability.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button size="lg" asChild>
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" asChild>
                   <Link href="/products">
                     Explore Systems
                   </Link>
                 </Button>
-                <Button size="lg" variant="secondary" asChild>
+                <Button size="lg" className="bg-gray-600 hover:bg-gray-700 text-white" asChild>
                   <Link href="/how-it-works">How It Works</Link>
                 </Button>
               </div>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">Easy Installation</span>
+                  <span className="text-sm">DIY Friendly</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">50% Water Savings</span>
+                  <span className="text-sm">Save 40% on Water Bills</span>
                 </div>
               </div>
             </div>
@@ -381,10 +381,10 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Perfect for Every Situation
+              Solutions for Every Living Space
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our greywater systems adapt to your specific needs and living situation
+              From tiny homes to large properties, our systems adapt to your water recycling needs
             </p>
           </div>
 
@@ -485,27 +485,27 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-gray-600 mb-2">50%</div>
-              <div className="text-lg font-semibold mb-2">Water Savings</div>
-              <div className="text-gray-600">Average household water usage reduction</div>
-            </div>
-
-            <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-green-600 mb-2">15K</div>
+              <div className="text-4xl lg:text-6xl font-bold text-gray-600 mb-2">40K</div>
               <div className="text-lg font-semibold mb-2">Gallons/Year</div>
-              <div className="text-gray-600">Water recycled by typical system</div>
+              <div className="text-gray-600">Water saved annually per system</div>
             </div>
 
             <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-purple-600 mb-2">$300</div>
-              <div className="text-lg font-semibold mb-2">Annual Savings</div>
-              <div className="text-gray-600">Average yearly water bill reduction</div>
+              <div className="text-4xl lg:text-6xl font-bold text-green-600 mb-2">40%</div>
+              <div className="text-lg font-semibold mb-2">Lower Bills</div>
+              <div className="text-gray-600">Average water bill reduction</div>
             </div>
 
             <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-orange-600 mb-2">75%</div>
-              <div className="text-lg font-semibold mb-2">Less Strain</div>
-              <div className="text-gray-600">Reduced load on water treatment plants</div>
+              <div className="text-4xl lg:text-6xl font-bold text-purple-600 mb-2">5K+</div>
+              <div className="text-lg font-semibold mb-2">Systems Sold</div>
+              <div className="text-gray-600">Since 2010</div>
+            </div>
+
+            <div className="text-center">
+              <div className="text-4xl lg:text-6xl font-bold text-orange-600 mb-2">4</div>
+              <div className="text-lg font-semibold mb-2">Stage Filtration</div>
+              <div className="text-gray-600">Progressive Matala filter system</div>
             </div>
           </div>
         </div>
@@ -556,75 +556,6 @@ export default async function Home() {
                 <CardDescription>
                   Dedicated customer service team and nationwide network of certified installers
                 </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Installation & Support
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Professional installation and ongoing support when you need it
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <Wrench className="h-10 w-10 text-gray-600 mb-4" />
-                <CardTitle>Professional Installation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>Certified installer network nationwide</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>Complete site assessment included</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>Permit assistance and compliance</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>System testing and commissioning</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <Users className="h-10 w-10 text-gray-600 mb-4" />
-                <CardTitle>Ongoing Support</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>24/7 technical support hotline</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>Annual maintenance programs</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>Replacement parts readily available</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <span>Performance monitoring and optimization</span>
-                  </li>
-                </ul>
               </CardContent>
             </Card>
           </div>
@@ -713,7 +644,7 @@ export default async function Home() {
             Get a personalized quote for your greywater recycling system today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
+            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold hover-lift" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
             <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>

@@ -12,6 +12,26 @@ if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true })
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
+async function editWithImage(sourcePath, prompt) {
+  const form = new FormData()
+  form.append('model', PREFERRED_MODEL)
+  form.append('prompt', prompt)
+  form.append('size', '1536x1024')
+  form.append('image', fs.createReadStream(sourcePath))
+  const res = await fetch('https://api.openai.com/v1/images/edits', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+    body: form
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    const err = new Error(text)
+    err.status = res.status
+    throw err
+  }
+  return await res.json()
+}
+
 const prompts = [
   { file: 'homes-ai.jpg', prompt: 'Photorealistic suburban single-family home exterior with water-wise landscaping, native plants and mulch, golden hour natural light, soft shadows, realistic textures, editorial-grade photography, color accurate, no text or logos, tasteful and authentic, 3:2 aspect' },
   { file: 'tiny-homes-ai.jpg', prompt: 'Photorealistic tiny house exterior with wood siding, compact sustainable garden and planters, warm evening light, clean composition, documentary/editorial style, realistic materials, no text or logos, 3:2 aspect' },
@@ -41,13 +61,7 @@ async function generateAll() {
     let image
     try {
       if (item.source && fs.existsSync(item.source)) {
-        // Image-to-image: use edits endpoint when source is provided
-        image = await client.images.edits({
-          model: PREFERRED_MODEL,
-          prompt,
-          image: fs.createReadStream(item.source),
-          size: '1536x1024'
-        })
+        image = await editWithImage(item.source, prompt)
       } else {
         image = await client.images.generate({
           model: PREFERRED_MODEL,
