@@ -1,222 +1,430 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, XCircle, AlertTriangle, MapPin, FileText, Phone } from "lucide-react"
-import { getAllStates, getStateInfo, getStateSlug, getMetadata, getStatesByLegalStatus, getProgressiveStates, getRestrictiveStates } from "@/lib/greywater-laws"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Greywater Laws by State - Complete Directory | Water Wise Group",
-  description: "Complete state-by-state directory of greywater laws and regulations. Find permit requirements, legal status, and contact information for all 50 states.",
-  keywords: "greywater laws, state regulations, permits, water reuse, greywater systems, legal requirements",
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { PageTemplate, FeatureCard } from "@/components/page-template"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Shield, AlertTriangle, CheckCircle, BookOpen, Grid3X3, Table } from "lucide-react"
+import stateDirectory from "@/greywater-state-directory.json"
+
+// Transform the imported data into the format needed for display
+const stateData = Object.entries(stateDirectory.states).map(([stateName, data]) => {
+  // Determine status category based on legalStatus
+  let status = "Limited"
+  if (data.legalStatus === "Legal" || data.legalStatus === "Legal and Regulated" || data.legalStatus === "Regulated and Permitted" || data.legalStatus === "Comprehensive Regulations") {
+    status = "Fully Legal"
+  } else if (data.legalStatus === "Restricted" || data.legalStatus === "Highly Restricted" || data.legalStatus === "Limited" || data.legalStatus === "Limited/Unclear") {
+    status = "Restricted"
+  } else if (data.legalStatus === "Effectively Prohibited" || data.legalStatus === "No Formal Regulations" || data.legalStatus === "No Specific Regulations") {
+    status = "Prohibited"
+  }
+  
+  // Create a brief description from the regulatory classification
+  const description = data.regulatoryClassification || data.legalStatus
+  
+  // Extract key details from the summary
+  const details = data.keyRestrictions?.join(". ") || data.summary?.substring(0, 150) + "..."
+  
+  return {
+    state: stateName,
+    status,
+    description,
+    details,
+    fullSummary: data.summary,
+    permitRequired: data.permitRequired,
+    permitThresholdGpd: data.permitThresholdGpd,
+    indoorUseAllowed: data.indoorUseAllowed,
+    outdoorUseAllowed: data.outdoorUseAllowed,
+    approvedUses: data.approvedUses,
+    keyRestrictions: data.keyRestrictions,
+    governingCode: data.governingCode,
+    primaryAgency: data.primaryAgency
+  }
+}).sort((a, b) => a.state.localeCompare(b.state))
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "Fully Legal":
+      return "bg-green-100 text-green-800 border-green-200"
+    case "Restricted":
+      return "bg-yellow-100 text-yellow-800 border-yellow-200"
+    case "Limited":
+      return "bg-orange-100 text-orange-800 border-orange-200"
+    case "Prohibited":
+      return "bg-red-100 text-red-800 border-red-200"
+    default:
+      return "bg-gray-100 text-gray-800 border-gray-200"
+  }
 }
 
-export default function GreywaterLaws() {
-  const metadata = getMetadata()
-  const states = getAllStates()
-  const statesByStatus = getStatesByLegalStatus()
-  const progressiveStates = getProgressiveStates()
-  const restrictiveStates = getRestrictiveStates()
-
-  const getStatusColor = (status: string) => {
-    const lowerStatus = status.toLowerCase()
-    if (lowerStatus.includes('legal') && !lowerStatus.includes('illegal')) return 'text-green-600'
-    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return 'text-gray-600'
-    if (lowerStatus.includes('limited') || lowerStatus.includes('unclear')) return 'text-yellow-600'
-    if (lowerStatus.includes('prohibited') || lowerStatus.includes('no formal') || lowerStatus.includes('no specific')) return 'text-red-600'
-    return 'text-gray-600'
+export default function GreywaterStateLaws() {
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('card')
+  const router = useRouter()
+  
+  // Calculate statistics from the data
+  const fullyLegalCount = stateData.filter(s => s.status === "Fully Legal").length
+  const restrictedCount = stateData.filter(s => s.status === "Restricted").length
+  const prohibitedCount = stateData.filter(s => s.status === "Prohibited").length
+  const limitedCount = stateData.filter(s => s.status === "Limited").length
+  
+  // Helper function to create state slug
+  const getStateSlug = (stateName: string) => {
+    return stateName.toLowerCase().replace(/\s+/g, '-')
   }
-
-  const getStatusIcon = (status: string) => {
-    const lowerStatus = status.toLowerCase()
-    if (lowerStatus.includes('legal') && !lowerStatus.includes('illegal')) return <CheckCircle className="h-5 w-5 text-green-600" />
-    if (lowerStatus.includes('regulated') || lowerStatus.includes('permitted')) return <CheckCircle className="h-5 w-5 text-gray-600" />
-    if (lowerStatus.includes('limited') || lowerStatus.includes('unclear')) return <AlertTriangle className="h-5 w-5 text-yellow-600" />
-    if (lowerStatus.includes('prohibited') || lowerStatus.includes('no formal') || lowerStatus.includes('no specific')) return <XCircle className="h-5 w-5 text-red-600" />
-    return <AlertTriangle className="h-5 w-5 text-gray-600" />
+  
+  // Navigate to state detail page
+  const navigateToState = (stateName: string) => {
+    router.push(`/greywater-laws/${getStateSlug(stateName)}`)
   }
-
+  
   return (
-    <div>
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
-              Greywater Laws by <span className="text-gradient">State</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed animate-slide-up">
-              {metadata.title}
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <div className="bg-white rounded-lg px-4 py-2">
-                <span className="text-gray-500">Last Updated:</span> <span className="font-semibold">{metadata.lastUpdated}</span>
-              </div>
-              <div className="bg-white rounded-lg px-4 py-2">
-                <span className="text-gray-500">Total States:</span> <span className="font-semibold">{metadata.totalStates}</span>
-              </div>
-              <div className="bg-white rounded-lg px-4 py-2">
-                <span className="text-gray-500">Data Source:</span> <span className="font-semibold">{metadata.dataSource}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <Card className="p-6">
-              <CardContent className="prose prose-lg max-w-none">
-                <p className="text-gray-700 leading-relaxed">
-                  {metadata.summary}
+    <PageTemplate
+      title="Greywater State Laws & Regulations"
+      subtitle="Understanding the legal landscape for greywater systems across the United States. Stay compliant while maximizing your water savings."
+      ctaTitle="Need Help Navigating Regulations?"
+      ctaSubtitle="Our experts can help you understand local requirements and design compliant systems"
+      ctaButtonText="Get Expert Guidance"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Overview */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Regulatory Overview - All 50 States</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card className="border-l-4 border-l-green-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center justify-between">
+                  <span>Fully Legal</span>
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </CardTitle>
+                <CardDescription>
+                  {fullyLegalCount} states
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  Comprehensive regulations allowing greywater systems with permits
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-l-4 border-l-yellow-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center justify-between">
+                  <span>Restricted</span>
+                  <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                </CardTitle>
+                <CardDescription>
+                  {restrictedCount} states
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  Limited use, often only specific system types allowed
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-l-4 border-l-orange-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center justify-between">
+                  <span>Limited</span>
+                  <Shield className="h-5 w-5 text-orange-600" />
+                </CardTitle>
+                <CardDescription>
+                  {limitedCount} states
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  Unclear regulations or case-by-case approval
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-l-4 border-l-red-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center justify-between">
+                  <span>Prohibited</span>
+                  <Shield className="h-5 w-5 text-red-600" />
+                </CardTitle>
+                <CardDescription>
+                  {prohibitedCount} states
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  No greywater systems permitted or no formal regulations
                 </p>
               </CardContent>
             </Card>
           </div>
         </div>
-      </section>
 
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Quick Overview
-              </h2>
-              <p className="text-xl text-gray-600">
-                Find your state's greywater regulations at a glance
+        {/* State-by-State Breakdown */}
+        <div className="mb-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+            <h2 className="text-3xl font-bold text-gray-900">State-by-State Regulations</h2>
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === 'card' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('card')}
+                className="flex items-center gap-2"
+              >
+                <Grid3X3 className="h-4 w-4" />
+                Cards
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className="flex items-center gap-2"
+              >
+                <Table className="h-4 w-4" />
+                Table
+              </Button>
+            </div>
+          </div>
+
+          {viewMode === 'card' ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {stateData.map((state, index) => (
+                <Card 
+                  key={index} 
+                  className="hover-lift transition-all duration-300 cursor-pointer hover:shadow-lg"
+                  onClick={() => navigateToState(state.state)}
+                >
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-lg hover:text-blue-700 transition-colors">
+                        {state.state}
+                      </CardTitle>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(state.status)}`}>
+                        {state.status}
+                      </span>
+                    </div>
+                    <CardDescription>{state.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">{state.details}</p>
+                    <p className="text-xs text-blue-600 mt-3 font-medium">Click for details →</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-4 font-semibold text-gray-900">State</th>
+                    <th className="text-left p-4 font-semibold text-gray-900">Status</th>
+                    <th className="text-left p-4 font-semibold text-gray-900">Permit Required</th>
+                    <th className="text-left p-4 font-semibold text-gray-900">Indoor Use</th>
+                    <th className="text-left p-4 font-semibold text-gray-900">Outdoor Use</th>
+                    <th className="text-left p-4 font-semibold text-gray-900 hidden lg:table-cell">Key Restrictions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stateData.map((state, index) => (
+                    <tr 
+                      key={index} 
+                      className="border-b hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => navigateToState(state.state)}
+                    >
+                      <td className="p-4 font-medium text-blue-700 hover:text-blue-800">
+                        {state.state}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium border inline-block ${getStatusColor(state.status)}`}>
+                          {state.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-sm text-gray-600">
+                        {state.permitRequired === "Yes" ? "Yes" : 
+                         state.permitRequired === "No" ? "No" :
+                         state.permitRequired || "Varies"}
+                      </td>
+                      <td className="p-4 text-center">
+                        {state.indoorUseAllowed ? (
+                          <CheckCircle className="h-4 w-4 text-green-600 inline" />
+                        ) : (
+                          <AlertTriangle className="h-4 w-4 text-red-600 inline" />
+                        )}
+                      </td>
+                      <td className="p-4 text-center">
+                        {state.outdoorUseAllowed ? (
+                          <CheckCircle className="h-4 w-4 text-green-600 inline" />
+                        ) : (
+                          <AlertTriangle className="h-4 w-4 text-red-600 inline" />
+                        )}
+                      </td>
+                      <td className="p-4 text-sm text-gray-600 hidden lg:table-cell">
+                        {state.keyRestrictions?.slice(0, 2).join(". ") || state.details}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Common Requirements */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Common Requirements Across States</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-gray-600" />
+                  Permit Requirements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Building permits for permanent installations</li>
+                  <li>• Health department approval in many areas</li>
+                  <li>• Professional design for large systems</li>
+                  <li>• Inspection requirements</li>
+                  <li>• Annual compliance reporting (some states)</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-green-600" />
+                  Safety Standards
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Subsurface irrigation preferred</li>
+                  <li>• Setbacks from wells and property lines</li>
+                  <li>• Use of approved soaps and detergents</li>
+                  <li>• No storage beyond 24 hours</li>
+                  <li>• Backflow prevention requirements</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Types of Systems */}
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Common System Categories</h2>
+          <div className="space-y-6">
+            <Card className="border-l-4 border-l-green-500">
+              <CardHeader>
+                <CardTitle>Laundry-to-Landscape (Most Permissive)</CardTitle>
+                <CardDescription>
+                  Direct connection from washing machine to landscape irrigation
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700">
+                  Often requires no permit in permissive states. Simple three-way valve system 
+                  allows switching between sewer and landscape irrigation. Most commonly allowed 
+                  system type across all states with greywater laws.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-yellow-500">
+              <CardHeader>
+                <CardTitle>Simple Systems (Moderate Restrictions)</CardTitle>
+                <CardDescription>
+                  Basic greywater systems with minimal treatment
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700">
+                  Usually includes basic filtration and surge tanks. May collect from multiple 
+                  sources like showers and bathroom sinks. Typically requires permits and 
+                  professional installation in most states.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-blue-500">
+              <CardHeader>
+                <CardTitle>Complex Systems (Most Regulated)</CardTitle>
+                <CardDescription>
+                  Advanced treatment and distribution systems
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700">
+                  Includes multi-stage filtration, disinfection, and automated distribution. 
+                  Often requires engineered design, professional installation, and ongoing 
+                  maintenance contracts. May require special permits and inspections.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Steps to Compliance */}
+        <div className="bg-gray-50 rounded-lg p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Steps to Legal Compliance</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-gray-600">1</span>
+              </div>
+              <h3 className="font-semibold mb-2">Research Local Laws</h3>
+              <p className="text-gray-600 text-sm">
+                Contact local building departments, health departments, and water utilities
               </p>
             </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              <Card className="border-green-200 bg-green-50/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CheckCircle className="h-6 w-6 text-green-600" />
-                    Progressive States
-                  </CardTitle>
-                  <CardDescription>
-                    States with user-friendly greywater policies
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold text-green-600 mb-2">{progressiveStates.length}</p>
-                  <p className="text-sm text-gray-600">
-                    Including Arizona, California, Texas, and others with permit-free thresholds
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-yellow-200 bg-yellow-50/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-6 w-6 text-yellow-600" />
-                    Limited/Unclear
-                  </CardTitle>
-                  <CardDescription>
-                    States with limited or unclear regulations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold text-yellow-600 mb-2">
-                    {states.length - progressiveStates.length - restrictiveStates.length}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Requiring case-by-case approval or lacking clear guidelines
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-red-200 bg-red-50/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <XCircle className="h-6 w-6 text-red-600" />
-                    Restrictive/Prohibited
-                  </CardTitle>
-                  <CardDescription>
-                    States prohibiting or severely restricting greywater
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold text-red-600 mb-2">{restrictiveStates.length}</p>
-                  <p className="text-sm text-gray-600">
-                    Including Illinois, Indiana, and others with no legal pathway
-                  </p>
-                </CardContent>
-              </Card>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-gray-600">2</span>
+              </div>
+              <h3 className="font-semibold mb-2">Choose Compliant System</h3>
+              <p className="text-gray-600 text-sm">
+                Select a system type that meets local requirements and your needs
+              </p>
             </div>
-
-            <div className="bg-white rounded-lg overflow-hidden">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-2xl font-bold text-gray-900">
-                  All States Directory
-                </h3>
-                <p className="text-gray-600 mt-2">
-                  Click on any state to view detailed regulations, permit requirements, and contact information
-                </p>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-gray-600">3</span>
               </div>
-              <div className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                  {states.map((stateName) => {
-                    const stateInfo = getStateInfo(stateName)
-                    if (!stateInfo) return null
-                    
-                    return (
-                      <Link
-                        key={stateName}
-                        href={`/greywater-laws/${getStateSlug(stateName)}`}
-                        className="group"
-                      >
-                        <Card className="hover-lift transition-all duration-300 h-full">
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-2">
-                              <h4 className="font-semibold text-gray-900 group-hover:text-gray-600 transition-colors">
-                                {stateName}
-                              </h4>
-                              {getStatusIcon(stateInfo.legalStatus)}
-                            </div>
-                            <p className={`text-sm ${getStatusColor(stateInfo.legalStatus)}`}>
-                              {stateInfo.legalStatus}
-                            </p>
-                            {stateInfo.permitThresholdGpd && (
-                              <p className="text-xs text-gray-500 mt-1">
-                                No permit under {stateInfo.permitThresholdGpd} gpd
-                              </p>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    )
-                  })}
-                </div>
+              <h3 className="font-semibold mb-2">Obtain Permits</h3>
+              <p className="text-gray-600 text-sm">
+                Submit applications and get necessary approvals before installation
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-gray-600">4</span>
               </div>
+              <h3 className="font-semibold mb-2">Professional Install</h3>
+              <p className="text-gray-600 text-sm">
+                Use licensed contractors and pass required inspections
+              </p>
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="py-20 bg-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Need Help Understanding Your State's Regulations?
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Our experts can guide you through the permitting process and recommend the right system for your location
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link href="/contact">Get Expert Consultation</Link>
-              </Button>
-              <Button size="lg" variant="secondary" asChild>
-                <Link href="/products">View Compliant Systems</Link>
-              </Button>
+        {/* Important Legal Notice */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-16">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-6 w-6 text-gray-600 mt-1 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-semibold text-blue-800 mb-2">Important Legal Notice</h3>
+              <p className="text-blue-700 leading-relaxed">
+                This information is for general guidance only and may not reflect the most current regulations. 
+                Greywater laws vary significantly by state, county, and municipality. Always consult with local 
+                authorities and obtain necessary permits before installing any greywater system.
+              </p>
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </PageTemplate>
   )
 }
