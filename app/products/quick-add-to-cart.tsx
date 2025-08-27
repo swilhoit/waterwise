@@ -40,8 +40,8 @@ export function QuickAddToCart({ product }: QuickAddToCartProps) {
 
   return (
     <Button 
-      size="sm"
-      className="w-full" 
+      size="lg"
+      className="w-full bg-black hover:bg-gray-800 text-white" 
       onClick={handleAddToCart}
       disabled={isAdded}
     >

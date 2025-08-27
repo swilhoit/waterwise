@@ -92,13 +92,13 @@ export default async function ProductsPage() {
             {displayProducts.map((product: any, index: number) => (
               <Card key={product.id || index} className="hover-lift transition-all duration-300">
                 <CardHeader>
-                  <div className="relative mb-4">
+                  <div className="relative mb-4 aspect-square">
                     <Image
                       src={product.images?.edges?.[0]?.node?.url || product.image}
                       alt={product.images?.edges?.[0]?.node?.altText || product.title}
-                      width={600}
-                      height={400}
-                      className="rounded-lg w-full h-64 object-cover"
+                      fill
+                      className="rounded-lg object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       unoptimized
                     />
                   </div>
@@ -108,7 +108,7 @@ export default async function ProductsPage() {
                 <CardContent>
                   {product.priceRange?.minVariantPrice ? (
                     <div className="text-2xl font-bold text-gray-600 mb-4">
-                      From ${product.priceRange.minVariantPrice.amount}
+                      From ${Math.round(parseFloat(product.priceRange.minVariantPrice.amount))}
                     </div>
                   ) : (
                     <div className="text-2xl font-bold text-gray-600 mb-4">
@@ -127,15 +127,17 @@ export default async function ProductsPage() {
                     </ul>
                   )}
                   
-                  <div className="space-y-3">
-                    <Button className="w-full" size="lg" asChild>
+                  <div className="flex gap-3">
+                    <Button className="flex-1 bg-black hover:bg-gray-800 text-white" size="lg" asChild>
                       <Link href={`/products/${product.handle}`}>
                         Learn More
                       </Link>
                     </Button>
                     
                     {!product.variants && (
-                      <QuickAddToCart product={product} />
+                      <div className="flex-1">
+                        <QuickAddToCart product={product} />
+                      </div>
                     )}
                   </div>
                 </CardContent>
@@ -201,7 +203,7 @@ export default async function ProductsPage() {
             <p className="text-lg text-gray-600 mb-6">
               Not sure which system is right for you? Our experts are here to help.
             </p>
-            <Button size="lg" asChild>
+            <Button size="lg" asChild className="bg-black hover:bg-gray-800 text-white">
               <Link href="/contact">Get Expert Recommendation</Link>
             </Button>
           </div>
