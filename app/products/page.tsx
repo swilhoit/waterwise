@@ -88,7 +88,7 @@ export default async function ProductsPage() {
       <section className="py-20">
         <div className="container mx-auto px-4">
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayProducts.map((product: any, index: number) => (
               <Card key={product.id || index} className="hover-lift transition-all duration-300">
                 <CardHeader>
