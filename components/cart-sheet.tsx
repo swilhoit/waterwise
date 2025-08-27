@@ -130,7 +130,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
                 <div className="mt-6 space-y-3">
                   <Button
                     onClick={handleCheckout}
-                    className="w-full"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
                     size="lg"
                     disabled={isCheckingOut}
                   >

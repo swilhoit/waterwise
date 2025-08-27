@@ -171,7 +171,7 @@ export default async function Home() {
                         From ${product.priceRange.minVariantPrice.amount}
                       </div>
                     )}
-                    <Button className="w-full" asChild>
+                    <Button className="w-full bg-black hover:bg-gray-800 text-white" asChild>
                       <Link href={`/products/${product.handle}`}>Learn More</Link>
                     </Button>
                   </CardContent>
@@ -207,7 +207,7 @@ export default async function Home() {
                       <span>Progressive filtration system</span>
                     </li>
                   </ul>
-                  <Button className="w-full mt-6" asChild>
+                  <Button className="w-full mt-6 bg-black hover:bg-gray-800 text-white" asChild>
                     <Link href="/products/aqua2use-gwdd">Learn More</Link>
                   </Button>
                 </CardContent>
@@ -240,7 +240,7 @@ export default async function Home() {
                       <span>Advanced multi-stage filtration</span>
                     </li>
                   </ul>
-                  <Button className="w-full mt-6" asChild>
+                  <Button className="w-full mt-6 bg-black hover:bg-gray-800 text-white" asChild>
                     <Link href="/products/aqua2use-pro">Learn More</Link>
                   </Button>
                 </CardContent>
@@ -328,7 +328,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Learn the basics of greywater recycling and how it can benefit your home
                 </CardDescription>
-                <Button variant="secondary" asChild className="w-full">
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
                   <Link href="/what-is-greywater">Learn More</Link>
                 </Button>
               </CardContent>
@@ -343,7 +343,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Understand the process and technology behind greywater systems
                 </CardDescription>
-                <Button variant="secondary" asChild className="w-full">
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
                   <Link href="/how-it-works">Learn More</Link>
                 </Button>
               </CardContent>
@@ -358,7 +358,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Check your state's greywater regulations and permit requirements
                 </CardDescription>
-                <Button variant="secondary" asChild className="w-full">
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
                   <Link href="/greywater-laws">Check Laws</Link>
                 </Button>
               </CardContent>
@@ -388,7 +388,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Compact systems designed for mobile living and small spaces
                 </CardDescription>
-                <Button variant="secondary" size="sm" asChild>
+                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
                   <Link href="/tiny-house-systems">Learn More</Link>
                 </Button>
               </CardContent>
@@ -403,7 +403,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Maximize water conservation in water-scarce regions
                 </CardDescription>
-                <Button variant="secondary" size="sm" asChild>
+                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
                   <Link href="/solutions">Learn More</Link>
                 </Button>
               </CardContent>
@@ -418,7 +418,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Reduce load on septic systems and extend their lifespan
                 </CardDescription>
-                <Button variant="secondary" size="sm" asChild>
+                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
                   <Link href="/solutions">Learn More</Link>
                 </Button>
               </CardContent>
@@ -433,7 +433,7 @@ export default async function Home() {
                 <CardDescription className="mb-4">
                   Self-sufficient water solutions for off-grid properties
                 </CardDescription>
-                <Button variant="secondary" size="sm" asChild>
+                <Button size="sm" asChild className="bg-black hover:bg-gray-800 text-white">
                   <Link href="/solutions/remote-work-sites">Learn More</Link>
                 </Button>
               </CardContent>
