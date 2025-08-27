@@ -90,8 +90,8 @@ export default function Solutions() {
     <div>
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+        <div className="px-4">
+          <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
               <span className="text-gradient">Solutions</span> for Every Property
             </h1>
@@ -103,7 +103,7 @@ export default function Solutions() {
       </section>
 
       <section className="py-20">
-        <div className="container mx-auto px-4">
+        <div className="px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Find Your Perfect Solution
@@ -157,8 +157,8 @@ export default function Solutions() {
       </section>
 
       <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+        <div className="px-4">
+          <div className="max-w-7xl mx-auto text-center">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
               Why Choose Aqua2use for Your Property?
             </h2>
@@ -204,8 +204,8 @@ export default function Solutions() {
       </section>
 
       <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
             <div className="animate-fade-in">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
                 Not Sure Which Solution is Right for You?
@@ -241,7 +241,7 @@ export default function Solutions() {
       </section>
 
       <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="px-4 text-center">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6">
             Ready to Transform Your Water Usage?
           </h2>

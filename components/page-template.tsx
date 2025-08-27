@@ -34,8 +34,8 @@ export function PageTemplate({
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-16 lg:py-24">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="container mx-auto px-4">
-          <div className={`${heroImage ? 'grid lg:grid-cols-2 gap-12 items-center' : 'text-center max-w-4xl mx-auto'}`}>
+        <div className="px-4">
+          <div className={`max-w-7xl mx-auto ${heroImage ? 'grid lg:grid-cols-2 gap-12 items-center' : 'text-center'}`}>
             <div className="animate-fade-in">
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                 {title}
@@ -62,8 +62,10 @@ export function PageTemplate({
 
       {/* Content Section */}
       <section className="py-16">
-        <div className="container mx-auto px-4">
-          {children}
+        <div className="px-4">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
         </div>
       </section>
 
@@ -71,7 +73,7 @@ export function PageTemplate({
       {showCTA && (
         <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
-          <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="px-4 text-center relative z-10">
             <h2 className="text-3xl lg:text-4xl font-bold mb-6">
               {ctaTitle}
             </h2>
