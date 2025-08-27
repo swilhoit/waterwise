@@ -648,7 +648,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+      <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">

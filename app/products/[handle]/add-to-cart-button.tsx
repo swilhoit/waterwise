@@ -68,7 +68,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
   if (!selectedVariant) {
     return (
-      <Button size="lg" className="w-full" disabled>
+      <Button size="lg" className="w-full bg-gray-400 cursor-not-allowed" disabled>
         Out of Stock
       </Button>
     )
@@ -110,7 +110,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
       <Button 
         size="lg" 
-        className="w-full" 
+        className="w-full bg-green-600 hover:bg-green-700 text-white" 
         onClick={handleAddToCart}
         disabled={!selectedVariant?.availableForSale || isAdded}
       >
