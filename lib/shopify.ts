@@ -10,10 +10,17 @@ const client = createStorefrontApiClient({
 })
 
 export function isShopifyConfigured() {
-  return process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN && 
+  // For blog access, we need the admin API token
+  const hasAdminAccess = !!process.env.SHOPIFY_ACCESS_TOKEN
+  
+  // For storefront access (products)
+  const hasStorefrontAccess = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN && 
          process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN !== 'dummy-store.myshopify.com' &&
          process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN &&
          process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN !== 'dummy-token'
+  
+  // Return true if either admin or storefront is configured
+  return hasAdminAccess || hasStorefrontAccess
 }
 
 export async function getProducts() {

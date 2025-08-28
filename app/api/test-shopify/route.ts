@@ -2,9 +2,13 @@ import { NextResponse } from 'next/server'
 import { getBlogArticles } from '@/lib/shopify'
 
 export async function GET() {
+  const hasToken = !!process.env.SHOPIFY_ACCESS_TOKEN
+  const shopDomain = process.env.SHOPIFY_SHOP_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
+  
   console.log('Testing Shopify Blog API...')
-  console.log('SHOPIFY_ACCESS_TOKEN exists:', !!process.env.SHOPIFY_ACCESS_TOKEN)
-  console.log('SHOPIFY_SHOP_DOMAIN:', process.env.SHOPIFY_SHOP_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN)
+  console.log('SHOPIFY_ACCESS_TOKEN exists:', hasToken)
+  console.log('SHOPIFY_SHOP_DOMAIN:', shopDomain)
+  console.log('All env keys:', Object.keys(process.env).filter(k => k.includes('SHOPIFY')).join(', '))
   
   try {
     const articles = await getBlogArticles()
@@ -12,6 +16,8 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
+      hasToken,
+      shopDomain,
       articlesCount: articles.length,
       articles: articles.slice(0, 3).map((a: any) => ({
         title: a.title,
