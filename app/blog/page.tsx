@@ -79,7 +79,7 @@ export default async function Blog() {
       const shopifyPostsFormatted = shopifyArticles.map((article: any) => ({
         id: article.id,
         title: article.title,
-        excerpt: article.summary || (article.content ? article.content.substring(0, 150) + '...' : "Read more about this topic..."),
+        excerpt: article.summary_html || (article.body_html ? article.body_html.replace(/<[^>]*>/g, '').substring(0, 150).trim() + '...' : "Read more about this topic..."),
         image: article.image?.src || "/images/gwdd-gravity.jpg",
         author: article.author || "Water Wise Team",
         date: article.published_at ? new Date(article.published_at).toLocaleDateString('en-US', {
