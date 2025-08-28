@@ -72,6 +72,7 @@ export default async function Blog() {
   let blogPosts = defaultBlogPosts
   
   try {
+    // Force rebuild: Check Shopify blog connection
     const shopifyArticles = await getBlogArticles()
     
     if (shopifyArticles && shopifyArticles.length > 0) {
