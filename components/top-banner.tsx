@@ -9,7 +9,7 @@ export function TopBanner() {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-slate-500 via-gray-500 to-stone-500 text-white py-2">
+      <div className="bg-gradient-to-r from-teal-700 via-cyan-700 to-sky-700 text-white py-2">
         <div className="container mx-auto px-4">
           <button 
             onClick={() => setShowCalculator(true)}

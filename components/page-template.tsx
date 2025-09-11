@@ -37,14 +37,14 @@ export function PageTemplate({
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative py-16 lg:py-24">
+      <section className={`relative ${plainHero ? 'py-10 lg:py-12' : 'py-16 lg:py-24'}`}>
         <div className="px-4">
           <div className={`max-w-7xl mx-auto ${heroImage ? 'grid lg:grid-cols-2 gap-12 items-center' : 'text-center'}`}>
             <div className="animate-fade-in">
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className={`text-4xl lg:text-5xl font-bold text-gray-900 ${plainHero ? 'mb-2' : 'mb-6'} leading-tight`}>
                 {title}
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className={`text-xl text-gray-600 ${plainHero ? 'mb-4' : 'mb-8'} leading-relaxed`}>
                 {subtitle}
               </p>
             </div>

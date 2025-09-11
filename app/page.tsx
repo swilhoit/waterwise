@@ -56,48 +56,104 @@ export default async function Home() {
 
   return (
     <div>
-      <section className="relative py-20 lg:py-32 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fade-in">
-              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Turn Every Drop Into A{" "}
-                <span className="text-gradient">Sustainable Solution</span>
-              </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Water Wise Group is on a mission to help you save water, lower your bills, and grow healthier landscapes—without compromising on simplicity or sustainability.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" asChild>
-                  <Link href="/products">
-                    Explore Systems
-                  </Link>
-                </Button>
-                <Button size="lg" className="bg-gray-600 hover:bg-gray-700 text-white" asChild>
-                  <Link href="/how-it-works">How It Works</Link>
-                </Button>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">DIY Friendly</span>
+      {/* Hero Section Container with Background */}
+      <section className="py-4 px-4">
+        <div className="relative min-h-screen w-full overflow-hidden flex items-center rounded-3xl">
+          {/* Full-screen background image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/sam5d_greywater_irrigation_system_at_a_home_in_southern_califor_b3ae333b-cfd3-4fc4-b8ea-31d09c2361a8.png"
+              alt="Greywater irrigation system at a home in Southern California"
+              fill
+              className="object-cover rounded-3xl"
+              priority
+            />
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40 rounded-3xl" />
+          </div>
+          
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="animate-fade-in">
+                <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+                  Buy Your Water Once<br />
+                  <span className="text-white">Use It Twice</span>
+                </h1>
+                <p className="text-sm text-gray-300 mb-8">
+                  Save up to 80% on your irrigation related water expenses by installing a greywater system
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" asChild>
+                    <Link href="/products">
+                      Explore Systems
+                    </Link>
+                  </Button>
+                  <Button size="lg" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30" asChild>
+                    <Link href="/how-it-works">How It Works</Link>
+                  </Button>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">Save 40% on Water Bills</span>
+                <div className="flex items-center gap-6 justify-center">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                    <span className="text-sm text-white">DIY Friendly</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                    <span className="text-sm text-white">Save 40% on Water Bills</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="relative animate-slide-in-right">
-              <Image
-                src="/images/Gemini_Generated_Image_hwzac2hwzac2hwza 1.png"
-                alt="Aqua2use Greywater System"
-                width={600}
-                height={400}
-                className="rounded-lg relative z-10 hover-lift"
-              />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Aqua2Use System Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
+              The Aqua2Use Greywater System
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for turning your waste greywater into usable irrigation water.
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <Image
+              src="/images/aqua2use.png"
+              alt="Aqua2Use Greywater System"
+              width={800}
+              height={600}
+              className="w-full h-auto rounded-lg"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Comparison Table Section - moved from later in the page and headlines removed */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          {products.length > 0 ? (
+            <ComparisonTable
+              className="max-w-5xl mx-auto"
+              products={products.slice(0, 2).map((p: any) => ({
+                title: p.title,
+                handle: p.handle,
+                priceText: p.priceRange?.minVariantPrice
+                  ? formatPriceDisplay(p.priceRange.minVariantPrice.amount, "From ")
+                  : undefined,
+              }))}
+            />
+          ) : (
+            <ComparisonTable
+              className="max-w-5xl mx-auto"
+              products={[
+                { title: "Aqua2use GWDD", handle: "aqua2use-gwdd" },
+                { title: "Aqua2use Pro", handle: "aqua2use-pro" },
+              ]}
+            />
+          )}
         </div>
       </section>
 
@@ -167,6 +223,221 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Featured in Section */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
+            <Image
+              src="/images/featured-on/architect.avif"
+              alt="Architect Magazine"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+            <Image
+              src="/images/featured-on/family-handyman.svg"
+              alt="Family Handyman"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+            <Image
+              src="/images/featured-on/The_Washington_Post_Newspaper.svg"
+              alt="The Washington Post"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+            <Image
+              src="/images/featured-on/bg-logo_web-large.avif"
+              alt="Better Homes & Gardens"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Greywater & Irrigation Guidelines */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          
+          {/* Visual cards removed per request */}
+
+          {/* Category: Greywater Collection */}
+          <div className="max-w-5xl mx-auto mb-8 text-center">
+            <h3 className="text-4xl font-bold text-gray-800">Greywater Sources</h3>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto place-items-center">
+            {/* Laundry - Approved */}
+            <Card className="hover-lift transition-all duration-300 border-green-600 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-green-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/laundry.png"
+                    alt="Laundry water source"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-green-600 font-bold">Laundry</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Laundry water is typically ideal for reuse when using biodegradable, low-sodium detergents.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Kitchen Sink - Not Approved */}
+            <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/kitchen-sink.png"
+                    alt="Kitchen sink"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-red-600 font-bold">Kitchen Sink</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Kitchen water contains fats, oils, and food waste. Not suitable for reuse.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Toilet - Not Approved */}
+            <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/toilet.png"
+                    alt="Toilet"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-red-600 font-bold">Toilet</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Toilet water is blackwater. Do not reuse under any circumstances.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Bathroom Sink - Approved with Permits */}
+            <Card className="hover-lift transition-all duration-300 border-amber-500 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-amber-500 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved with Permits</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/bathroom.png"
+                    alt="Bathroom sink"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-amber-500 font-bold">Bathroom Sink</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Often allowed for landscape irrigation with a compliant system. Permits may be required.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Shower - Approved with Permits */}
+            <Card className="hover-lift transition-all duration-300 border-amber-500 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-amber-500 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved with Permits</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/shower.png"
+                    alt="Shower"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-amber-500 font-bold">Shower</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Shower water is generally suitable for reuse with proper filtration and permits.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Category: Greywater Irrigation */}
+          <div className="max-w-4xl mx-auto mt-12 mb-8 text-center">
+            <h3 className="text-4xl font-bold text-gray-800">Greywater Irrigation</h3>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 place-items-center">
+            {/* Above Ground Irrigation - Not Approved */}
+            <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/aboveground.png"
+                    alt="Above ground irrigation"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-red-600 font-bold">Above Ground Irrigation</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Sprinklers or surface watering can aerosolize water. Most codes prohibit above-ground greywater irrigation.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Underground Irrigation - Approved */}
+            <Card className="hover-lift transition-all duration-300 border-green-600 border-2 text-center p-6 relative h-[500px]">
+              <Badge className="bg-green-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved</Badge>
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-center mb-6 mt-8">
+                  <Image
+                    src="/images/line-art/underground.png"
+                    alt="Underground irrigation"
+                    width={180}
+                    height={180}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-3xl text-green-600 font-bold">Underground Irrigation</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <CardDescription className="text-base">
+                  Subsurface drip or mulch basins deliver water below the surface, minimizing exposure and meeting code in most regions.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+
+          <p className="text-sm text-gray-500 mt-6 text-center">
+            Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
+          </p>
+        </div>
+      </section>
+
 
       {/* Featured Customer Success Stories */}
       <section className="py-20">
@@ -254,240 +525,6 @@ export default async function Home() {
             <Button size="lg" variant="outline" asChild>
               <Link href="/customer-stories">View All Success Stories</Link>
             </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Greywater & Irrigation Guidelines */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Greywater & Irrigation Guidelines
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Check which household water sources are suitable for greywater reuse
-            </p>
-          </div>
-
-          {/* Category: Greywater Collection */}
-          <div className="max-w-5xl mx-auto mb-4 text-center">
-            <h3 className="text-xl font-semibold text-gray-800">Greywater Sources</h3>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Laundry - Approved */}
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle>Laundry</CardTitle>
-                  <Badge className="bg-green-600 text-white border-transparent">Approved</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Laundry water is typically ideal for reuse when using biodegradable, low-sodium detergents.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Kitchen & Toilet - Not Approved */}
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle>Kitchen & Toilet</CardTitle>
-                  <Badge className="bg-red-600 text-white border-transparent">Not Approved</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Kitchen water contains fats, oils, and food waste; toilets are blackwater. Do not reuse.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Bathroom Sink & Shower - Approved with Permits */}
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle>Bathroom Sink & Shower</CardTitle>
-                  <Badge className="bg-amber-500 text-white border-transparent">Approved with Permits</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Often allowed for landscape irrigation with a compliant system. Permits may be required depending on your location.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Category: Greywater Irrigation */}
-          <div className="max-w-4xl mx-auto mt-12 mb-4 text-center">
-            <h3 className="text-xl font-semibold text-gray-800">Greywater Irrigation</h3>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12">
-            {/* Above Ground Irrigation - Not Approved */}
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle>Above Ground Irrigation</CardTitle>
-                  <Badge className="bg-red-600 text-white border-transparent">Not Approved</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Sprinklers or surface watering can aerosolize water. Most codes prohibit above-ground greywater irrigation.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Underground Irrigation - Approved */}
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle>Underground Irrigation</CardTitle>
-                  <Badge className="bg-green-600 text-white border-transparent">Approved</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Subsurface drip or mulch basins deliver water below the surface, minimizing exposure and meeting code in most regions.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-
-          <p className="text-sm text-gray-500 mt-6 text-center">
-            Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
-            <Image
-              src="/images/architect.png"
-              alt="Architect Magazine"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-            <Image
-              src="/images/family-handyman.svg"
-              alt="Family Handyman"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-            <Image
-              src="/images/The_Washington_Post_Newspaper.svg"
-              alt="The Washington Post"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Removed: Why Choose Greywater Recycling section */}
-
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Our Greywater Systems
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Professional-grade systems designed for easy installation and maximum efficiency
-            </p>
-          </div>
-
-          {products.length > 0 ? (
-            <ComparisonTable
-              className="max-w-5xl mx-auto"
-              products={products.slice(0, 2).map((p: any) => ({
-                title: p.title,
-                handle: p.handle,
-                priceText: p.priceRange?.minVariantPrice
-                  ? formatPriceDisplay(p.priceRange.minVariantPrice.amount, "From ")
-                  : undefined,
-              }))}
-            />
-          ) : (
-            <ComparisonTable
-              className="max-w-5xl mx-auto"
-              products={[
-                { title: "Aqua2use GWDD", handle: "aqua2use-gwdd" },
-                { title: "Aqua2use Pro", handle: "aqua2use-pro" },
-              ]}
-            />
-          )}
-
-          {/* Cards removed; comparison table is the primary UI */}
-        </div>
-      </section>
-
-
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Directory
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Find local resources, regulations, and financial incentives for greywater systems
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <Shield className="h-10 w-10 text-amber-600 mb-4" />
-                <CardTitle>State Laws</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Check your state's greywater regulations, permit requirements, and compliance guidelines
-                </CardDescription>
-                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                  <Link href="/greywater-laws">View State Laws</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <Users className="h-10 w-10 text-blue-600 mb-4" />
-                <CardTitle>Local Installers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Find certified greywater system installers and contractors in your area
-                </CardDescription>
-                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                  <Link href="/installers">Find Installers</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <DollarSign className="h-10 w-10 text-green-600 mb-4" />
-                <CardTitle>Rebates & Incentives</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Discover financial incentives, tax credits, and rebate programs in your area
-                </CardDescription>
-                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                  <Link href="/rebates">View Incentives</Link>
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
@@ -678,61 +715,45 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Is greywater safe to use?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Yes, when properly filtered and treated, greywater is safe for irrigation and non-potable uses. Our systems use multi-stage filtration to remove contaminants and meet all health department standards.
-                </CardDescription>
-              </CardContent>
-            </Card>
+          <div className="max-w-4xl mx-auto">
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Is greywater safe to use?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Yes, when properly filtered and treated, greywater is safe for irrigation and non-potable uses. Our systems use multi-stage filtration to remove contaminants and meet all health department standards.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>How much water can I save?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Most households save 40-50% on their water usage. A typical family of four can recycle 15,000-20,000 gallons per year, saving hundreds of dollars on water bills.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">How much water can I save?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Most households save 40-50% on their water usage. A typical family of four can recycle 15,000-20,000 gallons per year, saving hundreds of dollars on water bills.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Do I need a permit?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Permit requirements vary by state and local jurisdiction. Many areas allow simple laundry-to-landscape systems without permits, while others require permits for all greywater systems. We help navigate local regulations.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Do I need a permit?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Permit requirements vary by state and local jurisdiction. Many areas allow simple laundry-to-landscape systems without permits, while others require permits for all greywater systems. We help navigate local regulations.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>How long does installation take?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Most residential installations take 1-2 days. Simple laundry-to-landscape systems can often be installed in a few hours, while whole-house systems may take longer depending on complexity.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">How long does installation take?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Most residential installations take 1-2 days. Simple laundry-to-landscape systems can often be installed in a few hours, while whole-house systems may take longer depending on complexity.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>What maintenance is required?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Our systems are designed for minimal maintenance. Filter replacement every 6-12 months and periodic system checks are typically all that's needed. We offer maintenance programs for hands-off operation.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">What maintenance is required?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Our systems are designed for minimal maintenance. Filter replacement every 6-12 months and periodic system checks are typically all that's needed. We offer maintenance programs for hands-off operation.
+              </p>
+            </div>
           </div>
         </div>
       </section>

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Calendar, User } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export type BlogCarouselPost = {
   id: string | number
@@ -57,7 +57,7 @@ export function BlogCarousel({ posts, title = "From the Blog", description = "In
             `}</style>
             {posts.map((post) => (
               <div key={post.id} className="min-w-[320px] max-w-[320px] snap-start">
-                <Card className="h-full overflow-hidden hover-lift transition-all duration-300">
+                <Card className="h-full overflow-hidden hover-lift transition-all duration-300 border-0">
                   <CardHeader className="p-0">
                     <Link href={`/blog/${post.slug}`} className="relative block">
                       <Image
@@ -70,20 +70,6 @@ export function BlogCarousel({ posts, title = "From the Blog", description = "In
                     </Link>
                   </CardHeader>
                   <CardContent className="p-5">
-                    <div className="flex items-center gap-4 text-xs text-gray-500 mb-2">
-                      {post.author && (
-                        <div className="flex items-center gap-1">
-                          <User className="h-3.5 w-3.5" />
-                          <span>{post.author}</span>
-                        </div>
-                      )}
-                      {post.date && (
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5" />
-                          <span>{post.date}</span>
-                        </div>
-                      )}
-                    </div>
                     <CardTitle className="text-lg leading-snug mb-2 line-clamp-2">
                       <Link href={`/blog/${post.slug}`} className="hover:underline">
                         {post.title}

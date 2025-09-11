@@ -9,24 +9,49 @@ import { useState, useEffect } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
 import { MegaNav } from "./mega-nav"
-import { getBlogArticles } from "@/lib/shopify"
+import { getBlogArticles, getProducts } from "@/lib/shopify"
+import { MiniProductCard } from "./mini-product-card"
 
 export function DynamicHeader() {
   const [isOpen, setIsOpen] = useState(false)
   const [blogArticles, setBlogArticles] = useState<any[]>([])
+  const [products, setProducts] = useState<any[]>([])
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const { totalItems } = useCart()
 
   useEffect(() => {
-    async function loadBlogArticles() {
+    async function loadData() {
       try {
+        // Load blog articles
         const articles = await getBlogArticles()
         setBlogArticles(articles.slice(0, 6)) // Take top 6 articles for dropdown
+        
+        // Load products
+        const productsData = await getProducts()
+        setProducts(productsData.slice(0, 6)) // Take top 6 products for dropdown
       } catch (error) {
-        console.error('Failed to load blog articles for navigation:', error)
+        console.error('Failed to load data for navigation:', error)
         setBlogArticles([])
+        setProducts([])
       }
     }
-    loadBlogArticles()
+    loadData()
+  }, [])
+
+  // Handle scroll events
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50
+      setIsScrolled(scrolled)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    // Check initial scroll position
+    handleScroll()
+
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const navigationItems = [
@@ -61,30 +86,27 @@ export function DynamicHeader() {
     },
     {
       label: "Products",
-      dropdown: [
+      dropdown: products.length > 0 ? products : [
         {
           title: "Aqua2use GWDD",
           description: "Gravity-fed system for most homes",
           href: "/products/aqua2use-gwdd",
-          image: "/images/gwdd-gravity.jpg"
+          image: "/images/gwdd-gravity.jpg",
+          price: "From $1,295"
         },
         {
           title: "GWDD with Pump",
           description: "Pump system for uphill irrigation",
           href: "/products/aqua2use-gwdd-pump",
-          image: "/images/gwdd-ug.jpg"
+          image: "/images/gwdd-ug.jpg",
+          price: "From $1,695"
         },
         {
           title: "Replacement Filters",
           description: "Keep your system running smoothly",
           href: "/products/replacement-filters",
-          image: "/images/aqua2use-greywater-recycling-sytem.png"
-        },
-        {
-          title: "Replacement Pumps",
-          description: "Pumps and parts for repairs",
-          href: "/products/replacement-pumps",
-          image: "/images/gwdd-gravity.jpg"
+          image: "/images/aqua2use-greywater-recycling-sytem.png",
+          price: "From $89"
         }
       ]
     },
@@ -190,25 +212,38 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-md">
+    <header className={`fixed ${isScrolled ? 'top-0' : 'top-8'} z-[60] w-full transition-all duration-300 ${
+      isScrolled 
+        ? '' 
+        : isDropdownOpen 
+        ? '' 
+        : 'bg-transparent'
+    }`}
+    style={{
+      backgroundColor: (isScrolled || isDropdownOpen) ? '#F4F1E9' : undefined
+    }}>
       <div className="container mx-auto px-4 relative">
-        <div className="flex h-16 items-center justify-between">
+        <div className={`flex ${isScrolled || isDropdownOpen ? 'h-20' : 'h-28'} items-center justify-between`}>
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/logo-water-wise-group.png"
+              src={isScrolled || isDropdownOpen ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
               alt="Water Wise Group"
-              width={150}
-              height={40}
-              className="h-10 w-auto"
+              width={240}
+              height={64}
+              className="h-12 w-auto transition-all duration-300"
             />
           </Link>
 
-          <MegaNav items={navigationItems} />
+          <MegaNav 
+            items={navigationItems} 
+            isScrolled={isScrolled || isDropdownOpen} 
+            onDropdownChange={setIsDropdownOpen}
+          />
 
           <div className="flex items-center gap-4">
               <CartSheet>
                 <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className="h-5 w-5" />
+                  <ShoppingCart className={`h-5 w-5 ${isScrolled || isDropdownOpen ? 'text-gray-900' : 'text-white'}`} />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                       {totalItems}
@@ -217,7 +252,7 @@ export function DynamicHeader() {
                 </Button>
               </CartSheet>
               
-              <Button asChild className="bg-black hover:bg-gray-800 text-white">
+              <Button asChild className={isScrolled || isDropdownOpen ? "bg-black hover:bg-gray-800 text-white" : "bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"}>
                 <Link href="/contact">Get Quote</Link>
               </Button>
           </div>
@@ -225,7 +260,7 @@ export function DynamicHeader() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-5 w-5" />
+                <Menu className={`h-5 w-5 ${isScrolled || isDropdownOpen ? 'text-gray-900' : 'text-white'}`} />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px]">
