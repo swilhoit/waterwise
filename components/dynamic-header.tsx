@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale, Users, DollarSign } from "lucide-react"
 import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
 import { MegaNav } from "./mega-nav"
@@ -19,6 +20,10 @@ export function DynamicHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const { totalItems } = useCart()
+  const pathname = usePathname()
+  
+  // Check if we're on the home page
+  const isHomePage = pathname === '/'
 
   useEffect(() => {
     async function loadData() {
@@ -212,21 +217,21 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className={`fixed ${isScrolled ? 'top-0' : 'top-8'} z-[60] w-full transition-all duration-300 ${
-      isScrolled 
+    <header className={`fixed ${isScrolled || !isHomePage ? 'top-0' : 'top-8'} z-[60] w-full transition-all duration-300 ${
+      isScrolled || !isHomePage
         ? '' 
         : isDropdownOpen 
         ? '' 
         : 'bg-transparent'
     }`}
     style={{
-      backgroundColor: (isScrolled || isDropdownOpen) ? '#F4F1E9' : undefined
+      backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined
     }}>
       <div className="container mx-auto px-4 relative">
-        <div className={`flex ${isScrolled || isDropdownOpen ? 'h-20' : 'h-28'} items-center justify-between`}>
+        <div className={`flex ${isScrolled || isDropdownOpen || !isHomePage ? 'h-20' : 'h-28'} items-center justify-between`}>
           <Link href="/" className="flex items-center">
             <Image
-              src={isScrolled || isDropdownOpen ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
+              src={isScrolled || isDropdownOpen || !isHomePage ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
               alt="Water Wise Group"
               width={240}
               height={64}
@@ -236,14 +241,14 @@ export function DynamicHeader() {
 
           <MegaNav 
             items={navigationItems} 
-            isScrolled={isScrolled || isDropdownOpen} 
+            isScrolled={isScrolled || isDropdownOpen || !isHomePage} 
             onDropdownChange={setIsDropdownOpen}
           />
 
           <div className="flex items-center gap-4">
               <CartSheet>
                 <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className={`h-5 w-5 ${isScrolled || isDropdownOpen ? 'text-gray-900' : 'text-white'}`} />
+                  <ShoppingCart className={`h-5 w-5 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                       {totalItems}
@@ -252,7 +257,7 @@ export function DynamicHeader() {
                 </Button>
               </CartSheet>
               
-              <Button asChild className={isScrolled || isDropdownOpen ? "bg-black hover:bg-gray-800 text-white" : "bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"}>
+              <Button asChild className={isScrolled || isDropdownOpen || !isHomePage ? "bg-black hover:bg-gray-800 text-white" : "bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"}>
                 <Link href="/contact">Get Quote</Link>
               </Button>
           </div>
@@ -260,7 +265,7 @@ export function DynamicHeader() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className={`h-5 w-5 ${isScrolled || isDropdownOpen ? 'text-gray-900' : 'text-white'}`} />
+                <Menu className={`h-5 w-5 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px]">

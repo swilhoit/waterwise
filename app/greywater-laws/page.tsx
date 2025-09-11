@@ -216,7 +216,7 @@ export default function GreywaterStateLaws() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse rounded-lg shadow-sm">
                 <thead>
-                  <tr className="border-b bg-gray-50">
+                  <tr className="border-b-2 border-black">
                     <th className="text-left p-4 font-semibold text-gray-900">State</th>
                     <th className="text-left p-4 font-semibold text-gray-900">Status</th>
                     <th className="text-left p-4 font-semibold text-gray-900">Permit Required</th>
@@ -229,10 +229,10 @@ export default function GreywaterStateLaws() {
                   {stateData.map((state, index) => (
                     <tr 
                       key={index} 
-                      className="border-b hover:bg-gray-50 transition-colors cursor-pointer"
+                      className="border-b border-black hover:bg-gray-50 transition-colors cursor-pointer"
                       onClick={() => navigateToState(state.state)}
                     >
-                      <td className="p-4 font-medium text-blue-700 hover:text-blue-800">
+                      <td className="p-4 font-medium text-black hover:text-gray-800">
                         {state.state}
                       </td>
                       <td className="p-4">
