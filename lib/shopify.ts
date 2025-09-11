@@ -195,7 +195,7 @@ export async function getBlogs() {
   `
 
   try {
-    const { data, errors } = await shopifyFetch({ query })
+    const { data, errors } = await client.request(query)
     
     if (errors) {
       console.error('Failed to fetch blogs:', errors)
@@ -245,9 +245,8 @@ export async function getBlogArticles(blogHandle?: string) {
   `
 
   try {
-    const { data, errors } = await shopifyFetch({ 
-      query,
-      variables: { handle }
+    const { data, errors } = await client.request(query, {
+      variables: { handle },
     })
     
     if (errors) {
