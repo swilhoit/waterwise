@@ -77,55 +77,110 @@ export function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Products</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-white border rounded-lg">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link href="/products/aqua2use-gwdd" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Aqua2use GWDD</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Gravity-fed system for most homes
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link href="/products/aqua2use-gwdd-pump" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">GWDD with Pump</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Pump system for uphill irrigation
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link href="/products/filters" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Replacement Filters</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Keep your system running smoothly
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link href="/products/pumps" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Replacement Pumps</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Pumps and parts for repairs
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li className="col-span-2 border-t pt-2">
-                        <NavigationMenuLink asChild>
-                          <Link href="/products" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none text-blue-600">View All Products →</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    </ul>
+                    <div className="w-screen max-w-6xl mx-auto bg-white border rounded-lg shadow-lg">
+                      <div className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                          <NavigationMenuLink asChild>
+                            <Link href="/products/aqua2use-gwdd" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
+                              <div className="flex flex-col items-center text-center space-y-3">
+                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                                  <Image
+                                    src="/images/gwdd-gravity.jpg"
+                                    alt="Aqua2use GWDD"
+                                    width={80}
+                                    height={80}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold text-gray-900 mb-1">Aqua2use GWDD</div>
+                                  <p className="text-xs text-gray-600 line-clamp-2">
+                                    Gravity-fed system for most homes
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+
+                          <NavigationMenuLink asChild>
+                            <Link href="/products/aqua2use-gwdd-pump" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
+                              <div className="flex flex-col items-center text-center space-y-3">
+                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                                  <Image
+                                    src="/images/gwdd-ug.jpg"
+                                    alt="GWDD with Pump"
+                                    width={80}
+                                    height={80}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold text-gray-900 mb-1">GWDD with Pump</div>
+                                  <p className="text-xs text-gray-600 line-clamp-2">
+                                    Pump system for uphill irrigation
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+
+                          <NavigationMenuLink asChild>
+                            <Link href="/products/replacement-filters" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
+                              <div className="flex flex-col items-center text-center space-y-3">
+                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                                  <Image
+                                    src="/images/aqua2use-greywater-recycling-sytem.png"
+                                    alt="Replacement Filters"
+                                    width={80}
+                                    height={80}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold text-gray-900 mb-1">Replacement Filters</div>
+                                  <p className="text-xs text-gray-600 line-clamp-2">
+                                    Keep your system running smoothly
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+
+                          <NavigationMenuLink asChild>
+                            <Link href="/products/replacement-pumps" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
+                              <div className="flex flex-col items-center text-center space-y-3">
+                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                                  <Image
+                                    src="/images/gwdd-gravity.jpg"
+                                    alt="Replacement Pumps"
+                                    width={80}
+                                    height={80}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                                  />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold text-gray-900 mb-1">Replacement Pumps</div>
+                                  <p className="text-xs text-gray-600 line-clamp-2">
+                                    Pumps and parts for repairs
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </div>
+
+                        <div className="border-t pt-4">
+                          <NavigationMenuLink asChild>
+                            <Link href="/products" className="inline-flex items-center justify-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                              <span>View All Products</span>
+                              <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </Link>
+                          </NavigationMenuLink>
+                        </div>
+                      </div>
+                    </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
