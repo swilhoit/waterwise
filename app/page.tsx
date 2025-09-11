@@ -33,8 +33,7 @@ export default async function Home() {
 
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+      <section className="relative py-20 lg:py-32 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
@@ -67,7 +66,6 @@ export default async function Home() {
               </div>
             </div>
             <div className="relative animate-slide-in-right">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur-2xl opacity-20" />
               <Image
                 src="/images/Gemini_Generated_Image_hwzac2hwzac2hwza 1.png"
                 alt="Aqua2use Greywater System"
