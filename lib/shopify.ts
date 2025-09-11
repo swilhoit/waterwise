@@ -318,7 +318,7 @@ export async function getProductReviews(productId: string) {
       variables: { id: productId },
     })
     
-    if (errors && errors.length > 0) {
+    if (errors && Array.isArray(errors) && errors.length > 0) {
       console.error('GraphQL errors fetching product reviews:', errors)
       return []
     }
