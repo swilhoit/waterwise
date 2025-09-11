@@ -24,46 +24,7 @@ const iconMap: { [key: string]: any } = {
 export default async function Home() {
   const products = await getProducts()
   
-  const defaultBlogPosts = [
-    {
-      id: 1,
-      title: "10 Ways Greywater Recycling Can Transform Your Home",
-      excerpt: "Discover how installing a greywater system can reduce your water bills, improve your garden, and increase your home's sustainability rating.",
-      image: "/images/gwdd-gravity.jpg",
-      author: "Water Wise Team",
-      date: "March 15, 2024",
-      slug: "10-ways-greywater-recycling-transforms-home",
-    },
-    {
-      id: 2,
-      title: "Understanding Greywater: What It Is and Why It Matters",
-      excerpt: "Learn the basics of greywater, where it comes from, and why recycling it is crucial for water conservation and environmental protection.",
-      image: "/images/aqua2use-greywater-recycling-sytem.png",
-      author: "Sarah Johnson",
-      date: "March 10, 2024",
-      slug: "understanding-greywater-basics",
-    },
-    {
-      id: 3,
-      title: "DIY vs Professional Installation: Which is Right for You?",
-      excerpt: "Explore the pros and cons of DIY installation versus hiring professionals for your greywater recycling system.",
-      image: "/images/gwdd-ug.jpg",
-      author: "Mike Chen",
-      date: "March 5, 2024",
-      slug: "diy-vs-professional-installation",
-    },
-    {
-      id: 4,
-      title: "Maximizing Water Savings: Best Practices for Greywater Systems",
-      excerpt: "Tips and strategies to get the most water savings and environmental benefits from your greywater recycling system.",
-      image: "/images/gwdd-gravity.jpg",
-      author: "Emily Rodriguez",
-      date: "February 28, 2024",
-      slug: "maximizing-water-savings-best-practices",
-    },
-  ]
-
-  let blogPosts = defaultBlogPosts
+  let blogPosts: any[] = []
   try {
     const shopifyArticles = await getBlogArticles()
     if (shopifyArticles && shopifyArticles.length > 0) {
@@ -82,7 +43,7 @@ export default async function Home() {
       }))
     }
   } catch (error) {
-    console.error('Failed to load blog posts from Shopify, using default posts:', error)
+    console.error('Failed to load blog posts from Shopify:', error)
   }
 
   const defaultBenefits = [
@@ -207,6 +168,95 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Featured Customer Success Stories */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Featured Success Stories
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Real families achieving remarkable water savings with our systems
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <Link href="/customer-stories/california-homeowner" className="group">
+              <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
+                <div className="relative h-64">
+                  <Image
+                    src="/images/customer-stories/california-family.jpg"
+                    alt="California family home with greywater system"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 p-6 text-white">
+                    <Badge className="bg-green-600 text-white mb-3">45% Water Savings</Badge>
+                    <h3 className="text-2xl font-bold mb-2">California Homeowner</h3>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <p className="text-gray-700 mb-4">
+                    "The Aqua2use system has been a game-changer for our family. In drought-stricken California, 
+                    we've reduced our water bill by 45% while keeping our garden thriving. The installation was 
+                    straightforward, and the system has been maintenance-free for over two years."
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>The Johnson Family</strong> • San Diego, CA
+                  </p>
+                  <div className="mt-4 text-blue-600 font-semibold group-hover:text-blue-700 flex items-center gap-2">
+                    Read Full Story 
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/customer-stories/arizona-desert-oasis" className="group">
+              <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
+                <div className="relative h-64">
+                  <Image
+                    src="/images/customer-stories/arizona-oasis.jpg"
+                    alt="Arizona desert garden with greywater irrigation"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 p-6 text-white">
+                    <Badge className="bg-blue-600 text-white mb-3">60% Less Water</Badge>
+                    <h3 className="text-2xl font-bold mb-2">Arizona Desert Oasis</h3>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <p className="text-gray-700 mb-4">
+                    "Living in Phoenix, water conservation is essential. Our Aqua2use Pro system allows us to 
+                    maintain our desert oasis using 60% less water. The native plants and fruit trees are 
+                    thriving on recycled water from our showers and washing machine."
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>The Martinez Family</strong> • Phoenix, AZ
+                  </p>
+                  <div className="mt-4 text-blue-600 font-semibold group-hover:text-blue-700 flex items-center gap-2">
+                    Read Full Story 
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+
+          <div className="text-center mt-10">
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/customer-stories">View All Success Stories</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Greywater & Irrigation Guidelines */}
       <section className="py-20">
@@ -386,55 +436,55 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Learn About Greywater
+              Directory
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover everything you need to know about greywater recycling
+              Find local resources, regulations, and financial incentives for greywater systems
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="hover-lift transition-all duration-300">
               <CardHeader>
-                <BookOpen className="h-10 w-10 text-gray-600 mb-4" />
-                <CardTitle>What is Greywater?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Learn the basics of greywater recycling and how it can benefit your home
-                </CardDescription>
-                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                  <Link href="/what-is-greywater">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <Wrench className="h-10 w-10 text-gray-600 mb-4" />
-                <CardTitle>How It Works</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-4">
-                  Understand the process and technology behind greywater systems
-                </CardDescription>
-                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                  <Link href="/how-it-works">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift transition-all duration-300">
-              <CardHeader>
-                <Shield className="h-10 w-10 text-gray-600 mb-4" />
+                <Shield className="h-10 w-10 text-amber-600 mb-4" />
                 <CardTitle>State Laws</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
-                  Check your state's greywater regulations and permit requirements
+                  Check your state's greywater regulations, permit requirements, and compliance guidelines
                 </CardDescription>
                 <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                  <Link href="/greywater-laws">Check Laws</Link>
+                  <Link href="/greywater-laws">View State Laws</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <Users className="h-10 w-10 text-blue-600 mb-4" />
+                <CardTitle>Local Installers</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Find certified greywater system installers and contractors in your area
+                </CardDescription>
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                  <Link href="/installers">Find Installers</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <DollarSign className="h-10 w-10 text-green-600 mb-4" />
+                <CardTitle>Rebates & Incentives</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Discover financial incentives, tax credits, and rebate programs in your area
+                </CardDescription>
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                  <Link href="/rebates">View Incentives</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -689,10 +739,12 @@ export default async function Home() {
 
       <Testimonials />
 
-      {/* Blog carousel */}
-      <BlogCarousel posts={blogPosts.slice(0, 12)} title="Greywater Resources" />
+      {/* Blog carousel - only show if we have real articles */}
+      {blogPosts.length > 0 && (
+        <BlogCarousel posts={blogPosts.slice(0, 12)} title="Greywater Resources" />
+      )}
 
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-r from-slate-500 via-gray-500 to-stone-500 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6 animate-fade-in">

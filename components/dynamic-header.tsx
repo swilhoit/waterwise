@@ -5,14 +5,29 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale, Users, DollarSign } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
 import { MegaNav } from "./mega-nav"
+import { getBlogArticles } from "@/lib/shopify"
 
-export function Header() {
+export function DynamicHeader() {
   const [isOpen, setIsOpen] = useState(false)
+  const [blogArticles, setBlogArticles] = useState<any[]>([])
   const { totalItems } = useCart()
+
+  useEffect(() => {
+    async function loadBlogArticles() {
+      try {
+        const articles = await getBlogArticles()
+        setBlogArticles(articles.slice(0, 6)) // Take top 6 articles for dropdown
+      } catch (error) {
+        console.error('Failed to load blog articles for navigation:', error)
+        setBlogArticles([])
+      }
+    }
+    loadBlogArticles()
+  }, [])
 
   const navigationItems = [
     {
@@ -156,42 +171,19 @@ export function Header() {
     },
     {
       label: "Blog",
-      dropdown: [
+      dropdown: blogArticles.length > 0 ? blogArticles.map((article: any) => ({
+        title: article.title,
+        description: article.summary_html ? 
+          article.summary_html.replace(/<[^>]*>/g, '').substring(0, 100) + '...' :
+          "Read this article from our blog",
+        href: `/blog/${article.handle}`,
+        image: article.image?.src || "/images/gwdd-gravity.jpg"
+      })) : [
         {
-          title: "10 Ways Greywater Recycling Can Transform Your Home",
-          description: "Discover how installing a greywater system can reduce your water bills, improve your garden, and increase your home's sustainability rating",
-          href: "/blog/10-ways-greywater-recycling-transforms-home",
+          title: "Blog Loading...",
+          description: "Our blog articles are loading",
+          href: "/blog",
           image: "/images/gwdd-gravity.jpg"
-        },
-        {
-          title: "Understanding Greywater: What It Is and Why It Matters",
-          description: "Learn the basics of greywater, where it comes from, and why recycling it is crucial for water conservation",
-          href: "/blog/understanding-greywater-basics",
-          image: "/images/aqua2use-greywater-recycling-sytem.png"
-        },
-        {
-          title: "DIY vs Professional Installation: Which is Right for You?",
-          description: "Explore the pros and cons of DIY installation versus hiring professionals for your greywater recycling system",
-          href: "/blog/diy-vs-professional-installation",
-          image: "/images/gwdd-ug.jpg"
-        },
-        {
-          title: "Maximizing Water Savings: Best Practices for Greywater Systems",
-          description: "Tips and strategies to get the most water savings and environmental benefits from your greywater recycling system",
-          href: "/blog/maximizing-water-savings-best-practices",
-          image: "/images/gwdd-gravity.jpg"
-        },
-        {
-          title: "The Future of Water Conservation in Residential Properties",
-          description: "Explore emerging trends in water conservation technology and what they mean for homeowners and property developers",
-          href: "/blog/future-water-conservation-residential",
-          image: "/images/aqua2use-greywater-recycling-sytem.png"
-        },
-        {
-          title: "Greywater Systems for Different Climates: What You Need to Know",
-          description: "How climate affects greywater system performance and what considerations to make for your specific region",
-          href: "/blog/greywater-systems-different-climates",
-          image: "/images/gwdd-ug.jpg"
         }
       ]
     }
