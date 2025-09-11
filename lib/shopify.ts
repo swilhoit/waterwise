@@ -174,91 +174,102 @@ export async function createCheckout(variantId: string, quantity: number = 1) {
   }
 }
 
-// Blog functions using Shopify Admin API
+// Blog functions using Shopify Storefront API
 export async function getBlogs() {
   if (!isShopifyConfigured()) {
     return []
   }
 
-  const shopDomain = process.env.SHOPIFY_SHOP_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
-  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
-
-  if (!accessToken) {
-    console.error('SHOPIFY_ACCESS_TOKEN is required for blog access')
-    return []
-  }
+  const query = `
+    query GetBlogs {
+      blogs(first: 10) {
+        edges {
+          node {
+            id
+            title
+            handle
+          }
+        }
+      }
+    }
+  `
 
   try {
-    const response = await fetch(`https://${shopDomain}/admin/api/2024-01/blogs.json`, {
-      headers: {
-        'X-Shopify-Access-Token': accessToken,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      console.error('Failed to fetch blogs:', response.statusText)
+    const { data, errors } = await shopifyFetch({ query })
+    
+    if (errors) {
+      console.error('Failed to fetch blogs:', errors)
       return []
     }
 
-    const data = await response.json()
-    return data.blogs || []
+    return data?.blogs?.edges?.map((edge: any) => edge.node) || []
   } catch (error) {
     console.error('Failed to fetch blogs:', error)
     return []
   }
 }
 
-export async function getBlogArticles(blogId?: string) {
+export async function getBlogArticles(blogHandle?: string) {
   if (!isShopifyConfigured()) {
     return []
   }
 
-  const shopDomain = process.env.SHOPIFY_SHOP_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
-  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN
-
-  if (!accessToken) {
-    console.error('SHOPIFY_ACCESS_TOKEN is required for blog access')
-    return []
-  }
-
-  try {
-    // If no blogId provided, fetch all articles from all blogs
-    let allArticles: any[] = []
-    
-    if (!blogId) {
-      const blogs = await getBlogs()
-      for (const blog of blogs) {
-        const response = await fetch(`https://${shopDomain}/admin/api/2024-01/blogs/${blog.id}/articles.json?limit=250`, {
-          headers: {
-            'X-Shopify-Access-Token': accessToken,
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          allArticles = [...allArticles, ...data.articles]
+  // Default to fetching from the main blog
+  const handle = blogHandle || 'greywater-education'
+  
+  const query = `
+    query GetBlogArticles($handle: String!) {
+      blog(handle: $handle) {
+        articles(first: 100) {
+          edges {
+            node {
+              id
+              title
+              handle
+              publishedAt
+              excerpt
+              content
+              contentHtml
+              image {
+                url
+                altText
+              }
+              authorV2 {
+                name
+              }
+            }
+          }
         }
       }
-    } else {
-      const response = await fetch(`https://${shopDomain}/admin/api/2024-01/blogs/${blogId}/articles.json?limit=250`, {
-        headers: {
-          'X-Shopify-Access-Token': accessToken,
-          'Content-Type': 'application/json',
-        },
-      })
+    }
+  `
 
-      if (!response.ok) {
-        console.error('Failed to fetch articles:', response.statusText)
-        return []
-      }
-
-      const data = await response.json()
-      allArticles = data.articles || []
+  try {
+    const { data, errors } = await shopifyFetch({ 
+      query,
+      variables: { handle }
+    })
+    
+    if (errors) {
+      console.error('Failed to fetch blog articles:', errors)
+      return []
     }
 
-    return allArticles
+    const articles = data?.blog?.articles?.edges?.map((edge: any) => {
+      const article = edge.node
+      return {
+        id: article.id,
+        title: article.title,
+        handle: article.handle,
+        published_at: article.publishedAt,
+        summary_html: article.excerpt,
+        body_html: article.contentHtml || article.content,
+        image: article.image ? { src: article.image.url } : null,
+        author: article.authorV2?.name || 'Water Wise Team'
+      }
+    }) || []
+
+    return articles
   } catch (error) {
     console.error('Failed to fetch blog articles:', error)
     return []
@@ -270,6 +281,7 @@ export async function getBlogArticle(handle: string) {
     return null
   }
 
-  const articles = await getBlogArticles()
+  // Fetch from the main blog
+  const articles = await getBlogArticles('greywater-education')
   return articles.find((article: any) => article.handle === handle) || null
 }
