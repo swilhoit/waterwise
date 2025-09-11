@@ -59,7 +59,7 @@ const getStatusColor = (status: string) => {
 }
 
 export default function GreywaterStateLaws() {
-  const [viewMode, setViewMode] = useState<'card' | 'table'>('card')
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('table')
   const router = useRouter()
   
   // Calculate statistics from the data
