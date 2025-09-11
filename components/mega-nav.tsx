@@ -90,31 +90,42 @@ export function MegaNav({ items }: MegaNavProps) {
                     <Link
                       key={dropdownItem.href}
                       href={dropdownItem.href}
-                      className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md"
+                      className="group block select-none rounded-lg leading-none no-underline outline-none transition-all hover:shadow-lg"
                     >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        {dropdownItem.image ? (
-                          <div className="relative w-40 h-32 rounded-lg overflow-hidden bg-gray-100">
-                            <Image
-                              src={dropdownItem.image}
-                              alt={dropdownItem.title}
-                              width={160}
-                              height={128}
-                              className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                            />
+                      {dropdownItem.image ? (
+                        // Card design with text overlay for items with images
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100 shadow-md group-hover:shadow-lg transition-all">
+                          <Image
+                            src={dropdownItem.image}
+                            alt={dropdownItem.title}
+                            width={320}
+                            height={192}
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          />
+                          {/* Dark overlay for better text readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                          {/* Text overlay */}
+                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <h3 className="text-sm font-bold mb-1 leading-tight">{dropdownItem.title}</h3>
+                            <p className="text-xs opacity-90 line-clamp-2 leading-tight">
+                              {dropdownItem.description}
+                            </p>
                           </div>
-                        ) : (
+                        </div>
+                      ) : (
+                        // Original design for items with icons
+                        <div className="flex flex-col items-center text-center space-y-3 p-4 hover:bg-gray-50 rounded-lg transition-colors">
                           <div className="w-16 h-16 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                             {dropdownItem.icon}
                           </div>
-                        )}
-                        <div>
-                          <div className="text-sm font-semibold text-gray-900 mb-1">{dropdownItem.title}</div>
-                          <p className="text-xs text-gray-600 line-clamp-2">
-                            {dropdownItem.description}
-                          </p>
+                          <div>
+                            <div className="text-sm font-semibold text-gray-900 mb-1">{dropdownItem.title}</div>
+                            <p className="text-xs text-gray-600 line-clamp-2">
+                              {dropdownItem.description}
+                            </p>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </Link>
                   ))}
                 </div>
