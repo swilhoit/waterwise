@@ -69,7 +69,7 @@ export default async function Home() {
             <div className="relative animate-slide-in-right">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur-2xl opacity-20" />
               <Image
-                src="/images/aqua2use-greywater-recycling-sytem.png"
+                src="/images/Gemini_Generated_Image_hwzac2hwzac2hwza 1.png"
                 alt="Aqua2use Greywater System"
                 width={600}
                 height={400}
