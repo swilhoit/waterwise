@@ -9,6 +9,7 @@ import { AddToCartButton } from './add-to-cart-button'
 import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText } from 'lucide-react'
 import { formatPriceDisplay } from '@/lib/price-utils'
 import { ProductReviews } from '@/components/product-reviews'
+import { FadeIn, PageTransition } from '@/components/animations'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
@@ -883,6 +884,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const productContent = getProductContent(handle)
 
   return (
+    <PageTransition>
     <div>
       {/* Hero Section */}
       <div className="border-b">
@@ -1399,6 +1401,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         </div>
       </div>
     </div>
+    </PageTransition>
   )
 }
 

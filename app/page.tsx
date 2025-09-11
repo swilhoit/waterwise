@@ -10,6 +10,7 @@ import { ComparisonTable } from "@/components/compare-table"
 import { formatPriceDisplay } from "@/lib/price-utils"
 import { BlogCarousel } from "@/components/blog-carousel"
 import { getBlogArticles } from "@/lib/shopify"
+import { FadeIn, Stagger, PageTransition } from "@/components/animations"
 
 
 const iconMap: { [key: string]: any } = {
@@ -55,6 +56,7 @@ export default async function Home() {
   const displayBenefits = defaultBenefits
 
   return (
+    <PageTransition>
     <div>
       {/* Hero Section Container with Background */}
       <section className="py-4 px-4">
@@ -69,7 +71,7 @@ export default async function Home() {
               priority
             />
             {/* Dark overlay for better text readability */}
-            <div className="absolute inset-0 bg-black/40 rounded-3xl" />
+            <div className="absolute inset-0 bg-black/25 rounded-3xl" />
           </div>
           
           <div className="container mx-auto px-4 relative z-10">
@@ -111,85 +113,95 @@ export default async function Home() {
       {/* Aqua2Use System Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
-              The Aqua2Use Greywater System
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for turning your waste greywater into usable irrigation water.
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto text-center">
-            <Image
-              src="/images/aqua2use.png"
-              alt="Aqua2Use Greywater System"
-              width={800}
-              height={600}
-              className="w-full h-auto rounded-lg"
-            />
-          </div>
+          <FadeIn>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
+                The Aqua2Use Greywater System
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for turning your waste greywater into usable irrigation water.
+              </p>
+            </div>
+          </FadeIn>
+          <FadeIn delay={200}>
+            <div className="max-w-4xl mx-auto text-center">
+              <Image
+                src="/images/aqua2use.png"
+                alt="Aqua2Use Greywater System"
+                width={800}
+                height={600}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* Comparison Table Section - moved from later in the page and headlines removed */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          {products.length > 0 ? (
-            <ComparisonTable
-              className="max-w-5xl mx-auto"
-              products={products.slice(0, 2).map((p: any) => ({
-                title: p.title,
-                handle: p.handle,
-                priceText: p.priceRange?.minVariantPrice
-                  ? formatPriceDisplay(p.priceRange.minVariantPrice.amount, "From ")
-                  : undefined,
-              }))}
-            />
-          ) : (
-            <ComparisonTable
-              className="max-w-5xl mx-auto"
-              products={[
-                { title: "Aqua2use GWDD", handle: "aqua2use-gwdd" },
-                { title: "Aqua2use Pro", handle: "aqua2use-pro" },
-              ]}
-            />
-          )}
+          <FadeIn>
+            {products.length > 0 ? (
+              <ComparisonTable
+                className="max-w-5xl mx-auto"
+                products={products.slice(0, 2).map((p: any) => ({
+                  title: p.title,
+                  handle: p.handle,
+                  priceText: p.priceRange?.minVariantPrice
+                    ? formatPriceDisplay(p.priceRange.minVariantPrice.amount, "From ")
+                    : undefined,
+                }))}
+              />
+            ) : (
+              <ComparisonTable
+                className="max-w-5xl mx-auto"
+                products={[
+                  { title: "Aqua2use GWDD", handle: "aqua2use-gwdd" },
+                  { title: "Aqua2use Pro", handle: "aqua2use-pro" },
+                ]}
+              />
+            )}
+          </FadeIn>
         </div>
       </section>
 
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              How Greywater Recycling Works
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Simple, efficient, and automatic water recycling for your property
-            </p>
-          </div>
+          <FadeIn>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                How Greywater Recycling Works
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Simple, efficient, and automatic water recycling for your property
+              </p>
+            </div>
+          </FadeIn>
 
           <div className="max-w-4xl mx-auto">
-            <a 
-              href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="block relative aspect-video bg-gray-200 rounded-lg overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
-            >
-              <Image
-                src="/images/maxresdefault.jpg"
-                alt="How Greywater Works Video"
-                width={800}
-                height={450}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                <div className="bg-white rounded-full p-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
+            <FadeIn delay={200}>
+              <a 
+                href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block relative aspect-video bg-gray-200 rounded-lg overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+              >
+                <Image
+                  src="/images/maxresdefault.jpg"
+                  alt="How Greywater Works Video"
+                  width={800}
+                  height={450}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                  <div className="bg-white rounded-full p-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
+                  </div>
                 </div>
-              </div>
-            </a>
+              </a>
+            </FadeIn>
 
-            <div className="grid md:grid-cols-3 gap-8 mt-12">
+            <Stagger delay={300} className="grid md:grid-cols-3 gap-8 mt-12">
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-gray-600">1</span>
@@ -219,7 +231,7 @@ export default async function Home() {
                   Clean greywater automatically waters your landscape via drip irrigation
                 </p>
               </div>
-            </div>
+            </Stagger>
           </div>
         </div>
       </section>
@@ -267,10 +279,12 @@ export default async function Home() {
           {/* Visual cards removed per request */}
 
           {/* Category: Greywater Collection */}
-          <div className="max-w-5xl mx-auto mb-8 text-center">
-            <h3 className="text-4xl font-bold text-gray-800">Greywater Sources</h3>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto place-items-center">
+          <FadeIn>
+            <div className="max-w-5xl mx-auto mb-8 text-center">
+              <h3 className="text-4xl font-bold text-gray-800">Greywater Sources</h3>
+            </div>
+          </FadeIn>
+          <Stagger delay={200} className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto place-items-center">
             {/* Laundry - Approved */}
             <Card className="hover-lift transition-all duration-300 border-green-600 border-2 text-center p-6 relative h-[500px]">
               <Badge className="bg-green-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved</Badge>
@@ -380,13 +394,15 @@ export default async function Home() {
                 </CardDescription>
               </CardContent>
             </Card>
-          </div>
+          </Stagger>
 
           {/* Category: Greywater Irrigation */}
-          <div className="max-w-4xl mx-auto mt-12 mb-8 text-center">
-            <h3 className="text-4xl font-bold text-gray-800">Greywater Irrigation</h3>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 place-items-center">
+          <FadeIn delay={400}>
+            <div className="max-w-4xl mx-auto mt-12 mb-8 text-center">
+              <h3 className="text-4xl font-bold text-gray-800">Greywater Irrigation</h3>
+            </div>
+          </FadeIn>
+          <Stagger delay={500} className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 place-items-center">
             {/* Above Ground Irrigation - Not Approved */}
             <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
               <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
@@ -430,11 +446,13 @@ export default async function Home() {
                 </CardDescription>
               </CardContent>
             </Card>
-          </div>
+          </Stagger>
 
-          <p className="text-sm text-gray-500 mt-6 text-center">
-            Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
-          </p>
+          <FadeIn delay={600}>
+            <p className="text-sm text-gray-500 mt-6 text-center">
+              Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
+            </p>
+          </FadeIn>
         </div>
       </section>
 
@@ -786,5 +804,6 @@ export default async function Home() {
         </div>
       </section>
     </div>
+    </PageTransition>
   )
 }
