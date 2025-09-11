@@ -89,8 +89,7 @@ export default function GreywaterStateLaws() {
       <div className="max-w-6xl mx-auto">
         {/* Overview */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Regulatory Overview - All 50 States</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="border-l-4 border-l-green-500">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-between">
@@ -163,8 +162,7 @@ export default function GreywaterStateLaws() {
 
         {/* State-by-State Breakdown */}
         <div className="mb-16">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-            <h2 className="text-3xl font-bold text-gray-900">State-by-State Regulations</h2>
+          <div className="flex justify-end mb-8">
             <div className="flex gap-2">
               <Button
                 variant={viewMode === 'card' ? 'default' : 'outline'}
@@ -200,7 +198,7 @@ export default function GreywaterStateLaws() {
                       <CardTitle className="text-lg hover:text-blue-700 transition-colors">
                         {state.state}
                       </CardTitle>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(state.status)}`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${getStatusColor(state.status)}`}>
                         {state.status}
                       </span>
                     </div>
@@ -237,7 +235,7 @@ export default function GreywaterStateLaws() {
                         {state.state}
                       </td>
                       <td className="p-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium border inline-block ${getStatusColor(state.status)}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium border inline-block whitespace-nowrap ${getStatusColor(state.status)}`}>
                           {state.status}
                         </span>
                       </td>
