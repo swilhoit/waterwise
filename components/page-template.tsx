@@ -37,10 +37,7 @@ export function PageTemplate({
   return (
     <div>
       {/* Hero Section */}
-      <section className={`relative ${plainHero ? '' : 'bg-gradient-to-br from-blue-50 via-white to-blue-50/30'} py-16 lg:py-24`}>
-        {!plainHero && (
-          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        )}
+      <section className="relative py-16 lg:py-24">
         <div className="px-4">
           <div className={`max-w-7xl mx-auto ${heroImage ? 'grid lg:grid-cols-2 gap-12 items-center' : 'text-center'}`}>
             <div className="animate-fade-in">
@@ -53,9 +50,6 @@ export function PageTemplate({
             </div>
             {heroImage && (
               <div className="relative animate-slide-in-right">
-                {!plainHero && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur-2xl opacity-20" />
-                )}
                 <Image
                   src={heroImage}
                   alt={heroImageAlt || title}

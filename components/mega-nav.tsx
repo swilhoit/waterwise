@@ -9,7 +9,7 @@ interface DropdownItem {
   title: string
   description: string
   href: string
-  icon: React.ReactNode
+  icon?: React.ReactNode
   image?: string
 }
 
