@@ -1223,22 +1223,6 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-8">
-                {/* Filtration System Diagram */}
-                <div className="mb-8">
-                  <h4 className="font-semibold text-gray-900 mb-4">Progressive 4-Stage Filtration System</h4>
-                  <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white border mb-4">
-                    <Image
-                      src="/docs/Aqua2use-Filtration-System.png"
-                      alt="Aqua2use 4-Stage Progressive Filtration System"
-                      fill
-                      className="object-contain p-4"
-                      unoptimized
-                    />
-                  </div>
-                  <p className="text-sm text-gray-600 mb-6">
-                    State-of-the-art Matala 3D progressive filtration technology with cross-flow depth filtration
-                  </p>
-                </div>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
