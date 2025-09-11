@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
 import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText } from 'lucide-react'
+import { formatPriceDisplay } from '@/lib/price-utils'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
@@ -919,7 +920,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   {product.priceRange?.minVariantPrice && (
                     <div className="flex items-baseline gap-2 mb-6">
                       <span className="text-4xl font-bold text-gray-600">
-                        ${product.priceRange.minVariantPrice.amount}
+                        {formatPriceDisplay(product.priceRange.minVariantPrice.amount)}
                       </span>
                       <span className="text-lg text-gray-500 font-medium">
                         {product.priceRange.minVariantPrice.currencyCode}

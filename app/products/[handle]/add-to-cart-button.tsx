@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { ShoppingCart, Check } from 'lucide-react'
+import { formatPrice } from '@/lib/price-utils'
 
 interface Product {
   id: string
@@ -96,7 +97,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
                     {edge.node.title}
                   </span>
                   <span className={`font-semibold ${edge.node.availableForSale ? '' : 'text-gray-500'}`}>
-                    ${edge.node.priceV2.amount}
+                    ${formatPrice(edge.node.priceV2.amount)}
                   </span>
                 </div>
                 {!edge.node.availableForSale && (
@@ -122,7 +123,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
         ) : (
           <>
             <ShoppingCart className="mr-2 h-4 w-4" />
-            Add to Cart - ${selectedVariant.priceV2.amount}
+            Add to Cart - ${formatPrice(selectedVariant.priceV2.amount)}
           </>
         )}
       </Button>

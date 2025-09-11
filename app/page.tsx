@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain, Play } from "lucide-react"
 import { getProducts } from "@/lib/shopify"
 import { Testimonials } from "@/components/testimonials"
+import { formatPriceDisplay } from "@/lib/price-utils"
 
 
 const iconMap: { [key: string]: any } = {
@@ -168,7 +169,7 @@ export default async function Home() {
                   <CardContent>
                     {product.priceRange?.minVariantPrice && (
                       <div className="text-2xl font-bold text-gray-600 mb-4">
-                        From ${product.priceRange.minVariantPrice.amount}
+                        {formatPriceDisplay(product.priceRange.minVariantPrice.amount, "From ")}
                       </div>
                     )}
                     <Button className="w-full bg-black hover:bg-gray-800 text-white" asChild>

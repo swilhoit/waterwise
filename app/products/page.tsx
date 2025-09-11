@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { CheckCircle, Droplets, Home as HomeIcon, Building } from "lucide-react"
 import { QuickAddToCart } from './quick-add-to-cart'
+import { formatPriceDisplay } from '@/lib/price-utils'
 
 export default async function ProductsPage() {
   const products = await getProducts()
@@ -112,7 +113,7 @@ export default async function ProductsPage() {
                 <CardContent>
                   {product.priceRange?.minVariantPrice ? (
                     <div className="text-2xl font-bold text-gray-600 mb-4">
-                      From ${Math.round(parseFloat(product.priceRange.minVariantPrice.amount))}
+                      {formatPriceDisplay(product.priceRange.minVariantPrice.amount, "From ")}
                     </div>
                   ) : (
                     <div className="text-2xl font-bold text-gray-600 mb-4">
