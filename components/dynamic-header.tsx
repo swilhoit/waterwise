@@ -217,7 +217,7 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className={`fixed ${isScrolled || !isHomePage ? 'top-0' : 'top-8'} z-[60] w-full transition-all duration-300 ${
+    <header className={`fixed z-[60] w-full transition-all duration-300 ${
       isScrolled || !isHomePage
         ? '' 
         : isDropdownOpen 
@@ -225,17 +225,27 @@ export function DynamicHeader() {
         : 'bg-transparent'
     }`}
     style={{
-      backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined
+      top: isScrolled || !isHomePage ? '0px' : '32px',
+      backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
+      transition: 'top 300ms ease-in-out, background-color 300ms ease-in-out'
     }}>
       <div className="container mx-auto px-4 relative">
-        <div className={`flex ${isScrolled || isDropdownOpen || !isHomePage ? 'h-20' : 'h-28'} items-center justify-between`}>
+        <div className="flex h-24 items-center justify-between" style={{
+          paddingTop: isScrolled || isDropdownOpen || !isHomePage ? '0.75rem' : '1.5rem',
+          paddingBottom: isScrolled || isDropdownOpen || !isHomePage ? '0.75rem' : '1.5rem',
+          transition: 'padding 300ms ease-in-out'
+        }}>
           <Link href="/" className="flex items-center">
             <Image
               src={isScrolled || isDropdownOpen || !isHomePage ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
               alt="Water Wise Group"
               width={320}
               height={85}
-              className={`w-auto transition-all duration-300 ${isScrolled || isDropdownOpen || !isHomePage ? 'h-12' : 'h-16'}`}
+              className="w-auto h-16 transition-all duration-300"
+              style={{
+                transform: isScrolled || isDropdownOpen || !isHomePage ? 'scale(0.85)' : 'scale(1)',
+                transformOrigin: 'left center'
+              }}
             />
           </Link>
 
@@ -265,7 +275,7 @@ export function DynamicHeader() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className={`h-5 w-5 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
+                <Menu className={`h-5 w-5 transition-colors duration-300 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px]">

@@ -82,7 +82,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange }: MegaNav
           {item.href ? (
             <Link
               href={item.href}
-              className={`inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+              className={`inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-300 ${
                 isScrolled 
                   ? 'bg-background text-foreground hover:bg-accent hover:text-accent-foreground' 
                   : 'bg-transparent text-white hover:bg-white/10 hover:text-white'
@@ -91,7 +91,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange }: MegaNav
               {item.label}
             </Link>
           ) : (
-            <button className={`inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            <button className={`inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-300 ${
               isScrolled 
                 ? 'bg-background text-foreground hover:bg-accent hover:text-accent-foreground' 
                 : 'bg-transparent text-white hover:bg-white/10 hover:text-white'
@@ -104,7 +104,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange }: MegaNav
           )}
 
           {item.dropdown && activeDropdown === item.label && (
-            <div className="fixed left-0 top-20 w-screen border-b shadow-lg z-[40]"
+            <div className="fixed left-0 top-24 w-screen border-b shadow-lg z-[40]"
                  style={{
                    backgroundColor: '#F4F1E9',
                    animation: 'fadeIn 200ms ease-out'
