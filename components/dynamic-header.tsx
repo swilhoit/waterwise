@@ -233,9 +233,9 @@ export function DynamicHeader() {
             <Image
               src={isScrolled || isDropdownOpen || !isHomePage ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
               alt="Water Wise Group"
-              width={240}
-              height={64}
-              className="h-12 w-auto transition-all duration-300"
+              width={320}
+              height={85}
+              className={`w-auto transition-all duration-300 ${isScrolled || isDropdownOpen || !isHomePage ? 'h-12' : 'h-16'}`}
             />
           </Link>
 
