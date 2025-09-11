@@ -3,27 +3,215 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale } from "lucide-react"
+import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale, Users, DollarSign } from "lucide-react"
 import { useState } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
+import { MegaNav } from "./mega-nav"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
 
+  const navigationItems = [
+    {
+      label: "How it Works",
+      dropdown: [
+        {
+          title: "What is Greywater?",
+          description: "Learn the basics of greywater recycling",
+          href: "/what-is-greywater",
+          icon: <BookOpen className="h-6 w-6 text-blue-600" />
+        },
+        {
+          title: "How Systems Work",
+          description: "Understanding greywater system mechanics",
+          href: "/how-it-works",
+          icon: <Settings className="h-6 w-6 text-green-600" />
+        },
+        {
+          title: "Tiny House Systems",
+          description: "Specialized solutions for tiny homes",
+          href: "/tiny-house-systems",
+          icon: <Home className="h-6 w-6 text-purple-600" />
+        },
+        {
+          title: "State Laws",
+          description: "Legal requirements by state",
+          href: "/greywater-laws",
+          icon: <Scale className="h-6 w-6 text-amber-600" />
+        }
+      ]
+    },
+    {
+      label: "Products",
+      dropdown: [
+        {
+          title: "Aqua2use GWDD",
+          description: "Gravity-fed system for most homes",
+          href: "/products/aqua2use-gwdd",
+          image: "/images/gwdd-gravity.jpg"
+        },
+        {
+          title: "GWDD with Pump",
+          description: "Pump system for uphill irrigation",
+          href: "/products/aqua2use-gwdd-pump",
+          image: "/images/gwdd-ug.jpg"
+        },
+        {
+          title: "Replacement Filters",
+          description: "Keep your system running smoothly",
+          href: "/products/replacement-filters",
+          image: "/images/aqua2use-greywater-recycling-sytem.png"
+        },
+        {
+          title: "Replacement Pumps",
+          description: "Pumps and parts for repairs",
+          href: "/products/replacement-pumps",
+          image: "/images/gwdd-gravity.jpg"
+        }
+      ]
+    },
+    {
+      label: "Solutions",
+      dropdown: [
+        {
+          title: "Residential Homes",
+          description: "Complete home greywater systems for sustainable living",
+          href: "/solutions/residential",
+          image: "/images/solutions/homes-ai.jpg"
+        },
+        {
+          title: "RVs & Trailers",
+          description: "Mobile greywater solutions for travel and camping",
+          href: "/solutions/rvs",
+          image: "/images/solutions/rvs-ai.jpg"
+        },
+        {
+          title: "Tiny Homes",
+          description: "Compact, efficient systems for minimal living",
+          href: "/solutions/tiny-homes",
+          image: "/images/solutions/tiny-homes-ai.jpg"
+        },
+        {
+          title: "Cabins & Retreats",
+          description: "Off-grid water recycling for remote locations",
+          href: "/solutions/cabins",
+          image: "/images/solutions/cabins-ai.jpg"
+        },
+        {
+          title: "Commercial Sites",
+          description: "Large-scale systems for businesses and developments",
+          href: "/solutions/remote-work-sites",
+          image: "/images/solutions/situation-remote-ai.jpg"
+        },
+        {
+          title: "Laundry to Landscape",
+          description: "Simple washing machine water diversion systems",
+          href: "/solutions/laundry-to-landscape",
+          image: "/images/solutions/situation-drought-ai.jpg"
+        }
+      ]
+    },
+    {
+      label: "Directory",
+      dropdown: [
+        {
+          title: "State Laws",
+          description: "Legal requirements and permits by state",
+          href: "/greywater-laws",
+          icon: <Scale className="h-6 w-6 text-amber-600" />
+        },
+        {
+          title: "Find Installers",
+          description: "Certified installers in your area",
+          href: "/installers",
+          icon: <Users className="h-6 w-6 text-blue-600" />
+        },
+        {
+          title: "Rebates & Incentives",
+          description: "Financial incentives and rebate programs",
+          href: "/rebates",
+          icon: <DollarSign className="h-6 w-6 text-green-600" />
+        }
+      ]
+    },
+    {
+      label: "Customer Stories",
+      dropdown: [
+        {
+          title: "California Homeowner",
+          description: "How one family cut their water bill by 60% with greywater recycling",
+          href: "/customer-stories/california-homeowner",
+          image: "/images/customer-stories/california-home.jpg"
+        },
+        {
+          title: "Tiny House Adventure",
+          description: "Off-grid living made sustainable with compact greywater systems",
+          href: "/customer-stories/tiny-house-adventure",
+          image: "/images/customer-stories/tiny-house.jpg"
+        },
+        {
+          title: "Commercial Success",
+          description: "Restaurant saves thousands annually with greywater recycling",
+          href: "/customer-stories/commercial-restaurant",
+          image: "/images/customer-stories/restaurant.jpg"
+        },
+        {
+          title: "Drought Solution",
+          description: "Arizona family maintains lush garden during water restrictions",
+          href: "/customer-stories/arizona-drought",
+          image: "/images/customer-stories/arizona-garden.jpg"
+        }
+      ]
+    },
+    {
+      label: "Blog",
+      dropdown: [
+        {
+          title: "10 Ways Greywater Can Transform Your Home",
+          description: "Discover the benefits of greywater recycling for sustainable living",
+          href: "/blog/greywater-transform-home",
+          image: "/images/blog/transform-home.jpg"
+        },
+        {
+          title: "Understanding Greywater Systems",
+          description: "A complete guide to how greywater recycling works",
+          href: "/blog/understanding-greywater",
+          image: "/images/blog/greywater-system.jpg"
+        },
+        {
+          title: "DIY vs Professional Installation",
+          description: "Which installation method is right for your project?",
+          href: "/blog/diy-vs-professional",
+          image: "/images/blog/installation.jpg"
+        },
+        {
+          title: "State Laws & Regulations",
+          description: "Navigate greywater laws and permit requirements",
+          href: "/blog/state-laws-regulations",
+          image: "/images/blog/legal-documents.jpg"
+        },
+        {
+          title: "Maximizing Water Savings",
+          description: "Expert tips to get the most from your greywater system",
+          href: "/blog/maximizing-savings",
+          image: "/images/blog/water-savings.jpg"
+        },
+        {
+          title: "Maintenance Best Practices",
+          description: "Keep your system running efficiently year-round",
+          href: "/blog/maintenance-guide",
+          image: "/images/blog/maintenance.jpg"
+        }
+      ]
+    }
+  ]
+
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image
@@ -35,368 +223,9 @@ export function Header() {
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>How it Works</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="left-1/2 transform -translate-x-1/2 w-screen max-w-4xl bg-white border rounded-lg shadow-lg">
-                      <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                          <NavigationMenuLink asChild>
-                            <Link href="/what-is-greywater" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                                  <BookOpen className="h-6 w-6 text-blue-600" />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">What is Greywater?</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Learn the basics of greywater recycling
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
+          <MegaNav items={navigationItems} />
 
-                          <NavigationMenuLink asChild>
-                            <Link href="/how-it-works" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                                  <Settings className="h-6 w-6 text-green-600" />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">How Systems Work</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Understanding greywater system mechanics
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/tiny-house-systems" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                                  <Home className="h-6 w-6 text-purple-600" />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Tiny House Systems</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Specialized solutions for tiny homes
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/greywater-laws" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center group-hover:bg-amber-200 transition-colors">
-                                  <Scale className="h-6 w-6 text-amber-600" />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">State Laws</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Legal requirements by state
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-                        </div>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Products</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="left-1/2 transform -translate-x-1/2 w-screen max-w-6xl bg-white border rounded-lg shadow-lg">
-                      <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                          <NavigationMenuLink asChild>
-                            <Link href="/products/aqua2use-gwdd" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/gwdd-gravity.jpg"
-                                    alt="Aqua2use GWDD"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Aqua2use GWDD</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Gravity-fed system for most homes
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/products/aqua2use-gwdd-pump" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/gwdd-ug.jpg"
-                                    alt="GWDD with Pump"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">GWDD with Pump</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Pump system for uphill irrigation
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/products/replacement-filters" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/aqua2use-greywater-recycling-sytem.png"
-                                    alt="Replacement Filters"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Replacement Filters</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Keep your system running smoothly
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/products/replacement-pumps" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/gwdd-gravity.jpg"
-                                    alt="Replacement Pumps"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Replacement Pumps</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Pumps and parts for repairs
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-                        </div>
-
-                        <div className="border-t pt-4">
-                          <NavigationMenuLink asChild>
-                            <Link href="/products" className="inline-flex items-center justify-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                              <span>View All Products</span>
-                              <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </Link>
-                          </NavigationMenuLink>
-                        </div>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Solutions</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="left-1/2 transform -translate-x-1/2 w-screen max-w-6xl bg-white border rounded-lg shadow-lg">
-                      <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions/residential" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/solutions/homes-ai.jpg"
-                                    alt="Residential Solutions"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Residential Homes</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Complete home greywater systems for sustainable living
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions/rvs" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/solutions/rvs-ai.jpg"
-                                    alt="RV Solutions"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">RVs & Trailers</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Mobile greywater solutions for travel and camping
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions/tiny-homes" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/solutions/tiny-homes-ai.jpg"
-                                    alt="Tiny Home Solutions"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Tiny Homes</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Compact, efficient systems for minimal living
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions/cabins" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/solutions/cabins-ai.jpg"
-                                    alt="Cabin Solutions"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Cabins & Retreats</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Off-grid water recycling for remote locations
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions/remote-work-sites" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/solutions/situation-remote-ai.jpg"
-                                    alt="Commercial Solutions"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Commercial Sites</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Large-scale systems for businesses and developments
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions/laundry-to-landscape" className="group block select-none rounded-lg p-4 leading-none no-underline outline-none transition-all hover:bg-gray-50 hover:shadow-md">
-                              <div className="flex flex-col items-center text-center space-y-3">
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
-                                  <Image
-                                    src="/images/solutions/situation-drought-ai.jpg"
-                                    alt="Laundry to Landscape"
-                                    width={80}
-                                    height={80}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="text-sm font-semibold text-gray-900 mb-1">Laundry to Landscape</div>
-                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                    Simple washing machine water diversion systems
-                                  </p>
-                                </div>
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-                        </div>
-
-                        <div className="border-t pt-4">
-                          <NavigationMenuLink asChild>
-                            <Link href="/solutions" className="inline-flex items-center justify-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                              <span>Explore All Solutions</span>
-                              <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </Link>
-                          </NavigationMenuLink>
-                        </div>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link href="/customer-stories" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                      Customer Stories
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link href="/blog" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                      Blog
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-              </NavigationMenuList>
-            </NavigationMenu>
-
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
               <CartSheet>
                 <Button variant="ghost" size="icon" className="relative">
                   <ShoppingCart className="h-5 w-5" />
@@ -411,8 +240,7 @@ export function Header() {
               <Button asChild className="bg-black hover:bg-gray-800 text-white">
                 <Link href="/contact">Get Quote</Link>
               </Button>
-            </div>
-          </nav>
+          </div>
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>

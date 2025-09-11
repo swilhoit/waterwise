@@ -82,6 +82,7 @@ export default function GreywaterStateLaws() {
     <PageTemplate
       title="Greywater State Laws & Regulations"
       subtitle="Understanding the legal landscape for greywater systems across the United States. Stay compliant while maximizing your water savings."
+      plainHero
       ctaTitle="Need Help Navigating Regulations?"
       ctaSubtitle="Our experts can help you understand local requirements and design compliant systems"
       ctaButtonText="Get Expert Guidance"

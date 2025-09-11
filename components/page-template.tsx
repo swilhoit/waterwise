@@ -12,6 +12,7 @@ interface PageTemplateProps {
   subtitle: string
   heroImage?: string
   heroImageAlt?: string
+  plainHero?: boolean
   children: React.ReactNode
   showCTA?: boolean
   ctaTitle?: string
@@ -25,6 +26,7 @@ export function PageTemplate({
   subtitle,
   heroImage,
   heroImageAlt,
+  plainHero,
   children,
   showCTA = true,
   ctaTitle = "Ready to Start Saving Water?",
@@ -35,8 +37,10 @@ export function PageTemplate({
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-16 lg:py-24">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+      <section className={`relative ${plainHero ? '' : 'bg-gradient-to-br from-blue-50 via-white to-blue-50/30'} py-16 lg:py-24`}>
+        {!plainHero && (
+          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+        )}
         <div className="px-4">
           <div className={`max-w-7xl mx-auto ${heroImage ? 'grid lg:grid-cols-2 gap-12 items-center' : 'text-center'}`}>
             <div className="animate-fade-in">
@@ -49,7 +53,9 @@ export function PageTemplate({
             </div>
             {heroImage && (
               <div className="relative animate-slide-in-right">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur-2xl opacity-20" />
+                {!plainHero && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur-2xl opacity-20" />
+                )}
                 <Image
                   src={heroImage}
                   alt={heroImageAlt || title}
@@ -74,7 +80,7 @@ export function PageTemplate({
 
       {/* CTA Section */}
       {showCTA && (
-        <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
+        <section className="py-20 bg-gradient-to-r from-slate-700 to-slate-800 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
           <div className="px-4 text-center relative z-10">
             <h2 className="text-3xl lg:text-4xl font-bold mb-6">
