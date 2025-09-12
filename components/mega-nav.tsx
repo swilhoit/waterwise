@@ -106,21 +106,19 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
 
           {item.dropdown && activeDropdown === item.label && (
             <div 
-              className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} left-0 w-screen`}
+              className="fixed left-0 w-screen"
               style={{
-                top: (isScrolled || !isHomePage) ? '80px' : '144px', // 80px for scrolled, 144px (64px padding + 80px nav) for hero state
-                transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                zIndex: 45
+                top: (isScrolled || !isHomePage) ? '80px' : '144px', // 80px for scrolled, 144px for hero
+                backgroundColor: '#F4F1E9',
+                borderBottom: '1px solid #e5e7eb',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
+                transformOrigin: 'top',
+                zIndex: 40,
+                transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleMouseLeave}>
-              <div 
-                className="w-full border-b shadow-lg overflow-hidden"
-                style={{
-                  backgroundColor: '#F4F1E9',
-                  animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
-                  transformOrigin: 'top'
-                }}>
                 <div className="max-w-7xl mx-auto px-6 py-8 animate-fade-in-delayed">
                 <div className={item.label === "Products" ? "block" : `grid gap-6 ${
                   item.dropdown.length <= 4 
@@ -240,7 +238,6 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
                     </Link>
                   </div>
                 )}
-                </div>
               </div>
             </div>
           )}
