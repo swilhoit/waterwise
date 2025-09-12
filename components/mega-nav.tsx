@@ -108,13 +108,13 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
             <div 
               className="fixed left-0 w-screen"
               style={{
-                top: (isScrolled || !isHomePage) ? '80px' : '144px', // 80px for scrolled, 144px for hero
+                top: (isScrolled || !isHomePage) ? '80px' : '144px', // 80px for scrolled, 144px for hero (64px offset + 80px nav height)
                 backgroundColor: '#F4F1E9',
                 borderBottom: '1px solid #e5e7eb',
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
                 transformOrigin: 'top',
-                zIndex: 40,
+                zIndex: 56, // Below nav (60) and background fill (58), but above content
                 transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
               onMouseEnter={handleDropdownMouseEnter}

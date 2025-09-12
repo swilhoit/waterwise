@@ -239,19 +239,33 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} z-[60] w-full transition-all duration-300 ${
-      isScrolled || !isHomePage
-        ? '' 
-        : isDropdownOpen 
-        ? '' 
-        : 'bg-transparent'
-    }`}
-    style={{
-      top: isScrolled || !isHomePage ? '0px' : '64px',
-      backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
-      animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
-      transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
-    }}>
+    <>
+      {/* Sliding background fill for hero dropdown state */}
+      {isDropdownOpen && !isScrolled && isHomePage && (
+        <div 
+          className="fixed inset-x-0 z-[58]"
+          style={{
+            top: 0,
+            height: '144px', // Covers from top to nav bottom (64px offset + 80px nav)
+            backgroundColor: '#F4F1E9',
+            animation: 'slideDownFromTop 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards'
+          }}
+        />
+      )}
+      
+      <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} z-[60] w-full transition-all duration-300 ${
+        isScrolled || !isHomePage
+          ? '' 
+          : isDropdownOpen 
+          ? '' 
+          : 'bg-transparent'
+      }`}
+      style={{
+        top: isScrolled || !isHomePage ? '0px' : '64px',
+        backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
+        animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
+        transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
+      }}>
       <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between" style={{
           height: '80px',
@@ -399,5 +413,6 @@ export function DynamicHeader() {
         </div>
       </div>
     </header>
+    </>
   )
 }
