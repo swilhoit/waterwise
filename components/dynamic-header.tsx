@@ -228,7 +228,7 @@ export function DynamicHeader() {
       backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
       transform: isScrolled || !isHomePage 
         ? isScrolled && isHomePage ? 'translateY(0)' : 'translateY(0)'
-        : 'translateY(48px)',
+        : 'translateY(64px)',
       animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
       transition: 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms ease-in-out'
     }}>
