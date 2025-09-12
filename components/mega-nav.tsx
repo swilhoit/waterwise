@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronDown, BookOpen, Settings, Home, Scale, ShoppingCart } from "lucide-react"
 import { MiniProductCard } from "./mini-product-card"
 
@@ -106,16 +106,21 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
 
           {item.dropdown && activeDropdown === item.label && (
             <div 
-              className="fixed left-0 w-screen border-b shadow-lg z-[30]"
+              className="fixed left-0 w-screen z-[30]"
               style={{
                 top: (isScrolled || !isHomePage) ? '80px' : '112px', // 80px for scrolled, 80px + 32px for hero state
-                backgroundColor: '#F4F1E9',
-                animation: 'fadeIn 200ms ease-out',
                 transition: 'top 300ms ease-in-out'
               }}
-                 onMouseEnter={handleDropdownMouseEnter}
-                 onMouseLeave={handleMouseLeave}>
-              <div className="max-w-7xl mx-auto px-6 py-8">
+              onMouseEnter={handleDropdownMouseEnter}
+              onMouseLeave={handleMouseLeave}>
+              <div 
+                className="w-full border-b shadow-lg overflow-hidden"
+                style={{
+                  backgroundColor: '#F4F1E9',
+                  animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
+                  transformOrigin: 'top'
+                }}>
+                <div className="max-w-7xl mx-auto px-6 py-8 animate-fade-in-delayed">
                 <div className={item.label === "Products" ? "block" : `grid gap-6 ${
                   item.dropdown.length <= 4 
                     ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' 
@@ -234,6 +239,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
                     </Link>
                   </div>
                 )}
+                </div>
               </div>
             </div>
           )}
