@@ -59,29 +59,29 @@ export default async function Home() {
     <PageTransition>
     <div>
       {/* Hero Section Container with Background */}
-      <section className="py-4 px-4">
-        <div className="relative min-h-screen w-full overflow-hidden flex items-center rounded-3xl">
+      <section className="py-2 sm:py-4 px-2 sm:px-4">
+        <div className="relative min-h-screen w-full overflow-hidden flex items-center rounded-2xl sm:rounded-3xl">
           {/* Full-screen background image */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/sam5d_greywater_irrigation_system_at_a_home_in_southern_califor_b3ae333b-cfd3-4fc4-b8ea-31d09c2361a8.png"
               alt="Greywater irrigation system at a home in Southern California"
               fill
-              className="object-cover rounded-3xl"
+              className="object-cover rounded-2xl sm:rounded-3xl"
               priority
             />
             {/* Dark overlay for better text readability */}
-            <div className="absolute inset-0 bg-black/25 rounded-3xl" />
+            <div className="absolute inset-0 bg-black/25 rounded-2xl sm:rounded-3xl" />
           </div>
           
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6">
               <div className="animate-fade-in">
-                <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                   Buy Your Water Once<br />
                   <span className="text-white">Use It Twice</span>
                 </h1>
-                <p className="text-sm text-gray-300 mb-8">
+                <p className="text-sm sm:text-base text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
                   Save up to 80% on your irrigation related water expenses by installing a greywater system
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center">

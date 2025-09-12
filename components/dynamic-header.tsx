@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale, Users, DollarSign } from "lucide-react"
+import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale, Users, DollarSign, ChevronDown, X } from "lucide-react"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { useCart } from "./cart-context"
@@ -19,11 +19,25 @@ export function DynamicHeader() {
   const [products, setProducts] = useState<any[]>([])
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const { totalItems } = useCart()
   const pathname = usePathname()
   
   // Check if we're on the home page
   const isHomePage = pathname === '/'
+  
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   useEffect(() => {
     async function loadData() {
@@ -284,38 +298,105 @@ export function DynamicHeader() {
               </Button>
           </div>
 
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className={`h-5 w-5 transition-colors duration-300 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
-              <nav className="flex flex-col gap-4 mt-8">
-                <Link href="/how-it-works" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  How it Works
-                </Link>
-                <Link href="/products" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Products
-                </Link>
-                <Link href="/solutions" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Solutions
-                </Link>
-                <Link href="/greywater-laws" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Greywater Laws
-                </Link>
-                <Link href="/customer-stories" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Customer Stories
-                </Link>
-                <Link href="/blog" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Blog
-                </Link>
-                <Button asChild className="mt-4 bg-black hover:bg-gray-800 text-white">
-                  <Link href="/contact">Get Quote</Link>
-                </Button>
-              </nav>
-            </SheetContent>
-          </Sheet>
+          {/* Mobile Menu Button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="lg:hidden"
+            onClick={() => setIsOpen(true)}
+          >
+            <Menu className={`h-5 w-5 transition-colors duration-300 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
+          </Button>
+
+          {/* Full Screen Mobile Overlay */}
+          {isOpen && (
+            <div className="fixed inset-0 z-[100] lg:hidden">
+              {/* Backdrop */}
+              <div 
+                className="absolute inset-0 bg-black/50 animate-fade-in"
+                onClick={() => setIsOpen(false)}
+              />
+              
+              {/* Mobile Menu Panel */}
+              <div className="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl animate-slide-in-right">
+                <div className="flex items-center justify-between p-4 border-b">
+                  <Image
+                    src="/images/logo-water-wise-group.png"
+                    alt="Water Wise Group"
+                    width={180}
+                    height={48}
+                    className="h-8 w-auto"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+
+                <nav className="flex flex-col p-4 space-y-2 h-full overflow-y-auto">
+                  {navigationItems.map((item, index) => (
+                    <div key={index}>
+                      {item.dropdown ? (
+                        <>
+                          <button
+                            className="flex items-center justify-between w-full p-3 text-left text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                            onClick={() => setActiveSubmenu(activeSubmenu === item.label ? null : item.label)}
+                          >
+                            <span className="font-medium">{item.label}</span>
+                            <ChevronDown className={`h-4 w-4 transition-transform ${
+                              activeSubmenu === item.label ? 'rotate-180' : ''
+                            }`} />
+                          </button>
+                          
+                          {activeSubmenu === item.label && (
+                            <div className="pl-4 py-2 space-y-1 border-l-2 border-gray-100 ml-3">
+                              {item.dropdown.map((subItem: any, subIndex: number) => (
+                                <Link
+                                  key={subIndex}
+                                  href={subItem.href || '#'}
+                                  className="block p-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+                                  onClick={() => {
+                                    setIsOpen(false)
+                                    setActiveSubmenu(null)
+                                  }}
+                                >
+                                  {subItem.title}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <Link
+                          href={item.href || '#'}
+                          className="block p-3 font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Mobile CTA and Cart */}
+                  <div className="pt-6 border-t border-gray-100 space-y-3 mt-auto">
+                    <CartSheet>
+                      <Button variant="outline" className="w-full justify-start">
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                        Cart ({totalItems})
+                      </Button>
+                    </CartSheet>
+                    <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                      <Link href="/contact">Get Quote</Link>
+                    </Button>
+                  </div>
+                </nav>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
