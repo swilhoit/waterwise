@@ -217,7 +217,7 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className={`fixed z-[60] w-full transition-all duration-300 ${
+    <header className={`fixed top-0 z-[60] w-full transition-all duration-300 ${
       isScrolled || !isHomePage
         ? '' 
         : isDropdownOpen 
@@ -225,39 +225,41 @@ export function DynamicHeader() {
         : 'bg-transparent'
     }`}
     style={{
-      top: isScrolled || !isHomePage ? '0px' : '32px',
       backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
-      transition: 'top 300ms ease-in-out, background-color 300ms ease-in-out'
+      transform: isScrolled || !isHomePage ? 'translateY(0)' : 'translateY(32px)',
+      transition: 'transform 300ms ease-in-out, background-color 300ms ease-in-out'
     }}>
       <div className="container mx-auto px-4 relative">
-        <div className="flex h-24 items-center justify-between" style={{
-          paddingTop: isScrolled || isDropdownOpen || !isHomePage ? '0.75rem' : '1.5rem',
-          paddingBottom: isScrolled || isDropdownOpen || !isHomePage ? '0.75rem' : '1.5rem',
-          transition: 'padding 300ms ease-in-out'
+        <div className="flex items-center justify-between" style={{
+          height: '80px',
+          transition: 'height 300ms ease-in-out'
         }}>
           <Link href="/" className="flex items-center">
-            <Image
-              src={isScrolled || isDropdownOpen || !isHomePage ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
-              alt="Water Wise Group"
-              width={320}
-              height={85}
-              className="w-auto h-16 transition-all duration-300"
-              style={{
-                transform: isScrolled || isDropdownOpen || !isHomePage ? 'scale(0.85)' : 'scale(1)',
-                transformOrigin: 'left center'
-              }}
-            />
+            <div className="w-80 h-16 flex items-center">
+              <Image
+                src={isScrolled || isDropdownOpen || !isHomePage ? "/images/logo-water-wise-group.png" : "/images/ww-white-logo.png"}
+                alt="Water Wise Group"
+                width={320}
+                height={85}
+                className="w-auto h-16 transition-all duration-300"
+                style={{
+                  transform: isScrolled || isDropdownOpen || !isHomePage ? 'scale(0.75)' : 'scale(1)',
+                  transformOrigin: 'left center'
+                }}
+              />
+            </div>
           </Link>
 
           <MegaNav 
             items={navigationItems} 
             isScrolled={isScrolled || isDropdownOpen || !isHomePage} 
             onDropdownChange={setIsDropdownOpen}
+            isHomePage={isHomePage}
           />
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 h-10">
               <CartSheet>
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative h-10 w-10 transition-colors duration-300">
                   <ShoppingCart className={`h-5 w-5 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -267,7 +269,7 @@ export function DynamicHeader() {
                 </Button>
               </CartSheet>
               
-              <Button asChild className={isScrolled || isDropdownOpen || !isHomePage ? "bg-black hover:bg-gray-800 text-white" : "bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"}>
+              <Button asChild className={`h-10 px-4 transition-all duration-300 ${isScrolled || isDropdownOpen || !isHomePage ? "bg-black hover:bg-gray-800 text-white" : "bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"}`}>
                 <Link href="/contact">Get Quote</Link>
               </Button>
           </div>

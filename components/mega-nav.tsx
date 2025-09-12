@@ -40,9 +40,10 @@ interface MegaNavProps {
   }[]
   isScrolled?: boolean
   onDropdownChange?: (isOpen: boolean) => void
+  isHomePage?: boolean
 }
 
-export function MegaNav({ items, isScrolled = false, onDropdownChange }: MegaNavProps) {
+export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePage = true }: MegaNavProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
 
@@ -104,11 +105,14 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange }: MegaNav
           )}
 
           {item.dropdown && activeDropdown === item.label && (
-            <div className="fixed left-0 top-24 w-screen border-b shadow-lg z-[40]"
-                 style={{
-                   backgroundColor: '#F4F1E9',
-                   animation: 'fadeIn 200ms ease-out'
-                 }}
+            <div 
+              className="fixed left-0 w-screen border-b shadow-lg z-[40]"
+              style={{
+                top: (isScrolled || !isHomePage) ? '80px' : '112px', // 80px for scrolled, 80px + 32px for hero state
+                backgroundColor: '#F4F1E9',
+                animation: 'fadeIn 200ms ease-out',
+                transition: 'top 300ms ease-in-out'
+              }}
                  onMouseEnter={handleDropdownMouseEnter}
                  onMouseLeave={handleMouseLeave}>
               <div className="max-w-7xl mx-auto px-6 py-8">
