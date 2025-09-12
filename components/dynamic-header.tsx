@@ -331,8 +331,8 @@ export function DynamicHeader() {
               />
               
               {/* Mobile Menu Panel - Full Screen */}
-              <div className="absolute inset-0 bg-white overflow-hidden animate-slide-in-right">
-                <div className="flex items-center justify-between p-4 border-b bg-[#F4F1E9]">
+              <div className="absolute inset-0 overflow-hidden animate-slide-in-right" style={{backgroundColor: '#F4F1E9'}}>
+                <div className="flex items-center justify-between p-4 border-b border-gray-200">
                   <Image
                     src="/images/logo-water-wise-group.png"
                     alt="Water Wise Group"
@@ -366,43 +366,68 @@ export function DynamicHeader() {
                           </button>
                           
                           {activeSubmenu === item.label && (
-                            <div className="bg-gray-50 mx-2 mt-2 rounded-lg p-3 space-y-2">
-                              {item.dropdown.map((subItem: any, subIndex: number) => (
-                                <Link
-                                  key={subIndex}
-                                  href={subItem.href || '#'}
-                                  className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-md transition-all"
-                                  onClick={() => {
-                                    setIsOpen(false)
-                                    setActiveSubmenu(null)
-                                  }}
-                                >
-                                  {subItem.image && (
-                                    <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
-                                      <Image
-                                        src={subItem.image}
-                                        alt={subItem.title}
-                                        fill
-                                        className="object-cover"
+                            <div className="bg-white/50 mx-2 mt-2 rounded-lg p-3 space-y-2">
+                              {item.label === "Products" ? (
+                                // Special handling for products with MiniProductCard in mobile
+                                item.dropdown.map((subItem: any, subIndex: number) => {
+                                  const derivedImage = subItem.image 
+                                    || subItem.images?.edges?.[0]?.node?.url 
+                                    || subItem.featuredImage?.url 
+                                    || '/images/gwdd-gravity.jpg'
+                                  return (
+                                    <div key={subIndex} onClick={() => {
+                                      setIsOpen(false)
+                                      setActiveSubmenu(null)
+                                    }}>
+                                      <MiniProductCard
+                                        title={subItem.title}
+                                        handle={subItem.handle || subItem.href?.split('/').pop() || ''}
+                                        image={derivedImage}
+                                        price={subItem.priceRange?.minVariantPrice?.amount || subItem.price || '0'}
+                                        compareAtPrice={subItem.variants?.[0]?.compareAtPrice?.amount}
                                       />
                                     </div>
-                                  )}
-                                  {subItem.icon && (
-                                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                      {subItem.icon}
+                                  )
+                                })
+                              ) : (
+                                // Regular handling for non-product items
+                                item.dropdown.map((subItem: any, subIndex: number) => (
+                                  <Link
+                                    key={subIndex}
+                                    href={subItem.href || '#'}
+                                    className="flex items-start gap-3 p-3 bg-white/80 rounded-lg hover:bg-white hover:shadow-md transition-all"
+                                    onClick={() => {
+                                      setIsOpen(false)
+                                      setActiveSubmenu(null)
+                                    }}
+                                  >
+                                    {subItem.image && (
+                                      <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
+                                        <Image
+                                          src={subItem.image}
+                                          alt={subItem.title}
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                    )}
+                                    {subItem.icon && (
+                                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        {subItem.icon}
+                                      </div>
+                                    )}
+                                    <div className="flex-1">
+                                      <h4 className="font-semibold text-gray-900">{subItem.title}</h4>
+                                      {subItem.description && (
+                                        <p className="text-sm text-gray-600 mt-1">{subItem.description}</p>
+                                      )}
+                                      {subItem.price && (
+                                        <p className="text-sm font-medium text-blue-600 mt-1">{subItem.price}</p>
+                                      )}
                                     </div>
-                                  )}
-                                  <div className="flex-1">
-                                    <h4 className="font-semibold text-gray-900">{subItem.title}</h4>
-                                    {subItem.description && (
-                                      <p className="text-sm text-gray-600 mt-1">{subItem.description}</p>
-                                    )}
-                                    {subItem.price && (
-                                      <p className="text-sm font-medium text-blue-600 mt-1">{subItem.price}</p>
-                                    )}
-                                  </div>
-                                </Link>
-                              ))}
+                                  </Link>
+                                ))
+                              )}
                             </div>
                           )}
                         </>
@@ -423,7 +448,7 @@ export function DynamicHeader() {
                 </nav>
                 
                 {/* Fixed Bottom CTA Section */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200" style={{backgroundColor: '#F4F1E9'}}>
                   <div className="space-y-3">
                     <CartSheet>
                       <Button variant="outline" className="w-full justify-between h-12">
