@@ -108,7 +108,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
             <div 
               className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} left-0 w-screen z-[30]`}
               style={{
-                top: (isScrolled || !isHomePage) ? '80px' : '144px', // 80px for scrolled, 80px + 64px for hero state
+                top: (isScrolled || !isHomePage) ? '80px' : '144px', // 80px for scrolled, 144px (64px padding + 80px nav) for hero state
                 transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
               onMouseEnter={handleDropdownMouseEnter}
