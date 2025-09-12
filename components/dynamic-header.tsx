@@ -368,15 +368,15 @@ export function DynamicHeader() {
                             </div>
                           )}
                         </>
-                      ) : (
+                      ) : item.href ? (
                         <Link
-                          href={item.href || '#'}
+                          href={item.href}
                           className="block p-3 font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.label}
                         </Link>
-                      )}
+                      ) : null}
                     </div>
                   ))}
 
