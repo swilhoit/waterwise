@@ -239,20 +239,31 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} z-[60] w-full transition-all duration-300 ${
-      isScrolled || !isHomePage
-        ? '' 
-        : isDropdownOpen 
-        ? '' 
-        : 'bg-transparent'
-    }`}
-    style={{
-      top: isScrolled || !isHomePage ? '0px' : isDropdownOpen ? '0px' : '64px',
-      backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
-      paddingTop: isScrolled || !isHomePage ? '0px' : isDropdownOpen ? '64px' : '0px',
-      animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
-      transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), padding-top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
-    }}>
+    <>
+      {/* Background fill for hero dropdown state */}
+      {isDropdownOpen && !isScrolled && isHomePage && (
+        <div 
+          className="fixed top-0 left-0 w-full h-[224px] z-[55]"
+          style={{
+            backgroundColor: '#F4F1E9',
+            animation: 'fadeIn 300ms ease-out'
+          }}
+        />
+      )}
+      
+      <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} z-[60] w-full transition-all duration-300 ${
+        isScrolled || !isHomePage
+          ? '' 
+          : isDropdownOpen 
+          ? '' 
+          : 'bg-transparent'
+      }`}
+      style={{
+        top: isScrolled || !isHomePage ? '0px' : '64px',
+        backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
+        animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
+        transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
+      }}>
       <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between" style={{
           height: '80px',
@@ -400,5 +411,6 @@ export function DynamicHeader() {
         </div>
       </div>
     </header>
+    </>
   )
 }
