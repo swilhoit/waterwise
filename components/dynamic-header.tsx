@@ -266,7 +266,7 @@ export function DynamicHeader() {
         animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
         transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
       }}>
-      <div className="container mx-auto px-4 relative">
+      <div className="w-full px-4 sm:container sm:mx-auto relative">
         <div className="flex items-center justify-between" style={{
           height: '80px',
           transition: 'height 300ms ease-in-out'
@@ -294,7 +294,7 @@ export function DynamicHeader() {
             isHomePage={isHomePage}
           />
 
-          <div className="flex items-center gap-4 h-10">
+          <div className="hidden lg:flex items-center gap-4 h-10">
               <CartSheet>
                 <Button variant="ghost" size="icon" className="relative h-10 w-10 transition-colors duration-300">
                   <ShoppingCart className={`h-5 w-5 ${isScrolled || isDropdownOpen || !isHomePage ? 'text-gray-900' : 'text-white'}`} />
@@ -326,36 +326,37 @@ export function DynamicHeader() {
             <div className="fixed inset-0 z-[100] lg:hidden">
               {/* Backdrop */}
               <div 
-                className="absolute inset-0 bg-black/50 animate-fade-in"
+                className="absolute inset-0 bg-black/70 animate-fade-in"
                 onClick={() => setIsOpen(false)}
               />
               
-              {/* Mobile Menu Panel */}
-              <div className="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl animate-slide-in-right">
-                <div className="flex items-center justify-between p-4 border-b">
+              {/* Mobile Menu Panel - Full Screen */}
+              <div className="absolute inset-0 bg-white overflow-hidden animate-slide-in-right">
+                <div className="flex items-center justify-between p-4 border-b bg-[#F4F1E9]">
                   <Image
                     src="/images/logo-water-wise-group.png"
                     alt="Water Wise Group"
                     width={180}
                     height={48}
-                    className="h-8 w-auto"
+                    className="h-10 w-auto"
                   />
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsOpen(false)}
+                    className="h-10 w-10"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-6 w-6" />
                   </Button>
                 </div>
 
-                <nav className="flex flex-col p-4 space-y-2 h-full overflow-y-auto">
+                <nav className="flex flex-col h-[calc(100vh-144px)] overflow-y-auto p-4 space-y-2">
                   {navigationItems.map((item, index) => (
                     <div key={index}>
                       {item.dropdown ? (
                         <>
                           <button
-                            className="flex items-center justify-between w-full p-3 text-left text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                            className="flex items-center justify-between w-full p-4 text-left text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                             onClick={() => setActiveSubmenu(activeSubmenu === item.label ? null : item.label)}
                           >
                             <span className="font-medium">{item.label}</span>
@@ -365,18 +366,41 @@ export function DynamicHeader() {
                           </button>
                           
                           {activeSubmenu === item.label && (
-                            <div className="pl-4 py-2 space-y-1 border-l-2 border-gray-100 ml-3">
+                            <div className="bg-gray-50 mx-2 mt-2 rounded-lg p-3 space-y-2">
                               {item.dropdown.map((subItem: any, subIndex: number) => (
                                 <Link
                                   key={subIndex}
                                   href={subItem.href || '#'}
-                                  className="block p-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+                                  className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-md transition-all"
                                   onClick={() => {
                                     setIsOpen(false)
                                     setActiveSubmenu(null)
                                   }}
                                 >
-                                  {subItem.title}
+                                  {subItem.image && (
+                                    <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
+                                      <Image
+                                        src={subItem.image}
+                                        alt={subItem.title}
+                                        fill
+                                        className="object-cover"
+                                      />
+                                    </div>
+                                  )}
+                                  {subItem.icon && (
+                                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                      {subItem.icon}
+                                    </div>
+                                  )}
+                                  <div className="flex-1">
+                                    <h4 className="font-semibold text-gray-900">{subItem.title}</h4>
+                                    {subItem.description && (
+                                      <p className="text-sm text-gray-600 mt-1">{subItem.description}</p>
+                                    )}
+                                    {subItem.price && (
+                                      <p className="text-sm font-medium text-blue-600 mt-1">{subItem.price}</p>
+                                    )}
+                                  </div>
                                 </Link>
                               ))}
                             </div>
@@ -396,19 +420,31 @@ export function DynamicHeader() {
                     </div>
                   ))}
 
-                  {/* Mobile CTA and Cart */}
-                  <div className="pt-6 border-t border-gray-100 space-y-3 mt-auto">
+                </nav>
+                
+                {/* Fixed Bottom CTA Section */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+                  <div className="space-y-3">
                     <CartSheet>
-                      <Button variant="outline" className="w-full justify-start">
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        Cart ({totalItems})
+                      <Button variant="outline" className="w-full justify-between h-12">
+                        <span className="flex items-center">
+                          <ShoppingCart className="h-5 w-5 mr-2" />
+                          View Cart
+                        </span>
+                        {totalItems > 0 && (
+                          <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                            {totalItems}
+                          </span>
+                        )}
                       </Button>
                     </CartSheet>
-                    <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                      <Link href="/contact">Get Quote</Link>
+                    <Button asChild className="w-full bg-black hover:bg-gray-800 text-white h-12">
+                      <Link href="/contact" onClick={() => setIsOpen(false)}>
+                        Get Quote
+                      </Link>
                     </Button>
                   </div>
-                </nav>
+                </div>
               </div>
             </div>
           )}
