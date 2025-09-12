@@ -46,9 +46,17 @@ export function DynamicHeader() {
 
   // Handle scroll events
   useEffect(() => {
+    let ticking = false
+    
     const handleScroll = () => {
-      const scrolled = window.scrollY > 50
-      setIsScrolled(scrolled)
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 100 // Increased threshold for smoother transition
+          setIsScrolled(scrolled)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -230,7 +238,7 @@ export function DynamicHeader() {
         ? isScrolled && isHomePage ? 'translateY(0)' : 'translateY(0)'
         : 'translateY(64px)',
       animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
-      transition: 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms ease-in-out'
+      transition: 'transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
     }}>
       <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between" style={{
