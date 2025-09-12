@@ -114,7 +114,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
                 transformOrigin: 'top',
-                zIndex: 56, // Below nav (60) and background fill (58), but above content
+                zIndex: 50, // Below nav (70) and background fill (65), but above content
                 transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
               onMouseEnter={handleDropdownMouseEnter}

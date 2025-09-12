@@ -243,7 +243,7 @@ export function DynamicHeader() {
       {/* Sliding background fill for hero dropdown state */}
       {isDropdownOpen && !isScrolled && isHomePage && (
         <div 
-          className="fixed inset-x-0 z-[58]"
+          className="fixed inset-x-0 z-[65]"
           style={{
             top: 0,
             height: '144px', // Covers from top to nav bottom (64px offset + 80px nav)
@@ -253,7 +253,7 @@ export function DynamicHeader() {
         />
       )}
       
-      <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} z-[60] w-full transition-all duration-300 ${
+      <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} z-[70] w-full transition-all duration-300 ${
         isScrolled || !isHomePage
           ? '' 
           : isDropdownOpen 
@@ -266,7 +266,7 @@ export function DynamicHeader() {
         animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
         transition: 'top 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 400ms ease-in-out'
       }}>
-      <div className="w-full px-4 sm:container sm:mx-auto relative">
+      <div className="w-full px-4 sm:container sm:mx-auto relative z-10">
         <div className="flex items-center justify-between" style={{
           height: '80px',
           transition: 'height 300ms ease-in-out'
