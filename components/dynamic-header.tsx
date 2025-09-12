@@ -227,7 +227,7 @@ export function DynamicHeader() {
     style={{
       backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
       transform: isScrolled || !isHomePage ? 'translateY(0)' : 'translateY(32px)',
-      transition: 'transform 300ms ease-in-out, background-color 300ms ease-in-out'
+      transition: 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms ease-in-out'
     }}>
       <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between" style={{

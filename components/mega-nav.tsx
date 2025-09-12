@@ -106,7 +106,7 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
 
           {item.dropdown && activeDropdown === item.label && (
             <div 
-              className="fixed left-0 w-screen border-b shadow-lg z-[40]"
+              className="fixed left-0 w-screen border-b shadow-lg z-[30]"
               style={{
                 top: (isScrolled || !isHomePage) ? '80px' : '112px', // 80px for scrolled, 80px + 32px for hero state
                 backgroundColor: '#F4F1E9',
