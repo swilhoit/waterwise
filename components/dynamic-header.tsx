@@ -217,7 +217,7 @@ export function DynamicHeader() {
   ]
 
   return (
-    <header className={`fixed top-0 z-[60] w-full transition-all duration-300 ${
+    <header className={`${isScrolled || !isHomePage ? 'fixed' : 'absolute'} top-0 z-[60] w-full transition-all duration-300 ${
       isScrolled || !isHomePage
         ? '' 
         : isDropdownOpen 
@@ -226,7 +226,10 @@ export function DynamicHeader() {
     }`}
     style={{
       backgroundColor: (isScrolled || isDropdownOpen || !isHomePage) ? '#F4F1E9' : undefined,
-      transform: isScrolled || !isHomePage ? 'translateY(0)' : 'translateY(32px)',
+      transform: isScrolled || !isHomePage 
+        ? isScrolled && isHomePage ? 'translateY(0)' : 'translateY(0)'
+        : 'translateY(32px)',
+      animation: isScrolled && isHomePage ? 'slideDownNav 400ms cubic-bezier(0.4, 0, 0.2, 1)' : undefined,
       transition: 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms ease-in-out'
     }}>
       <div className="container mx-auto px-4 relative">

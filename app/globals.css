@@ -168,6 +168,15 @@
   }
 }
 
+@keyframes slideDownNav {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(0);
