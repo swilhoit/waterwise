@@ -1438,29 +1438,30 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* FAQ Section */}
-            <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <MessageSquare className="h-6 w-6 text-gray-600" />
+            <div className="bg-white">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                   Frequently Asked Questions
-                </CardTitle>
-                <CardDescription className="text-gray-600 mt-2">
+                </h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                   Everything you need to know about this greywater system
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-8">
-                <div className="space-y-4">
-                  {productContent.faq.map((item: any, index: number) => (
-                    <div key={index} className="border border-gray-200 p-6 rounded-lg hover:bg-gray-50 transition-colors">
-                      <h4 className="font-semibold text-gray-900 text-lg mb-3">
-                        {item.question}
-                      </h4>
+                </p>
+              </div>
+              
+              <div className="max-w-4xl mx-auto">
+                {productContent.faq.map((item: any, index: number) => (
+                  <div key={index}>
+                    <div className="py-8">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4">{item.question}</h3>
                       <p className="text-gray-600 leading-relaxed">{item.answer}</p>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    {index < productContent.faq.length - 1 && (
+                      <div className="border-t border-black"></div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

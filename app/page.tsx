@@ -2,7 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain, Play } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain, Play, Shirt, ChefHat, Toilet, Bath, ShowerHead, Waves, Zap } from "lucide-react"
 import { getProducts } from "@/lib/shopify"
 import { Testimonials } from "@/components/testimonials"
 import { formatPriceDisplay } from "@/lib/price-utils"
@@ -561,6 +562,163 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Greywater & Irrigation Guidelines */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          
+          {/* Category: Greywater Collection */}
+          <div className="max-w-5xl mx-auto mb-8 text-center">
+            <h3 className="text-4xl font-bold text-gray-800">Greywater Sources</h3>
+          </div>
+          
+          {/* Greywater Sources Table */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 bg-gray-50">
+                    <th className="text-left py-6 px-6 font-bold text-xl">Source</th>
+                    <th className="text-center py-6 px-6 font-bold text-xl">Status</th>
+                    <th className="text-left py-6 px-6 font-bold text-xl">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Shirt className="w-8 h-8 text-green-600" />
+                        <span className="font-semibold text-lg">Laundry</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-green-600 text-white border-transparent px-4 py-2 text-sm">Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Laundry water is typically ideal for reuse when using biodegradable, low-sodium detergents.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Bath className="w-8 h-8 text-amber-500" />
+                        <span className="font-semibold text-lg">Bathroom Sink</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-amber-500 text-white border-transparent px-4 py-2 text-sm">Approved with Permits</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Often allowed for landscape irrigation with a compliant system. Permits may be required.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <ShowerHead className="w-8 h-8 text-amber-500" />
+                        <span className="font-semibold text-lg">Shower</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-amber-500 text-white border-transparent px-4 py-2 text-sm">Approved with Permits</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Shower water is generally suitable for reuse with proper filtration and permits.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <ChefHat className="w-8 h-8 text-red-600" />
+                        <span className="font-semibold text-lg">Kitchen Sink</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-red-600 text-white border-transparent px-4 py-2 text-sm">Not Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Kitchen water contains fats, oils, and food waste. Not suitable for reuse.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Toilet className="w-8 h-8 text-red-600" />
+                        <span className="font-semibold text-lg">Toilet</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-red-600 text-white border-transparent px-4 py-2 text-sm">Not Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Toilet water is blackwater. Do not reuse under any circumstances.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Category: Greywater Irrigation */}
+          <div className="max-w-5xl mx-auto mt-12 mb-8 text-center">
+            <h3 className="text-4xl font-bold text-gray-800">Greywater Irrigation Methods</h3>
+          </div>
+          
+          {/* Greywater Irrigation Table */}
+          <div className="max-w-5xl mx-auto">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 bg-gray-50">
+                    <th className="text-left py-6 px-6 font-bold text-xl">Method</th>
+                    <th className="text-center py-6 px-6 font-bold text-xl">Status</th>
+                    <th className="text-left py-6 px-6 font-bold text-xl">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Zap className="w-8 h-8 text-green-600" />
+                        <span className="font-semibold text-lg">Underground Irrigation</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-green-600 text-white border-transparent px-4 py-2 text-sm">Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Subsurface drip or mulch basins deliver water below the surface, minimizing exposure and meeting code in most regions.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Waves className="w-8 h-8 text-red-600" />
+                        <span className="font-semibold text-lg">Above Ground Irrigation</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-red-600 text-white border-transparent px-4 py-2 text-sm">Not Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Sprinklers or surface watering can aerosolize water. Most codes prohibit above-ground greywater irrigation.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-500 mt-6 text-center">
+            Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
+          </p>
+        </div>
+      </section>
+
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -572,61 +730,45 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Is greywater safe to use?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Yes, when properly filtered and treated, greywater is safe for irrigation and non-potable uses. Our systems use multi-stage filtration to remove contaminants and meet all health department standards.
-                </CardDescription>
-              </CardContent>
-            </Card>
+          <div className="max-w-4xl mx-auto">
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Is greywater safe to use?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Yes, when properly filtered and treated, greywater is safe for irrigation and non-potable uses. Our systems use multi-stage filtration to remove contaminants and meet all health department standards.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>How much water can I save?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Most households save 40-50% on their water usage. A typical family of four can recycle 15,000-20,000 gallons per year, saving hundreds of dollars on water bills.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">How much water can I save?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Most households save 40-50% on their water usage. A typical family of four can recycle 15,000-20,000 gallons per year, saving hundreds of dollars on water bills.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Do I need a permit?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Permit requirements vary by state and local jurisdiction. Many areas allow simple laundry-to-landscape systems without permits, while others require permits for all greywater systems. We help navigate local regulations.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Do I need a permit?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Permit requirements vary by state and local jurisdiction. Many areas allow simple laundry-to-landscape systems without permits, while others require permits for all greywater systems. We help navigate local regulations.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>How long does installation take?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Most residential installations take 1-2 days. Simple laundry-to-landscape systems can often be installed in a few hours, while whole-house systems may take longer depending on complexity.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">How long does installation take?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Most residential installations take 1-2 days. Simple laundry-to-landscape systems can often be installed in a few hours, while whole-house systems may take longer depending on complexity.
+              </p>
+            </div>
+            <div className="border-t border-black"></div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>What maintenance is required?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Our systems are designed for minimal maintenance. Filter replacement every 6-12 months and periodic system checks are typically all that's needed. We offer maintenance programs for hands-off operation.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="py-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">What maintenance is required?</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Our systems are designed for minimal maintenance. Filter replacement every 6-12 months and periodic system checks are typically all that's needed. We offer maintenance programs for hands-off operation.
+              </p>
+            </div>
           </div>
         </div>
       </section>
