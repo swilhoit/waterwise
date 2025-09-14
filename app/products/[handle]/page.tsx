@@ -8,8 +8,6 @@ import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
 import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText } from 'lucide-react'
 import { formatPriceDisplay } from '@/lib/price-utils'
-import { ProductReviews } from '@/components/product-reviews'
-import { FadeIn, PageTransition } from '@/components/animations'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
@@ -352,31 +350,12 @@ function getProductContent(handle: string) {
         {
           name: "Mike Ellsworth", 
           rating: 5,
-          review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.",
-          images: [
-            {
-              url: "/images/solutions/situation-tiny-rv-ai.jpg",
-              alt: "Tiny house greywater installation",
-              thumbnail: "/images/solutions/situation-tiny-rv-ai.jpg"
-            }
-          ]
+          review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan."
         },
         {
           name: "Dave in Baja",
           rating: 5,
-          review: "We live in the desert, and water is scarce. When we built our house, we put in two sewer lines - one for black water into the septic, and one for gray water into the garden.",
-          images: [
-            {
-              url: "/images/customer-stories/arizona-oasis.jpg",
-              alt: "Desert garden with greywater irrigation",
-              thumbnail: "/images/customer-stories/arizona-oasis.jpg"
-            },
-            {
-              url: "/images/solutions/situation-drought-ai.jpg", 
-              alt: "Drought-resistant landscaping",
-              thumbnail: "/images/solutions/situation-drought-ai.jpg"
-            }
-          ]
+          review: "We live in the desert, and water is scarce. When we built our house, we put in two sewer lines - one for black water into the septic, and one for gray water into the garden."
         },
         {
           name: "J.G.",
@@ -884,10 +863,9 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const productContent = getProductContent(handle)
 
   return (
-    <PageTransition>
-    <div>
+    <div className="bg-white">
       {/* Hero Section */}
-      <div className="border-b">
+      <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -1006,7 +984,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       </div>
 
       {/* Product Details Section - Open Layout */}
-      <div className="border-t">
+      <div className="border-t bg-gray-50">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-6xl mx-auto space-y-16">
         
@@ -1366,14 +1344,101 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               </Card>
             </div>
 
-            {/* Dynamic Reviews Section */}
-            <ProductReviews 
-              product={product} 
-              fallbackReviews={productContent.reviews || []} 
-            />
+            {/* Customer Reviews Section */}
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <Star className="h-5 w-5 text-gray-600" />
+                    Customer Reviews
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 p-8">
+                  {productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
+                    <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-6' : 'pb-2'}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          ))}
+                        </div>
+                        <span className="font-semibold text-gray-900">{review.name}</span>
+                      </div>
+                      <p className="text-gray-600 leading-relaxed">"{review.review}"</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <Star className="h-5 w-5 text-gray-600" />
+                    Review Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Performance</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Easy Installation</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Value for Money</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-gray-700">Customer Support</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <h4 className="font-semibold text-gray-900 mb-4">Common Highlights</h4>
+                    <div className="space-y-2 text-gray-700">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <span>Excellent long-term performance</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <span>Significant water savings</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <span>Low maintenance requirements</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <span>Great customer support</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* FAQ Section */}
-            <div>
+            <div className="bg-white">
               <div className="text-center mb-12">
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                   Frequently Asked Questions
@@ -1382,7 +1447,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   Everything you need to know about this greywater system
                 </p>
               </div>
-
+              
               <div className="max-w-4xl mx-auto">
                 {productContent.faq.map((item: any, index: number) => (
                   <div key={index}>
@@ -1401,7 +1466,6 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         </div>
       </div>
     </div>
-    </PageTransition>
   )
 }
 

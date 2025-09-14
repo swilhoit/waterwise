@@ -4,202 +4,54 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, ShoppingCart, BookOpen, Settings, Home, Scale, Users, DollarSign } from "lucide-react"
+import { Menu, ShoppingCart } from "lucide-react"
 import { useState } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
-import { MegaNav } from "./mega-nav"
+import { SimpleNav } from "./simple-nav"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
 
-  const navigationItems = [
+  const navItems = [
     {
       label: "How it Works",
       dropdown: [
-        {
-          title: "What is Greywater?",
-          description: "Learn the basics of greywater recycling",
-          href: "/what-is-greywater",
-          icon: <BookOpen className="h-6 w-6 text-blue-600" />
-        },
-        {
-          title: "How Systems Work",
-          description: "Understanding greywater system mechanics",
-          href: "/how-it-works",
-          icon: <Settings className="h-6 w-6 text-green-600" />
-        },
-        {
-          title: "Tiny House Systems",
-          description: "Specialized solutions for tiny homes",
-          href: "/tiny-house-systems",
-          icon: <Home className="h-6 w-6 text-purple-600" />
-        },
-        {
-          title: "State Laws",
-          description: "Legal requirements by state",
-          href: "/greywater-laws",
-          icon: <Scale className="h-6 w-6 text-amber-600" />
-        }
+        { title: "What is Greywater?", href: "/what-is-greywater", description: "Learn the basics of greywater recycling" },
+        { title: "How Systems Work", href: "/how-it-works", description: "Understanding greywater system mechanics" },
+        { title: "Tiny House Systems", href: "/tiny-house-systems", description: "Specialized solutions for tiny homes" },
+        { title: "State Laws", href: "/greywater-laws", description: "Legal requirements by state" }
       ]
     },
     {
       label: "Products",
       dropdown: [
-        {
-          title: "Aqua2use GWDD",
-          description: "Gravity-fed system for most homes",
-          href: "/products/aqua2use-gwdd",
-          image: "/images/gwdd-gravity.jpg"
-        },
-        {
-          title: "GWDD with Pump",
-          description: "Pump system for uphill irrigation",
-          href: "/products/aqua2use-gwdd-pump",
-          image: "/images/gwdd-ug.jpg"
-        },
-        {
-          title: "Replacement Filters",
-          description: "Keep your system running smoothly",
-          href: "/products/replacement-filters",
-          image: "/images/aqua2use-greywater-recycling-sytem.png"
-        },
-        {
-          title: "Replacement Pumps",
-          description: "Pumps and parts for repairs",
-          href: "/products/replacement-pumps",
-          image: "/images/gwdd-gravity.jpg"
-        }
+        { title: "Aqua2use GWDD", href: "/products/aqua2use-gwdd", description: "Gravity-fed system for most homes" },
+        { title: "GWDD with Pump", href: "/products/aqua2use-gwdd-pump", description: "Pump system for uphill irrigation" },
+        { title: "Replacement Filters", href: "/products/replacement-filters", description: "Keep your system running smoothly" },
+        { title: "Replacement Pumps", href: "/products/replacement-pumps", description: "Pumps and parts for repairs" },
+        { title: "View All Products", href: "/products" }
       ]
     },
     {
       label: "Solutions",
       dropdown: [
-        {
-          title: "Residential Homes",
-          description: "Complete home greywater systems for sustainable living",
-          href: "/solutions/residential",
-          image: "/images/solutions/homes-ai.jpg"
-        },
-        {
-          title: "RVs & Trailers",
-          description: "Mobile greywater solutions for travel and camping",
-          href: "/solutions/rvs",
-          image: "/images/solutions/rvs-ai.jpg"
-        },
-        {
-          title: "Tiny Homes",
-          description: "Compact, efficient systems for minimal living",
-          href: "/solutions/tiny-homes",
-          image: "/images/solutions/tiny-homes-ai.jpg"
-        },
-        {
-          title: "Cabins & Retreats",
-          description: "Off-grid water recycling for remote locations",
-          href: "/solutions/cabins",
-          image: "/images/solutions/cabins-ai.jpg"
-        },
-        {
-          title: "Commercial Sites",
-          description: "Large-scale systems for businesses and developments",
-          href: "/solutions/remote-work-sites",
-          image: "/images/solutions/situation-remote-ai.jpg"
-        },
-        {
-          title: "Laundry to Landscape",
-          description: "Simple washing machine water diversion systems",
-          href: "/solutions/laundry-to-landscape",
-          image: "/images/solutions/situation-drought-ai.jpg"
-        }
+        { title: "Residential Homes", href: "/solutions/residential", description: "Complete home greywater systems" },
+        { title: "RVs & Trailers", href: "/solutions/rvs", description: "Mobile greywater solutions" },
+        { title: "Tiny Homes", href: "/solutions/tiny-homes", description: "Compact, efficient systems" },
+        { title: "Cabins & Cottages", href: "/solutions/cabins", description: "Off-grid greywater solutions" },
+        { title: "Sustainable Developments", href: "/solutions/developments", description: "Community-scale systems" }
       ]
     },
-    {
-      label: "Directory",
-      dropdown: [
-        {
-          title: "State Laws",
-          description: "Legal requirements and permits by state",
-          href: "/greywater-laws",
-          icon: <Scale className="h-6 w-6 text-amber-600" />
-        },
-        {
-          title: "Find Installers",
-          description: "Certified installers in your area",
-          href: "/installers",
-          icon: <Users className="h-6 w-6 text-blue-600" />
-        },
-        {
-          title: "Rebates & Incentives",
-          description: "Financial incentives and rebate programs",
-          href: "/rebates",
-          icon: <DollarSign className="h-6 w-6 text-green-600" />
-        }
-      ]
-    },
-    {
-      label: "Customer Stories",
-      dropdown: [
-        {
-          title: "California Homeowner",
-          description: "How the Johnson family reduced their water bill by 45% in drought-stricken California",
-          href: "/customer-stories/california-homeowner",
-          image: "/images/customer-stories/california-family.jpg"
-        },
-        {
-          title: "Arizona Desert Oasis",
-          description: "Maintaining a desert oasis with 60% less water in Phoenix",
-          href: "/customer-stories/arizona-desert-oasis",
-          image: "/images/customer-stories/arizona-oasis.jpg"
-        }
-      ]
-    },
-    {
-      label: "Blog",
-      dropdown: [
-        {
-          title: "10 Ways Greywater Recycling Can Transform Your Home",
-          description: "Discover how installing a greywater system can reduce your water bills, improve your garden, and increase your home's sustainability rating",
-          href: "/blog/10-ways-greywater-recycling-transforms-home",
-          image: "/images/gwdd-gravity.jpg"
-        },
-        {
-          title: "Understanding Greywater: What It Is and Why It Matters",
-          description: "Learn the basics of greywater, where it comes from, and why recycling it is crucial for water conservation",
-          href: "/blog/understanding-greywater-basics",
-          image: "/images/aqua2use-greywater-recycling-sytem.png"
-        },
-        {
-          title: "DIY vs Professional Installation: Which is Right for You?",
-          description: "Explore the pros and cons of DIY installation versus hiring professionals for your greywater recycling system",
-          href: "/blog/diy-vs-professional-installation",
-          image: "/images/gwdd-ug.jpg"
-        },
-        {
-          title: "Maximizing Water Savings: Best Practices for Greywater Systems",
-          description: "Tips and strategies to get the most water savings and environmental benefits from your greywater recycling system",
-          href: "/blog/maximizing-water-savings-best-practices",
-          image: "/images/gwdd-gravity.jpg"
-        },
-        {
-          title: "The Future of Water Conservation in Residential Properties",
-          description: "Explore emerging trends in water conservation technology and what they mean for homeowners and property developers",
-          href: "/blog/future-water-conservation-residential",
-          image: "/images/aqua2use-greywater-recycling-sytem.png"
-        },
-        {
-          title: "Greywater Systems for Different Climates: What You Need to Know",
-          description: "How climate affects greywater system performance and what considerations to make for your specific region",
-          href: "/blog/greywater-systems-different-climates",
-          image: "/images/gwdd-ug.jpg"
-        }
-      ]
-    }
+    { label: "Customer Stories", href: "/customer-stories" },
+    { label: "Blog", href: "/blog" },
+    { label: "About", href: "/about" }
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-md">
-      <div className="container mx-auto px-4 relative">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-gray-200">
+      <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image
@@ -211,23 +63,23 @@ export function Header() {
             />
           </Link>
 
-          <MegaNav items={navigationItems} />
+          <SimpleNav items={navItems} />
 
-          <div className="flex items-center gap-4">
-              <CartSheet>
-                <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className="h-5 w-5" />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {totalItems}
-                    </span>
-                  )}
-                </Button>
-              </CartSheet>
-              
-              <Button asChild className="bg-black hover:bg-gray-800 text-white">
-                <Link href="/contact">Get Quote</Link>
+          <div className="hidden lg:flex items-center gap-4">
+            <CartSheet>
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
               </Button>
+            </CartSheet>
+            
+            <Button asChild className="bg-black hover:bg-gray-800 text-white">
+              <Link href="/contact">Get Quote</Link>
+            </Button>
           </div>
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>

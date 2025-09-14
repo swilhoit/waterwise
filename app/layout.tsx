@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { DynamicHeader } from "@/components/dynamic-header";
+import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart-context";
 import { TopBanner } from "@/components/top-banner";
@@ -20,10 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`} style={{backgroundColor: '#F4F1E9'}}>
+      <body className={`${inter.className} antialiased`} style={{backgroundColor: 'white'}}>
         <CartProvider>
           <TopBanner />
-          <DynamicHeader />
+          <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </CartProvider>

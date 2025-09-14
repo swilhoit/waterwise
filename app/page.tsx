@@ -3,14 +3,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain, Play, XCircle, AlertTriangle } from "lucide-react"
+import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Users, BookOpen, Shield, Wrench, Award, Globe, Mountain, Play, Shirt, ChefHat, Toilet, Bath, ShowerHead, Waves, Zap } from "lucide-react"
 import { getProducts } from "@/lib/shopify"
 import { Testimonials } from "@/components/testimonials"
-import { ComparisonTable } from "@/components/compare-table"
 import { formatPriceDisplay } from "@/lib/price-utils"
-import { BlogCarousel } from "@/components/blog-carousel"
-import { getBlogArticles } from "@/lib/shopify"
-import { FadeIn, Stagger, PageTransition } from "@/components/animations"
 
 
 const iconMap: { [key: string]: any } = {
@@ -24,184 +20,269 @@ const iconMap: { [key: string]: any } = {
 
 export default async function Home() {
   const products = await getProducts()
-  
-  let blogPosts: any[] = []
-  try {
-    const shopifyArticles = await getBlogArticles()
-    if (shopifyArticles && shopifyArticles.length > 0) {
-      blogPosts = shopifyArticles.map((article: any) => ({
-        id: article.id,
-        title: article.title,
-        excerpt:
-          article.summary_html ||
-          (article.body_html ? article.body_html.replace(/<[^>]*>/g, '').substring(0, 150).trim() + '...' : ''),
-        image: article.image?.src || "/images/gwdd-gravity.jpg",
-        author: article.author || "Water Wise Team",
-        date: article.published_at
-          ? new Date(article.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-          : undefined,
-        slug: article.handle || `article-${article.id}`,
-      }))
-    }
-  } catch (error) {
-    console.error('Failed to load blog posts from Shopify:', error)
-  }
 
   const defaultBenefits = [
     { title: "Save 50% on Water Usage", description: "Recycle water from showers, washing machines, and sinks to irrigate your garden", icon: "droplets" },
     { title: "Lower Your Water Bills", description: "Reduce monthly water costs by reusing greywater for landscape irrigation", icon: "dollar" },
     { title: "Eco-Friendly Solution", description: "Reduce strain on water treatment facilities and conserve precious freshwater resources", icon: "leaf" },
+    { title: "Healthier Landscapes", description: "Greywater contains nutrients that benefit plants and promote lush growth", icon: "tree" },
+    { title: "Perfect for Any Property", description: "Solutions for homes, tiny homes, cabins, RVs, and sustainable developments", icon: "home" },
+    { title: "Trusted by Thousands", description: "Join our growing community of water-conscious property owners", icon: "users" }
   ]
 
   const displayBenefits = defaultBenefits
 
   return (
-    <PageTransition>
     <div>
-      {/* Hero Section Container with Background */}
-      <section className="py-2 sm:py-4 px-2 sm:px-4">
-        <div className="relative min-h-screen w-full overflow-hidden flex items-center rounded-2xl sm:rounded-3xl">
-          {/* Full-screen background image */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/images/sam5d_greywater_irrigation_system_at_a_home_in_southern_califor_b3ae333b-cfd3-4fc4-b8ea-31d09c2361a8.png"
-              alt="Greywater irrigation system at a home in Southern California"
-              fill
-              className="object-cover rounded-2xl sm:rounded-3xl"
-              priority
-            />
-            {/* Dark overlay for better text readability */}
-            <div className="absolute inset-0 bg-black/25 rounded-2xl sm:rounded-3xl" />
-          </div>
-          
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6">
-              <div className="animate-fade-in">
-                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-                  Buy Your Water Once<br />
-                  <span className="text-white">Use It Twice</span>
-                </h1>
-                <p className="text-sm sm:text-base text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                  Save up to 80% on your irrigation related water expenses by installing a greywater system
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" asChild>
-                    <Link href="/products">
-                      Explore Systems
-                    </Link>
-                  </Button>
-                  <Button size="lg" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30" asChild>
-                    <Link href="/how-it-works">How It Works</Link>
-                  </Button>
+      <section className="relative py-20 lg:py-32 overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="animate-fade-in">
+              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Turn Every Drop Into A{" "}
+                <span className="text-gradient">Sustainable Solution</span>
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Water Wise Group is on a mission to help you save water, lower your bills, and grow healthier landscapes—without compromising on simplicity or sustainability.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" asChild>
+                  <Link href="/products">
+                    Explore Systems
+                  </Link>
+                </Button>
+                <Button size="lg" className="bg-gray-600 hover:bg-gray-700 text-white" asChild>
+                  <Link href="/how-it-works">How It Works</Link>
+                </Button>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="text-sm">DIY Friendly</span>
                 </div>
-                <div className="flex items-center gap-6 justify-center">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-white" />
-                    <span className="text-sm text-white">DIY Friendly</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-white" />
-                    <span className="text-sm text-white">Save 40% on Water Bills</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="text-sm">Save 40% on Water Bills</span>
                 </div>
               </div>
             </div>
+            <div className="relative animate-slide-in-right">
+              <Image
+                src="/images/Gemini_Generated_Image_hwzac2hwzac2hwza 1.png"
+                alt="Aqua2use Greywater System"
+                width={600}
+                height={400}
+                className="rounded-lg relative z-10 hover-lift"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Aqua2Use System Section */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="container mx-auto px-4">
-          <FadeIn>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
-                The Aqua2Use Greywater System
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for turning your waste greywater into usable irrigation water.
-              </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="max-w-4xl mx-auto text-center">
-              <Image
-                src="/images/aqua2use.png"
-                alt="Aqua2Use Greywater System"
-                width={800}
-                height={600}
-                className="w-full h-auto rounded-lg"
-              />
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Comparison Table Section - moved from later in the page and headlines removed */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <FadeIn>
-            {products.length > 0 ? (
-              <ComparisonTable
-                className="max-w-5xl mx-auto"
-                products={products.slice(0, 2).map((p: any) => ({
-                  title: p.title,
-                  handle: p.handle,
-                  priceText: p.priceRange?.minVariantPrice
-                    ? formatPriceDisplay(p.priceRange.minVariantPrice.amount, "From ")
-                    : undefined,
-                }))}
-              />
-            ) : (
-              <ComparisonTable
-                className="max-w-5xl mx-auto"
-                products={[
-                  { title: "Aqua2use GWDD", handle: "aqua2use-gwdd" },
-                  { title: "Aqua2use Pro", handle: "aqua2use-pro" },
-                ]}
-              />
-            )}
-          </FadeIn>
+          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
+            <Image
+              src="/images/architect.png"
+              alt="Architect Magazine"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+            <Image
+              src="/images/family-handyman.svg"
+              alt="Family Handyman"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+            <Image
+              src="/images/The_Washington_Post_Newspaper.svg"
+              alt="The Washington Post"
+              width={120}
+              height={40}
+              className="h-10 w-auto grayscale opacity-60"
+            />
+          </div>
         </div>
       </section>
 
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <FadeIn>
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                How Greywater Recycling Works
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Simple, efficient, and automatic water recycling for your property
-              </p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose Greywater Recycling?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Join thousands of homeowners who are saving water and money while creating healthier landscapes
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayBenefits.map((benefit: any, index: number) => {
+              const IconComponent = iconMap[benefit.icon] || Droplets
+              return (
+                <Card key={index} className="hover-lift transition-all duration-300 border-gray-100">
+                  <CardHeader>
+                    <IconComponent className="h-10 w-10 text-gray-600 mb-4" />
+                    <CardTitle>{benefit.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription>{benefit.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Our Greywater Systems
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Professional-grade systems designed for easy installation and maximum efficiency
+            </p>
+          </div>
+
+          {products.length > 0 ? (
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {products.slice(0, 2).map((product: any) => (
+                <Card key={product.id} className="hover-lift transition-all duration-300">
+                  <CardHeader>
+                    {product.images?.edges?.[0]?.node && (
+                      <Image
+                        src={product.images.edges[0].node.url}
+                        alt={product.images.edges[0].node.altText || product.title}
+                        width={400}
+                        height={300}
+                        className="rounded-lg mb-4"
+                      />
+                    )}
+                    <CardTitle>{product.title}</CardTitle>
+                    <CardDescription>{product.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {product.priceRange?.minVariantPrice && (
+                      <div className="text-2xl font-bold text-gray-600 mb-4">
+                        {formatPriceDisplay(product.priceRange.minVariantPrice.amount, "From ")}
+                      </div>
+                    )}
+                    <Button className="w-full bg-black hover:bg-gray-800 text-white" asChild>
+                      <Link href={`/products/${product.handle}`}>Learn More</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </FadeIn>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              <Card className="hover-lift transition-all duration-300">
+                <CardHeader>
+                  <Image
+                    src="/images/gwdd-gravity.jpg"
+                    alt="Aqua2use GWDD"
+                    width={400}
+                    height={300}
+                    className="rounded-lg mb-4"
+                  />
+                  <CardTitle>Aqua2use GWDD</CardTitle>
+                  <CardDescription>Gravity & Pump Systems</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                      <span>Perfect for homes and cabins</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                      <span>Processes up to 150 gallons per day</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                      <span>Progressive filtration system</span>
+                    </li>
+                  </ul>
+                  <Button className="w-full mt-6 bg-black hover:bg-gray-800 text-white" asChild>
+                    <Link href="/products/aqua2use-gwdd">Learn More</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover-lift transition-all duration-300">
+                <CardHeader>
+                  <Image
+                    src="/images/gwdd-ug.jpg"
+                    alt="Aqua2use Pro"
+                    width={400}
+                    height={300}
+                    className="rounded-lg mb-4"
+                  />
+                  <CardTitle>Aqua2use Pro</CardTitle>
+                  <CardDescription>Commercial Grade System</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                      <span>For larger properties & developments</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                      <span>Processes up to 500 gallons per day</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                      <span>Advanced multi-stage filtration</span>
+                    </li>
+                  </ul>
+                  <Button className="w-full mt-6 bg-black hover:bg-gray-800 text-white" asChild>
+                    <Link href="/products/aqua2use-pro">Learn More</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              How Greywater Recycling Works
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Simple, efficient, and automatic water recycling for your property
+            </p>
+          </div>
 
           <div className="max-w-4xl mx-auto">
-            <FadeIn delay={200}>
-              <a 
-                href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block relative aspect-video bg-gray-200 rounded-lg overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
-              >
-                <Image
-                  src="/images/maxresdefault.jpg"
-                  alt="How Greywater Works Video"
-                  width={800}
-                  height={450}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                  <div className="bg-white rounded-full p-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
-                  </div>
+            <a 
+              href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block relative aspect-video bg-gray-200 rounded-lg overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+            >
+              <Image
+                src="/images/maxresdefault.jpg"
+                alt="How Greywater Works Video"
+                width={800}
+                height={450}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                <div className="bg-white rounded-full p-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
                 </div>
-              </a>
-            </FadeIn>
+              </div>
+            </a>
 
-            <Stagger delay={300} className="grid md:grid-cols-3 gap-8 mt-12">
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-gray-600">1</span>
@@ -231,318 +312,67 @@ export default async function Home() {
                   Clean greywater automatically waters your landscape via drip irrigation
                 </p>
               </div>
-            </Stagger>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Featured in Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
-            <Image
-              src="/images/featured-on/architect.avif"
-              alt="Architect Magazine"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-            <Image
-              src="/images/featured-on/family-handyman.svg"
-              alt="Family Handyman"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-            <Image
-              src="/images/featured-on/The_Washington_Post_Newspaper.svg"
-              alt="The Washington Post"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-            <Image
-              src="/images/featured-on/bg-logo_web-large.avif"
-              alt="Better Homes & Gardens"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Greywater & Irrigation Guidelines */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          
-          {/* Visual cards removed per request */}
-
-          {/* Category: Greywater Collection */}
-          <FadeIn>
-            <div className="max-w-5xl mx-auto mb-8 text-center">
-              <h3 className="text-4xl font-bold text-gray-800">Greywater Sources</h3>
-            </div>
-          </FadeIn>
-          <Stagger delay={200} className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto place-items-center">
-            {/* Laundry - Approved */}
-            <Card className="hover-lift transition-all duration-300 border-green-600 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-green-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/laundry.png"
-                    alt="Laundry water source"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-green-600 font-bold">Laundry</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Laundry water is typically ideal for reuse when using biodegradable, low-sodium detergents.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Kitchen Sink - Not Approved */}
-            <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/kitchen-sink.png"
-                    alt="Kitchen sink"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-red-600 font-bold">Kitchen Sink</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Kitchen water contains fats, oils, and food waste. Not suitable for reuse.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Toilet - Not Approved */}
-            <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/toilet.png"
-                    alt="Toilet"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-red-600 font-bold">Toilet</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Toilet water is blackwater. Do not reuse under any circumstances.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Bathroom Sink - Approved with Permits */}
-            <Card className="hover-lift transition-all duration-300 border-amber-500 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-amber-500 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved with Permits</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/bathroom.png"
-                    alt="Bathroom sink"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-amber-500 font-bold">Bathroom Sink</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Often allowed for landscape irrigation with a compliant system. Permits may be required.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Shower - Approved with Permits */}
-            <Card className="hover-lift transition-all duration-300 border-amber-500 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-amber-500 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved with Permits</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/shower.png"
-                    alt="Shower"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-amber-500 font-bold">Shower</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Shower water is generally suitable for reuse with proper filtration and permits.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </Stagger>
-
-          {/* Category: Greywater Irrigation */}
-          <FadeIn delay={400}>
-            <div className="max-w-4xl mx-auto mt-12 mb-8 text-center">
-              <h3 className="text-4xl font-bold text-gray-800">Greywater Irrigation</h3>
-            </div>
-          </FadeIn>
-          <Stagger delay={500} className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12 place-items-center">
-            {/* Above Ground Irrigation - Not Approved */}
-            <Card className="hover-lift transition-all duration-300 border-red-600 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-red-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Not Approved</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/aboveground.png"
-                    alt="Above ground irrigation"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-red-600 font-bold">Above Ground Irrigation</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Sprinklers or surface watering can aerosolize water. Most codes prohibit above-ground greywater irrigation.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            {/* Underground Irrigation - Approved */}
-            <Card className="hover-lift transition-all duration-300 border-green-600 border-2 text-center p-6 relative h-[500px]">
-              <Badge className="bg-green-600 text-white border-transparent text-base px-4 py-2 rounded-full absolute top-4 right-4">Approved</Badge>
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-6 mt-8">
-                  <Image
-                    src="/images/line-art/underground.png"
-                    alt="Underground irrigation"
-                    width={180}
-                    height={180}
-                    className="opacity-80"
-                  />
-                </div>
-                <CardTitle className="text-3xl text-green-600 font-bold">Underground Irrigation</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription className="text-base">
-                  Subsurface drip or mulch basins deliver water below the surface, minimizing exposure and meeting code in most regions.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </Stagger>
-
-          <FadeIn delay={600}>
-            <p className="text-sm text-gray-500 mt-6 text-center">
-              Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-
-      {/* Featured Customer Success Stories */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Featured Success Stories
+              Learn About Greywater
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real families achieving remarkable water savings with our systems
+              Discover everything you need to know about greywater recycling
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <Link href="/customer-stories/california-homeowner" className="group">
-              <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
-                <div className="relative h-64">
-                  <Image
-                    src="/images/customer-stories/california-family.jpg"
-                    alt="California family home with greywater system"
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 p-6 text-white">
-                    <Badge className="bg-green-600 text-white mb-3">45% Water Savings</Badge>
-                    <h3 className="text-2xl font-bold mb-2">California Homeowner</h3>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <p className="text-gray-700 mb-4">
-                    "The Aqua2use system has been a game-changer for our family. In drought-stricken California, 
-                    we've reduced our water bill by 45% while keeping our garden thriving. The installation was 
-                    straightforward, and the system has been maintenance-free for over two years."
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>The Johnson Family</strong> • San Diego, CA
-                  </p>
-                  <div className="mt-4 text-blue-600 font-semibold group-hover:text-blue-700 flex items-center gap-2">
-                    Read Full Story 
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <BookOpen className="h-10 w-10 text-gray-600 mb-4" />
+                <CardTitle>What is Greywater?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Learn the basics of greywater recycling and how it can benefit your home
+                </CardDescription>
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                  <Link href="/what-is-greywater">Learn More</Link>
+                </Button>
+              </CardContent>
+            </Card>
 
-            <Link href="/customer-stories/arizona-desert-oasis" className="group">
-              <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
-                <div className="relative h-64">
-                  <Image
-                    src="/images/customer-stories/arizona-oasis.jpg"
-                    alt="Arizona desert garden with greywater irrigation"
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 p-6 text-white">
-                    <Badge className="bg-blue-600 text-white mb-3">60% Less Water</Badge>
-                    <h3 className="text-2xl font-bold mb-2">Arizona Desert Oasis</h3>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <p className="text-gray-700 mb-4">
-                    "Living in Phoenix, water conservation is essential. Our Aqua2use Pro system allows us to 
-                    maintain our desert oasis using 60% less water. The native plants and fruit trees are 
-                    thriving on recycled water from our showers and washing machine."
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>The Martinez Family</strong> • Phoenix, AZ
-                  </p>
-                  <div className="mt-4 text-blue-600 font-semibold group-hover:text-blue-700 flex items-center gap-2">
-                    Read Full Story 
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <Wrench className="h-10 w-10 text-gray-600 mb-4" />
+                <CardTitle>How It Works</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Understand the process and technology behind greywater systems
+                </CardDescription>
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                  <Link href="/how-it-works">Learn More</Link>
+                </Button>
+              </CardContent>
+            </Card>
 
-          <div className="text-center mt-10">
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/customer-stories">View All Success Stories</Link>
-            </Button>
+            <Card className="hover-lift transition-all duration-300">
+              <CardHeader>
+                <Shield className="h-10 w-10 text-gray-600 mb-4" />
+                <CardTitle>State Laws</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Check your state's greywater regulations and permit requirements
+                </CardDescription>
+                <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                  <Link href="/greywater-laws">Check Laws</Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -558,7 +388,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link href="/tiny-house-systems" className="group block">
               <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
                 <div className="relative h-64">
@@ -573,46 +403,6 @@ export default async function Home() {
                     <h3 className="text-xl font-bold mb-2">Tiny Homes & RVs</h3>
                     <p className="text-sm text-gray-200">
                       Compact systems designed for mobile living and small spaces
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-
-            <Link href="/solutions/multifamily-homes" className="group block">
-              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
-                <div className="relative h-64">
-                  <Image 
-                    src="/images/solutions/homes-ai.jpg" 
-                    alt="Multifamily homes" 
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                  <div className="absolute bottom-0 p-6 text-white">
-                    <h3 className="text-xl font-bold mb-2">Multifamily Homes</h3>
-                    <p className="text-sm text-gray-200">
-                      Scalable systems for apartments, condos, and townhome communities
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-
-            <Link href="/solutions/commercial" className="group block">
-              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
-                <div className="relative h-64">
-                  <Image 
-                    src="/images/solutions/commercial-ai.jpg" 
-                    alt="Commercial properties" 
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                  <div className="absolute bottom-0 p-6 text-white">
-                    <h3 className="text-xl font-bold mb-2">Commercial Properties</h3>
-                    <p className="text-sm text-gray-200">
-                      Engineered reuse for hotels, gyms, laundries, schools and more
                     </p>
                   </div>
                 </div>
@@ -721,6 +511,213 @@ export default async function Home() {
         </div>
       </section>
 
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose Water Wise Group?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Your trusted partner for reliable greywater solutions
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="hover-lift transition-all duration-300 text-center">
+              <CardHeader>
+                <Award className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <CardTitle>Industry Leading Warranty</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  5-year comprehensive warranty on all systems with full parts and labor coverage
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift transition-all duration-300 text-center">
+              <CardHeader>
+                <Shield className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <CardTitle>Certified & Compliant</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  NSF certified systems that meet all health department standards and regulations
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift transition-all duration-300 text-center">
+              <CardHeader>
+                <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <CardTitle>Expert Support</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Dedicated customer service team and nationwide network of certified installers
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Greywater & Irrigation Guidelines */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          
+          {/* Category: Greywater Collection */}
+          <div className="max-w-5xl mx-auto mb-8 text-center">
+            <h3 className="text-4xl font-bold text-gray-800">Greywater Sources</h3>
+          </div>
+          
+          {/* Greywater Sources Table */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 bg-gray-50">
+                    <th className="text-left py-6 px-6 font-bold text-xl">Source</th>
+                    <th className="text-center py-6 px-6 font-bold text-xl">Status</th>
+                    <th className="text-left py-6 px-6 font-bold text-xl">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Shirt className="w-8 h-8 text-green-600" />
+                        <span className="font-semibold text-lg">Laundry</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-green-600 text-white border-transparent px-4 py-2 text-sm">Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Laundry water is typically ideal for reuse when using biodegradable, low-sodium detergents.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Bath className="w-8 h-8 text-amber-500" />
+                        <span className="font-semibold text-lg">Bathroom Sink</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-amber-500 text-white border-transparent px-4 py-2 text-sm">Approved with Permits</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Often allowed for landscape irrigation with a compliant system. Permits may be required.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <ShowerHead className="w-8 h-8 text-amber-500" />
+                        <span className="font-semibold text-lg">Shower</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-amber-500 text-white border-transparent px-4 py-2 text-sm">Approved with Permits</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Shower water is generally suitable for reuse with proper filtration and permits.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <ChefHat className="w-8 h-8 text-red-600" />
+                        <span className="font-semibold text-lg">Kitchen Sink</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-red-600 text-white border-transparent px-4 py-2 text-sm">Not Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Kitchen water contains fats, oils, and food waste. Not suitable for reuse.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Toilet className="w-8 h-8 text-red-600" />
+                        <span className="font-semibold text-lg">Toilet</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-red-600 text-white border-transparent px-4 py-2 text-sm">Not Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Toilet water is blackwater. Do not reuse under any circumstances.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Category: Greywater Irrigation */}
+          <div className="max-w-5xl mx-auto mt-12 mb-8 text-center">
+            <h3 className="text-4xl font-bold text-gray-800">Greywater Irrigation Methods</h3>
+          </div>
+          
+          {/* Greywater Irrigation Table */}
+          <div className="max-w-5xl mx-auto">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 bg-gray-50">
+                    <th className="text-left py-6 px-6 font-bold text-xl">Method</th>
+                    <th className="text-center py-6 px-6 font-bold text-xl">Status</th>
+                    <th className="text-left py-6 px-6 font-bold text-xl">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Zap className="w-8 h-8 text-green-600" />
+                        <span className="font-semibold text-lg">Underground Irrigation</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-green-600 text-white border-transparent px-4 py-2 text-sm">Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Subsurface drip or mulch basins deliver water below the surface, minimizing exposure and meeting code in most regions.
+                    </td>
+                  </tr>
+                  
+                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <td className="py-8 px-6">
+                      <div className="flex items-center gap-4">
+                        <Waves className="w-8 h-8 text-red-600" />
+                        <span className="font-semibold text-lg">Above Ground Irrigation</span>
+                      </div>
+                    </td>
+                    <td className="py-8 px-6 text-center">
+                      <Badge className="bg-red-600 text-white border-transparent px-4 py-2 text-sm">Not Approved</Badge>
+                    </td>
+                    <td className="py-8 px-6 text-gray-600 text-base leading-relaxed">
+                      Sprinklers or surface watering can aerosolize water. Most codes prohibit above-ground greywater irrigation.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-500 mt-6 text-center">
+            Always verify local regulations. See <a className="underline" href="/greywater-laws">state greywater laws</a>.
+          </p>
+        </div>
+      </section>
 
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -778,12 +775,7 @@ export default async function Home() {
 
       <Testimonials />
 
-      {/* Blog carousel - only show if we have real articles */}
-      {blogPosts.length > 0 && (
-        <BlogCarousel posts={blogPosts.slice(0, 12)} title="Greywater Resources" />
-      )}
-
-      <section className="py-24 bg-gradient-to-r from-slate-500 via-gray-500 to-stone-500 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6 animate-fade-in">
@@ -804,6 +796,5 @@ export default async function Home() {
         </div>
       </section>
     </div>
-    </PageTransition>
   )
 }
