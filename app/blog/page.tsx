@@ -5,79 +5,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, User, ArrowRight } from "lucide-react"
 import { getBlogArticles } from "@/lib/shopify"
 
-const defaultBlogPosts = [
-  {
-    id: 1,
-    title: "10 Ways Greywater Recycling Can Transform Your Home",
-    excerpt: "Discover how installing a greywater system can reduce your water bills, improve your garden, and increase your home's sustainability rating.",
-    image: "/images/gwdd-gravity.jpg",
-    author: "Water Wise Team",
-    date: "March 15, 2024",
-    readTime: "5 min read",
-    slug: "10-ways-greywater-recycling-transforms-home"
-  },
-  {
-    id: 2,
-    title: "Understanding Greywater: What It Is and Why It Matters",
-    excerpt: "Learn the basics of greywater, where it comes from, and why recycling it is crucial for water conservation and environmental protection.",
-    image: "/images/aqua2use-greywater-recycling-sytem.png",
-    author: "Sarah Johnson",
-    date: "March 10, 2024", 
-    readTime: "7 min read",
-    slug: "understanding-greywater-basics"
-  },
-  {
-    id: 3,
-    title: "DIY vs Professional Installation: Which is Right for You?",
-    excerpt: "Explore the pros and cons of DIY installation versus hiring professionals for your greywater recycling system.",
-    image: "/images/gwdd-ug.jpg",
-    author: "Mike Chen",
-    date: "March 5, 2024",
-    readTime: "4 min read",
-    slug: "diy-vs-professional-installation"
-  },
-  {
-    id: 4,
-    title: "Maximizing Water Savings: Best Practices for Greywater Systems",
-    excerpt: "Tips and strategies to get the most water savings and environmental benefits from your greywater recycling system.",
-    image: "/images/gwdd-gravity.jpg",
-    author: "Emily Rodriguez", 
-    date: "February 28, 2024",
-    readTime: "6 min read",
-    slug: "maximizing-water-savings-best-practices"
-  },
-  {
-    id: 5,
-    title: "The Future of Water Conservation in Residential Properties",
-    excerpt: "Explore emerging trends in water conservation technology and what they mean for homeowners and property developers.",
-    image: "/images/aqua2use-greywater-recycling-sytem.png",
-    author: "David Thompson",
-    date: "February 20, 2024",
-    readTime: "8 min read",
-    slug: "future-water-conservation-residential"
-  },
-  {
-    id: 6,
-    title: "Greywater Systems for Different Climates: What You Need to Know",
-    excerpt: "How climate affects greywater system performance and what considerations to make for your specific region.",
-    image: "/images/gwdd-ug.jpg",
-    author: "Lisa Santos",
-    date: "February 15, 2024",
-    readTime: "5 min read",
-    slug: "greywater-systems-different-climates"
-  }
-]
-
 export default async function Blog() {
-  let blogPosts = defaultBlogPosts
+  let blogPosts: any[] = []
   
   try {
-    // Force rebuild: Check Shopify blog connection
+    // Only use real Shopify articles
     const shopifyArticles = await getBlogArticles()
     
     if (shopifyArticles && shopifyArticles.length > 0) {
       // Transform Shopify articles to match our expected format
-      const shopifyPostsFormatted = shopifyArticles.map((article: any) => ({
+      blogPosts = shopifyArticles.map((article: any) => ({
         id: article.id,
         title: article.title,
         excerpt: article.summary_html || (article.body_html ? article.body_html.replace(/<[^>]*>/g, '').substring(0, 150).trim() + '...' : "Read more about this topic..."),
@@ -91,12 +28,10 @@ export default async function Blog() {
         readTime: "5 min read",
         slug: article.handle || `article-${article.id}`
       }))
-      
-      blogPosts = shopifyPostsFormatted
     }
   } catch (error) {
-    console.error('Failed to load blog posts from Shopify, using default posts:', error)
-    // Fall back to default posts
+    console.error('Failed to load blog posts from Shopify:', error)
+    // No fallback - only show real articles
   }
   return (
     <div>
@@ -112,7 +47,17 @@ export default async function Blog() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {blogPosts.map((post: any) => (
+            {blogPosts.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-600 text-lg">
+                  Blog articles are currently being loaded from our content management system.
+                </p>
+                <p className="text-gray-500 mt-2">
+                  Please check back soon for the latest water conservation insights and tips.
+                </p>
+              </div>
+            ) : (
+              blogPosts.map((post: any) => (
               <Card key={post.id} className="hover-lift transition-all duration-300 overflow-hidden">
                 <CardHeader className="p-0">
                   <div className="relative">
@@ -155,7 +100,8 @@ export default async function Blog() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>

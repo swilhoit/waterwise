@@ -76,7 +76,7 @@ export default async function StatePage({
 
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-12 lg:py-20">
+      <section className="relative py-12 lg:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <Link href="/greywater-laws" className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-700 mb-8 transition-colors">

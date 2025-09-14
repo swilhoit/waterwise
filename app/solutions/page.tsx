@@ -20,6 +20,19 @@ export default function Solutions() {
       href: "/solutions/homes"
     },
     {
+      title: "Multifamily Homes",
+      description: "Scalable systems for apartments, condos, and townhome communities",
+      icon: Building,
+      image: "/images/solutions/homes-ai.jpg",
+      benefits: [
+        "Centralized or distributed designs",
+        "Serve multiple units efficiently",
+        "Integrates with existing irrigation",
+        "Compliance guidance available"
+      ],
+      href: "/solutions/multifamily-homes"
+    },
+    {
       title: "Tiny Homes", 
       description: "Compact systems designed for space-efficient living",
       icon: TreePine,
@@ -59,6 +72,19 @@ export default function Solutions() {
       href: "/solutions/cabins"
     },
     {
+      title: "Commercial Properties",
+      description: "Reliable greywater reuse for hotels, laundry, gyms, schools and more",
+      icon: Building,
+      image: "/images/solutions/commercial-ai.jpg",
+      benefits: [
+        "Reduce operating water costs",
+        "Support sustainability goals",
+        "Engineered for uptime",
+        "Service plans available"
+      ],
+      href: "/solutions/commercial"
+    },
+    {
       title: "Custom Applications",
       description: "Tailored solutions for unique properties and special requirements",
       icon: Car,
@@ -75,8 +101,7 @@ export default function Solutions() {
 
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+      <section className="relative bg-white py-20 lg:py-32 overflow-hidden">
         <div className="px-4">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
