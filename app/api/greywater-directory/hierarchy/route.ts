@@ -13,16 +13,16 @@ export async function GET(request: NextRequest) {
     const parentId = searchParams.get('parentId');
     const parentType = searchParams.get('parentType');
     
-    // Check cache first
+    // Check cache first (temporarily disabled for debugging)
     const cacheKey = `${level}-${parentId || 'all'}-${parentType || 'none'}`;
-    const cached = hierarchyCache[cacheKey];
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      return NextResponse.json({
-        status: 'success',
-        data: cached.data,
-        cached: true
-      });
-    }
+    // const cached = hierarchyCache[cacheKey];
+    // if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    //   return NextResponse.json({
+    //     status: 'success',
+    //     data: cached.data,
+    //     cached: true
+    //   });
+    // }
 
     let data: any[] = [];
     const bigquery = getBigQueryClient();
@@ -42,18 +42,25 @@ export async function GET(request: NextRequest) {
           ORDER BY state_name
         `;
         
-        const [stateRows] = await bigquery.query({
-          query: stateQuery,
-          location: 'US'
-        }) as any;
-        
-        data = stateRows.map((row: any) => ({
+        try {
+          const [stateRows] = await bigquery.query({
+            query: stateQuery,
+            location: 'US'
+          }) as any;
+          
+          console.log('State query returned', stateRows.length, 'rows');
+          
+          data = stateRows.map((row: any) => ({
           state_jurisdiction_id: row.state_code,
           state_name: row.state_name,
           state_code: row.state_code,
           county_count: row.county_count || 0,
           city_count: row.city_count || 0
         }));
+        } catch (queryError) {
+          console.error('State query failed:', queryError);
+          throw queryError;
+        }
         break;
 
       case 'counties':
