@@ -1,31 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { BigQuery } from '@google-cloud/bigquery';
 
-// GET hierarchy data - hardcoded for now to avoid BigQuery issues
+const bigquery = new BigQuery({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+});
+
+// Cache for hierarchy data to reduce BigQuery calls
+let hierarchyCache: { [key: string]: { data: any[], timestamp: number } } = {};
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// GET hierarchy data from BigQuery only - no fallback data
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const level = searchParams.get('level') || 'states';
     const parentId = searchParams.get('parentId');
     const parentType = searchParams.get('parentType');
+    
+    // Check cache first
+    const cacheKey = `${level}-${parentId || 'all'}-${parentType || 'none'}`;
+    const cached = hierarchyCache[cacheKey];
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      return NextResponse.json({
+        status: 'success',
+        data: cached.data,
+        cached: true
+      });
+    }
 
+    let data: any[] = [];
+    
     switch (level) {
       case 'states':
-        // Return hardcoded California data
-        return NextResponse.json({
-          status: 'success',
-          data: [
-            {
-              state_jurisdiction_id: 'CA',
-              state_name: 'California',
-              state_code: 'CA',
-              county_count: 58,
-              city_count: 482
-            }
-          ]
-        });
+        // Query for all states with greywater data
+        const stateQuery = `
+          SELECT DISTINCT
+            state_code,
+            state_name,
+            COUNT(DISTINCT county_name) as county_count,
+            COUNT(DISTINCT city_name) as city_count
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+          WHERE state_code IS NOT NULL
+          GROUP BY state_code, state_name
+          ORDER BY state_name
+        `;
+        
+        const [stateRows] = await bigquery.query({
+          query: stateQuery,
+          location: 'US'
+        }) as any;
+        
+        data = stateRows.map((row: any) => ({
+          state_jurisdiction_id: row.state_code,
+          state_name: row.state_name,
+          state_code: row.state_code,
+          county_count: row.county_count || 0,
+          city_count: row.city_count || 0
+        }));
+        break;
 
       case 'counties':
-        // Get counties for a specific state
         if (!parentId) {
           return NextResponse.json({
             status: 'error',
@@ -33,29 +67,36 @@ export async function GET(request: NextRequest) {
           }, { status: 400 });
         }
         
-        // Return hardcoded LA County data for California
-        if (parentId === 'CA') {
-          return NextResponse.json({
-            status: 'success',
-            data: [
-              {
-                county_jurisdiction_id: 'Los Angeles',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California',
-                city_count: 88
-              }
-            ]
-          });
-        }
+        // Query for all counties in a state
+        const countyQuery = `
+          SELECT DISTINCT
+            county_name,
+            state_code,
+            state_name,
+            COUNT(DISTINCT city_name) as city_count
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+          WHERE state_code = @stateCode
+            AND county_name IS NOT NULL
+          GROUP BY county_name, state_code, state_name
+          ORDER BY county_name
+        `;
         
-        return NextResponse.json({
-          status: 'success',
-          data: []
-        });
+        const [countyRows] = await bigquery.query({
+          query: countyQuery,
+          params: { stateCode: parentId },
+          location: 'US'
+        }) as any;
+        
+        data = countyRows.map((row: any) => ({
+          county_jurisdiction_id: row.county_name,
+          county_name: row.county_name,
+          state_code: row.state_code,
+          state_name: row.state_name,
+          city_count: row.city_count || 0
+        }));
+        break;
 
       case 'cities':
-        // Get cities for a county or state
         if (!parentId) {
           return NextResponse.json({
             status: 'error',
@@ -63,105 +104,69 @@ export async function GET(request: NextRequest) {
           }, { status: 400 });
         }
         
-        // Return hardcoded cities for Los Angeles County
-        if (parentId === 'Los Angeles' && parentType === 'county') {
-          return NextResponse.json({
-            status: 'success',
-            data: [
-              {
-                city_jurisdiction_id: 'Pasadena',
-                city_name: 'Pasadena',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'Santa Monica',
-                city_name: 'Santa Monica',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'Long Beach',
-                city_name: 'Long Beach',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'Glendale',
-                city_name: 'Glendale',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'Burbank',
-                city_name: 'Burbank',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California'
-              }
-            ]
-          });
+        let cityQuery = '';
+        let queryParams: any = {};
+        
+        if (parentType === 'county') {
+          // Query for cities in a specific county
+          cityQuery = `
+            SELECT DISTINCT
+              city_name,
+              county_name,
+              state_code,
+              state_name,
+              population
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+            WHERE county_name = @countyName
+              AND state_code = @stateCode
+              AND city_name IS NOT NULL
+            ORDER BY city_name
+          `;
+          
+          // Extract state code from the request or default to CA
+          const stateCode = searchParams.get('stateCode') || 'CA';
+          queryParams = { 
+            countyName: parentId,
+            stateCode: stateCode
+          };
+        } else if (parentType === 'state') {
+          // Query for all cities in a state
+          cityQuery = `
+            SELECT DISTINCT
+              city_name,
+              county_name,
+              state_code,
+              state_name,
+              population
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+            WHERE state_code = @stateCode
+              AND city_name IS NOT NULL
+            ORDER BY population DESC
+            LIMIT 100
+          `;
+          queryParams = { stateCode: parentId };
         }
         
-        // Return cities for state view
-        if (parentId === 'CA' && parentType === 'state') {
-          return NextResponse.json({
-            status: 'success',
-            data: [
-              {
-                city_jurisdiction_id: 'Los Angeles',
-                city_name: 'Los Angeles',
-                county_name: 'Los Angeles',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'San Francisco',
-                city_name: 'San Francisco',
-                county_name: 'San Francisco',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'San Diego',
-                city_name: 'San Diego',
-                county_name: 'San Diego',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'San Jose',
-                city_name: 'San Jose',
-                county_name: 'Santa Clara',
-                state_code: 'CA',
-                state_name: 'California'
-              },
-              {
-                city_jurisdiction_id: 'Sacramento',
-                city_name: 'Sacramento',
-                county_name: 'Sacramento',
-                state_code: 'CA',
-                state_name: 'California'
-              }
-            ]
-          });
-        }
+        const [cityRows] = await bigquery.query({
+          query: cityQuery,
+          params: queryParams,
+          location: 'US'
+        }) as any;
         
-        return NextResponse.json({
-          status: 'success',
-          data: []
-        });
+        data = cityRows.map((row: any) => ({
+          city_jurisdiction_id: row.city_name,
+          city_name: row.city_name,
+          county_name: row.county_name,
+          state_code: row.state_code,
+          state_name: row.state_name,
+          population: row.population
+        }));
+        break;
 
       case 'water_districts':
         // Return empty for water districts for now
-        return NextResponse.json({
-          status: 'success',
-          data: []
-        });
+        data = [];
+        break;
 
       default:
         return NextResponse.json({
@@ -169,6 +174,17 @@ export async function GET(request: NextRequest) {
           message: 'Invalid level parameter'
         }, { status: 400 });
     }
+    
+    // Cache the successful result
+    hierarchyCache[cacheKey] = {
+      data,
+      timestamp: Date.now()
+    };
+    
+    return NextResponse.json({
+      status: 'success',
+      data
+    });
   } catch (error) {
     console.error('Hierarchy query error:', error);
     return NextResponse.json({
