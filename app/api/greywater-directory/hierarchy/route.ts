@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { BigQuery } from '@google-cloud/bigquery';
-
-const bigquery = new BigQuery({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-});
+import { getBigQueryClient } from '@/lib/bigquery';
 
 // Cache for hierarchy data to reduce BigQuery calls
 let hierarchyCache: { [key: string]: { data: any[], timestamp: number } } = {};
@@ -29,6 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     let data: any[] = [];
+    const bigquery = getBigQueryClient();
     
     switch (level) {
       case 'states':

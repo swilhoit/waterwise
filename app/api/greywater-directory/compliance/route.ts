@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { BigQuery } from '@google-cloud/bigquery';
-
-const bigquery = new BigQuery({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-});
+import { getBigQueryClient } from '@/lib/bigquery';
 
 // GET compliance data with real incentives from database
 export async function GET(request: NextRequest) {
@@ -23,6 +19,8 @@ export async function GET(request: NextRequest) {
     // First, query for any active incentive programs
     let incentivePrograms: any[] = [];
     let programTiers: any[] = [];
+    const bigquery = getBigQueryClient();
+    
     try {
       // Query for all active incentives - MWD or any jurisdiction-specific
       const incentiveQuery = `
