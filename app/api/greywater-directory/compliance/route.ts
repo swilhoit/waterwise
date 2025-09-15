@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
 
     // First, query for any active incentive programs
     let incentivePrograms: any[] = [];
+    let programTiers: any[] = [];
     try {
       // Query for all active incentives - MWD or any jurisdiction-specific
       const incentiveQuery = `
@@ -63,6 +64,33 @@ export async function GET(request: NextRequest) {
       });
       
       incentivePrograms = rows;
+      
+      // Query for program tiers if we have state programs
+      if (incentivePrograms.some(p => p.jurisdiction_id === stateJurisdictionId)) {
+        const tierQuery = `
+          SELECT 
+            pt.*,
+            im.program_name,
+            im.jurisdiction_id
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_tiers\` pt
+          JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.incentives_master\` im
+            ON pt.program_id = im.program_id
+          WHERE im.jurisdiction_id = ?
+            AND LOWER(im.program_status) = 'active'
+          ORDER BY pt.program_id, pt.tier_number
+        `;
+        
+        try {
+          const [tierRows] = await bigquery.query({
+            query: tierQuery,
+            params: [stateJurisdictionId],
+            parameterMode: 'POSITIONAL'
+          });
+          programTiers = tierRows;
+        } catch (tierError) {
+          console.error('Failed to fetch program tiers:', tierError);
+        }
+      }
     } catch (error) {
       console.error('Failed to fetch incentives:', error);
     }
@@ -143,6 +171,9 @@ export async function GET(request: NextRequest) {
     
     // Process and assign incentives to appropriate levels
     Array.from(seenPrograms.values()).forEach(program => {
+      // Find tiers for this program if it's a state program
+      const programTiersData = programTiers.filter(t => t.program_name === program.program_name);
+      
       const formattedProgram = {
         program_name: program.program_name,
         incentive_type: program.incentive_type,
@@ -157,7 +188,17 @@ export async function GET(request: NextRequest) {
         commercial_eligibility: program.sector_applicability?.includes('commercial') || false,
         installation_requirements: program.installation_requirements,
         program_contact_email: program.contact_email,
-        program_contact_phone: program.contact_phone
+        program_contact_phone: program.contact_phone,
+        tiers: programTiersData.map(tier => ({
+          tier_name: tier.tier_name,
+          tier_number: tier.tier_number,
+          min_amount: tier.min_amount,
+          max_amount: tier.max_amount,
+          requirements: tier.requirements,
+          typical_applicants: tier.typical_applicants,
+          processing_time: tier.processing_time,
+          user_types: tier.user_types
+        }))
       };
       
       // Assign MWD programs to county level for LA County

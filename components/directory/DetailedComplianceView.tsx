@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { 
   Building, 
@@ -8,7 +9,8 @@ import {
   DollarSign, 
   FileText, 
   CheckCircle, 
-  XCircle
+  XCircle,
+  User
 } from 'lucide-react'
 
 interface HierarchyItem {
@@ -30,6 +32,17 @@ interface HierarchyItem {
   city_count?: number
 }
 
+interface ProgramTier {
+  tier_name: string
+  tier_number: number
+  min_amount: number
+  max_amount: number
+  requirements?: string
+  typical_applicants?: string
+  processing_time?: string
+  user_types?: string[]
+}
+
 interface IncentiveProgram {
   program_name?: string
   incentive_type?: string
@@ -48,6 +61,7 @@ interface IncentiveProgram {
   installation_requirements?: string
   documentation_required?: string
   incentive_processing_time?: number
+  tiers?: ProgramTier[]
   program_contact_email?: string
   program_contact_phone?: string
 }
@@ -99,6 +113,49 @@ export default function DetailedComplianceView({
   complianceData,
   sectorView = 'residential'
 }: DetailedComplianceViewProps) {
+  const [userType, setUserType] = useState<string>('homeowner')
+  
+  // User type options based on sector
+  const userTypeOptions = sectorView === 'residential' 
+    ? [
+        { value: 'homeowner', label: 'Homeowner' },
+        { value: 'small_farm', label: 'Small Farm' },
+        { value: 'nonprofit', label: 'Nonprofit' }
+      ]
+    : [
+        { value: 'business', label: 'Business' },
+        { value: 'agricultural', label: 'Agricultural' },
+        { value: 'affordable_housing', label: 'Affordable Housing' },
+        { value: 'industrial', label: 'Industrial' }
+      ]
+  
+  // Filter tiers based on user type
+  const filterTiersByUserType = (tiers: ProgramTier[] | undefined) => {
+    if (!tiers || tiers.length === 0) return tiers
+    
+    // Score each tier based on user type match
+    return tiers.map(tier => {
+      let score = 0
+      let isMatch = false
+      
+      // Check if user type matches
+      if (tier.user_types?.includes(userType)) {
+        score = 100 // Perfect match
+        isMatch = true
+      } else if (tier.typical_applicants?.toLowerCase().includes(userType.replace('_', ' '))) {
+        score = 75 // Good match
+        isMatch = true
+      } else if (sectorView === 'residential' && tier.typical_applicants?.toLowerCase().includes('resident')) {
+        score = 50 // Sector match
+        isMatch = true
+      } else if (sectorView === 'commercial' && tier.typical_applicants?.toLowerCase().includes('business')) {
+        score = 50 // Sector match
+        isMatch = true
+      }
+      
+      return { ...tier, matchScore: score, isMatch }
+    }).filter(tier => tier.isMatch).sort((a, b) => b.matchScore - a.matchScore)
+  }
   
   // Filter programs based on sector view
   const filterProgramsBySector = (programs: IncentiveProgram[]) => {
@@ -148,32 +205,71 @@ export default function DetailedComplianceView({
       )}
       
       <div className="space-y-2">
-        {/* Amount Information */}
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">Incentive Amount:</span>
-          <div className="text-right">
-            {program.incentive_amount_min && program.incentive_amount_max ? (
-              <p className="text-lg font-bold text-green-700">
-                ${program.incentive_amount_min?.toLocaleString()} - ${program.incentive_amount_max?.toLocaleString()}
-              </p>
-            ) : program.incentive_amount_max ? (
-              <p className="text-lg font-bold text-green-700">
-                Up to ${program.incentive_amount_max?.toLocaleString()}
-              </p>
-            ) : program.rebate_percentage ? (
-              <p className="text-lg font-bold text-green-700">
-                {program.rebate_percentage}% rebate
-              </p>
-            ) : (
-              <p className="text-sm text-gray-500">Amount varies</p>
-            )}
-            {program.max_funding_per_application && (
-              <p className="text-xs text-gray-500">
-                Max: ${program.max_funding_per_application.toLocaleString()} per application
-              </p>
-            )}
+        {/* Tier Information for State Programs */}
+        {program.tiers && program.tiers.length > 0 ? (
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-700">
+              {filterTiersByUserType(program.tiers)?.length === program.tiers.length 
+                ? 'Available Funding Tiers:' 
+                : `Matching Tiers for ${userTypeOptions.find(opt => opt.value === userType)?.label}:`}
+            </p>
+            <div className="space-y-1">
+              {(filterTiersByUserType(program.tiers) || program.tiers).map((tier: any, tierIdx: number) => (
+                <div key={tierIdx} className={`border-l-2 ${tier.matchScore >= 75 ? 'border-green-500' : 'border-blue-300'} pl-3 py-1`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-gray-800">{tier.tier_name}</span>
+                      {tier.matchScore >= 100 && <Badge className="text-xs bg-green-100 text-green-700">Perfect Match</Badge>}
+                      {tier.matchScore >= 75 && tier.matchScore < 100 && <Badge className="text-xs bg-blue-100 text-blue-700">Good Match</Badge>}
+                    </div>
+                    <span className="text-xs font-bold text-green-700">
+                      ${tier.min_amount.toLocaleString()} - ${tier.max_amount.toLocaleString()}
+                    </span>
+                  </div>
+                  {tier.typical_applicants && (
+                    <p className="text-xs text-gray-600">For: {tier.typical_applicants}</p>
+                  )}
+                  {tier.processing_time && (
+                    <p className="text-xs text-gray-500">Processing: {tier.processing_time}</p>
+                  )}
+                  {tier.requirements && (
+                    <p className="text-xs text-gray-500 mt-1">Requirements: {tier.requirements}</p>
+                  )}
+                </div>
+              ))}
+              {filterTiersByUserType(program.tiers)?.length === 0 && (
+                <p className="text-xs text-gray-500 italic">No matching tiers for your profile. Showing all available tiers above.</p>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          /* Original Amount Information for non-tiered programs */
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">Incentive Amount:</span>
+            <div className="text-right">
+              {program.incentive_amount_min && program.incentive_amount_max ? (
+                <p className="text-lg font-bold text-green-700">
+                  ${program.incentive_amount_min?.toLocaleString()} - ${program.incentive_amount_max?.toLocaleString()}
+                </p>
+              ) : program.incentive_amount_max ? (
+                <p className="text-lg font-bold text-green-700">
+                  Up to ${program.incentive_amount_max?.toLocaleString()}
+                </p>
+              ) : program.rebate_percentage ? (
+                <p className="text-lg font-bold text-green-700">
+                  {program.rebate_percentage}% rebate
+                </p>
+              ) : (
+                <p className="text-sm text-gray-500">Amount varies</p>
+              )}
+              {program.max_funding_per_application && (
+                <p className="text-xs text-gray-500">
+                  Max: ${program.max_funding_per_application.toLocaleString()} per application
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Eligibility */}
         <div className="grid grid-cols-2 gap-2 text-sm">
@@ -272,6 +368,30 @@ export default function DetailedComplianceView({
               )}
             </div>
           </div>
+        </div>
+
+        {/* User Type Selector for Tier Matching */}
+        <div className="bg-white border rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <User className="h-5 w-5 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">I am a:</span>
+            </div>
+            <select 
+              value={userType}
+              onChange={(e) => setUserType(e.target.value)}
+              className="px-3 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {userTypeOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            Select your profile to see personalized funding tier recommendations for state programs
+          </p>
         </div>
 
         {/* Policy Hierarchy Breakdown */}
