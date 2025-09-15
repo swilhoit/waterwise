@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
             ON pt.program_id = im.program_id
           WHERE im.jurisdiction_id = ?
             AND LOWER(im.program_status) = 'active'
-          ORDER BY pt.program_id, pt.tier_number
+          ORDER BY pt.program_id, pt.tier_level
         `;
         
         try {
@@ -189,11 +189,11 @@ export async function GET(request: NextRequest) {
         program_contact_phone: program.contact_phone,
         tiers: programTiersData.map(tier => ({
           tier_name: tier.tier_name,
-          tier_number: tier.tier_number,
+          tier_number: tier.tier_level,
           min_amount: tier.min_amount,
           max_amount: tier.max_amount,
           requirements: tier.requirements,
-          typical_applicants: tier.typical_applicants,
+          typical_applicants: tier.typical_applicant,
           processing_time: tier.processing_time,
           user_types: tier.user_types
         }))
