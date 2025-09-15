@@ -25,9 +25,9 @@ export default async function Home() {
     { title: "Save 50% on Water Usage", description: "Recycle water from showers, washing machines, and sinks to irrigate your garden", icon: "droplets" },
     { title: "Lower Your Water Bills", description: "Reduce monthly water costs by reusing greywater for landscape irrigation", icon: "dollar" },
     { title: "Eco-Friendly Solution", description: "Reduce strain on water treatment facilities and conserve precious freshwater resources", icon: "leaf" },
-    { title: "Healthier Landscapes", description: "Greywater contains nutrients that benefit plants and promote lush growth", icon: "tree" },
-    { title: "Perfect for Any Property", description: "Solutions for homes, tiny homes, cabins, RVs, and sustainable developments", icon: "home" },
-    { title: "Trusted by Thousands", description: "Join our growing community of water-conscious property owners", icon: "users" }
+    { title: "Local Code Compliance", description: "Engineered to meet state and city greywater codes—with support for permits and inspections", icon: "tree" },
+    { title: "Incentives & Rebates", description: "Tap into utility rebates and sustainability incentives to lower upfront costs", icon: "home" },
+    { title: "Increase Property Value", description: "Sustainable renovations like greywater systems can boost resale value and marketability", icon: "users" }
   ]
 
   const displayBenefits = defaultBenefits
@@ -111,7 +111,7 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Greywater Recycling?
+              Why Install a Greywater System?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Join thousands of homeowners who are saving water and money while creating healthier landscapes

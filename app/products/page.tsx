@@ -15,7 +15,7 @@ export default async function ProductsPage() {
       id: "1",
       title: "Aqua2use GWDD Gravity System",
       description: "Perfect for homes and cabins with gravity-fed water systems. Processes up to 150 gallons per day with our progressive filtration technology.",
-      image: "/images/gwdd-gravity.jpg",
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
       price: "From $1,999",
       handle: "aqua2use-gwdd",
       features: [
@@ -29,7 +29,7 @@ export default async function ProductsPage() {
       id: "2", 
       title: "Aqua2use GWDD Pump System",
       description: "Ideal when gravity flow isn't possible. Includes a reliable pump system for versatile installation options.",
-      image: "/images/gwdd-ug.jpg",
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-ug.jpg?v=1719241821",
       price: "From $2,299",
       handle: "aqua2use-gwdd-pump",
       features: [
@@ -43,7 +43,7 @@ export default async function ProductsPage() {
       id: "3",
       title: "Aqua2use Pro Commercial System", 
       description: "High-capacity system designed for larger properties, multi-family units, and commercial applications.",
-      image: "/images/gwdd-ug.jpg",
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-ug.jpg?v=1719241821",
       price: "From $3,999",
       handle: "aqua2use-pro",
       features: [
@@ -57,7 +57,7 @@ export default async function ProductsPage() {
       id: "4",
       title: "Replacement Filters",
       description: "Keep your Aqua2use system running at peak performance with genuine replacement filters.",
-      image: "/images/gwdd-gravity.jpg", 
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223", 
       price: "From $89",
       handle: "filters",
       features: [

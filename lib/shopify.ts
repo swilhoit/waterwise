@@ -9,6 +9,21 @@ const client = createStorefrontApiClient({
   publicAccessToken,
 })
 
+function hasGraphQLErrors(errors: any): boolean {
+  if (!errors) return false
+  if (Array.isArray(errors)) return errors.length > 0
+  if (typeof errors === 'object') return Object.keys(errors).length > 0
+  return Boolean(errors)
+}
+
+function stringifyErrors(errors: any): string {
+  try {
+    return typeof errors === 'string' ? errors : JSON.stringify(errors)
+  } catch {
+    return String(errors)
+  }
+}
+
 export function isShopifyConfigured() {
   // For blog access, we need the admin API token
   const hasAdminAccess = !!process.env.SHOPIFY_ACCESS_TOKEN
@@ -59,8 +74,8 @@ export async function getProducts() {
 
   try {
     const { data, errors } = await client.request(query)
-    if (errors) {
-      console.error('Shopify API errors:', errors)
+    if (hasGraphQLErrors(errors)) {
+      console.error('Shopify API errors:', stringifyErrors(errors))
       return []
     }
     return data?.products?.edges?.map((edge: any) => edge.node) || []
@@ -81,31 +96,89 @@ export async function getProduct(handle: string) {
         id
         title
         description
+        descriptionHtml
         handle
+        tags
+        productType
+        vendor
+        createdAt
+        updatedAt
+        seo {
+          title
+          description
+        }
         priceRange {
           minVariantPrice {
             amount
             currencyCode
           }
+          maxVariantPrice {
+            amount
+            currencyCode
+          }
         }
-        images(first: 5) {
+        images(first: 20) {
           edges {
             node {
+              id
               url
               altText
+              width
+              height
             }
           }
         }
-        variants(first: 10) {
+        variants(first: 20) {
           edges {
             node {
               id
               title
+              sku
               priceV2 {
                 amount
                 currencyCode
               }
+              compareAtPriceV2 {
+                amount
+                currencyCode
+              }
               availableForSale
+              quantityAvailable
+              weight
+              weightUnit
+              selectedOptions {
+                name
+                value
+              }
+              image {
+                url
+                altText
+              }
+            }
+          }
+        }
+        metafields(identifiers: [
+          { namespace: "product", key: "features" },
+          { namespace: "product", key: "specifications" },
+          { namespace: "product", key: "faq" },
+          { namespace: "reviews", key: "list" }
+        ]) {
+          namespace
+          key
+          value
+          type
+        }
+        options {
+          id
+          name
+          values
+        }
+        collections(first: 10) {
+          edges {
+            node {
+              id
+              title
+              handle
             }
           }
         }
@@ -117,8 +190,8 @@ export async function getProduct(handle: string) {
     const { data, errors } = await client.request(query, {
       variables: { handle },
     })
-    if (errors) {
-      console.error('Shopify API errors:', errors)
+    if (hasGraphQLErrors(errors)) {
+      console.error('Shopify API errors:', stringifyErrors(errors))
       return null
     }
     return data?.product || null
@@ -162,8 +235,8 @@ export async function createCheckout(variantId: string, quantity: number = 1) {
       },
     })
     
-    if (errors) {
-      console.error('Shopify API errors:', errors)
+    if (hasGraphQLErrors(errors)) {
+      console.error('Shopify API errors:', stringifyErrors(errors))
       return null
     }
     
@@ -197,8 +270,8 @@ export async function getBlogs() {
   try {
     const { data, errors } = await client.request(query)
     
-    if (errors) {
-      console.error('Failed to fetch blogs:', errors)
+    if (hasGraphQLErrors(errors)) {
+      console.error('Failed to fetch blogs:', stringifyErrors(errors))
       return []
     }
 
@@ -249,8 +322,8 @@ export async function getBlogArticles(blogHandle?: string) {
       variables: { handle },
     })
     
-    if (errors) {
-      console.error('Failed to fetch blog articles:', errors)
+    if (hasGraphQLErrors(errors)) {
+      console.error('Failed to fetch blog articles:', stringifyErrors(errors))
       return []
     }
 
@@ -318,8 +391,8 @@ export async function getProductReviews(productId: string) {
       variables: { id: productId },
     })
     
-    if (errors && Array.isArray(errors) && errors.length > 0) {
-      console.error('GraphQL errors fetching product reviews:', errors)
+    if (hasGraphQLErrors(errors)) {
+      console.error('GraphQL errors fetching product reviews:', stringifyErrors(errors))
       return []
     }
 
@@ -509,4 +582,64 @@ export async function getAllProductReviews(product: any) {
     console.error('Failed to fetch all product reviews:', error)
     return []
   }
+}
+
+// Enhanced product data processing
+export function processProductData(product: any) {
+  if (!product) return null
+
+  // Process metafields into a more usable format
+  const metafields: Record<string, any> = {}
+  // New API returns an array of metafield objects directly
+  if (Array.isArray(product.metafields)) {
+    product.metafields.forEach((mf: any) => {
+      if (!mf) return
+      const { namespace, key, value, type } = mf
+      if (!namespace || !key) return
+      if (!metafields[namespace]) metafields[namespace] = {}
+      try {
+        metafields[namespace][key] = type === 'json' ? JSON.parse(value) : value
+      } catch {
+        // Attempt to parse JSON if it's stringified but type not marked json
+        try {
+          metafields[namespace][key] = JSON.parse(value)
+        } catch {
+          metafields[namespace][key] = value
+        }
+      }
+    })
+  }
+
+  // Extract features, specifications, FAQ from metafields
+  const features = metafields.product?.features ? 
+    (Array.isArray(metafields.product.features) ? metafields.product.features : []) : []
+  
+  const specifications = metafields.product?.specifications || {}
+  const faq = metafields.product?.faq ? 
+    (Array.isArray(metafields.product.faq) ? metafields.product.faq : []) : []
+  
+  const reviews = metafields.reviews?.list ? 
+    (Array.isArray(metafields.reviews.list) ? metafields.reviews.list : []) : []
+
+  return {
+    ...product,
+    features,
+    specifications,
+    faq,
+    reviews,
+    metafields,
+    // Processed collections
+    collections: product.collections?.edges?.map((edge: any) => edge.node) || [],
+    // Enhanced images with dimensions
+    processedImages: product.images?.edges?.map((edge: any) => ({
+      ...edge.node,
+      aspectRatio: edge.node.width && edge.node.height ? edge.node.width / edge.node.height : 1
+    })) || []
+  }
+}
+
+// Get enhanced product with processed data
+export async function getEnhancedProduct(handle: string) {
+  const product = await getProduct(handle)
+  return processProductData(product)
 }

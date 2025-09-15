@@ -1,4 +1,4 @@
-import { getProduct } from '@/lib/shopify'
+import { getProduct, getEnhancedProduct } from '@/lib/shopify'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
-import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText } from 'lucide-react'
+import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText, Ruler, ArrowRight } from 'lucide-react'
 import { formatPriceDisplay } from '@/lib/price-utils'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
@@ -14,7 +14,7 @@ const fallbackProducts: { [key: string]: any } = {
   "aqua2use-gwdd": {
     id: "gid://shopify/Product/7459820208334",
     title: "Aqua2use Grey Water Diversion System", 
-    description: "The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for treating greywater from your laundry, bathroom sinks and showers.",
+    description: "The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for turning your waste greywater into usable irrigation water. Process up to 17 gallons per minute with our patented 4-stage Matala filtration system.",
     handle: "aqua2use-gwdd",
     priceRange: {
       minVariantPrice: {
@@ -34,6 +34,18 @@ const fallbackProducts: { [key: string]: any } = {
           node: {
             url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pump.jpg?v=1719253734",
             altText: "Greywater System Aqua2use with pump"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+            altText: "Aqua2use GWDD Detailed View"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-how-it-works.jpg?v=1719253036",
+            altText: "Aqua2use GWDD Installation View"
           }
         }
       ]
@@ -63,7 +75,56 @@ const fallbackProducts: { [key: string]: any } = {
           }
         }
       ]
-    }
+    },
+    features: [
+      "Fully automated greywater treatment system",
+      "Processes 17 gallons per minute of greywater",
+      "Compact dimensions: 23.2\" L x 14.6\" W x 19.7\" H",
+      "State of the Art Progressive 4-Stage Filtration by Matala",
+      "Built-in overflow safety system prevents flooding",
+      "UV resistant high-grade polyethylene construction",
+      "WaterMark approved certification",
+      "Cross-Flow depth filtration with 3-dimensional filter structure",
+      "Solid removal: 75% (pump unit), 90% (gravity unit)",
+      "Two magnetic micro floats with Electronic Pump Controller (pump version)",
+      "No external timers required - fully automated operation",
+      "Can be installed above ground, half-submerged, or underground",
+      "Suitable for laundry, shower, and bathroom sink water",
+      "Integrated diverter valve for easy system bypass"
+    ],
+    specifications: {
+      tankCapacity: "21 gallons total capacity",
+      dimensions: "23.2\" L x 14.6\" W x 19.7\" H",
+      weight: "13.6 kg (30 lbs) pump version",
+      processingCapacity: "17 gallons per minute",
+      filtrationStages: "4-stage progressive by Matala",
+      solidRemoval: "90% (gravity), 75% (pump)",
+      installation: "Above ground, half-submerged, or underground",
+      powerRequirement: "110V outlet (pump version only)",
+      certification: "WaterMark approved",
+      filterCapacity: "Up to 15,850 gallons before cleaning",
+      filterMaintenance: "Clean every 4-6 months",
+      inletConnection: "2\"-4\" diameter",
+      outletConnection: "1.25\" diameter"
+    },
+    faq: [
+      {
+        question: "What is an Aqua2use GWDD?",
+        answer: "The Aqua2use GWDD (Grey Water Diversion Device) is the most advanced greywater treatment system available. It's designed to automatically filter and reuse water from your laundry, bath, and shower for irrigation, saving up to 40% on your water bills."
+      },
+      {
+        question: "What's the difference between the Gravity and Pump versions?",
+        answer: "The Gravity version ($599.99) relies on natural water flow and achieves 90% solid removal. The Pump version ($899.99) includes a submersible pump with electronic controller for situations where gravity flow isn't possible, achieving 75% solid removal but offering more installation flexibility."
+      },
+      {
+        question: "How does it work?",
+        answer: "The system automatically diverts greywater from your waste pipe through Matala's patented 4-stage progressive filtration. For pump units, magnetic micro floats activate the pump when water reaches optimal levels, sending filtered water to your irrigation system - all without external timers."
+      },
+      {
+        question: "How often do I have to clean or replace the filters?",
+        answer: "Testing in the field has shown that up to 15,850 gallons can pass through the unit before they need cleaning. Recommended cleaning cycle depending on how many people are using the system is every 4-6 months."
+      }
+    ]
   },
   "aqua2use-gwdd-pump": {
     id: "gid://shopify/Product/2",
@@ -80,13 +141,13 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            url: "/images/gwdd-ug.jpg",
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pump.jpg?v=1719253734",
             altText: "Aqua2use GWDD Pump System"
           }
         },
         {
           node: {
-            url: "/images/aqua2use-greywater-recycling-sytem.png",
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
             altText: "Aqua2use Pump System Installation"
           }
         }
@@ -117,7 +178,49 @@ const fallbackProducts: { [key: string]: any } = {
           }
         }
       ]
-    }
+    },
+    features: [
+      "Integrated submersible pump with electronic controller",
+      "Processes 17 gallons per minute of greywater",
+      "Ideal for uphill irrigation or longer distances",
+      "Progressive 4-Stage Filtration by Matala",
+      "Built-in overflow safety system",
+      "UV resistant high-grade polyethylene construction",
+      "WaterMark approved certification",
+      "Dry run protection for pump longevity",
+      "75% solid removal efficiency",
+      "Two magnetic micro floats for automatic operation"
+    ],
+    specifications: {
+      tankCapacity: "21 gallons",
+      dimensions: "23.2\" x 14.6\" x 19.7\"",
+      processingCapacity: "17 gallons per minute",
+      pumpType: "Submersible pump with Electronic Controller",
+      filtrationStages: "4-stage progressive by Matala",
+      solidRemoval: "75% efficiency",
+      installation: "Above ground, half-submerged, or underground",
+      certification: "WaterMark approved",
+      filterCapacity: "Up to 15,850 gallons before cleaning",
+      power: "110V electrical connection required"
+    },
+    faq: [
+      {
+        question: "What's the difference between gravity and pump systems?",
+        answer: "The pump system includes a submersible pump with electronic controller for situations where gravity flow isn't possible, such as when the system needs to pump uphill or when higher flow rates are required."
+      },
+      {
+        question: "What power requirements does the pump system have?",
+        answer: "The pump system requires a 110V electrical connection. The electronic pump controller includes dry run protection and automatic operation based on water level sensors."
+      },
+      {
+        question: "How often does the pump need maintenance?",
+        answer: "The submersible pump is designed for long-term operation with minimal maintenance. Regular filter cleaning every 4-6 months is the primary maintenance requirement."
+      },
+      {
+        question: "Can it handle the same flow rate as gravity systems?",
+        answer: "Yes, the pump system processes the same 17 gallons per minute as the gravity system, but with the added benefit of being able to pump to elevated irrigation areas."
+      }
+    ]
   },
   "aqua2use-pro": {
     id: "gid://shopify/Product/7459819061454",
@@ -140,8 +243,20 @@ const fallbackProducts: { [key: string]: any } = {
         },
         {
           node: {
-            url: "/images/aqua2use-greywater-recycling-sytem.png",
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
             altText: "Aqua2use Pro System Components"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-how-it-works.jpg?v=1719253036",
+            altText: "Aqua2use Pro Detailed View"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pro-performance-curve.jpg?v=1719253072",
+            altText: "Aqua2use Pro Technical Overview"
           }
         }
       ]
@@ -160,13 +275,57 @@ const fallbackProducts: { [key: string]: any } = {
           }
         }
       ]
-    }
+    },
+    features: [
+      "Commercial-grade greywater treatment system",
+      "Processes up to 25 gallons per minute",
+      "Large 50-gallon tank capacity",
+      "Progressive 4-Stage Filtration by Matala",
+      "Over 108 sq ft of filter surface area",
+      "UV resistant construction for long-term durability",
+      "NSF/ANSI 350 compliant",
+      "Suitable for multi-family and commercial applications",
+      "90% solid removal efficiency",
+      "Includes diverter valve for system bypass"
+    ],
+    specifications: {
+      tankCapacity: "50 gallons",
+      dimensions: "31.5\" x 23.6\" x 26\"",
+      processingCapacity: "25 gallons per minute",
+      filtrationStages: "4-stage progressive by Matala",
+      solidRemoval: "Up to 90% of suspended solids",
+      installation: "Above ground, half-submerged, or underground (max 1.3 ft)",
+      powerRequirement: "110V outlet required",
+      pumpType: "Submersible with Electronic Controller",
+      certification: "NSF/ANSI 350 compliant",
+      filterCapacity: "Up to 15,000 gallons before cleaning",
+      inletConnection: "2\"-4\" diameter",
+      filterSurfaceArea: "Over 108 sq ft"
+    },
+    faq: [
+      {
+        question: "What makes the Aqua2use Pro different from the GWDD?",
+        answer: "The Pro has a 50-gallon capacity (vs 21 gallons) and handles 25 gallons per minute (vs 17 gpm). It's designed for commercial and multi-family applications with higher water volumes."
+      },
+      {
+        question: "What type of properties is the Pro system designed for?",
+        answer: "The Pro is ideal for hotels, apartment buildings, office complexes, RV parks, laundromats, and any commercial property with high greywater volume needs."
+      },
+      {
+        question: "How deep can the Pro system be buried?",
+        answer: "The Pro can be buried up to 1.3 feet deep. This allows for discrete installation while maintaining easy access for maintenance."
+      },
+      {
+        question: "What maintenance does the Pro system require?",
+        answer: "Clean filters every 4-6 months (after approximately 15,000 gallons). The system includes easy-access filter compartments for simple maintenance."
+      }
+    ]
   },
-  "filters": {
+  "replacement-filters": {
     id: "gid://shopify/Product/7463774912718",
     title: "Replacement Filters",
     description: "Keep your Aqua2use system running at peak performance with genuine replacement filters. Our progressive 4-stage filtration system by Matala includes multiple density filter mats that are easy to clean and replace, ensuring optimal greywater treatment for years to come.",
-    handle: "filters",
+    handle: "replacement-filters",
     priceRange: {
       minVariantPrice: {
         amount: "249.99",
@@ -225,7 +384,48 @@ const fallbackProducts: { [key: string]: any } = {
           }
         }
       ]
-    }
+    },
+    features: [
+      "Genuine OEM replacement filters for Aqua2use systems",
+      "Progressive 4-Stage Matala filter mats",
+      "3-dimensional cross-flow design",
+      "UV resistant filter media",
+      "Easy tool-free replacement",
+      "Extends system life and performance",
+      "Maintains optimal filtration efficiency",
+      "Compatible with all GWDD and Pro models",
+      "Cleanable and reusable design",
+      "Maintains optimal system performance"
+    ],
+    specifications: {
+      filterType: "Progressive 4-Stage Matala Filter Mats",
+      filterStructure: "3-dimensional cross-flow design",
+      compatibility: "All Aqua2use GWDD and Pro systems",
+      cleaningCycle: "Every 4-6 months (depending on usage)",
+      replacementCycle: "Every 3 years with proper maintenance",
+      capacity: "Up to 15,850 gallons before cleaning required",
+      installation: "Tool-free replacement",
+      material: "UV resistant filter media",
+      stages: "Multiple density layers for progressive filtration"
+    },
+    faq: [
+      {
+        question: "How often do I need to clean the filters?",
+        answer: "Filters should be cleaned every 4-6 months depending on usage and water quality. With regular cleaning, filters can last up to 3 years before replacement."
+      },
+      {
+        question: "How do I know when filters need cleaning?",
+        answer: "Signs include reduced flow rate, longer processing times, or if it's been 4-6 months since last cleaning. The system will continue to work but efficiency decreases."
+      },
+      {
+        question: "Can I clean the filters myself?",
+        answer: "Yes! The filters are designed for easy maintenance. Simply remove them (no tools required), rinse with clean water, and reinstall. Full instructions are included."
+      },
+      {
+        question: "Are these filters compatible with all Aqua2use systems?",
+        answer: "Yes, these progressive 4-stage Matala filters are designed to work with all Aqua2use GWDD and Pro systems. The filter configuration is standardized across all models."
+      }
+    ]
   },
   "replacement-greywater-pump": {
     id: "gid://shopify/Product/7559824703694",
@@ -268,16 +468,56 @@ const fallbackProducts: { [key: string]: any } = {
           }
         }
       ]
-    }
+    },
+    features: [
+      "Direct OEM replacement pump for Aqua2use GWDD",
+      "Submersible design with electronic controller",
+      "Dry run protection for extended life",
+      "Automatic operation with water level sensors",
+      "110V electrical connection",
+      "Quick and easy installation",
+      "Restores full system performance",
+      "Compatible with all GWDD pump systems",
+      "Built-in thermal overload protection",
+      "12-month manufacturer warranty"
+    ],
+    specifications: {
+      type: "Submersible Greywater Pump",
+      power: "110V electrical connection",
+      controller: "Electronic Pump Controller included",
+      protection: "Dry run protection",
+      compatibility: "All Aqua2use GWDD systems",
+      installation: "Direct replacement",
+      warranty: "12 months",
+      operation: "Automatic with water level sensors"
+    },
+    faq: [
+      {
+        question: "Is this compatible with my existing Aqua2use system?",
+        answer: "Yes, this pump is designed as a direct replacement for all Aqua2use GWDD systems, both gravity and pump models."
+      },
+      {
+        question: "Does it include the electronic controller?",
+        answer: "Yes, the replacement pump comes with the electronic pump controller and all necessary fittings for installation."
+      },
+      {
+        question: "How difficult is the installation?",
+        answer: "Installation is straightforward for most DIY homeowners. Basic plumbing and electrical connections are required. Professional installation is available if preferred."
+      },
+      {
+        question: "What's the expected lifespan of the pump?",
+        answer: "With proper maintenance and regular filter cleaning, the pump typically lasts 5-7 years depending on usage frequency and water conditions."
+      }
+    ]
   },
-  "replacement-filters": {
-    id: "gid://shopify/Product/7463774912718",
-    title: "Replacement Filters",
-    description: "Easy Replacement – No Service Necessary Complete Set of 6 Filters Works with Aqua2use Gravity and GWDD No more cleaning of the filters every 6 months Simply remove the old filters and install the new ones in your unit",
-    handle: "replacement-filters",
+  "replacement-pumps": {
+    id: "gid://shopify/Product/6",
+    title: "Replacement Pumps",
+    description: "High-quality replacement pumps and pump kits for your Aqua2use greywater system. Keep your system running at peak performance with genuine OEM pumps designed for reliable, long-term operation.",
+    handle: "replacement-pumps",
     priceRange: {
       minVariantPrice: {
-        amount: "249.99",
+        amount: "399.99",
         currencyCode: "USD"
       }
     },
@@ -285,14 +525,14 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
-            altText: "aqua2use replacement filters"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+            altText: "Replacement pump for Aqua2use GWDD"
           }
         },
         {
           node: {
-            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/description-gwdd-image.jpg?v=1719592385",
-            altText: "replacement filters for gwdd"
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use_GWDD_pump_performance_and_specifications.jpg?v=1742748645",
+            altText: "Pump specifications and performance"
           }
         }
       ]
@@ -301,17 +541,68 @@ const fallbackProducts: { [key: string]: any } = {
       edges: [
         {
           node: {
-            id: "gid://shopify/ProductVariant/42721174552782",
-            title: "Default Title",
+            id: "gid://shopify/ProductVariant/12",
+            title: "Standard Pump Kit",
             priceV2: {
-              amount: "249.99",
+              amount: "399.99",
               currencyCode: "USD"
             },
-            availableForSale: false
+            availableForSale: true
+          }
+        },
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/13",
+            title: "Premium Pump Kit with Controller",
+            priceV2: {
+              amount: "499.99",
+              currencyCode: "USD"
+            },
+            availableForSale: true
           }
         }
       ]
-    }
+    },
+    features: [
+      "Direct OEM replacement pump for Aqua2use systems",
+      "Submersible design with electronic controller",
+      "Dry run protection for extended life",
+      "Automatic operation with water level sensors",
+      "110V electrical connection",
+      "Quick and easy installation",
+      "Restores full system performance",
+      "Compatible with all GWDD pump systems",
+      "Built-in thermal overload protection",
+      "12-month manufacturer warranty"
+    ],
+    specifications: {
+      type: "Submersible Greywater Pump",
+      power: "110V electrical connection",
+      controller: "Electronic Pump Controller included",
+      protection: "Dry run protection",
+      compatibility: "All Aqua2use GWDD systems",
+      installation: "Direct replacement",
+      warranty: "12 months",
+      operation: "Automatic with water level sensors"
+    },
+    faq: [
+      {
+        question: "What pumps are compatible with my system?",
+        answer: "These replacement pumps are designed for all Aqua2use GWDD systems that use pump-assisted operation."
+      },
+      {
+        question: "What's included with the pump?",
+        answer: "Each pump kit includes the submersible pump, electronic controller, and necessary fittings for installation."
+      },
+      {
+        question: "How long do pumps typically last?",
+        answer: "With proper maintenance, pumps typically last 5-7 years depending on usage and water conditions."
+      },
+      {
+        question: "Is professional installation required?",
+        answer: "While many homeowners can install it themselves, professional installation is recommended for optimal performance."
+      }
+    ]
   }
 }
 
@@ -321,25 +612,34 @@ function getProductContent(handle: string) {
     "aqua2use-gwdd": {
       features: [
         "Fully automated greywater treatment system",
-        "Manages 17 gallons per minute of greywater",
-        "Compact device: 24\" Length, 15\" Width, 20\" Height",
-        "State of the Art Progressive 4 Stage Filtration",
-        "Built-in overflow safety system",
-        "UV resistant materials",
+        "Processes 17 gallons per minute of greywater",
+        "Compact dimensions: 23.2\" L x 14.6\" W x 19.7\" H",
+        "State of the Art Progressive 4-Stage Filtration by Matala",
+        "Built-in overflow safety system prevents flooding",
+        "UV resistant high-grade polyethylene construction",
         "WaterMark approved certification",
         "Cross-Flow depth filtration with 3-dimensional filter structure",
         "Solid removal: 75% (pump unit), 90% (gravity unit)",
-        "Two magnetic micro floats with Electronic Pump Controller"
+        "Two magnetic micro floats with Electronic Pump Controller (pump version)",
+        "No external timers required - fully automated operation",
+        "Can be installed above ground, half-submerged, or underground",
+        "Suitable for laundry, shower, and bathroom sink water",
+        "Integrated diverter valve for easy system bypass"
       ],
       specifications: {
-        tankCapacity: "21 gallons",
-        dimensions: "23.2\" x 14.6\" x 19.7\"",
+        tankCapacity: "21 gallons total capacity",
+        dimensions: "23.2\" L x 14.6\" W x 19.7\" H",
+        weight: "13.6 kg (30 lbs) pump version",
         processingCapacity: "17 gallons per minute",
         filtrationStages: "4-stage progressive by Matala",
-        solidRemoval: "Up to 90% (gravity unit)",
+        solidRemoval: "90% (gravity), 75% (pump)",
         installation: "Above ground, half-submerged, or underground",
+        powerRequirement: "110V outlet (pump version only)",
         certification: "WaterMark approved",
-        filterCapacity: "Up to 15,850 gallons before cleaning"
+        filterCapacity: "Up to 15,850 gallons before cleaning",
+        filterMaintenance: "Clean every 4-6 months",
+        filterReplacement: "Replace every 3 years",
+        warranty: "12 months on all parts"
       },
       reviews: [
         {
@@ -371,11 +671,15 @@ function getProductContent(handle: string) {
       faq: [
         {
           question: "What is an Aqua2use GWDD?",
-          answer: "The Aqua2use GWDD is the most advanced Grey Water Diversion Device available. It is designed to help you reuse your waste water from your laundry, bath, and shower."
+          answer: "The Aqua2use GWDD (Grey Water Diversion Device) is the most advanced greywater treatment system available. It's designed to automatically filter and reuse water from your laundry, bath, and shower for irrigation, saving up to 40% on your water bills."
+        },
+        {
+          question: "What's the difference between the Gravity and Pump versions?",
+          answer: "The Gravity version ($599.99) relies on natural water flow and achieves 90% solid removal. The Pump version ($899.99) includes a submersible pump with electronic controller for situations where gravity flow isn't possible, achieving 75% solid removal but offering more installation flexibility."
         },
         {
           question: "How does it work?",
-          answer: "It simply diverts grey water from your waste pipe and then filters the water as it passes through the Matala Patented 3-Dimensional Progressive Filter mats. Then the pumps get activated and diverts the water into your irrigation system. This all happens automatically."
+          answer: "The system automatically diverts greywater from your waste pipe through Matala's patented 4-stage progressive filtration. For pump units, magnetic micro floats activate the pump when water reaches optimal levels, sending filtered water to your irrigation system - all without external timers."
         },
         {
           question: "How often do I have to clean or replace the filters?",
@@ -432,6 +736,18 @@ function getProductContent(handle: string) {
         {
           question: "Does this unit break down in the sun?",
           answer: "No, it is made of UV resistant High Grade Poly Ethylene."
+        },
+        {
+          question: "How do I choose between gravity and pump versions?",
+          answer: "Choose the gravity version if your greywater source is higher than your irrigation area and you have natural slope. Choose the pump version if you need to pump water uphill, have limited fall, or want more flexibility in system placement."
+        },
+        {
+          question: "What maintenance is required?",
+          answer: "The system requires minimal maintenance: clean filters every 4-6 months (takes about 15 minutes), check and clean the pump inlet screen quarterly if you have the pump version, and replace filters every 3 years with proper maintenance."
+        },
+        {
+          question: "Is this suitable for tiny houses and RVs?",
+          answer: "Yes! The compact design (23.2\" x 14.6\" x 19.7\") makes it perfect for tiny houses and RVs. Many customers use it for mobile living situations where water conservation is critical."
         }
       ]
     },
@@ -843,12 +1159,22 @@ function getProductContent(handle: string) {
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params
   let product = null
+  let shopifyProduct = null
 
-  // Try to get product from Shopify first
+  // Try to get enhanced product from Shopify first
   try {
-    product = await getProduct(handle)
+    shopifyProduct = await getEnhancedProduct(handle)
+    if (shopifyProduct) {
+      product = shopifyProduct
+    }
   } catch (error) {
-    console.error('Failed to fetch product from Shopify:', error)
+    console.error('Failed to fetch enhanced product from Shopify:', error)
+    // Fallback to basic product
+    try {
+      product = await getProduct(handle)
+    } catch (basicError) {
+      console.error('Failed to fetch basic product from Shopify:', basicError)
+    }
   }
 
   // Fall back to default content if no Shopify product found
@@ -860,7 +1186,13 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     notFound()
   }
 
-  const productContent = getProductContent(handle)
+  // Use Shopify data if available, otherwise fallback to local content
+  const productContent = shopifyProduct ? {
+    features: shopifyProduct.features || getProductContent(handle).features,
+    specifications: shopifyProduct.specifications || getProductContent(handle).specifications,
+    faq: shopifyProduct.faq || getProductContent(handle).faq,
+    reviews: shopifyProduct.reviews || getProductContent(handle).reviews
+  } : getProductContent(handle)
 
   return (
     <div className="bg-white">
@@ -892,6 +1224,24 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                         <span className="text-lg font-medium">Product Image Coming Soon</span>
                       </div>
                     </div>
+                  </div>
+                )}
+
+                {/* Additional Product Images Gallery */}
+                {product.images?.edges?.length > 1 && (
+                  <div className="mt-6 grid grid-cols-2 gap-4">
+                    {product.images.edges.slice(1, 3).map((image: any, index: number) => (
+                      <div key={index} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border hover:border-gray-300 transition-colors">
+                        <Image
+                          src={image.node.url}
+                          alt={image.node.altText || `${product.title} view ${index + 2}`}
+                          fill
+                          sizes="(max-width: 768px) 50vw, 25vw"
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -931,7 +1281,11 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
                 {/* Description */}
                 <div className="prose prose-xl text-gray-600 leading-relaxed max-w-none">
-                  <p>{product.description}</p>
+                  {product.descriptionHtml ? (
+                    <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
+                  ) : (
+                    <p>{product.description}</p>
+                  )}
                 </div>
 
                 {/* Key Features Grid */}
@@ -983,6 +1337,103 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         </div>
       </div>
 
+      {/* Water Savings Infographic Section */}
+      <div className="bg-blue-50 border-t border-b">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              Why Greywater Systems Make Sense
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8 mb-8">
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <div className="text-4xl font-bold text-blue-600 mb-2">55%</div>
+                <div className="text-lg font-semibold text-gray-900 mb-2">Outdoor Irrigation</div>
+                <p className="text-gray-600 text-sm">Average household water used for landscape watering</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <div className="text-4xl font-bold text-green-600 mb-2">40%</div>
+                <div className="text-lg font-semibold text-gray-900 mb-2">Water Bill Savings</div>
+                <p className="text-gray-600 text-sm">Typical reduction in monthly water costs</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <div className="text-4xl font-bold text-purple-600 mb-2">17K</div>
+                <div className="text-lg font-semibold text-gray-900 mb-2">Gallons/Year</div>
+                <p className="text-gray-600 text-sm">Water recycled by average household system</p>
+              </div>
+            </div>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Transform your household's water waste into a sustainable resource that nourishes your landscape while reducing environmental impact and utility costs.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Product Description & Demo Video Section */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                  See How It Works
+                </h2>
+                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                  {product.description}
+                </p>
+                <div className="space-y-4 text-gray-600">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span>Fully automated operation - no daily maintenance required</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span>Progressive 4-stage filtration removes up to 90% of solids</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span>WaterMark approved for safety and reliability</span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-6">
+                {/* Video Demo */}
+                <div className="relative">
+                  <a 
+                    href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block relative aspect-video bg-gray-200 rounded-xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300 shadow-lg"
+                  >
+                    <Image
+                      src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/maxresdefault.jpg?v=1719253200"
+                      alt="How Greywater Works Video"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                      <div className="bg-white rounded-full p-4 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                        <svg className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                {/* Water Usage Infographic */}
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-blue-600 mb-2">55%</div>
+                    <div className="text-lg font-semibold text-gray-900 mb-2">Outdoor Irrigation</div>
+                    <p className="text-gray-600 text-sm">Average household water used for landscape watering</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Product Details Section - Open Layout */}
       <div className="border-t bg-gray-50">
         <div className="container mx-auto px-4 py-16">
@@ -1002,7 +1453,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   <div className="mb-6">
                     <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white border">
                       <Image
-                        src="/docs/Aqua2use-How-It-Works.jpg"
+                        src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-how-it-works.jpg?v=1719253036"
                         alt="How Aqua2use Greywater System Works"
                         fill
                         className="object-contain p-2"
@@ -1010,6 +1461,38 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       />
                     </div>
                   </div>
+
+                  {/* Filtration System Diagram */}
+                  <div className="mb-6">
+                    <h4 className="font-semibold text-gray-900 mb-4">4-Stage Filtration System</h4>
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <Image
+                        src="/docs/Aqua2use-Filtration-System.png"
+                        alt="Aqua2use 4-Stage Filtration System"
+                        fill
+                        className="object-contain p-4"
+                        unoptimized
+                      />
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">Progressive filtration removes up to 90% of suspended solids through multiple density layers.</p>
+                  </div>
+
+                  {/* Media Filter Chart */}
+                  <div className="mb-6">
+                    <h4 className="font-semibold text-gray-900 mb-4">Filter Media Performance</h4>
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <Image
+                        src="/docs/Aqua2use-Filtration-System.png"
+                        alt="Aqua2use Filtration System Performance"
+                        fill
+                        className="object-contain p-4"
+                        unoptimized
+                      />
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">Progressive filtration removes up to 90% of suspended solids through multiple density layers.</p>
+                  </div>
+
+
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-white">1</span>
@@ -1080,6 +1563,178 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </CardContent>
               </Card>
             </div>
+
+            {/* System Components & Cutaway Section - GWDD Only */}
+            {handle === 'aqua2use-gwdd' && (
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <Settings className="h-6 w-6 text-gray-600" />
+                    System Components & Internal View
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 mt-2">
+                    Detailed view of internal components and system construction
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-900">System Internal View</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                        <Image
+                          src="/docs/Aqua2use-GWDD-Assembly-Guide.jpg"
+                          alt="Aqua2use GWDD Assembly Guide"
+                          fill
+                          className="object-contain p-4"
+                          unoptimized
+                        />
+                      </div>
+                      <p className="text-sm text-gray-600">Detailed assembly and component breakdown</p>
+                    </div>
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-900">System Components</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                        <Image
+                          src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978"
+                          alt="Aqua2use GWDD System Components"
+                          fill
+                          className="object-contain p-4"
+                          unoptimized
+                        />
+                      </div>
+                      <p className="text-sm text-gray-600">Detailed view of all system parts and assembly</p>
+                    </div>
+                  </div>
+                  
+                  {/* Unit Dimensions */}
+                  <div className="pt-6 border-t border-gray-100">
+                    <h4 className="font-semibold text-gray-900 mb-4">System Features & Dimensions</h4>
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <Image
+                        src="/docs/Aqua2use-Pro-Features.jpg"
+                        alt="Aqua2use System Features and Dimensions"
+                        fill
+                        className="object-contain p-4"
+                        unoptimized
+                      />
+                    </div>
+                    <p className="text-sm text-gray-600 text-center mt-2">
+                      Complete feature overview and system specifications
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Working Principle & Filter Flow Section - GWDD Only */}
+            {handle === 'aqua2use-gwdd' && (
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <ArrowRight className="h-6 w-6 text-gray-600" />
+                    Working Principle & Filter Flow
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 mt-2">
+                    Step-by-step filtration process and water flow pattern
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <div className="space-y-6">
+                    <div className="relative aspect-[5/2] rounded-lg overflow-hidden bg-white border">
+                      <Image
+                        src="/docs/Aqua2use-How-It-Works.jpg"
+                        alt="Complete Filtration Process Flow"
+                        fill
+                        className="object-contain p-4"
+                        unoptimized
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-600">
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-2">Filtration Steps:</h5>
+                        <ul className="space-y-1">
+                          <li>1. Initial collection and overflow protection</li>
+                          <li>2. Primary debris separation</li>
+                          <li>3. Progressive density filtration</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-2">Advanced Features:</h5>
+                        <ul className="space-y-1">
+                          <li>4. Cross-flow filter design</li>
+                          <li>5. Clean water collection</li>
+                          <li>6. Automated distribution</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Pump Performance & Design Section - GWDD Only */}
+            {handle === 'aqua2use-gwdd' && (
+              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <Zap className="h-6 w-6 text-gray-600" />
+                    Pump Performance & Design
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 mt-2">
+                    Advanced pump technology with performance specifications
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-8">
+                  <div className="space-y-6">
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <Image
+                        src="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg"
+                        alt="GWDD Pump Performance Chart"
+                        fill
+                        className="object-contain p-4"
+                        unoptimized
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-600">
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-3">Pump Design Features:</h5>
+                        <ul className="space-y-2">
+                          <li className="flex items-start gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>Two magnetic micro floats for precise water level detection</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>Electronic pump controller with automatic operation</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>Dry run protection prevents pump damage</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-gray-900 mb-3">Performance Specifications:</h5>
+                        <ul className="space-y-2">
+                          <li className="flex items-start gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>Processes up to 17 gallons per minute</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>Automatic 4x daily residual water check</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            <span>No external timers required</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Assembly Guide & Technical Images Section */}
             {(handle === 'aqua2use-gwdd' || handle === 'aqua2use-pro' || handle === 'replacement-greywater-pump') && (

@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, ShoppingCart } from "lucide-react"
+import { Menu, ShoppingCart, ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
@@ -12,6 +12,7 @@ import { SimpleNav } from "./simple-nav"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const [expandedSection, setExpandedSection] = useState<string | null>(null)
   const { totalItems } = useCart()
 
   const navItems = [
@@ -21,7 +22,8 @@ export function Header() {
         { title: "What is Greywater?", href: "/what-is-greywater", description: "Learn the basics of greywater recycling" },
         { title: "How Systems Work", href: "/how-it-works", description: "Understanding greywater system mechanics" },
         { title: "Tiny House Systems", href: "/tiny-house-systems", description: "Specialized solutions for tiny homes" },
-        { title: "State Laws", href: "/greywater-laws", description: "Legal requirements by state" }
+        { title: "State Laws", href: "/greywater-laws", description: "Legal requirements by state" },
+        { title: "Compliance Directory", href: "/directory", description: "Browse regulations by location" }
       ]
     },
     {
@@ -88,29 +90,67 @@ export function Header() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
-              <nav className="flex flex-col gap-4 mt-8">
-                <Link href="/how-it-works" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  How it Works
-                </Link>
-                <Link href="/products" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Products
-                </Link>
-                <Link href="/solutions" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Solutions
-                </Link>
-                <Link href="/greywater-laws" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Greywater Laws
-                </Link>
-                <Link href="/customer-stories" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Customer Stories
-                </Link>
-                <Link href="/blog" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                  Blog
-                </Link>
-                <Button asChild className="mt-4 bg-black hover:bg-gray-800 text-white">
-                  <Link href="/contact">Get Quote</Link>
-                </Button>
+            <SheetContent side="right" className="w-[300px] overflow-y-auto">
+              <nav className="flex flex-col gap-2 mt-8">
+                {navItems.map((item) => (
+                  <div key={item.label}>
+                    {item.dropdown ? (
+                      <div>
+                        <button
+                          onClick={() => setExpandedSection(expandedSection === item.label ? null : item.label)}
+                          className="flex items-center justify-between w-full text-left text-lg font-medium py-2 hover:bg-gray-100 rounded-md px-2"
+                        >
+                          {item.label}
+                          <ChevronDown 
+                            className={`h-4 w-4 transition-transform ${
+                              expandedSection === item.label ? 'rotate-180' : ''
+                            }`}
+                          />
+                        </button>
+                        {expandedSection === item.label && (
+                          <div className="ml-4 mt-1 space-y-1">
+                            {item.dropdown.map((subItem) => (
+                              <Link
+                                key={subItem.href}
+                                href={subItem.href}
+                                className="block py-2 px-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                                onClick={() => setIsOpen(false)}
+                              >
+                                {subItem.title}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link
+                        href={item.href!}
+                        className="block text-lg font-medium py-2 px-2 hover:bg-gray-100 rounded-md"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </div>
+                ))}
+                
+                <div className="mt-6 space-y-3 px-2">
+                  <CartSheet>
+                    <Button variant="outline" className="w-full justify-start">
+                      <ShoppingCart className="h-5 w-5 mr-2" />
+                      Cart
+                      {totalItems > 0 && (
+                        <span className="ml-auto bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {totalItems}
+                        </span>
+                      )}
+                    </Button>
+                  </CartSheet>
+                  
+                  <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+                    <Link href="/contact">Get Quote</Link>
+                  </Button>
+                </div>
               </nav>
             </SheetContent>
           </Sheet>
