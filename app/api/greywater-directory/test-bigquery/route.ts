@@ -5,8 +5,19 @@ export async function GET(request: NextRequest) {
   try {
     const bigquery = getBigQueryClient();
     
-    // Simple test query
-    const query = `SELECT 1 as test, CURRENT_TIMESTAMP() as timestamp`;
+    // Test jurisdictions_master query
+    const query = `
+      SELECT DISTINCT
+        state_code,
+        state_name,
+        COUNT(DISTINCT county_name) as county_count,
+        COUNT(DISTINCT city_name) as city_count
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
+      WHERE state_code IS NOT NULL
+      GROUP BY state_code, state_name
+      ORDER BY state_name
+      LIMIT 10
+    `;
     
     const [rows] = await bigquery.query({
       query,
