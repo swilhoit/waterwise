@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
             state_name,
             COUNT(DISTINCT county_name) as county_count,
             COUNT(DISTINCT city_name) as city_count
-          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
           WHERE state_code IS NOT NULL
           GROUP BY state_code, state_name
           ORDER BY state_name
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
             state_code,
             state_name,
             COUNT(DISTINCT city_name) as city_count
-          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
           WHERE state_code = @stateCode
             AND county_name IS NOT NULL
           GROUP BY county_name, state_code, state_name
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
               state_code,
               state_name,
               population
-            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
             WHERE county_name = @countyName
               AND state_code = @stateCode
               AND city_name IS NOT NULL
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
               state_code,
               state_name,
               population
-            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions\`
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
             WHERE state_code = @stateCode
               AND city_name IS NOT NULL
             ORDER BY population DESC
