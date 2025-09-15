@@ -716,36 +716,6 @@ export default function DirectoryView({
                 </Button>
               </div>
               
-              {/* County/City Toggle for State Pages */}
-              {selectedState && !selectedCounty && !selectedCity && (
-                <div className="flex items-center gap-2 border rounded-lg p-1">
-                  <Button
-                    variant={stateViewMode === 'counties' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => {
-                      setStateViewMode('counties')
-                      setCurrentLevel('counties')
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Building className="h-4 w-4" />
-                    Counties
-                  </Button>
-                  <Button
-                    variant={stateViewMode === 'cities' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => {
-                      setStateViewMode('cities')
-                      setCurrentLevel('cities')
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Home className="h-4 w-4" />
-                    Cities
-                  </Button>
-                </div>
-              )}
-              
               {/* View Mode Toggle */}
               {data.length > 0 && (
                 <div className="flex items-center gap-2 border rounded-lg p-1">
@@ -867,17 +837,51 @@ export default function DirectoryView({
         {/* Section Header */}
         {data.length > 0 && !selectedCity && (
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {selectedState && !selectedCounty && stateViewMode === 'cities' 
-                ? `Cities in ${selectedState.state_name}`
-                : currentLevel === 'cities' ? 'Cities' :
-                  currentLevel === 'counties' ? 'Counties' : 'States'}
-            </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              {selectedState && !selectedCounty && stateViewMode === 'cities'
-                ? `Showing ${filteredData.length} ${filteredData.length === 1 ? 'city' : 'cities'} directly`
-                : 'Click on any item below to view details and drill down further'}
-            </p>
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {selectedState && !selectedCounty && stateViewMode === 'cities' 
+                    ? `Cities in ${selectedState.state_name}`
+                    : currentLevel === 'cities' ? 'Cities' :
+                      currentLevel === 'counties' ? 'Counties' : 'States'}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {selectedState && !selectedCounty && stateViewMode === 'cities'
+                    ? `Showing ${filteredData.length} ${filteredData.length === 1 ? 'city' : 'cities'} directly`
+                    : 'Click on any item below to view details and drill down further'}
+                </p>
+              </div>
+              
+              {/* County/City Toggle for State Pages */}
+              {selectedState && !selectedCounty && !selectedCity && (
+                <div className="flex items-center gap-2 border rounded-lg p-1">
+                  <Button
+                    variant={stateViewMode === 'counties' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => {
+                      setStateViewMode('counties')
+                      setCurrentLevel('counties')
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <Building className="h-4 w-4" />
+                    Counties
+                  </Button>
+                  <Button
+                    variant={stateViewMode === 'cities' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => {
+                      setStateViewMode('cities')
+                      setCurrentLevel('cities')
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <Home className="h-4 w-4" />
+                    Cities
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
