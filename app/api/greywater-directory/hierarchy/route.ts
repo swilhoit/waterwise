@@ -13,16 +13,16 @@ export async function GET(request: NextRequest) {
     const parentId = searchParams.get('parentId');
     const parentType = searchParams.get('parentType');
     
-    // Check cache first (temporarily disabled for debugging)
+    // Check cache first
     const cacheKey = `${level}-${parentId || 'all'}-${parentType || 'none'}`;
-    // const cached = hierarchyCache[cacheKey];
-    // if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-    //   return NextResponse.json({
-    //     status: 'success',
-    //     data: cached.data,
-    //     cached: true
-    //   });
-    // }
+    const cached = hierarchyCache[cacheKey];
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION && cached.data.length > 0) {
+      return NextResponse.json({
+        status: 'success',
+        data: cached.data,
+        cached: true
+      });
+    }
 
     let data: any[] = [];
     const bigquery = getBigQueryClient();
@@ -179,11 +179,13 @@ export async function GET(request: NextRequest) {
         }, { status: 400 });
     }
     
-    // Cache the successful result
-    hierarchyCache[cacheKey] = {
-      data,
-      timestamp: Date.now()
-    };
+    // Cache the successful result only if we have data
+    if (data.length > 0) {
+      hierarchyCache[cacheKey] = {
+        data,
+        timestamp: Date.now()
+      };
+    }
     
     return NextResponse.json({
       status: 'success',
