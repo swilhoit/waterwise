@@ -22,13 +22,23 @@ interface SimpleNavProps {
 
 export function SimpleNav({ items }: SimpleNavProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
 
   const handleMouseEnter = (label: string) => {
+    // Clear any pending timeout
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      setTimeoutId(null)
+    }
     setActiveDropdown(label)
   }
 
   const handleMouseLeave = () => {
-    setActiveDropdown(null)
+    // Add a small delay before closing to prevent accidental closures
+    const id = setTimeout(() => {
+      setActiveDropdown(null)
+    }, 100)
+    setTimeoutId(id)
   }
 
   return (
@@ -36,7 +46,7 @@ export function SimpleNav({ items }: SimpleNavProps) {
       {items.map((item) => (
         <div
           key={item.label}
-          className="relative"
+          className="relative group"
           onMouseEnter={() => item.dropdown && handleMouseEnter(item.label)}
           onMouseLeave={handleMouseLeave}
         >
@@ -55,24 +65,31 @@ export function SimpleNav({ items }: SimpleNavProps) {
           )}
 
           {item.dropdown && activeDropdown === item.label && (
-            <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-              <div className="py-1">
-                {item.dropdown.map((dropdownItem) => (
-                  <Link
-                    key={dropdownItem.href}
-                    href={dropdownItem.href}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                  >
-                    <div>
-                      <div className="font-medium">{dropdownItem.title}</div>
-                      {dropdownItem.description && (
-                        <div className="text-xs text-gray-500 mt-1">{dropdownItem.description}</div>
-                      )}
-                    </div>
-                  </Link>
-                ))}
+            <>
+              {/* Invisible bridge to maintain hover state */}
+              <div className="absolute top-full left-0 w-full h-2" />
+              <div className="absolute top-full left-0 pt-2 z-50">
+                <div className="w-56 bg-white border border-gray-200 rounded-md shadow-lg">
+                  <div className="py-1">
+                    {item.dropdown.map((dropdownItem) => (
+                      <Link
+                        key={dropdownItem.href}
+                        href={dropdownItem.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                        onClick={() => setActiveDropdown(null)}
+                      >
+                        <div>
+                          <div className="font-medium">{dropdownItem.title}</div>
+                          {dropdownItem.description && (
+                            <div className="text-xs text-gray-500 mt-1">{dropdownItem.description}</div>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       ))}
