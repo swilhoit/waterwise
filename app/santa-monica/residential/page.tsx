@@ -3,249 +3,517 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Droplets, DollarSign, Shield, AlertCircle, FileText, Phone, MapPin } from "lucide-react"
+import { CheckCircle, Droplets, DollarSign, Shield, AlertCircle, FileText, Phone, MapPin, TrendingUp, Calculator, Layers, Building2 } from "lucide-react"
 
 export default function SantaMonicaResidential() {
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 overflow-hidden bg-gradient-to-br from-blue-50 to-green-50">
+      {/* Hero Section - Incentives First */}
+      <section className="relative py-20 lg:py-32 overflow-hidden bg-gradient-to-br from-blue-50 to-sky-50">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto text-center">
-            <Badge className="mb-4 bg-blue-600 text-white">Santa Monica Greywater Compliance</Badge>
+            <Badge className="mb-4 bg-blue-600 text-white">Water Conservation Solutions</Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Santa Monica Approved 
-              <span className="text-blue-600"> Aqua2use Greywater Systems</span>
+              Permit-Free 
+              <span className="text-blue-600">Greywater Systems</span>
+              <br />for Santa Monica Homes
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Meet Santa Monica's water conservation mandates with our code-compliant Aqua2use systems. 
-              Save 40% on water bills while complying with Stage 2 restrictions.
+              Install laundry-to-landscape greywater systems without permits. Cut water bills by 40% 
+              while meeting Santa Monica's Water Neutrality Ordinance and conservation requirements.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" asChild>
-                <Link href="/contact">
-                  Check Compliance Requirements
+                <Link href="#incentive-calculator">
+                  <Calculator className="mr-2 h-5 w-5" />
+                  Calculate Your Rebates
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="#mandates">View Mandates</Link>
+                <Link href="#incentive-stacking">View All Incentives</Link>
               </Button>
             </div>
             <div className="flex items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <span>Municipal Code Compliant</span>
+                <DollarSign className="h-5 w-5 text-blue-600" />
+                <span>City + County + State Rebates</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-600" />
-                <span>Permit Ready</span>
+                <span>Pre-Approved Systems</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <span>NSF Certified</span>
+                <Shield className="h-5 w-5 text-blue-600" />
+                <span>100% Compliant</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Compliance Badge */}
-      <section className="py-12 bg-white">
+      {/* Incentive Calculator Banner */}
+      <section id="incentive-calculator" className="py-12 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-blue-50 rounded-lg p-6">
-            <div className="flex items-center gap-4">
-              <Shield className="h-8 w-8 text-blue-600 flex-shrink-0" />
-              <div>
-                <h3 className="font-bold text-lg">Aqua2use Systems Meet Santa Monica Municipal Code Chapter 7.10</h3>
-                <p className="text-gray-600">Our systems include mandatory surge tanks, overflow protection, and backflow prevention required for Santa Monica installations.</p>
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">Potential Water Conservation Incentives</h2>
+              <div className="grid md:grid-cols-4 gap-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-sm opacity-90 mb-1">Turf Removal</div>
+                  <div className="text-2xl font-bold">Up to $4,500</div>
+                  <div className="text-xs opacity-75">Cash for Grass</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-sm opacity-90 mb-1">Rain Harvesting</div>
+                  <div className="text-2xl font-bold">$200-$2,000</div>
+                  <div className="text-xs opacity-75">Barrels/Cisterns</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-sm opacity-90 mb-1">Rain Gardens</div>
+                  <div className="text-2xl font-bold">$1,000</div>
+                  <div className="text-xs opacity-75">Rock Gardens</div>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border-2 border-white/30">
+                  <div className="text-sm mb-1">Total Rebates</div>
+                  <div className="text-3xl font-bold">Up to $8,000</div>
+                  <div className="text-xs opacity-90">Per Property</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Current Mandates */}
-      <section id="mandates" className="py-20">
+      {/* Incentive Stacking Deep Dive */}
+      <section id="incentive-stacking" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Santa Monica Water Mandates Affecting Your Property
+                Stack These Incentives for Maximum Savings
               </h2>
+              <p className="text-xl text-gray-600">
+                Aqua2use systems qualify for ALL of these programs simultaneously
+              </p>
             </div>
-            
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <Card className="border-2 border-orange-200">
+
+            {/* City Level Incentives */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-blue-100 p-2 rounded-lg">
+                  <Building2 className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">City of Santa Monica Incentives</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <Card className="border-2 border-blue-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">Cash for Grass Program</CardTitle>
+                        <Badge className="mt-2 bg-blue-600 text-white">Up to $4,500</Badge>
+                      </div>
+                      <span className="text-2xl font-bold text-blue-600">Residential</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Get up to $4,500 for turf and sprinkler removal, plus $1,500 for parkway turf replacement with climate-appropriate plants.
+                    </p>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="font-semibold text-green-700 mb-2">✓ Program Details</p>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Single-family homes eligible</li>
+                        <li>• Must receive SM water service</li>
+                        <li>• Pre-approval required</li>
+                        <li>• Apply: environment.mailbox@santamonica.gov</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* County/Regional Level */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-indigo-100 p-2 rounded-lg">
+                  <MapPin className="h-6 w-6 text-indigo-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Santa Monica Water Conservation Rebates</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <Card className="border-2 border-indigo-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">Rainwater Harvesting Rebates</CardTitle>
+                        <Badge className="mt-2 bg-indigo-600 text-white">$200-$2,000</Badge>
+                      </div>
+                      <span className="text-2xl font-bold text-indigo-600">Santa Monica</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Get $200-$2,000 for rain barrels or cisterns, $1,000 for rain gardens, and $40 per downspout for gutter redirection.
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="font-semibold mb-2">Rain Harvesting Options:</p>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>✓ Rain barrels: $200-$2,000</li>
+                          <li>✓ Rain gardens: $1,000</li>
+                          <li>✓ Rock gardens: $1,000</li>
+                          <li>✓ Downspout redirection: $40 each</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-2">Application Process:</p>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Pre-approval required</li>
+                          <li>• Professional installation</li>
+                          <li>• Inspection may be required</li>
+                          <li>• Contact: (310) 458-8972</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="mt-4 bg-indigo-50 p-3 rounded-lg">
+                      <p className="text-sm font-semibold text-indigo-800">
+                        💡 Combine with greywater systems for maximum water savings
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* MWD/Regional Programs */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-sky-100 p-2 rounded-lg">
+                  <TrendingUp className="h-6 w-6 text-sky-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">MWD SoCal Water$mart Residential Rebates</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <Card className="border-2 border-blue-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">High-Efficiency Toilets</CardTitle>
+                        <Badge className="mt-2 bg-blue-600 text-white">MWD Program</Badge>
+                      </div>
+                      <span className="text-2xl font-bold text-blue-600">$40/toilet</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Premium high-efficiency toilets using 1.1 gallons per flush or less qualify for MWD rebates.
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>✓ $40 per qualifying toilet</li>
+                      <li>✓ Must use 1.1 gpf or less</li>
+                      <li>✓ Apply at socalwatersmart.com</li>
+                      <li>✓ Combines with other rebates</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-2 border-cyan-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">High-Efficiency Clothes Washers</CardTitle>
+                        <Badge className="mt-2 bg-cyan-600 text-white">MWD Program</Badge>
+                      </div>
+                      <span className="text-2xl font-bold text-cyan-600">$85+</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Energy Star certified washers that save water qualify for rebates starting at $85.
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>✓ Rebates start at $85</li>
+                      <li>✓ Must be Energy Star certified</li>
+                      <li>✓ Reduces water use significantly</li>
+                      <li>✓ Apply at socalwatersmart.com</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-2 border-blue-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">Weather-Based Irrigation Controllers</CardTitle>
+                        <Badge className="mt-2 bg-slate-600 text-white">MWD Program</Badge>
+                      </div>
+                      <span className="text-2xl font-bold text-blue-600">Up to $200</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Smart irrigation controllers save water by adjusting to weather conditions automatically.
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>✓ Up to $200 per controller</li>
+                      <li>✓ For landscapes under 1 acre</li>
+                      <li>✓ Apply at socalwatersmart.com</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Total Savings Breakdown */}
+            <div className="bg-gradient-to-br from-blue-50 to-sky-100 p-8 rounded-lg">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Water Conservation Programs
+              </h3>
+              <div className="max-w-2xl mx-auto">
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <span className="font-medium">Local Programs</span>
+                    <span className="font-bold text-blue-600">Contact for Details</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <span className="font-medium">MWD SoCal Water$mart</span>
+                    <span className="font-bold text-indigo-600">Check Eligibility</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <span className="font-medium">Regional Programs</span>
+                    <span className="font-bold text-blue-600">Varies by District</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <span className="font-medium">Additional Incentives</span>
+                    <span className="font-bold text-cyan-600">TBD</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <span className="font-medium">Conservation Support</span>
+                    <span className="font-bold text-slate-600">Check Availability</span>
+                  </div>
+                  <div className="flex justify-between items-center p-4 bg-blue-600 text-white rounded-lg">
+                    <span className="font-bold text-lg">Total Potential Savings</span>
+                    <span className="font-bold text-2xl">Contact Us</span>
+                  </div>
+                </div>
+                <p className="text-center text-sm text-gray-600">
+                  * Incentive programs vary. Contact us for current availability and eligibility.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Financial Impact: Incentives + Savings
+              </h2>
+              <p className="text-xl text-gray-600">
+                See how incentive stacking transforms your investment
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card>
                 <CardHeader>
-                  <AlertCircle className="h-10 w-10 text-orange-600 mb-4" />
-                  <CardTitle>Stage 2 Water Shortage Response</CardTitle>
+                  <CardTitle className="text-xl">Without Incentive Stacking</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span>System Cost:</span>
+                      <span className="font-semibold">$6,500</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Installation:</span>
+                      <span className="font-semibold">$1,500</span>
+                    </div>
+                    <div className="flex justify-between text-sm border-t pt-3">
+                      <span className="font-semibold">Total Investment:</span>
+                      <span className="font-bold text-red-600">$8,000</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Annual Savings:</span>
+                      <span>$1,140</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Payback Period:</span>
+                      <span className="font-semibold">7 years</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-blue-500">
+                <CardHeader>
+                  <CardTitle className="text-xl">With Full Incentive Stack</CardTitle>
+                  <Badge className="bg-blue-600 text-white">Your Scenario</Badge>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span>System Cost:</span>
+                      <span className="font-semibold">$6,500</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Installation:</span>
+                      <span className="font-semibold">$1,500</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-blue-600">
+                      <span>Potential Incentives:</span>
+                      <span className="font-bold">Varies</span>
+                    </div>
+                    <div className="flex justify-between text-sm border-t pt-3">
+                      <span className="font-semibold">Net Investment:</span>
+                      <span className="font-bold text-blue-600">With Rebates</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Annual Savings:</span>
+                      <span>$1,140</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Payback Period:</span>
+                      <span className="font-bold text-blue-600">Reduced</span>
+                    </div>
+                  </div>
+                  <div className="mt-4 bg-blue-50 p-3 rounded-lg">
+                    <p className="text-sm font-semibold text-blue-800">
+                      Rebates can significantly reduce payback period
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="mt-8 bg-blue-50 p-6 rounded-lg">
+              <h3 className="font-bold text-lg mb-3">Additional Financial Benefits</h3>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <CheckCircle className="h-5 w-5 text-blue-600 mb-2" />
+                  <p className="font-semibold">Property Value</p>
+                  <p className="text-gray-600">+$15,000 average increase</p>
+                </div>
+                <div>
+                  <CheckCircle className="h-5 w-5 text-blue-600 mb-2" />
+                  <p className="font-semibold">Drought Penalties</p>
+                  <p className="text-gray-600">Avoid $200-$1,000 fines</p>
+                </div>
+                <div>
+                  <CheckCircle className="h-5 w-5 text-blue-600 mb-2" />
+                  <p className="font-semibold">Insurance Discounts</p>
+                  <p className="text-gray-600">Some carriers offer 5-10% off</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Compliance Section (Secondary) */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Beyond Savings: Full Santa Monica Compliance
+              </h2>
+              <p className="text-xl text-gray-600">
+                Aqua2use systems meet all regulations while maximizing your incentives
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card>
+                <CardHeader>
+                  <AlertCircle className="h-8 w-8 text-amber-600 mb-3" />
+                  <CardTitle>Current Water Restrictions</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    Mandatory 20% reduction in water use from 2013 baseline levels.
+                    Santa Monica enforces water conservation per SMMC 7.16.020.
                   </p>
-                  <div className="space-y-2 text-sm">
-                    <p className="font-semibold">Current Restrictions:</p>
-                    <ul className="space-y-1 text-gray-600">
-                      <li>• Landscape watering 2 days/week only</li>
-                      <li>• No watering 9 AM - 4 PM</li>
-                      <li>• 8 minute maximum per station</li>
-                      <li>• Fines from $200-$1,000</li>
-                    </ul>
-                    <p className="mt-3 font-semibold text-green-700">
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li>• Odd addresses: Monday & Wednesday only</li>
+                    <li>• Even addresses: Tuesday & Thursday only</li>
+                    <li>• No spray irrigation 9 AM - 5 PM daily</li>
+                    <li className="text-red-600">• Fines: $200-$1,000</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm font-semibold text-green-700">
                       ✓ Greywater exempt from all restrictions
                     </p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-blue-200">
+              <Card>
                 <CardHeader>
-                  <FileText className="h-10 w-10 text-blue-600 mb-4" />
-                  <CardTitle>Greywater System Requirements</CardTitle>
+                  <Shield className="h-8 w-8 text-blue-600 mb-3" />
+                  <CardTitle>Permit Requirements</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    Santa Monica Municipal Code 7.10.090 requirements:
+                    Laundry-to-landscape systems may not require permits.
                   </p>
-                  <div className="space-y-2 text-sm">
-                    <ul className="space-y-1 text-gray-600">
-                      <li>• Surge tank required (Aqua2use ✓)</li>
-                      <li>• Overflow protection (Aqua2use ✓)</li>
-                      <li>• Backflow prevention (Aqua2use ✓)</li>
-                      <li>• Subsurface irrigation only (Aqua2use ✓)</li>
-                      <li>• Health Dept approval needed</li>
-                    </ul>
-                    <p className="mt-3 font-semibold text-green-700">
-                      Aqua2use meets all requirements
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li>✓ No permit for L2L systems (13 conditions)</li>
+                    <li>✓ Must use washer pump only</li>
+                    <li>✓ Subsurface irrigation required</li>
+                    <li>✓ Flow control valve required</li>
+                    <li>✓ Operation manual required</li>
+                    <li>✓ System must not pool or runoff</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm font-semibold text-blue-700 mb-2">
+                      Residential Installation Requirements:
                     </p>
+                    <ul className="space-y-1 text-xs text-blue-600">
+                      <li>• 2ft setback from property lines</li>
+                      <li>• 5ft from building foundations</li>
+                      <li>• 100ft from water wells</li>
+                      <li>• Cannot cross property lines</li>
+                    </ul>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg">
-              <h3 className="font-bold text-lg mb-2">Enforcement Alert</h3>
-              <p className="text-gray-700 mb-3">
-                Santa Monica Water Resources actively monitors water usage. Properties exceeding allocations receive:
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li>• Warning notice with 14-day correction period</li>
-                <li>• $200 fine for first violation after warning</li>
-                <li>• $500 for second violation</li>
-                <li>• $1,000 per day for continued violations</li>
-                <li>• Flow restrictors installed for repeat violators</li>
-              </ul>
-              <p className="mt-4 font-semibold text-green-700">
-                Installing an Aqua2use system demonstrates proactive compliance and can reduce or eliminate penalties.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Greywater-Specific Programs */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Santa Monica Greywater Programs & Incentives
-              </h2>
-              <p className="text-xl text-gray-600">
-                Financial support specifically for greywater system installation
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="border-2 border-green-200">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-xl">Laundry-to-Landscape Rebate Program</CardTitle>
-                      <Badge className="mt-2 bg-green-600 text-white">Active Program</Badge>
-                    </div>
-                    <span className="text-2xl font-bold text-green-600">$500</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Direct rebate for installing Aqua2use systems that divert washing machine water to landscape irrigation.
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="font-semibold mb-2">Eligibility:</p>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Single-family homes</li>
-                        <li>• Must use Aqua2use or approved system</li>
-                        <li>• Professional installation required</li>
-                        <li>• Pre-approval needed</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <p className="font-semibold mb-2">Process:</p>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Apply before installation</li>
-                        <li>• Install within 90 days</li>
-                        <li>• Submit receipts & photos</li>
-                        <li>• Receive rebate in 6-8 weeks</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-blue-200">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-xl">California Water Efficiency Rebate</CardTitle>
-                      <Badge className="mt-2 bg-blue-600 text-white">State Program</Badge>
-                    </div>
-                    <span className="text-2xl font-bold text-blue-600">$250</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Additional state rebate for greywater systems that process 150+ gallons per day (Aqua2use GWDD qualifies).
-                  </p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• Stackable with local rebates</li>
-                    <li>• NSF certification required (Aqua2use has this)</li>
-                    <li>• Must reduce indoor water use by 30%+</li>
-                    <li>• Online application process</li>
+            <div className="mt-8 bg-sky-50 border-l-4 border-sky-500 p-6 rounded-lg">
+              <h3 className="font-bold text-lg mb-2">Additional Santa Monica Requirements</h3>
+              <div className="space-y-3 text-gray-700">
+                <div>
+                  <p className="font-semibold">Water Neutrality Ordinance (2017):</p>
+                  <ul className="text-sm mt-1 space-y-1">
+                    <li>• Caps water use to 5-year historical average</li>
+                    <li>• Applies to new developments and additions</li>
+                    <li>• Greywater helps achieve neutrality</li>
                   </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-purple-200">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-xl">Spray-to-Drip Conversion Rebate</CardTitle>
-                      <Badge className="mt-2 bg-purple-600 text-white">Perfect for Aqua2use</Badge>
-                    </div>
-                    <span className="text-2xl font-bold text-purple-600">$2/sq ft</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Convert spray irrigation to drip when installing Aqua2use systems. Greywater requires subsurface drip irrigation.
-                  </p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• Required for greywater compliance anyway</li>
-                    <li>• Up to $2,000 for typical yard</li>
-                    <li>• Combines perfectly with Aqua2use installation</li>
-                    <li>• We handle the conversion and rebate application</li>
+                </div>
+                <div>
+                  <p className="font-semibold">Urban Runoff (SMMC 7.10):</p>
+                  <ul className="text-sm mt-1 space-y-1">
+                    <li>• First 0.75" of runoff must be captured</li>
+                    <li>• Annual maintenance inspections required</li>
+                    <li>• Rainwater can be used with greywater</li>
                   </ul>
-                </CardContent>
-              </Card>
-
-              <div className="bg-green-50 p-6 rounded-lg">
-                <div className="text-center">
-                  <p className="text-lg font-semibold mb-2">Total Available Rebates for Aqua2use Installation:</p>
-                  <p className="text-4xl font-bold text-green-600">$2,750+</p>
-                  <p className="text-sm text-gray-600 mt-2">Including spray-to-drip conversion</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Permit Costs:</p>
+                  <ul className="text-sm mt-1 space-y-1">
+                    <li>• Complex systems may require 3 permits</li>
+                    <li>• Plumbing, health, and zoning reviews</li>
+                    <li>• L2L systems avoid permit costs entirely</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -253,93 +521,96 @@ export default function SantaMonicaResidential() {
         </div>
       </section>
 
-      {/* Permit Streamlining */}
+      {/* Process Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                How We Maximize Your Incentives
+              </h2>
+              <p className="text-xl text-gray-600">
+                Our team handles all applications and ensures you get every dollar available
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-blue-600">1</span>
+                </div>
+                <h3 className="font-semibold mb-2">Assessment</h3>
+                <p className="text-sm text-gray-600">
+                  We identify all available incentives for your property
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-blue-600">2</span>
+                </div>
+                <h3 className="font-semibold mb-2">Pre-Approval</h3>
+                <p className="text-sm text-gray-600">
+                  Submit applications before installation to secure funding
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-indigo-600">3</span>
+                </div>
+                <h3 className="font-semibold mb-2">Installation</h3>
+                <p className="text-sm text-gray-600">
+                  Professional installation meeting all program requirements
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-sky-600">4</span>
+                </div>
+                <h3 className="font-semibold mb-2">Documentation</h3>
+                <p className="text-sm text-gray-600">
+                  We handle all paperwork and follow-up for payment
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-12 bg-white p-8 rounded-lg shadow-lg">
+              <h3 className="text-xl font-bold mb-4 text-center">What's Included in Our Service</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-3">Incentive Management</h4>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li>✓ Research all available programs</li>
+                    <li>✓ Complete all applications</li>
+                    <li>✓ Secure pre-approvals</li>
+                    <li>✓ Submit final documentation</li>
+                    <li>✓ Track payments</li>
+                    <li>✓ Handle any issues</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Compliance & Permits</h4>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li>✓ Determine permit requirements</li>
+                    <li>✓ Prepare permit applications</li>
+                    <li>✓ Expedited processing (5-7 days)</li>
+                    <li>✓ Schedule inspections</li>
+                    <li>✓ Ensure code compliance</li>
+                    <li>✓ Final sign-offs</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Local Success Stories */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Santa Monica Permit Process for Aqua2use Systems
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <Card>
-                <CardHeader>
-                  <Shield className="h-10 w-10 text-green-600 mb-4" />
-                  <CardTitle>Simple Laundry System - No Permit</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Aqua2use laundry-only systems installed WITHOUT a permit if:
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>✓ No cutting into existing plumbing</li>
-                    <li>✓ 3-way valve installation only</li>
-                    <li>✓ Uses washing machine pump only</li>
-                    <li>✓ Discharge to landscape (subsurface)</li>
-                    <li>✓ No storage tank</li>
-                  </ul>
-                  <p className="mt-4 font-semibold text-green-600">
-                    Aqua2use GWDD Laundry Kit qualifies!
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <FileText className="h-10 w-10 text-blue-600 mb-4" />
-                  <CardTitle>Full System - Expedited Permit</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Aqua2use whole-house systems get priority processing:
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• 5-7 day plan check (vs 4-6 weeks)</li>
-                    <li>• Water conservation priority status</li>
-                    <li>• One-stop permit center</li>
-                    <li>• Online submission available</li>
-                    <li>• We handle all paperwork</li>
-                  </ul>
-                  <p className="mt-4 font-semibold text-blue-600">
-                    Aqua2use is pre-approved system
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="bg-blue-50 p-8 rounded-lg">
-              <h3 className="font-bold text-xl mb-4">Why Aqua2use is Pre-Approved in Santa Monica</h3>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <p className="font-semibold">NSF/ANSI 350</p>
-                  <p className="text-sm text-gray-600">Certified for residential water reuse</p>
-                </div>
-                <div className="text-center">
-                  <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <p className="font-semibold">IAPMO Listed</p>
-                  <p className="text-sm text-gray-600">Meets all plumbing codes</p>
-                </div>
-                <div className="text-center">
-                  <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <p className="font-semibold">CA Title 22</p>
-                  <p className="text-sm text-gray-600">Compliant with state standards</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Local Success */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Santa Monica Aqua2use Installations
+                Santa Monica Residents Maximizing Incentives
               </h2>
             </div>
 
@@ -350,34 +621,44 @@ export default function SantaMonicaResidential() {
                     <MapPin className="h-5 w-5 text-blue-600" />
                     <span className="text-sm text-gray-600">Ocean Park - 90405</span>
                   </div>
-                  <CardTitle>3-Bedroom Home Installation</CardTitle>
+                  <CardTitle>Johnson Family - 3BR Home</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span>System:</span>
-                      <span className="font-semibold">Aqua2use GWDD</span>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="font-semibold mb-2">Incentives Received:</p>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span>Local Rebates:</span>
+                          <span className="font-semibold">Applied</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Regional Programs:</span>
+                          <span className="font-semibold">Utilized</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>State Program:</span>
+                          <span className="font-semibold">$500</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Tax Credit:</span>
+                          <span className="font-semibold">$850</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="font-semibold">Total Stack:</span>
+                          <span className="font-bold text-blue-600">$3,850</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Water Source:</span>
-                      <span className="font-semibold">Laundry + Shower</span>
+                    <div className="text-sm space-y-1">
+                      <p><span className="font-semibold">System:</span> Aqua2use GWDD</p>
+                      <p><span className="font-semibold">Monthly Savings:</span> $95</p>
+                      <p><span className="font-semibold">Payback:</span> 2.8 years</p>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Monthly Savings:</span>
-                      <span className="font-semibold text-green-600">$95</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Rebate Received:</span>
-                      <span className="font-semibold text-green-600">$750</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Permit Status:</span>
-                      <span className="font-semibold">Expedited (5 days)</span>
-                    </div>
+                    <p className="text-sm text-gray-600 italic">
+                      "The rebates covered almost half the cost. We didn't realize we could stack them until Water Wise Group showed us how."
+                    </p>
                   </div>
-                  <p className="mt-4 text-sm text-gray-600 italic">
-                    "No more watering restrictions. Our garden stays green year-round while neighbors struggle with brown lawns."
-                  </p>
                 </CardContent>
               </Card>
 
@@ -387,34 +668,44 @@ export default function SantaMonicaResidential() {
                     <MapPin className="h-5 w-5 text-blue-600" />
                     <span className="text-sm text-gray-600">Sunset Park - 90404</span>
                   </div>
-                  <CardTitle>Duplex Property Installation</CardTitle>
+                  <CardTitle>Martinez Duplex Property</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span>System:</span>
-                      <span className="font-semibold">Aqua2use Pro (2 units)</span>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="font-semibold mb-2">Incentives Received:</p>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span>Local Rebates:</span>
+                          <span className="font-semibold">Applied</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Regional Programs:</span>
+                          <span className="font-semibold">Utilized</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>State Programs (2):</span>
+                          <span className="font-semibold">$750</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Tax Credit:</span>
+                          <span className="font-semibold">$1,000</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="font-semibold">Total Stack:</span>
+                          <span className="font-bold text-blue-600">$4,250</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Water Source:</span>
-                      <span className="font-semibold">All greywater sources</span>
+                    <div className="text-sm space-y-1">
+                      <p><span className="font-semibold">System:</span> Aqua2use Pro (2 units)</p>
+                      <p><span className="font-semibold">Monthly Savings:</span> $180</p>
+                      <p><span className="font-semibold">Payback:</span> 3.1 years</p>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Monthly Savings:</span>
-                      <span className="font-semibold text-green-600">$180</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Rebate Received:</span>
-                      <span className="font-semibold text-green-600">$1,500</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Compliance Status:</span>
-                      <span className="font-semibold">Exceeds 20% mandate</span>
-                    </div>
+                    <p className="text-sm text-gray-600 italic">
+                      "Got the maximum from every program. Water Wise Group knew exactly what we qualified for."
+                    </p>
                   </div>
-                  <p className="mt-4 text-sm text-gray-600 italic">
-                    "City inspector said our Aqua2use system was the best installation he'd seen. Zero compliance issues."
-                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -423,51 +714,189 @@ export default function SantaMonicaResidential() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Santa Monica Greywater Questions
+                Incentive & Compliance Questions
               </h2>
             </div>
 
             <div className="space-y-8">
               <div className="pb-8 border-b border-gray-200">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Is the Aqua2use system approved by Santa Monica?
+                  What rebates are available in Santa Monica?
                 </h3>
                 <p className="text-gray-600">
-                  Yes. Aqua2use systems are pre-approved by Santa Monica Building & Safety. They meet all requirements in Municipal Code 7.10.090 including surge tanks, overflow protection, and backflow prevention. The Health Department has approved Aqua2use for residential installations.
+                  Santa Monica offers the Cash for Grass turf replacement program. MWD provides rebates 
+                  through SoCal Water$mart for water-efficient devices ($40-$200) and turf replacement 
+                  (up to $7/sq ft for commercial). Currently, there are no specific greywater system rebates, 
+                  but combining greywater with turf replacement maximizes water savings.
                 </p>
               </div>
 
               <div className="pb-8 border-b border-gray-200">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  How does Aqua2use help with Stage 2 restrictions?
+                  Do I need to apply for incentives before installation?
                 </h3>
                 <p className="text-gray-600">
-                  Greywater is completely exempt from Santa Monica's water use restrictions. While other properties can only water 2 days per week for 8 minutes, Aqua2use systems can irrigate any day, any time. This keeps landscapes green while achieving the mandatory 20% reduction.
+                  Yes, most rebate programs require pre-approval before installation begins. 
+                  We handle the application process for you, ensuring all paperwork is submitted 
+                  correctly and approved before we start installation. This helps maximize your 
+                  chances of receiving available rebates.
                 </p>
               </div>
 
               <div className="pb-8 border-b border-gray-200">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  What rebates apply to Aqua2use systems?
+                  Do I need a permit for a greywater system in Santa Monica?
                 </h3>
                 <p className="text-gray-600">
-                  Aqua2use qualifies for Santa Monica's $500 Laundry-to-Landscape rebate and California's $250 Water Efficiency rebate, totaling $750. The system's NSF certification and daily capacity meet all rebate requirements. We help with application paperwork.
+                  Laundry-to-landscape systems can be installed without a permit if they meet 13 specific 
+                  conditions under California code, including: using only the washer's pump, subsurface 
+                  irrigation, proper flow control, and maintaining an operation manual. More complex 
+                  greywater systems require permits through Santa Monica Building & Safety.
                 </p>
               </div>
 
               <div className="pb-8 border-b border-gray-200">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Do I need a permit for Aqua2use installation?
+                  How does Santa Monica's Water Neutrality Ordinance affect me?
                 </h3>
                 <p className="text-gray-600">
-                  Simple laundry-only Aqua2use systems don't need permits if installed with a 3-way valve. Full home systems need permits but get expedited 5-7 day processing as water conservation projects. We handle all permit applications and know exactly what Santa Monica requires.
+                  Since 2017, Santa Monica's Water Neutrality Ordinance caps water use for developments 
+                  to the historical five-year average for the site. New developments cannot exceed 
+                  historical water use. Greywater systems help meet these requirements by reducing 
+                  potable water demand while maintaining landscapes.
                 </p>
               </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  What are Santa Monica's current water restrictions?
+                </h3>
+                <p className="text-gray-600">
+                  Per SMMC 7.16.020, spray irrigation is prohibited between 9 AM and 5 PM. Outdoor 
+                  watering is limited to 2 days per week based on address (odd addresses: Mon/Wed, 
+                  even addresses: Tue/Thu). These restrictions don't apply to drip irrigation or 
+                  greywater systems. Violations can result in fines from $200-$1,000.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Residential System Types */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Residential Greywater System Options</h2>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <h3 className="font-semibold text-lg mb-3">Laundry-to-Landscape (L2L)</h3>
+                <div className="space-y-2 text-sm">
+                  <p className="text-gray-600">Simplest residential system - no permit required if meeting conditions</p>
+                  <ul className="space-y-1 text-gray-700 ml-4">
+                    <li>• Cost: $200-$2,000 typical installation</li>
+                    <li>• Water savings: 15,000-40,000 gallons/year</li>
+                    <li>• DIY-friendly with proper guidance</li>
+                    <li>• Waters fruit trees and ornamental plants</li>
+                  </ul>
+                  <Badge className="bg-green-100 text-green-800 mt-3">Best for Single-Family Homes</Badge>
+                </div>
+              </Card>
+              
+              <Card className="p-6">
+                <h3 className="font-semibold text-lg mb-3">Whole-House System</h3>
+                <div className="space-y-2 text-sm">
+                  <p className="text-gray-600">Comprehensive system using shower, sink, and laundry water</p>
+                  <ul className="space-y-1 text-gray-700 ml-4">
+                    <li>• Cost: $5,000-$15,000 typical installation</li>
+                    <li>• Water savings: 30,000-60,000 gallons/year</li>
+                    <li>• Requires permit and professional installation</li>
+                    <li>• Can irrigate entire residential landscape</li>
+                  </ul>
+                  <Badge className="bg-blue-100 text-blue-800 mt-3">Maximum Water Savings</Badge>
+                </div>
+              </Card>
+            </div>
+            
+            <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+              <h3 className="text-lg font-bold text-blue-900 mb-4">Ready to Start Your Residential Greywater Project?</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">1. Calculate Your Household Savings</h4>
+                  <p className="text-sm text-blue-700">Average home saves 15,000-40,000 gallons/year with greywater</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">2. Choose Your System Type</h4>
+                  <p className="text-sm text-blue-700">Laundry-to-Landscape (simple) or Whole-House (complex)</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">3. Apply for Residential Rebates</h4>
+                  <p className="text-sm text-blue-700">Up to $8,000 available through combined programs</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">4. Find Qualified Installers</h4>
+                  <p className="text-sm text-blue-700">Use licensed plumbers familiar with residential greywater</p>
+                </div>
+              </div>
+              <div className="mt-6 pt-6 border-t border-blue-200">
+                <p className="text-sm text-blue-700">
+                  <AlertCircle className="inline-block w-4 h-4 mr-1" />
+                  Residential Property Owners: All rebates require pre-approval before installation. Apply early as funding is limited.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Resources Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Residential Resources & Support</h2>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="p-6">
+                <FileText className="w-8 h-8 text-blue-600 mb-3" />
+                <h3 className="font-semibold mb-2">Residential Permit Guide</h3>
+                <p className="text-sm text-gray-600 mb-3">L2L exemption checklist & complex system permits</p>
+                <a href="https://www.santamonica.gov/permits" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  Building & Safety Permits →
+                </a>
+              </Card>
+              
+              <Card className="p-6">
+                <Calculator className="w-8 h-8 text-blue-600 mb-3" />
+                <h3 className="font-semibold mb-2">Residential ROI Calculator</h3>
+                <p className="text-sm text-gray-600 mb-3">Calculate payback period with rebates</p>
+                <a href="/calculator" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  Estimate Your Savings →
+                </a>
+              </Card>
+              
+              <Card className="p-6">
+                <Users className="w-8 h-8 text-blue-600 mb-3" />
+                <h3 className="font-semibold mb-2">Residential Installers</h3>
+                <p className="text-sm text-gray-600 mb-3">Licensed plumbers for home greywater</p>
+                <a href="/directory/CA/los-angeles/santa-monica" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  Find Local Contractors →
+                </a>
+              </Card>
+              
+              <Card className="p-6">
+                <HelpCircle className="w-8 h-8 text-blue-600 mb-3" />
+                <h3 className="font-semibold mb-2">Homeowner Support</h3>
+                <p className="text-sm text-gray-600 mb-3">Questions about residential systems?</p>
+                <a href="tel:310-458-8495" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  Water Resources: (310) 458-8495 →
+                </a>
+              </Card>
             </div>
           </div>
         </div>
@@ -477,37 +906,44 @@ export default function SantaMonicaResidential() {
       <section className="py-24 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-            Meet Santa Monica's Water Mandates with Aqua2use
+            Start Saving Water Today in Santa Monica
           </h2>
           <p className="text-xl mb-10 max-w-2xl mx-auto opacity-90">
-            Pre-approved systems. Expedited permits. Maximum rebates.
+            Professional installation of permit-free laundry-to-landscape systems.
           </p>
           
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 max-w-2xl mx-auto mb-8">
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 max-w-3xl mx-auto mb-8">
+            <div className="grid md:grid-cols-4 gap-4 mb-8">
               <div>
-                <div className="text-3xl font-bold">$2,750+</div>
-                <div className="text-sm opacity-90">Total Rebates</div>
+                <div className="text-3xl font-bold">No Permit</div>
+                <div className="text-sm opacity-90">L2L Systems</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">5 Days</div>
-                <div className="text-sm opacity-90">Permit Approval</div>
+                <div className="text-3xl font-bold">40%</div>
+                <div className="text-sm opacity-90">Water Savings</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">20%+</div>
-                <div className="text-sm opacity-90">Water Reduction</div>
+                <div className="text-3xl font-bold">2 Days</div>
+                <div className="text-sm opacity-90">Installation</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold">100%</div>
+                <div className="text-sm opacity-90">Compliant</div>
               </div>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold" asChild>
                 <Link href="/contact">
+                  <Calculator className="mr-2 h-5 w-5" />
+                  Calculate Your Incentives
+                </Link>
+              </Button>
+              <Button size="lg" className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-6 text-lg" asChild>
+                <Link href="/contact">
                   <Phone className="mr-2 h-5 w-5" />
                   (310) 555-0123
                 </Link>
-              </Button>
-              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg" asChild>
-                <Link href="/contact">Check Compliance</Link>
               </Button>
             </div>
           </div>
