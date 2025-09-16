@@ -12,14 +12,13 @@ export default function SantaMonicaResidential() {
       <section className="relative py-20 lg:py-32 overflow-hidden bg-gradient-to-br from-blue-50 to-sky-50">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto text-center">
-            <Badge className="mb-4 bg-blue-600 text-white">Water Conservation Solutions</Badge>
+            <Badge className="mb-4 bg-blue-600 text-white">Santa Monica Water Conservation</Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Get Up to $8,500 in Government Rebates for
-              <br /><span className="text-blue-600">Water Conservation</span> in Santa Monica
+              Get $8,500 in <span className="text-blue-600">Government Rebates</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Stack city, state, and federal incentives for greywater systems, turf removal, and irrigation upgrades. 
-              Cut water bills by 40% while meeting Santa Monica's conservation requirements.
+              Stack city, state, and federal incentives for greywater systems, turf removal, and irrigation upgrades 
+              in Santa Monica. Cut water bills by 40% while meeting conservation requirements.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" asChild>
