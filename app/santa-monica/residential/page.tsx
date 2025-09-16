@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Droplets, DollarSign, Shield, AlertCircle, FileText, Phone, MapPin, TrendingUp, Calculator, Layers, Building2 } from "lucide-react"
+import { CheckCircle, Droplets, DollarSign, Shield, AlertCircle, FileText, Phone, MapPin, TrendingUp, Calculator, Layers, Building2, Users, HelpCircle } from "lucide-react"
 
 export default function SantaMonicaResidential() {
   return (
