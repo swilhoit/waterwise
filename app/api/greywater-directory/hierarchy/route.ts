@@ -34,33 +34,27 @@ export async function GET(request: NextRequest) {
           SELECT DISTINCT
             state_code,
             state_name,
+            state_jurisdiction_id,
             COUNT(DISTINCT county_name) as county_count,
             COUNT(DISTINCT city_name) as city_count
           FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
           WHERE state_code IS NOT NULL
-          GROUP BY state_code, state_name
+          GROUP BY state_code, state_name, state_jurisdiction_id
           ORDER BY state_name
         `;
         
-        try {
-          const [stateRows] = await bigquery.query({
-            query: stateQuery,
-            location: 'US'
-          }) as any;
-          
-          console.log('State query returned', stateRows.length, 'rows');
-          
-          data = stateRows.map((row: any) => ({
-          state_jurisdiction_id: row.state_code,
+        const [stateRows] = await bigquery.query({
+          query: stateQuery,
+          location: 'US'
+        }) as any;
+        
+        data = stateRows.map((row: any) => ({
+          state_jurisdiction_id: row.state_jurisdiction_id || `STATE_${row.state_code}`,
           state_name: row.state_name,
           state_code: row.state_code,
           county_count: row.county_count || 0,
           city_count: row.city_count || 0
         }));
-        } catch (queryError) {
-          console.error('State query failed:', queryError);
-          throw queryError;
-        }
         break;
 
       case 'counties':
@@ -71,17 +65,17 @@ export async function GET(request: NextRequest) {
           }, { status: 400 });
         }
         
-        // Query for all counties in a state
         const countyQuery = `
           SELECT DISTINCT
             county_name,
+            county_jurisdiction_id,
             state_code,
             state_name,
             COUNT(DISTINCT city_name) as city_count
           FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
           WHERE state_code = @stateCode
             AND county_name IS NOT NULL
-          GROUP BY county_name, state_code, state_name
+          GROUP BY county_name, county_jurisdiction_id, state_code, state_name
           ORDER BY county_name
         `;
         
@@ -92,7 +86,7 @@ export async function GET(request: NextRequest) {
         }) as any;
         
         data = countyRows.map((row: any) => ({
-          county_jurisdiction_id: row.county_name,
+          county_jurisdiction_id: row.county_jurisdiction_id || `COUNTY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}`,
           county_name: row.county_name,
           state_code: row.state_code,
           state_name: row.state_name,
@@ -116,6 +110,7 @@ export async function GET(request: NextRequest) {
           cityQuery = `
             SELECT DISTINCT
               city_name,
+              city_jurisdiction_id,
               county_name,
               state_code,
               state_name,
@@ -138,6 +133,7 @@ export async function GET(request: NextRequest) {
           cityQuery = `
             SELECT DISTINCT
               city_name,
+              city_jurisdiction_id,
               county_name,
               state_code,
               state_name,
@@ -158,7 +154,7 @@ export async function GET(request: NextRequest) {
         }) as any;
         
         data = cityRows.map((row: any) => ({
-          city_jurisdiction_id: row.city_name,
+          city_jurisdiction_id: row.city_jurisdiction_id || `CITY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}_${row.city_name.replace(/\s+/g, '_')}`,
           city_name: row.city_name,
           county_name: row.county_name,
           state_code: row.state_code,
@@ -192,11 +188,17 @@ export async function GET(request: NextRequest) {
       data
     });
   } catch (error) {
-    console.error('Hierarchy query error:', error);
+    console.error('Hierarchy API Error:', error);
+    
+    let errorMessage = 'Failed to query hierarchy data';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     return NextResponse.json({
       status: 'error',
-      message: 'Failed to query hierarchy data',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: errorMessage,
+      error: error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : 'Unknown error'
     }, { status: 500 });
   }
 }
