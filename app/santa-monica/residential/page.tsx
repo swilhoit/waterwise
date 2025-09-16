@@ -14,8 +14,8 @@ export default function SantaMonicaResidential() {
           <div className="max-w-5xl mx-auto text-center">
             <Badge className="mb-4 bg-blue-600 text-white">Water Conservation Solutions</Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Get Up to $8,500 in Government Rebates
-              <br />for <span className="text-blue-600">Water Conservation</span> in Santa Monica
+              Get Up to $8,500 in Government Rebates for
+              <br /><span className="text-blue-600">Water Conservation</span> in Santa Monica
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
               Stack city, state, and federal incentives for greywater systems, turf removal, and irrigation upgrades. 
