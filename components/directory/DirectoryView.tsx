@@ -742,7 +742,7 @@ export default function DirectoryView({
 
         {/* Show detailed view for selected jurisdiction */}
         {showStateDetail && stateData && !selectedCounty && !selectedCity && (
-          <StateDetailView stateData={stateData} />
+          <StateDetailView stateData={stateData} complianceData={complianceDetails} />
         )}
         {selectedCounty && !selectedCity && (
           <CountyDetailView 
