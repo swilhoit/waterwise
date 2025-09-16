@@ -1054,7 +1054,22 @@ const RegulationItem = ({ title, content }: { title: string, content?: string | 
   );
 };
 
-const IncentiveSection = ({ level, programs, sectorView, renderFunction }: { level: string, programs: any[] | undefined, sectorView: 'residential' | 'commercial', renderFunction: Function }) => {
+const colors = {
+  State: 'bg-blue-50 text-blue-700 border-blue-200',
+  County: 'bg-purple-50 text-purple-700 border-purple-200',
+  City: 'bg-green-50 text-green-700 border-green-200',
+} as const;
+
+type Level = keyof typeof colors;
+
+interface IncentiveSectionProps {
+  level: Level;
+  programs: any[] | undefined;
+  sectorView: 'residential' | 'commercial';
+  renderFunction: Function;
+}
+
+const IncentiveSection = ({ level, programs, sectorView, renderFunction }: IncentiveSectionProps) => {
   const filterProgramsBySector = (programs: any[]) => {
     if (!programs) return []
     return programs.filter(program => {
@@ -1072,12 +1087,6 @@ const IncentiveSection = ({ level, programs, sectorView, renderFunction }: { lev
     return null;
   }
   
-  const colors = {
-    State: 'bg-blue-50 text-blue-700 border-blue-200',
-    County: 'bg-purple-50 text-purple-700 border-purple-200',
-    City: 'bg-green-50 text-green-700 border-green-200',
-  }
-
   return (
     <div>
       <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
@@ -1087,7 +1096,7 @@ const IncentiveSection = ({ level, programs, sectorView, renderFunction }: { lev
       </h4>
       <div className="grid md:grid-cols-2 gap-4">
         {filteredPrograms.map((program, idx) => 
-          renderFunction(program, level, `bg-${colors[level].split(' ')[0]}`, idx)
+          renderFunction(program, level, colors[level].split(' ')[0], idx)
         )}
       </div>
     </div>
