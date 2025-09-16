@@ -160,7 +160,8 @@ export default function DirectoryView({
   const fetchData = async (
     level: 'states' | 'counties' | 'cities' | 'water_districts',
     parentId?: string,
-    parentType?: string
+    parentType?: string,
+    stateCode?: string
   ) => {
     setLoading(true)
     setError(null)
@@ -169,6 +170,7 @@ export default function DirectoryView({
       const params = new URLSearchParams({ level })
       if (parentId) params.append('parentId', parentId)
       if (parentType) params.append('parentType', parentType)
+      if (stateCode) params.append('stateCode', stateCode)
 
       const response = await fetch(`/api/greywater-directory/hierarchy?${params}`)
       const result = await response.json()
@@ -340,7 +342,7 @@ export default function DirectoryView({
                       }
                     } else {
                       // Show cities in this county
-                      fetchData('cities', countyData.county_jurisdiction_id, 'county')
+                      fetchData('cities', countyData.county_jurisdiction_id, 'county', stateData.state_code)
                       fetchComplianceDetails(initialState, countyData.county_name)
                     }
                   }

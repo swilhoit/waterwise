@@ -78,14 +78,13 @@ export async function GET(request: NextRequest) {
         const countyQuery = `
           SELECT DISTINCT
             county_name,
-            county_jurisdiction_id,
             state_code,
             state_name,
             COUNT(DISTINCT city_name) as city_count
           FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.jurisdictions_master\`
           WHERE state_code = @stateCode
             AND county_name IS NOT NULL
-          GROUP BY county_name, county_jurisdiction_id, state_code, state_name
+          GROUP BY county_name, state_code, state_name
           ORDER BY county_name
         `;
         
@@ -99,7 +98,7 @@ export async function GET(request: NextRequest) {
           console.log('County query returned', countyRows.length, 'rows');
           
           data = countyRows.map((row: any) => ({
-          county_jurisdiction_id: row.county_jurisdiction_id || `COUNTY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}`,
+          county_jurisdiction_id: `COUNTY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}`,
           county_name: row.county_name,
           state_code: row.state_code,
           state_name: row.state_name,
@@ -123,11 +122,17 @@ export async function GET(request: NextRequest) {
         let queryParams: any = {};
         
         if (parentType === 'county') {
+          const stateCode = searchParams.get('stateCode');
+          if (!stateCode) {
+            return NextResponse.json({
+              status: 'error',
+              message: 'stateCode is required when fetching cities by county'
+            }, { status: 400 });
+          }
           // Query for cities in a specific county
           cityQuery = `
             SELECT DISTINCT
               city_name,
-              city_jurisdiction_id,
               county_name,
               state_code,
               state_name,
@@ -139,18 +144,17 @@ export async function GET(request: NextRequest) {
             ORDER BY city_name
           `;
           
-          // Extract state code from the request or default to CA
-          const stateCode = searchParams.get('stateCode') || 'CA';
           queryParams = { 
             countyName: parentId,
             stateCode: stateCode
           };
         } else if (parentType === 'state') {
+           // Extract state code from parentId (e.g., "STATE_CA" -> "CA")
+          const stateCode = parentId.startsWith('STATE_') ? parentId.substring(6) : parentId;
           // Query for all cities in a state
           cityQuery = `
             SELECT DISTINCT
               city_name,
-              city_jurisdiction_id,
               county_name,
               state_code,
               state_name,
@@ -161,7 +165,7 @@ export async function GET(request: NextRequest) {
             ORDER BY population DESC
             LIMIT 100
           `;
-          queryParams = { stateCode: parentId };
+          queryParams = { stateCode: stateCode };
         }
         
         try {
@@ -174,7 +178,7 @@ export async function GET(request: NextRequest) {
           console.log('City query returned', cityRows.length, 'rows');
           
           data = cityRows.map((row: any) => ({
-          city_jurisdiction_id: row.city_jurisdiction_id || `CITY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}_${row.city_name.replace(/\s+/g, '_')}`,
+          city_jurisdiction_id: `CITY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}_${row.city_name.replace(/\s+/g, '_')}`,
           city_name: row.city_name,
           county_name: row.county_name,
           state_code: row.state_code,
