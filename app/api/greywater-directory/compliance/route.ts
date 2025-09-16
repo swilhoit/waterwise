@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBigQueryClient } from '@/lib/bigquery';
 
-// GET compliance data with real incentives from database
+// GET compliance data with real incentives from database 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;

@@ -1,4 +1,4 @@
-"use client"
+"use client" 
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -33,6 +33,7 @@ import {
 } from 'lucide-react'
 import DetailedComplianceView from './DetailedComplianceView'
 import StateDetailView from './StateDetailView'
+import CountyDetailView from './CountyDetailView'
 import { nameToSlug, slugToName, findBySlug } from '@/lib/url-utils'
 
 interface HierarchyItem {
@@ -743,7 +744,16 @@ export default function DirectoryView({
         {showStateDetail && stateData && !selectedCounty && !selectedCity && (
           <StateDetailView stateData={stateData} />
         )}
-        {(selectedCounty || selectedCity) && (
+        {selectedCounty && !selectedCity && (
+          <CountyDetailView 
+            countyData={selectedCounty}
+            stateCode={selectedState?.state_code || ''}
+            countyName={selectedCounty.county_name || ''}
+            complianceData={complianceDetails}
+            sectorView={sectorView}
+          />
+        )}
+        {selectedCity && (
           <DetailedComplianceView 
             selectedState={selectedState}
             selectedCounty={selectedCounty}
