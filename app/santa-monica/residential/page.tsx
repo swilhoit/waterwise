@@ -123,7 +123,7 @@ export default function SantaMonicaResidential() {
                         <td className="px-6 py-4 text-sm text-gray-600">Santa Monica</td>
                         <td className="px-6 py-4">
                           <Badge className="bg-blue-600 text-white">~$2/sq ft</Badge>
-                          <div className="text-xs text-gray-500 mt-1">Est. $800-$2,000 typical</div>
+                          <div className="text-xs text-gray-500 mt-1">400-1,000 sq ft avg = $800-$2,000</div>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">Perfect companion to greywater</td>
                       </tr>
