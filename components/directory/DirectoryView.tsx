@@ -317,7 +317,13 @@ export default function DirectoryView({
                         const cityData = findBySlug(citiesResult.data, initialCity, 'city_name')
                         
                         if (cityData) {
-                          setSelectedCity(cityData)
+                          const fullCityData = {
+                            ...cityData,
+                            state_code: stateData.state_code,
+                            state_name: stateData.state_name
+                          };
+                          setSelectedCity(fullCityData)
+                          
                           newBreadcrumbs.push({ 
                             label: cityData.city_name || '', 
                             path: `${basePath}/${initialState}/${nameToSlug(countyData.county_name || '')}/${nameToSlug(cityData.city_name || '')}`, 
@@ -753,7 +759,7 @@ export default function DirectoryView({
             sectorView={sectorView}
           />
         )}
-        {selectedCity && (
+        {selectedCity && selectedCounty && selectedState && (
           <DetailedComplianceView 
             selectedState={selectedState}
             selectedCounty={selectedCounty}
