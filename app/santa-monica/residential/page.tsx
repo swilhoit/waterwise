@@ -14,7 +14,7 @@ export default function SantaMonicaResidential() {
           <div className="max-w-5xl mx-auto text-center">
             <Badge className="mb-4 bg-blue-600 text-white">Water Conservation Solutions</Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Save Up to $8,000 with 
+              Save Up to $8,500 with 
               <span className="text-blue-600"> Greywater Systems</span>
               <br />in Santa Monica
             </h1>
@@ -64,19 +64,19 @@ export default function SantaMonicaResidential() {
                   <div className="text-xs opacity-75">Cash for Grass</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-sm opacity-90 mb-1">Spray to Drip</div>
+                  <div className="text-2xl font-bold">~$800-$2,000</div>
+                  <div className="text-xs opacity-75">Irrigation Conversion</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                   <div className="text-sm opacity-90 mb-1">Rain Harvesting</div>
                   <div className="text-2xl font-bold">$200-$2,000</div>
                   <div className="text-xs opacity-75">Barrels/Cisterns</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-sm opacity-90 mb-1">Rain Gardens</div>
-                  <div className="text-2xl font-bold">$1,000</div>
-                  <div className="text-xs opacity-75">Rock Gardens</div>
-                </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border-2 border-white/30">
-                  <div className="text-sm mb-1">Total Rebates</div>
-                  <div className="text-3xl font-bold">Up to $8,000</div>
-                  <div className="text-xs opacity-90">Per Property</div>
+                  <div className="text-sm mb-1">Total Potential</div>
+                  <div className="text-3xl font-bold">Up to $8,500</div>
+                  <div className="text-xs opacity-90">Combined Rebates</div>
                 </div>
               </div>
             </div>
@@ -124,7 +124,8 @@ export default function SantaMonicaResidential() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">Santa Monica</td>
                         <td className="px-6 py-4">
-                          <Badge className="bg-blue-600 text-white">Per sq ft</Badge>
+                          <Badge className="bg-blue-600 text-white">~$2/sq ft</Badge>
+                          <div className="text-xs text-gray-500 mt-1">Est. $800-$2,000 typical</div>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">Perfect companion to greywater</td>
                       </tr>
