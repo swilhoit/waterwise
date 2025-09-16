@@ -312,7 +312,7 @@ export default function DirectoryView({
                     
                     if (initialCity) {
                       // Load cities to get city data
-                      const citiesResponse = await fetch(`/api/greywater-directory/hierarchy?level=cities&parentId=${countyData.county_jurisdiction_id}&parentType=county`)
+                      const citiesResponse = await fetch(`/api/greywater-directory/hierarchy?level=cities&parentId=${countyData.county_name}&parentType=county`)
                       const citiesResult = await citiesResponse.json()
                       
                       if (citiesResult.status === 'success') {
@@ -342,7 +342,7 @@ export default function DirectoryView({
                       }
                     } else {
                       // Show cities in this county
-                      fetchData('cities', countyData.county_jurisdiction_id, 'county', stateData.state_code)
+                      fetchData('cities', countyData.county_name, 'county', stateData.state_code)
                       fetchComplianceDetails(initialState, countyData.county_name)
                     }
                   }
