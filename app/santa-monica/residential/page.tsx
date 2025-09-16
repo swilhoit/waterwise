@@ -132,6 +132,32 @@ export default function SantaMonicaResidential() {
                     </div>
                   </CardContent>
                 </Card>
+                
+                <Card className="border-2 border-blue-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">Spray to Drip Conversion Rebate</CardTitle>
+                        <Badge className="mt-2 bg-blue-600 text-white">Per Square Foot</Badge>
+                      </div>
+                      <span className="text-2xl font-bold text-blue-600">New!</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Convert existing sprinklers in planter beds and hedges to efficient drip irrigation. Delivers water directly to plant roots.
+                    </p>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="font-semibold text-green-700 mb-2">✓ Requirements</p>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Not for lawn areas - planter beds only</li>
+                        <li>• Must have working sprinklers currently</li>
+                        <li>• Pre-verification photos required</li>
+                        <li>• Contact: (310) 458-8972 for amounts</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
@@ -326,29 +352,29 @@ export default function SantaMonicaResidential() {
             <div className="grid md:grid-cols-2 gap-8">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl">Without Incentive Stacking</CardTitle>
+                  <CardTitle className="text-xl">Without Rebates</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span>System Cost:</span>
-                      <span className="font-semibold">$6,500</span>
+                      <span>Aqua2use System:</span>
+                      <span className="font-semibold">$599</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Installation:</span>
-                      <span className="font-semibold">$1,500</span>
+                      <span>Professional Installation:</span>
+                      <span className="font-semibold">$400</span>
                     </div>
                     <div className="flex justify-between text-sm border-t pt-3">
                       <span className="font-semibold">Total Investment:</span>
-                      <span className="font-bold text-red-600">$8,000</span>
+                      <span className="font-bold text-red-600">$999</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Annual Savings:</span>
-                      <span>$1,140</span>
+                      <span>Annual Water Savings:</span>
+                      <span>$600-$1,200</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>Payback Period:</span>
-                      <span className="font-semibold">7 years</span>
+                      <span className="font-semibold">10-20 months</span>
                     </div>
                   </div>
                 </CardContent>
@@ -356,39 +382,43 @@ export default function SantaMonicaResidential() {
 
               <Card className="border-2 border-blue-500">
                 <CardHeader>
-                  <CardTitle className="text-xl">With Full Incentive Stack</CardTitle>
-                  <Badge className="bg-blue-600 text-white">Your Scenario</Badge>
+                  <CardTitle className="text-xl">With Landscape Rebates</CardTitle>
+                  <Badge className="bg-blue-600 text-white">Combined Savings</Badge>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span>System Cost:</span>
-                      <span className="font-semibold">$6,500</span>
+                      <span>Aqua2use System:</span>
+                      <span className="font-semibold">$599</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Installation:</span>
-                      <span className="font-semibold">$1,500</span>
+                      <span>Professional Installation:</span>
+                      <span className="font-semibold">$400</span>
                     </div>
                     <div className="flex justify-between text-sm text-blue-600">
-                      <span>Potential Incentives:</span>
-                      <span className="font-bold">Varies</span>
+                      <span>Turf Removal Rebate:</span>
+                      <span className="font-bold">Up to $4,500</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-blue-600">
+                      <span>Spray to Drip Rebate:</span>
+                      <span className="font-bold">Per sq ft</span>
                     </div>
                     <div className="flex justify-between text-sm border-t pt-3">
-                      <span className="font-semibold">Net Investment:</span>
-                      <span className="font-bold text-blue-600">With Rebates</span>
+                      <span className="font-semibold">Net Result:</span>
+                      <span className="font-bold text-green-600">Profit + Savings</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Annual Savings:</span>
-                      <span>$1,140</span>
+                      <span>Annual Water Savings:</span>
+                      <span>$600-$1,200</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>Payback Period:</span>
-                      <span className="font-bold text-blue-600">Reduced</span>
+                      <span className="font-bold text-green-600">Immediate</span>
                     </div>
                   </div>
                   <div className="mt-4 bg-blue-50 p-3 rounded-lg">
                     <p className="text-sm font-semibold text-blue-800">
-                      Rebates can significantly reduce payback period
+                      Landscape rebates can exceed greywater system cost!
                     </p>
                   </div>
                 </CardContent>
@@ -729,10 +759,11 @@ export default function SantaMonicaResidential() {
                   What rebates are available in Santa Monica?
                 </h3>
                 <p className="text-gray-600">
-                  Santa Monica offers the Cash for Grass turf replacement program. MWD provides rebates 
-                  through SoCal Water$mart for water-efficient devices ($40-$200) and turf replacement 
-                  (up to $7/sq ft for commercial). Currently, there are no specific greywater system rebates, 
-                  but combining greywater with turf replacement maximizes water savings.
+                  Santa Monica offers the Cash for Grass program (up to $4,500) and Spray to Drip conversion 
+                  rebates for converting sprinklers to drip irrigation. MWD provides additional rebates through 
+                  SoCal Water$mart for water-efficient devices ($40-$200). While there's no dedicated greywater 
+                  system rebate, combining greywater installation with turf removal and sprinkler conversion 
+                  maximizes both water savings and available rebates.
                 </p>
               </div>
 
@@ -800,7 +831,8 @@ export default function SantaMonicaResidential() {
                 <div className="space-y-2 text-sm">
                   <p className="text-gray-600">Simplest residential system - no permit required if meeting conditions</p>
                   <ul className="space-y-1 text-gray-700 ml-4">
-                    <li>• Cost: $200-$2,000 typical installation</li>
+                    <li>• System cost: $599 for Aqua2use unit</li>
+                    <li>• Installation: $200-$500 additional</li>
                     <li>• Water savings: 15,000-40,000 gallons/year</li>
                     <li>• DIY-friendly with proper guidance</li>
                     <li>• Waters fruit trees and ornamental plants</li>
