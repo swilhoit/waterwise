@@ -57,6 +57,11 @@ export default function SantaMonicaResidential() {
               <h2 className="text-2xl font-bold mb-4">Potential Water Conservation Incentives</h2>
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-sm opacity-90 mb-1">Greywater System</div>
+                  <div className="text-2xl font-bold">$599</div>
+                  <div className="text-xs opacity-75">Aqua2use L2L</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                   <div className="text-sm opacity-90 mb-1">Turf Removal</div>
                   <div className="text-2xl font-bold">Up to $4,500</div>
                   <div className="text-xs opacity-75">Cash for Grass</div>
@@ -66,15 +71,10 @@ export default function SantaMonicaResidential() {
                   <div className="text-2xl font-bold">~$800-$2,000</div>
                   <div className="text-xs opacity-75">Irrigation Conversion</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-sm opacity-90 mb-1">Rain Harvesting</div>
-                  <div className="text-2xl font-bold">$200-$2,000</div>
-                  <div className="text-xs opacity-75">Barrels/Cisterns</div>
-                </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border-2 border-white/30">
-                  <div className="text-sm mb-1">Total Potential</div>
-                  <div className="text-3xl font-bold">Up to $8,500</div>
-                  <div className="text-xs opacity-90">Combined Rebates</div>
+                  <div className="text-sm mb-1">Net Profit</div>
+                  <div className="text-3xl font-bold">Up to $7,900</div>
+                  <div className="text-xs opacity-90">After System Cost</div>
                 </div>
               </div>
             </div>
