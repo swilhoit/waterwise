@@ -14,13 +14,13 @@ export default function SantaMonicaResidential() {
           <div className="max-w-5xl mx-auto text-center">
             <Badge className="mb-4 bg-blue-600 text-white">Water Conservation Solutions</Badge>
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Permit-Free 
-              <span className="text-blue-600">Greywater Systems</span>
-              <br />for Santa Monica Homes
+              Save Up to $8,000 with 
+              <span className="text-blue-600"> Greywater Systems</span>
+              <br />in Santa Monica
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Install laundry-to-landscape greywater systems without permits. Cut water bills by 40% 
-              while meeting Santa Monica's Water Neutrality Ordinance and conservation requirements.
+              Stack city, county, and regional rebates while cutting water bills by 40%. 
+              Meet Santa Monica's Water Neutrality Ordinance with compliant greywater solutions.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" asChild>
