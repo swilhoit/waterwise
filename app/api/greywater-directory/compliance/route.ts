@@ -16,10 +16,52 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
+    const bigquery = getBigQueryClient();
+
+    const stateJurisdictionId = `STATE_${state}`;
+    const countyJurisdictionId = county ? `COUNTY_${state}_${county.replace(/\s+/g, '_')}` : '';
+    // For cities, check both formats - with and without underscores
+    const cityJurisdictionId = city ? `CITY_${state}_${city}` : '';
+    const cityJurisdictionIdAlt = city ? `CITY_${state}_${city.replace(/\s+/g, '_')}` : '';
+
+    // Query for regulations and permits
+    let regulationsData: any[] = [];
+    try {
+      const regulationsQuery = `
+        SELECT 
+          r.jurisdiction_id,
+          r.greywater_allowed,
+          r.regulation_summary,
+          r.allowed_sources,
+          r.prohibited_sources,
+          r.treatment_requirements,
+          r.system_size_limits,
+          r.setback_requirements,
+          r.inspection_required,
+          r.documentation_url,
+          p.permit_required,
+          p.permit_type,
+          p.permit_fee,
+          p.annual_fee,
+          p.processing_time_days
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.regulations_master\` r
+        LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.permits_master\` p
+          ON r.jurisdiction_id = p.jurisdiction_id
+        WHERE r.jurisdiction_id IN (?, ?, ?, ?)
+      `;
+      const [rows] = await bigquery.query({
+        query: regulationsQuery,
+        params: [stateJurisdictionId, countyJurisdictionId, cityJurisdictionId, cityJurisdictionIdAlt],
+        parameterMode: 'POSITIONAL'
+      });
+      regulationsData = rows;
+    } catch (error) {
+      console.error('Failed to fetch regulations:', error);
+    }
+
     // First, query for any active incentive programs
     let incentivePrograms: any[] = [];
     let programTiers: any[] = [];
-    const bigquery = getBigQueryClient();
     
     try {
       // Query for all active incentives - MWD or any jurisdiction-specific
@@ -48,12 +90,6 @@ export async function GET(request: NextRequest) {
             OR jurisdiction_id = ?
           )
       `;
-      
-      const stateJurisdictionId = `STATE_${state}`;
-      const countyJurisdictionId = county ? `COUNTY_${state}_${county.replace(/\s+/g, '_')}` : '';
-      // For cities, check both formats - with and without underscores
-      const cityJurisdictionId = city ? `CITY_${state}_${city}` : '';
-      const cityJurisdictionIdAlt = city ? `CITY_${state}_${city.replace(/\s+/g, '_')}` : '';
       
       const [rows] = await bigquery.query({
         query: incentiveQuery,
@@ -96,20 +132,26 @@ export async function GET(request: NextRequest) {
     // Build compliance response with real jurisdiction IDs
     const compliance: any = {};
     
+    const getRegulationFor = (jurisdictionId: string, altId: string = '') => {
+      return regulationsData.find(r => r.jurisdiction_id === jurisdictionId || (altId && r.jurisdiction_id === altId)) || {};
+    }
+
     // State level - always include
+    const stateRegs = getRegulationFor(stateJurisdictionId);
     compliance.state = {
-      compliance_level: 'state',
+      compliance_level: 'State',
       state_code: state,
       state_name: state,
       county_name: null,
       city_name: null,
-      jurisdiction_id: `STATE_${state}`,
-      greywater_allowed: true,
-      permit_required: true,
-      permit_type: null,
-      permit_fee: null,
-      annual_fee: null,
-      regulation_summary: 'State greywater regulations apply. Check local jurisdictions for additional requirements.',
+      jurisdiction_id: stateJurisdictionId,
+      greywater_allowed: stateRegs.greywater_allowed ?? true,
+      permit_required: stateRegs.permit_required ?? null,
+      permit_type: stateRegs.permit_type,
+      permit_fee: stateRegs.permit_fee,
+      annual_fee: stateRegs.annual_fee,
+      regulation_summary: stateRegs.regulation_summary || 'State greywater regulations apply. Check local jurisdictions for additional requirements.',
+      ...stateRegs,
       incentives: [],
       incentive_count: 0,
       max_incentive: null
@@ -117,19 +159,21 @@ export async function GET(request: NextRequest) {
     
     // County level if requested
     if (county) {
+      const countyRegs = getRegulationFor(countyJurisdictionId);
       compliance.county = {
-        compliance_level: 'county',
+        compliance_level: 'County',
         state_code: state,
         state_name: state,
         county_name: county,
         city_name: null,
-        jurisdiction_id: `COUNTY_${state}_${county.replace(/\s+/g, '_')}`,
-        greywater_allowed: true,
-        permit_required: true,
-        permit_type: null,
-        permit_fee: null,
-        annual_fee: null,
-        regulation_summary: `${county} County greywater regulations apply.`,
+        jurisdiction_id: countyJurisdictionId,
+        greywater_allowed: countyRegs.greywater_allowed ?? true,
+        permit_required: countyRegs.permit_required ?? null,
+        permit_type: countyRegs.permit_type,
+        permit_fee: countyRegs.permit_fee,
+        annual_fee: countyRegs.annual_fee,
+        regulation_summary: countyRegs.regulation_summary || `${county} County defers to state regulations.`,
+        ...countyRegs,
         incentives: [],
         incentive_count: 0,
         max_incentive: null
@@ -138,19 +182,21 @@ export async function GET(request: NextRequest) {
     
     // City level if requested
     if (city) {
+      const cityRegs = getRegulationFor(cityJurisdictionId, cityJurisdictionIdAlt);
       compliance.city = {
-        compliance_level: 'city',
+        compliance_level: 'City',
         state_code: state,
         state_name: state,
         county_name: county || '',
         city_name: city,
-        jurisdiction_id: `CITY_${state}_${city}`,
-        greywater_allowed: true,
-        permit_required: true,
-        permit_type: null,
-        permit_fee: null,
-        annual_fee: null,
-        regulation_summary: `${city} city greywater regulations apply.`,
+        jurisdiction_id: cityRegs.jurisdiction_id || cityJurisdictionId,
+        greywater_allowed: cityRegs.greywater_allowed ?? true,
+        permit_required: cityRegs.permit_required ?? null,
+        permit_type: cityRegs.permit_type,
+        permit_fee: cityRegs.permit_fee,
+        annual_fee: cityRegs.annual_fee,
+        regulation_summary: cityRegs.regulation_summary || `${city} defers to county and state regulations.`,
+        ...cityRegs,
         incentives: [],
         incentive_count: 0,
         max_incentive: null

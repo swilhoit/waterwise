@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Users, DollarSign, FileText, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
+import EffectivePolicyView from './EffectivePolicyView'
 
 interface CountyDetailViewProps {
   countyData: any
@@ -73,6 +74,12 @@ export default function CountyDetailView({
           Greywater Regulations & Incentives
         </p>
       </div>
+      
+      {/* Effective Policy */}
+      <EffectivePolicyView 
+        complianceData={localCompliance}
+        jurisdictionName={`${countyName} County`}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Greywater Status */}

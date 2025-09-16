@@ -934,7 +934,6 @@ export default function DirectoryView({
                         <TableHead>Counties</TableHead>
                         <TableHead>Cities</TableHead>
                         <TableHead>Policy</TableHead>
-                        <TableHead>Max Rebate</TableHead>
                         <TableHead className="w-10"></TableHead>
                       </>
                     )}
@@ -942,9 +941,6 @@ export default function DirectoryView({
                       <>
                         <TableHead>County</TableHead>
                         <TableHead>Cities</TableHead>
-                        <TableHead>Policy</TableHead>
-                        <TableHead>Incentives</TableHead>
-                        <TableHead>Max Rebate</TableHead>
                         <TableHead className="w-10"></TableHead>
                       </>
                     )}
@@ -953,8 +949,6 @@ export default function DirectoryView({
                         <TableHead>City</TableHead>
                         <TableHead>Population</TableHead>
                         <TableHead>Policy</TableHead>
-                        <TableHead>Incentives</TableHead>
-                        <TableHead>Permit Fee</TableHead>
                         <TableHead className="w-10"></TableHead>
                       </>
                     )}
