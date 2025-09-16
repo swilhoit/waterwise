@@ -97,239 +97,154 @@ export default function SantaMonicaResidential() {
               </p>
             </div>
 
-            {/* City Level Incentives */}
+            {/* Incentives Table */}
             <div className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <Building2 className="h-6 w-6 text-blue-600" />
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                  <h3 className="text-xl font-bold text-white">Available Water Conservation Rebates</h3>
+                  <p className="text-blue-100 text-sm mt-1">Prioritized for greywater and irrigation projects</p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">City of Santa Monica Incentives</h3>
-              </div>
-              
-              <div className="space-y-4">
-                <Card className="border-2 border-blue-200">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">Cash for Grass Program</CardTitle>
-                        <Badge className="mt-2 bg-blue-600 text-white">Up to $4,500</Badge>
-                      </div>
-                      <span className="text-2xl font-bold text-blue-600">Residential</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">
-                      Get up to $4,500 for turf and sprinkler removal, plus $1,500 for parkway turf replacement with climate-appropriate plants.
-                    </p>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <p className="font-semibold text-green-700 mb-2">✓ Program Details</p>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Single-family homes eligible</li>
-                        <li>• Must receive SM water service</li>
-                        <li>• Pre-approval required</li>
-                        <li>• Apply: environment.mailbox@santamonica.gov</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
                 
-                <Card className="border-2 border-blue-200">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">Spray to Drip Conversion Rebate</CardTitle>
-                        <Badge className="mt-2 bg-blue-600 text-white">Per Square Foot</Badge>
-                      </div>
-                      <span className="text-2xl font-bold text-blue-600">New!</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">
-                      Convert existing sprinklers in planter beds and hedges to efficient drip irrigation. Delivers water directly to plant roots.
-                    </p>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <p className="font-semibold text-green-700 mb-2">✓ Requirements</p>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Not for lawn areas - planter beds only</li>
-                        <li>• Must have working sprinklers currently</li>
-                        <li>• Pre-verification photos required</li>
-                        <li>• Contact: (310) 458-8972 for amounts</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* County/Regional Level */}
-            <div className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-indigo-100 p-2 rounded-lg">
-                  <MapPin className="h-6 w-6 text-indigo-600" />
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
+                        <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Provider</th>
+                        <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Rebate Amount</th>
+                        <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Greywater Benefit</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {/* Irrigation-related first */}
+                      <tr className="bg-blue-50">
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">Spray to Drip Conversion</div>
+                          <div className="text-sm text-gray-500">Convert sprinklers to drip irrigation</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Santa Monica</td>
+                        <td className="px-6 py-4">
+                          <Badge className="bg-blue-600 text-white">Per sq ft</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Perfect companion to greywater</td>
+                      </tr>
+                      
+                      <tr className="bg-blue-50">
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">Weather-Based Controllers</div>
+                          <div className="text-sm text-gray-500">Smart irrigation controllers</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">MWD</td>
+                        <td className="px-6 py-4">
+                          <Badge className="bg-green-600 text-white">Up to $200</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Optimize greywater irrigation</td>
+                      </tr>
+                      
+                      {/* Landscape transformation */}
+                      <tr>
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">Cash for Grass</div>
+                          <div className="text-sm text-gray-500">Turf removal & replacement</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Santa Monica</td>
+                        <td className="px-6 py-4">
+                          <Badge className="bg-green-600 text-white">Up to $4,500</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Create greywater-ready landscape</td>
+                      </tr>
+                      
+                      <tr>
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">Rain Harvesting Systems</div>
+                          <div className="text-sm text-gray-500">Barrels, cisterns, gardens</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Santa Monica</td>
+                        <td className="px-6 py-4">
+                          <Badge className="bg-blue-600 text-white">$200-$2,000</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Combine with greywater storage</td>
+                      </tr>
+                      
+                      {/* Indoor efficiency */}
+                      <tr className="bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">High-Efficiency Washers</div>
+                          <div className="text-sm text-gray-500">Energy Star certified</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">MWD</td>
+                        <td className="px-6 py-4">
+                          <Badge className="bg-gray-600 text-white">$85+</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Source for L2L systems</td>
+                      </tr>
+                      
+                      <tr className="bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">High-Efficiency Toilets</div>
+                          <div className="text-sm text-gray-500">1.1 gallons per flush</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">MWD</td>
+                        <td className="px-6 py-4">
+                          <Badge className="bg-gray-600 text-white">$40/toilet</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">Reduces blackwater volume</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Santa Monica Water Conservation Rebates</h3>
-              </div>
-              
-              <div className="space-y-4">
-                <Card className="border-2 border-indigo-200">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">Rainwater Harvesting Rebates</CardTitle>
-                        <Badge className="mt-2 bg-indigo-600 text-white">$200-$2,000</Badge>
-                      </div>
-                      <span className="text-2xl font-bold text-indigo-600">Santa Monica</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">
-                      Get $200-$2,000 for rain barrels or cisterns, $1,000 for rain gardens, and $40 per downspout for gutter redirection.
+                
+                <div className="bg-blue-50 px-6 py-4 border-t border-blue-200">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 text-blue-600" />
+                    <p className="text-sm text-blue-800">
+                      <span className="font-semibold">Pro Tip:</span> Install greywater alongside turf removal and sprinkler conversion to maximize rebates. 
+                      The $599 Aqua2use system cost can be completely offset by landscape rebates!
                     </p>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="font-semibold mb-2">Rain Harvesting Options:</p>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>✓ Rain barrels: $200-$2,000</li>
-                          <li>✓ Rain gardens: $1,000</li>
-                          <li>✓ Rock gardens: $1,000</li>
-                          <li>✓ Downspout redirection: $40 each</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="font-semibold mb-2">Application Process:</p>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• Pre-approval required</li>
-                          <li>• Professional installation</li>
-                          <li>• Inspection may be required</li>
-                          <li>• Contact: (310) 458-8972</li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="mt-4 bg-indigo-50 p-3 rounded-lg">
-                      <p className="text-sm font-semibold text-indigo-800">
-                        💡 Combine with greywater systems for maximum water savings
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* MWD/Regional Programs */}
-            <div className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-sky-100 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-sky-600" />
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">MWD SoCal Water$mart Residential Rebates</h3>
-              </div>
-              
-              <div className="space-y-4">
-                <Card className="border-2 border-blue-200">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">High-Efficiency Toilets</CardTitle>
-                        <Badge className="mt-2 bg-blue-600 text-white">MWD Program</Badge>
-                      </div>
-                      <span className="text-2xl font-bold text-blue-600">$40/toilet</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">
-                      Premium high-efficiency toilets using 1.1 gallons per flush or less qualify for MWD rebates.
-                    </p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>✓ $40 per qualifying toilet</li>
-                      <li>✓ Must use 1.1 gpf or less</li>
-                      <li>✓ Apply at socalwatersmart.com</li>
-                      <li>✓ Combines with other rebates</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-2 border-cyan-200">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">High-Efficiency Clothes Washers</CardTitle>
-                        <Badge className="mt-2 bg-cyan-600 text-white">MWD Program</Badge>
-                      </div>
-                      <span className="text-2xl font-bold text-cyan-600">$85+</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">
-                      Energy Star certified washers that save water qualify for rebates starting at $85.
-                    </p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>✓ Rebates start at $85</li>
-                      <li>✓ Must be Energy Star certified</li>
-                      <li>✓ Reduces water use significantly</li>
-                      <li>✓ Apply at socalwatersmart.com</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-2 border-blue-200">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">Weather-Based Irrigation Controllers</CardTitle>
-                        <Badge className="mt-2 bg-slate-600 text-white">MWD Program</Badge>
-                      </div>
-                      <span className="text-2xl font-bold text-blue-600">Up to $200</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">
-                      Smart irrigation controllers save water by adjusting to weather conditions automatically.
-                    </p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>✓ Up to $200 per controller</li>
-                      <li>✓ For landscapes under 1 acre</li>
-                      <li>✓ Apply at socalwatersmart.com</li>
-                    </ul>
-                  </CardContent>
-                </Card>
               </div>
             </div>
 
-            {/* Total Savings Breakdown */}
+
+            {/* Application Guide */}
             <div className="bg-gradient-to-br from-blue-50 to-sky-100 p-8 rounded-lg">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                Water Conservation Programs
+                How to Apply for These Rebates
               </h3>
-              <div className="max-w-2xl mx-auto">
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <span className="font-medium">Local Programs</span>
-                    <span className="font-bold text-blue-600">Contact for Details</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <span className="font-medium">MWD SoCal Water$mart</span>
-                    <span className="font-bold text-indigo-600">Check Eligibility</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <span className="font-medium">Regional Programs</span>
-                    <span className="font-bold text-blue-600">Varies by District</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <span className="font-medium">Additional Incentives</span>
-                    <span className="font-bold text-cyan-600">TBD</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <span className="font-medium">Conservation Support</span>
-                    <span className="font-bold text-slate-600">Check Availability</span>
-                  </div>
-                  <div className="flex justify-between items-center p-4 bg-blue-600 text-white rounded-lg">
-                    <span className="font-bold text-lg">Total Potential Savings</span>
-                    <span className="font-bold text-2xl">Contact Us</span>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="bg-white p-4 rounded-lg">
+                  <div className="font-semibold text-blue-900 mb-2">1. Santa Monica Programs</div>
+                  <p className="text-sm text-gray-600 mb-3">Cash for Grass & Spray to Drip</p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <p>📧 environment.mailbox@santamonica.gov</p>
+                    <p>📞 (310) 458-8972</p>
                   </div>
                 </div>
-                <p className="text-center text-sm text-gray-600">
-                  * Incentive programs vary. Contact us for current availability and eligibility.
-                </p>
+                
+                <div className="bg-white p-4 rounded-lg">
+                  <div className="font-semibold text-blue-900 mb-2">2. MWD Programs</div>
+                  <p className="text-sm text-gray-600 mb-3">Devices & Controllers</p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <p>🌐 socalwatersmart.com</p>
+                    <p>📞 (888) 376-3314</p>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-4 rounded-lg">
+                  <div className="font-semibold text-blue-900 mb-2">3. Installation Support</div>
+                  <p className="text-sm text-gray-600 mb-3">We Handle Everything</p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <p>✓ Application submission</p>
+                    <p>✓ Documentation & photos</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-center">
+                <Badge className="bg-green-600 text-white px-4 py-2">
+                  Important: Apply BEFORE installation to ensure eligibility
+                </Badge>
               </div>
             </div>
           </div>
