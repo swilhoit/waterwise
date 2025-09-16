@@ -22,7 +22,7 @@ import {
   Calendar,
   Users
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 
 interface StateData {
@@ -70,7 +70,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
   const [stateData, setStateData] = useState(initialStateData)
 
   // Merge compliance data incentives into stateData
-  useState(() => {
+  useEffect(() => {
     if (complianceData?.state) {
       // Merge compliance data incentives and regulations into stateData
       setStateData(prevData => ({
