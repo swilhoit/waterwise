@@ -308,9 +308,15 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
         </CardHeader>
         <CardContent>
           {incentives.length > 0 ? (
-            <p className="text-sm text-green-700 font-semibold">{incentives.length} program(s) available.</p>
+            <div>
+              <p className="text-sm text-green-700 font-semibold">{incentives.length} program(s) available.</p>
+              {/* Future enhancement: could add a button to view program details */}
+            </div>
           ) : (
-            <p className="text-sm text-gray-500">No specific residential incentives found at the state level.</p>
+            <div>
+              <p className="text-sm text-gray-500">No statewide residential incentives found.</p>
+              <p className="text-xs text-gray-400 mt-2">Local rebates may be available. Check specific counties and cities for details.</p>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -360,9 +366,15 @@ const CommercialView = ({ stateData, incentives }: { stateData: StateData, incen
         </CardHeader>
         <CardContent>
           {incentives.length > 0 ? (
-            <p className="text-sm text-green-700 font-semibold">{incentives.length} program(s) available for commercial properties.</p>
+            <div>
+              <p className="text-sm text-green-700 font-semibold">{incentives.length} program(s) available for commercial properties.</p>
+              {/* Future enhancement: could add a button to view program details */}
+            </div>
           ) : (
-            <p className="text-sm text-gray-500">No specific commercial incentives found at the state level.</p>
+            <div>
+              <p className="text-sm text-gray-500">No statewide commercial incentives found.</p>
+              <p className="text-xs text-gray-400 mt-2">Local rebates may be available. Check specific counties and cities for details.</p>
+            </div>
           )}
         </CardContent>
       </Card>
