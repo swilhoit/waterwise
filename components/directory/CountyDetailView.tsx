@@ -90,13 +90,13 @@ export default function CountyDetailView({
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium text-gray-900">Greywater Status</p>
-              <p className="text-sm text-gray-600 mt-1">
+              <div className="text-sm text-gray-600 mt-1">
                 {countyCompliance?.greywater_allowed !== false ? (
                   <Badge className="bg-green-100 text-green-800">Allowed</Badge>
                 ) : (
                   <Badge className="bg-red-100 text-red-800">Not Allowed</Badge>
                 )}
-              </p>
+              </div>
               {countyCompliance?.permit_required && (
                 <p className="text-xs text-gray-500 mt-2">Permit required</p>
               )}
