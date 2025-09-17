@@ -112,7 +112,7 @@ export default function CountyDetailView({
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium text-gray-900">Financial Incentives</p>
-              <p className="text-sm text-gray-600 mt-1">
+              <div className="text-sm text-gray-600 mt-1">
                 {hasIncentives ? (
                   <>
                     <Badge className="bg-green-100 text-green-800">
@@ -127,7 +127,7 @@ export default function CountyDetailView({
                 ) : (
                   <Badge className="bg-gray-100 text-gray-800">None Available</Badge>
                 )}
-              </p>
+              </div>
             </div>
           </div>
         </Card>
