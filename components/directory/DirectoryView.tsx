@@ -312,7 +312,7 @@ export default function DirectoryView({
                     
                     if (initialCity) {
                       // Load cities to get city data
-                      const citiesResponse = await fetch(`/api/greywater-directory/hierarchy?level=cities&parentId=${countyData.county_name}&parentType=county`)
+                      const citiesResponse = await fetch(`/api/greywater-directory/hierarchy?level=cities&parentId=${countyData.county_name}&parentType=county&stateCode=${initialState}`)
                       const citiesResult = await citiesResponse.json()
                       
                       if (citiesResult.status === 'success') {
