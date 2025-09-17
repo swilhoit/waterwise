@@ -25,7 +25,18 @@ export async function GET(request: NextRequest) {
     }
 
     let data: any[] = [];
-    const bigquery = getBigQueryClient();
+    let bigquery;
+    try {
+      bigquery = getBigQueryClient();
+      console.log('BigQuery client initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize BigQuery client:', error);
+      return NextResponse.json({
+        status: 'error',
+        message: 'Failed to initialize BigQuery client',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }, { status: 500 });
+    }
     
     switch (level) {
       case 'states':
@@ -98,7 +109,7 @@ export async function GET(request: NextRequest) {
           console.log('County query returned', countyRows.length, 'rows');
           
           data = countyRows.map((row: any) => ({
-          county_jurisdiction_id: `COUNTY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}`,
+          county_jurisdiction_id: `COUNTY_${row.state_code}_${row.county_name ? row.county_name.replace(/\s+/g, '_') : 'NO_NAME'}`,
           county_name: row.county_name,
           state_code: row.state_code,
           state_name: row.state_name,
@@ -178,7 +189,7 @@ export async function GET(request: NextRequest) {
           console.log('City query returned', cityRows.length, 'rows');
           
           data = cityRows.map((row: any) => ({
-          city_jurisdiction_id: `CITY_${row.state_code}_${row.county_name.replace(/\s+/g, '_')}_${row.city_name.replace(/\s+/g, '_')}`,
+          city_jurisdiction_id: `CITY_${row.state_code}_${row.county_name ? row.county_name.replace(/\s+/g, '_') : 'NO_COUNTY'}_${row.city_name.replace(/\s+/g, '_')}`,
           city_name: row.city_name,
           county_name: row.county_name,
           state_code: row.state_code,
