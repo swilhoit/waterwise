@@ -3,9 +3,21 @@ import StateDetailView from '@/components/directory/StateDetailView'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { getStateNameFromCode } from '@/lib/state-utils'
+import { Metadata } from 'next'
 
 interface PageProps {
   params: Promise<{ state: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { state } = await params
+  const stateName = getStateNameFromCode(state)
+
+  return {
+    title: `${stateName} Water Conservation Programs | Greywater & Rainwater Rebates`,
+    description: `Find greywater systems, rainwater harvesting rebates, and water conservation programs in ${stateName}. Browse by county and city for local incentives and grants.`,
+    keywords: `${stateName} greywater rebates, ${stateName} rainwater harvesting, ${state} water conservation, ${stateName} water rebates`
+  }
 }
 
 async function getStateData(stateCode: string) {
