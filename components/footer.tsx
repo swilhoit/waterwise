@@ -61,23 +61,23 @@ export function Footer() {
             <h3 className="font-semibold text-lg mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy-policy" className="text-gray-300 hover:text-white text-sm">
+                <Link href="/privacy" className="text-gray-300 hover:text-white text-sm">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/refund-policy" className="text-gray-300 hover:text-white text-sm">
-                  Refund Policy
+                <Link href="/directory" className="text-gray-300 hover:text-white text-sm">
+                  Greywater Directory
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="text-gray-300 hover:text-white text-sm">
+                <Link href="/terms" className="text-gray-300 hover:text-white text-sm">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/shipping-policy" className="text-gray-300 hover:text-white text-sm">
-                  Shipping Policy
+                <Link href="/blog" className="text-gray-300 hover:text-white text-sm">
+                  Blog & Resources
                 </Link>
               </li>
             </ul>
@@ -110,20 +110,14 @@ export function Footer() {
               © 2025, Water Wise Group
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link href="/refund-policy" className="text-sm text-gray-400 hover:text-white">
-                Refund policy
-              </Link>
-              <Link href="/privacy-policy" className="text-sm text-gray-400 hover:text-white">
+              <Link href="/privacy" className="text-sm text-gray-400 hover:text-white">
                 Privacy policy
               </Link>
-              <Link href="/terms-of-service" className="text-sm text-gray-400 hover:text-white">
+              <Link href="/terms" className="text-sm text-gray-400 hover:text-white">
                 Terms of service
               </Link>
               <Link href="/contact" className="text-sm text-gray-400 hover:text-white">
                 Contact information
-              </Link>
-              <Link href="/shipping-policy" className="text-sm text-gray-400 hover:text-white">
-                Shipping policy
               </Link>
             </div>
           </div>

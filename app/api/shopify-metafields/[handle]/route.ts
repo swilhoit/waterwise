@@ -37,7 +37,7 @@ export async function GET(
         }
       `
 
-      const resolveRes = await fetch(`https://${shopDomain}/admin/api/2024-10/graphql.json`, {
+      const resolveRes = await fetch(`https://${shopDomain}/admin/api/2025-10/graphql.json`, {
         method: 'POST',
         headers: {
           'X-Shopify-Access-Token': adminAccessToken,
@@ -83,7 +83,7 @@ export async function GET(
       }
     `
 
-    const mfRes = await fetch(`https://${shopDomain}/admin/api/2024-10/graphql.json`, {
+    const mfRes = await fetch(`https://${shopDomain}/admin/api/2025-10/graphql.json`, {
       method: 'POST',
       headers: {
         'X-Shopify-Access-Token': adminAccessToken,

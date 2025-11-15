@@ -6,7 +6,12 @@ import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart-context";
 import { TopBanner } from "@/components/top-banner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  adjustFontFallback: true
+});
 
 export const metadata: Metadata = {
   title: "Water Wise Group - Greywater Recycling Systems",

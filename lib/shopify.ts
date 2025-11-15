@@ -5,7 +5,7 @@ const publicAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKE
 
 const client = createStorefrontApiClient({
   storeDomain,
-  apiVersion: '2024-10',
+  apiVersion: '2025-10',
   publicAccessToken,
 })
 
@@ -441,7 +441,7 @@ export async function getProductReviewsAdmin(productId: string) {
   try {
     // Try to fetch reviews using Shopify's built-in reviews (if enabled)
     const response = await fetch(
-      `https://${storeDomain}/admin/api/2024-10/products/${numericId}/reviews.json`,
+      `https://${storeDomain}/admin/api/2025-10/products/${numericId}/reviews.json`,
       {
         headers: {
           'X-Shopify-Access-Token': adminAccessToken,

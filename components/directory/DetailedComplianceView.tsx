@@ -2,16 +2,20 @@
 
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Building, 
-  Home, 
-  Droplets, 
-  DollarSign, 
-  FileText, 
-  CheckCircle, 
+import {
+  Building,
+  Home,
+  Droplets,
+  DollarSign,
+  FileText,
+  CheckCircle,
   XCircle,
   User,
-  Info
+  Info,
+  Check,
+  X,
+  AlertTriangle,
+  ExternalLink
 } from 'lucide-react'
 import EffectivePolicyView from './EffectivePolicyView'
 
@@ -75,6 +79,24 @@ interface IncentiveProgram {
   tiers?: ProgramTier[]
   program_contact_email?: string
   program_contact_phone?: string
+  water_types?: string
+}
+
+interface GreywaterLaws {
+  legal_status?: string
+  governing_code?: string
+  permit_threshold_gpd?: number
+  permit_required?: string
+  indoor_use_allowed?: boolean
+  outdoor_use_allowed?: boolean
+  approved_uses?: string[]
+  key_restrictions?: string[]
+  recent_changes?: string
+  primary_agency?: string
+  agency_contact?: string
+  agency_phone?: string
+  government_website?: string
+  regulatory_classification?: string
 }
 
 interface ComplianceData {
@@ -104,6 +126,8 @@ interface ComplianceData {
   permit_count?: number
   // Add regulation details to each level
   regulations?: RegulationDetail;
+  // Add laws property for state-level greywater laws
+  laws?: GreywaterLaws | null;
 }
 
 interface DetailedComplianceViewProps {
@@ -201,158 +225,17 @@ export default function DetailedComplianceView({
     }
   }
   
-  // Helper function to render detailed incentive program
-  const renderIncentiveProgram = (program: IncentiveProgram, level: string, color: string, index: number) => (
-    <div key={`${level}-${program.program_name}-${index}`} className={`border rounded-lg p-4 ${color}`}>
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="font-medium text-gray-900">{program.program_name || `${level} Program`}</h4>
-        <Badge className={`${level === 'State' ? 'bg-blue-100 text-blue-800' : 
-                            level === 'County' ? 'bg-purple-100 text-purple-800' : 
-                            'bg-green-100 text-green-800'}`}>
-          {program.program_status || 'Active'}
-        </Badge>
-      </div>
-      
-      {program.program_description && (
-        <p className="text-sm text-gray-600 mb-2">{program.program_description}</p>
-      )}
-      
-      <div className="space-y-2">
-        {/* Tier Information for State Programs */}
-        {program.tiers && program.tiers.length > 0 ? (
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-700">
-              {filterTiersByUserType(program.tiers)?.length === program.tiers.length 
-                ? 'Available Funding Tiers:' 
-                : `Matching Tiers for ${userTypeOptions.find(opt => opt.value === userType)?.label}:`}
-            </p>
-            <div className="space-y-1">
-              {(filterTiersByUserType(program.tiers) || program.tiers).map((tier: any, tierIdx: number) => (
-                <div key={tierIdx} className={`border-l-2 ${tier.matchScore >= 75 ? 'border-green-500' : 'border-blue-300'} pl-3 py-1`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-gray-800">{tier.tier_name}</span>
-                      {tier.matchScore >= 100 && <Badge className="text-xs bg-green-100 text-green-700">Perfect Match</Badge>}
-                      {tier.matchScore >= 75 && tier.matchScore < 100 && <Badge className="text-xs bg-blue-100 text-blue-700">Good Match</Badge>}
-                    </div>
-                    <span className="text-xs font-bold text-green-700">
-                      ${tier.min_amount.toLocaleString()} - ${tier.max_amount.toLocaleString()}
-                    </span>
-                  </div>
-                  {tier.typical_applicants && (
-                    <p className="text-xs text-gray-600">For: {tier.typical_applicants}</p>
-                  )}
-                  {tier.processing_time && (
-                    <p className="text-xs text-gray-500">Processing: {tier.processing_time}</p>
-                  )}
-                  {tier.requirements && (
-                    <p className="text-xs text-gray-500 mt-1">Requirements: {tier.requirements}</p>
-                  )}
-                </div>
-              ))}
-              {filterTiersByUserType(program.tiers)?.length === 0 && (
-                <p className="text-xs text-gray-500 italic">No matching tiers for your profile. Showing all available tiers above.</p>
-              )}
-            </div>
-          </div>
-        ) : (
-          /* Original Amount Information for non-tiered programs */
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Incentive Amount:</span>
-            <div className="text-right">
-              {program.incentive_amount_min && program.incentive_amount_max ? (
-                <p className="text-lg font-bold text-green-700">
-                  ${program.incentive_amount_min?.toLocaleString()} - ${program.incentive_amount_max?.toLocaleString()}
-                </p>
-              ) : program.incentive_amount_max ? (
-                <p className="text-lg font-bold text-green-700">
-                  Up to ${program.incentive_amount_max?.toLocaleString()}
-                </p>
-              ) : program.rebate_percentage ? (
-                <p className="text-lg font-bold text-green-700">
-                  {program.rebate_percentage}% rebate
-                </p>
-              ) : (
-                <p className="text-sm text-gray-500">Amount varies</p>
-              )}
-              {program.max_funding_per_application && (
-                <p className="text-xs text-gray-500">
-                  Max: ${program.max_funding_per_application.toLocaleString()} per application
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Eligibility */}
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="flex items-center gap-2">
-            <Home className="h-4 w-4 text-blue-500" />
-            <span className={program.residential_eligibility ? 'text-green-700' : 'text-gray-400'}>
-              Residential {program.residential_eligibility ? '✓' : '✗'}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Building className="h-4 w-4 text-purple-500" />
-            <span className={program.commercial_eligibility ? 'text-green-700' : 'text-gray-400'}>
-              Commercial {program.commercial_eligibility ? '✓' : '✗'}
-            </span>
-          </div>
-        </div>
-
-        {/* Requirements */}
-        {program.eligibility_requirements && (
-          <div>
-            <p className="text-xs font-medium text-gray-700">Eligibility:</p>
-            <p className="text-xs text-gray-600">{program.eligibility_requirements}</p>
-          </div>
-        )}
-
-        {program.installation_requirements && (
-          <div>
-            <p className="text-xs font-medium text-gray-700">Installation Requirements:</p>
-            <p className="text-xs text-gray-600">{program.installation_requirements}</p>
-          </div>
-        )}
-
-        {/* Processing and Contact Info */}
-        <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
-          {program.incentive_processing_time && (
-            <div>Processing: {program.incentive_processing_time} days</div>
-          )}
-          {program.application_deadline && (
-            <div>Deadline: {program.application_deadline}</div>
-          )}
-        </div>
-
-        {/* Contact Information */}
-        {(program.program_contact_email || program.program_contact_phone) && (
-          <div className="text-xs text-gray-600 border-t pt-2 mt-2">
-            {program.program_contact_email && (
-              <div>Email: {program.program_contact_email}</div>
-            )}
-            {program.program_contact_phone && (
-              <div>Phone: {program.program_contact_phone}</div>
-            )}
-          </div>
-        )}
-
-        {/* Application Link */}
-        {program.incentive_url && (
-          <div className="pt-2">
-            <a 
-              href={program.incentive_url} 
-              className="text-xs text-blue-600 hover:text-blue-800 underline"
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Apply Online →
-            </a>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  // Helper function to render incentive amount
+  const renderIncentiveAmount = (program: IncentiveProgram) => {
+    if (program.incentive_amount_min && program.incentive_amount_max) {
+      return `$${program.incentive_amount_min?.toLocaleString()} - $${program.incentive_amount_max?.toLocaleString()}`;
+    } else if (program.incentive_amount_max) {
+      return `Up to $${program.incentive_amount_max?.toLocaleString()}`;
+    } else if (program.rebate_percentage) {
+      return `${program.rebate_percentage}% rebate`;
+    }
+    return 'Varies';
+  };
   if (selectedCity) {
     // Detailed City-Level View
     return (
@@ -551,6 +434,124 @@ export default function DetailedComplianceView({
           </div>
         </div>
 
+        {/* Greywater Laws & Regulations */}
+        {complianceData?.state?.laws && (
+          <div className="bg-white border rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-blue-500" />
+              State Greywater Laws & Regulations
+            </h3>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Legal Status</h4>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={complianceData.state.laws.legal_status?.toLowerCase().includes('legal') ? 'default' : 'secondary'}>
+                      {complianceData.state.laws.legal_status}
+                    </Badge>
+                    <span className="text-sm text-gray-600">{complianceData.state.laws.regulatory_classification}</span>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Permit Required</h4>
+                  <p className="text-sm text-gray-600">{complianceData.state.laws.permit_required}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    Allowed Uses
+                  </h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {complianceData.state.laws.approved_uses?.map((use: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">•</span>
+                        <span>{use}</span>
+                      </li>
+                    )) || <li className="text-sm text-gray-500">No specific uses listed</li>}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    Key Restrictions
+                  </h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {complianceData.state.laws.key_restrictions?.map((restriction: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-orange-500 mt-0.5">•</span>
+                        <span>{restriction}</span>
+                      </li>
+                    )) || <li className="text-sm text-gray-500">No specific restrictions listed</li>}
+                  </ul>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Governing Code</h4>
+                <p className="text-sm text-gray-600">{complianceData.state.laws.governing_code}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Primary Agency</h4>
+                  <p className="text-sm text-gray-600">{complianceData.state.laws.primary_agency}</p>
+                  {complianceData.state.laws.agency_contact && (
+                    <p className="text-sm text-blue-600 mt-1">{complianceData.state.laws.agency_contact}</p>
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Use Permissions</h4>
+                  <div className="flex gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">Indoor:</span>
+                      {complianceData.state.laws.indoor_use_allowed ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-500" />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">Outdoor:</span>
+                      {complianceData.state.laws.outdoor_use_allowed ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <X className="h-4 w-4 text-red-500" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {complianceData.state.laws.recent_changes && (
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                    <Info className="h-4 w-4" />
+                    Recent Changes
+                  </h4>
+                  <p className="text-sm text-blue-800">{complianceData.state.laws.recent_changes}</p>
+                </div>
+              )}
+
+              {complianceData.state.laws.government_website && (
+                <div className="flex justify-end">
+                  <a
+                    href={complianceData.state.laws.government_website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2"
+                  >
+                    Visit Official Website
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Requirements Section Based on Sector View */}
         <div className="bg-white border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -593,9 +594,9 @@ export default function DetailedComplianceView({
           
           {complianceData ? (
             <div className="space-y-6">
-              <IncentiveSection level="State" programs={complianceData.state?.incentives} sectorView={sectorView} renderFunction={renderIncentiveProgram} />
-              <IncentiveSection level="County" programs={complianceData.county?.incentives} sectorView={sectorView} renderFunction={renderIncentiveProgram} />
-              <IncentiveSection level="City" programs={complianceData.city?.incentives} sectorView={sectorView} renderFunction={renderIncentiveProgram} />
+              <IncentiveSection level="State" programs={complianceData.state?.incentives} sectorView={sectorView} />
+              <IncentiveSection level="County" programs={complianceData.county?.incentives} sectorView={sectorView} />
+              <IncentiveSection level="City" programs={complianceData.city?.incentives} sectorView={sectorView} />
 
               {/* Summary Statistics */}
               {complianceData.effective && (
@@ -1066,10 +1067,9 @@ interface IncentiveSectionProps {
   level: Level;
   programs: any[] | undefined;
   sectorView: 'residential' | 'commercial';
-  renderFunction: Function;
 }
 
-const IncentiveSection = ({ level, programs, sectorView, renderFunction }: IncentiveSectionProps) => {
+const IncentiveSection = ({ level, programs, sectorView }: IncentiveSectionProps) => {
   const filterProgramsBySector = (programs: any[]) => {
     if (!programs) return []
     return programs.filter(program => {
@@ -1081,12 +1081,23 @@ const IncentiveSection = ({ level, programs, sectorView, renderFunction }: Incen
     })
   }
 
+  const renderIncentiveAmount = (program: any) => {
+    if (program.incentive_amount_min && program.incentive_amount_max) {
+      return `$${program.incentive_amount_min?.toLocaleString()} - $${program.incentive_amount_max?.toLocaleString()}`;
+    } else if (program.incentive_amount_max) {
+      return `Up to $${program.incentive_amount_max?.toLocaleString()}`;
+    } else if (program.rebate_percentage) {
+      return `${program.rebate_percentage}% rebate`;
+    }
+    return 'Varies';
+  };
+
   const filteredPrograms = filterProgramsBySector(programs || []);
 
   if (filteredPrograms.length === 0) {
     return null;
   }
-  
+
   return (
     <div>
       <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
@@ -1094,10 +1105,78 @@ const IncentiveSection = ({ level, programs, sectorView, renderFunction }: Incen
           {level} {sectorView === 'commercial' ? 'Commercial' : 'Residential'} Programs ({filteredPrograms.length})
         </Badge>
       </h4>
-      <div className="grid md:grid-cols-2 gap-4">
-        {filteredPrograms.map((program, idx) => 
-          renderFunction(program, level, colors[level].split(' ')[0], idx)
-        )}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Program Name
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Type
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Amount
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-3 py-2 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Apply
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredPrograms.map((program, idx) => (
+              <tr key={idx} className="hover:bg-gray-50">
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-gray-900">{program.program_name || `${level} Program`}</span>
+                    {program.water_types && (
+                      <Badge className="bg-cyan-100 text-cyan-800 text-xs">
+                        <Droplets className="h-3 w-3 mr-1" />
+                        {program.water_types}
+                      </Badge>
+                    )}
+                  </div>
+                  {program.program_description && (
+                    <p className="text-xs text-gray-500 mt-1 max-w-md">{program.program_description}</p>
+                  )}
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <span className="text-gray-700 capitalize">{program.program_type || 'Rebate'}</span>
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <span className="font-semibold text-green-700">{renderIncentiveAmount(program)}</span>
+                  {program.incentive_per_unit && (
+                    <p className="text-xs text-gray-500">{program.incentive_per_unit}</p>
+                  )}
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <Badge className={`${level === 'State' ? 'bg-blue-100 text-blue-800' :
+                                      level === 'County' ? 'bg-purple-100 text-purple-800' :
+                                      'bg-green-100 text-green-800'} text-xs`}>
+                    {program.program_status || 'Active'}
+                  </Badge>
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap text-center">
+                  {program.incentive_url ? (
+                    <a
+                      href={program.incentive_url}
+                      className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    <span className="text-gray-400">-</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )
