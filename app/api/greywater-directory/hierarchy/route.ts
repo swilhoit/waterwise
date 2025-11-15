@@ -76,37 +76,13 @@ export async function GET(request: NextRequest) {
 
           console.log('BigQuery returned', stateRows.length, 'states from greywater_laws table');
 
-          // Check which states have active programs
-          const programQuery = `
-            SELECT DISTINCT
-              SPLIT(jurisdiction_id, '_')[OFFSET(0)] as state_code
-            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\`
-            WHERE LENGTH(SPLIT(jurisdiction_id, '_')[OFFSET(0)]) = 2
-              AND REGEXP_CONTAINS(SPLIT(jurisdiction_id, '_')[OFFSET(0)], r'^[A-Z]{2}$')
-          `;
-
-          let statesWithPrograms = new Set<string>();
-          try {
-            const [programRows] = await bigquery.query({
-              query: programQuery,
-              location: 'US'
-            }) as any;
-
-            statesWithPrograms = new Set(programRows.map((row: any) => row.state_code));
-            console.log('States with programs:', statesWithPrograms.size);
-          } catch (error) {
-            console.error('Error querying programs:', error);
-          }
-
-          // Query to count counties and cities per state
+          // Query to count counties and cities per state from city_county_mapping
           const countsQuery = `
             SELECT
-              SPLIT(jurisdiction_id, '_')[OFFSET(0)] as state_code,
-              COUNTIF(jurisdiction_id LIKE '%_COUNTY_%') as county_count,
-              COUNTIF(jurisdiction_id LIKE '%_CITY_%') as city_count
-            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\`
-            WHERE LENGTH(SPLIT(jurisdiction_id, '_')[OFFSET(0)]) = 2
-              AND REGEXP_CONTAINS(SPLIT(jurisdiction_id, '_')[OFFSET(0)], r'^[A-Z]{2}$')
+              state_code,
+              COUNT(DISTINCT county_jurisdiction_id) as county_count,
+              COUNT(DISTINCT city_jurisdiction_id) as city_count
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
             GROUP BY state_code
           `;
 
@@ -137,7 +113,7 @@ export async function GET(request: NextRequest) {
               legal_status: row.legal_status,
               county_count: counts.county_count,
               city_count: counts.city_count,
-              has_programs: statesWithPrograms.has(row.state_code)
+              has_programs: false // Will be updated when program_jurisdiction_link table exists
             };
           });
 
@@ -164,11 +140,8 @@ export async function GET(request: NextRequest) {
           SELECT DISTINCT
             m.county_jurisdiction_id,
             m.county_name,
-            COUNT(DISTINCT m.city_jurisdiction_id) as city_count,
-            COUNT(DISTINCT CASE WHEN p.jurisdiction_id IS NOT NULL THEN m.city_jurisdiction_id END) as cities_with_programs
+            COUNT(DISTINCT m.city_jurisdiction_id) as city_count
           FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
-          LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` p
-            ON m.city_jurisdiction_id = p.jurisdiction_id
           WHERE m.state_code = '${stateCode}'
           GROUP BY m.county_jurisdiction_id, m.county_name
           ORDER BY m.county_name
@@ -190,7 +163,7 @@ export async function GET(request: NextRequest) {
               state_code: stateCode,
               state_name: stateNames[stateCode] || stateCode,
               city_count: parseInt(row.city_count) || 0,
-              cities_with_programs: parseInt(row.cities_with_programs) || 0
+              cities_with_programs: 0 // Will be populated when program_jurisdiction_link table exists
             }));
         } catch (error) {
           console.error('Error executing county query:', error);
@@ -214,36 +187,29 @@ export async function GET(request: NextRequest) {
 
         if (isCountyParent) {
           // Query cities for a specific county using the mapping table
-          // Show ALL cities in the county, not just those with programs
+          // Show ALL cities in the county
           cityQuery = `
             SELECT DISTINCT
               m.city_jurisdiction_id,
               m.city_name,
               m.county_name,
-              m.state_code,
-              CASE WHEN p.jurisdiction_id IS NOT NULL THEN TRUE ELSE FALSE END as has_programs
+              m.state_code
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
-            LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` p
-              ON m.city_jurisdiction_id = p.jurisdiction_id
             WHERE m.county_jurisdiction_id = '${parentId}'
             ORDER BY m.city_name
           `;
         } else if (isStateParent) {
           // Query all cities in a state
-          // Show cities with programs, and optionally add all other cities
           const cityStateCode = parentId.replace('_STATE', '');
           cityQuery = `
             SELECT DISTINCT
               m.city_jurisdiction_id,
               m.city_name,
               m.county_name,
-              m.state_code,
-              CASE WHEN p.jurisdiction_id IS NOT NULL THEN TRUE ELSE FALSE END as has_programs
+              m.state_code
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
-            LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` p
-              ON m.city_jurisdiction_id = p.jurisdiction_id
             WHERE m.state_code = '${cityStateCode}'
-            ORDER BY has_programs DESC, m.city_name
+            ORDER BY m.city_name
             LIMIT 100
           `;
         } else {
