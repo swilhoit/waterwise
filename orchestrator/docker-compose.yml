@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ORCHESTRATOR_AUTH_TOKEN=${ORCHESTRATOR_AUTH_TOKEN:-dev-token-change-me}
+      - GOOGLE_CLOUD_PROJECT_ID=greywater-prospects-2025
+      - PORT=8000
+    volumes:
+      # Mount the parent directory to access the git repo
+      - ..:/workspace
+      # Mount logs and state
+      - ./logs:/workspace/orchestrator/logs
+      - ./state:/workspace/orchestrator/state
+    working_dir: /workspace/orchestrator
+    command: python webhook_server.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Add a simple UI for monitoring
+  # ui:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "3001:80"
+  #   volumes:
+  #     - ./ui:/usr/share/nginx/html

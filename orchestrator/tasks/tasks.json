@@ -1,0 +1,44 @@
+{
+  "tasks": [
+    {
+      "id": "task-1",
+      "name": "Create program jurisdiction link table",
+      "description": "Create the missing program_jurisdiction_link table in BigQuery",
+      "prompt": "Create a BigQuery table called program_jurisdiction_link that links programs from the programs_master table to jurisdictions (states, counties, cities). The table should have columns for program_id and jurisdiction_id. Then create a script to populate it based on the program_id naming convention (e.g., CA_PROGRAM_NAME should link to CA_STATE).",
+      "branch_name": "feature/program-jurisdiction-link",
+      "dependencies": []
+    },
+    {
+      "id": "task-2",
+      "name": "Add program filtering to hierarchy API",
+      "description": "Update hierarchy API to use program_jurisdiction_link for filtering",
+      "prompt": "Update the hierarchy API in app/api/greywater-directory/hierarchy/route.ts to use the program_jurisdiction_link table for filtering programs. Restore the has_programs and cities_with_programs fields to use actual data from the link table.",
+      "branch_name": "feature/hierarchy-program-filtering",
+      "dependencies": ["task-1"]
+    },
+    {
+      "id": "task-3",
+      "name": "Optimize font loading",
+      "description": "Fix font preloading warnings completely",
+      "prompt": "Investigate and fix the font preloading warning for the Inter font. Consider using next/font optimization techniques, adjusting the preload strategy, or implementing font subsetting to reduce the warning.",
+      "branch_name": "feature/font-optimization",
+      "dependencies": []
+    },
+    {
+      "id": "task-4",
+      "name": "Add comprehensive testing suite",
+      "description": "Create unit and integration tests for directory API",
+      "prompt": "Create a comprehensive testing suite for the greywater directory API. Include unit tests for the hierarchy API, compliance API, and state data endpoints. Use Jest or Vitest for testing.",
+      "branch_name": "feature/api-testing",
+      "dependencies": ["task-2"]
+    },
+    {
+      "id": "task-5",
+      "name": "Implement caching layer",
+      "description": "Add Redis caching for API responses",
+      "prompt": "Implement a Redis caching layer for the greywater directory APIs to improve performance. Cache hierarchy data, compliance data, and state information with appropriate TTLs.",
+      "branch_name": "feature/api-caching",
+      "dependencies": []
+    }
+  ]
+}
