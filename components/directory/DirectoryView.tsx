@@ -652,17 +652,17 @@ export default function DirectoryView({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 lg:py-8">
         {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 mb-6 text-sm">
+        <nav className="flex flex-wrap items-center gap-2 mb-6 text-sm bg-white px-4 py-3 rounded-lg shadow-sm">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-2">
-              {index > 0 && <ChevronRight className="h-4 w-4 text-gray-400" />}
+              {index > 0 && <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />}
               <button
                 onClick={() => router.push(crumb.path)}
-                className={`hover:text-blue-600 transition-colors ${
+                className={`hover:text-blue-600 transition-colors truncate ${
                   index === breadcrumbs.length - 1
-                    ? 'text-gray-900 font-medium'
+                    ? 'text-gray-900 font-semibold'
                     : 'text-gray-600'
                 }`}
               >
@@ -674,51 +674,52 @@ export default function DirectoryView({
 
         {/* Controls Section - Moved to top */}
         {(data.length > 0 || selectedCounty || selectedCity) && (
-          <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="mb-6 lg:mb-8 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
             {/* Only show search bar when not on detail pages */}
             {!selectedCity && data.length > 0 && (
-              <div className="relative max-w-md flex-1">
+              <div className="relative w-full lg:max-w-md lg:flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
                   type="text"
                   placeholder={`Search ${selectedState && !selectedCounty && stateViewMode === 'cities' ? 'cities' : currentLevel}...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-10"
                 />
               </div>
             )}
             
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               {/* Residential/Commercial Toggle */}
-              <div className="flex items-center gap-2 border rounded-lg p-1">
+              <div className="flex items-center gap-1 border rounded-lg p-1 shadow-sm bg-white">
                 <Button
                   variant={sectorView === 'residential' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setSectorView('residential')}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1.5 text-xs lg:text-sm"
                 >
-                  <Home className="h-4 w-4" />
-                  Residential
+                  <Home className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                  <span className="hidden sm:inline">Residential</span>
                 </Button>
                 <Button
                   variant={sectorView === 'commercial' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setSectorView('commercial')}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1.5 text-xs lg:text-sm"
                 >
-                  <Building className="h-4 w-4" />
-                  Commercial
+                  <Building className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                  <span className="hidden sm:inline">Commercial</span>
                 </Button>
               </div>
               
               {/* View Mode Toggle */}
               {data.length > 0 && (
-                <div className="flex items-center gap-2 border rounded-lg p-1">
+                <div className="flex items-center gap-1 border rounded-lg p-1 shadow-sm bg-white">
                   <Button
                     variant={viewMode === 'table' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setViewMode('table')}
+                    title="Table view"
                   >
                     <TableIcon className="h-4 w-4" />
                   </Button>
@@ -726,6 +727,7 @@ export default function DirectoryView({
                     variant={viewMode === 'card' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setViewMode('card')}
+                    title="Card view"
                   >
                     <LayoutGrid className="h-4 w-4" />
                   </Button>
