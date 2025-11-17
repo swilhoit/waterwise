@@ -1345,17 +1345,17 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               Why Greywater Systems Make Sense
             </h2>
             <div className="grid md:grid-cols-3 gap-8 mb-8">
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-white p-6 rounded-xl ">
                 <div className="text-4xl font-bold text-blue-600 mb-2">55%</div>
                 <div className="text-lg font-semibold text-gray-900 mb-2">Outdoor Irrigation</div>
                 <p className="text-gray-600 text-sm">Average household water used for landscape watering</p>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-white p-6 rounded-xl ">
                 <div className="text-4xl font-bold text-green-600 mb-2">40%</div>
                 <div className="text-lg font-semibold text-gray-900 mb-2">Water Bill Savings</div>
                 <p className="text-gray-600 text-sm">Typical reduction in monthly water costs</p>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-white p-6 rounded-xl ">
                 <div className="text-4xl font-bold text-purple-600 mb-2">17K</div>
                 <div className="text-lg font-semibold text-gray-900 mb-2">Gallons/Year</div>
                 <p className="text-gray-600 text-sm">Water recycled by average household system</p>
@@ -1402,7 +1402,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="block relative aspect-video bg-gray-200 rounded-xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300 shadow-lg"
+                    className="block relative aspect-video bg-gray-200 rounded-xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300 "
                   >
                     <Image
                       src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/maxresdefault.jpg?v=1719253200"
@@ -1412,7 +1412,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       unoptimized
                     />
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                      <div className="bg-white rounded-full p-4 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                      <div className="bg-white rounded-full p-4  group-hover:scale-110 transition-transform duration-300">
                         <svg className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>

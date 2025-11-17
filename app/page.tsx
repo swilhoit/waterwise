@@ -276,7 +276,7 @@ export default async function Home() {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                <div className="bg-white rounded-full p-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="bg-white rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
                   <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
                 </div>
               </div>
@@ -390,7 +390,7 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link href="/tiny-house-systems" className="group block">
-              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+              <Card className="overflow-hidden  transition-all duration-300 h-full cursor-pointer">
                 <div className="relative h-64">
                   <Image 
                     src="/images/solutions/situation-tiny-rv-ai.jpg" 
@@ -410,7 +410,7 @@ export default async function Home() {
             </Link>
 
             <Link href="/solutions" className="group block">
-              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+              <Card className="overflow-hidden  transition-all duration-300 h-full cursor-pointer">
                 <div className="relative h-64">
                   <Image 
                     src="/images/solutions/situation-drought-ai.jpg" 
@@ -430,7 +430,7 @@ export default async function Home() {
             </Link>
 
             <Link href="/solutions" className="group block">
-              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+              <Card className="overflow-hidden  transition-all duration-300 h-full cursor-pointer">
                 <div className="relative h-64">
                   <Image 
                     src="/images/solutions/situation-septic-ai.jpg" 
@@ -450,7 +450,7 @@ export default async function Home() {
             </Link>
 
             <Link href="/solutions/remote-work-sites" className="group block">
-              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full cursor-pointer">
+              <Card className="overflow-hidden  transition-all duration-300 h-full cursor-pointer">
                 <div className="relative h-64">
                   <Image 
                     src="/images/solutions/situation-remote-ai.jpg" 

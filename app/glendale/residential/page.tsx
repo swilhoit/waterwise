@@ -161,7 +161,7 @@ export default function GlendaleResidential() {
             {/* Additional Rebates Table */}
             <div className="mb-12">
               <h3 className="text-xl font-bold mb-4">Stack These Additional Glendale Rebates</h3>
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50 border-b border-gray-200">

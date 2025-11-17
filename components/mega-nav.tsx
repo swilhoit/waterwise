@@ -116,7 +116,6 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
                 minWidth: '100vw',
                 backgroundColor: '#F4F1E9',
                 borderBottom: '1px solid #e5e7eb',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
                 transformOrigin: 'top',
                 zIndex: 45, // Below top banner but above everything else
@@ -310,7 +309,6 @@ export function MegaNav({ items, isScrolled = false, onDropdownChange, isHomePag
                 minWidth: '100vw',
                 backgroundColor: '#F4F1E9',
                 borderBottom: '1px solid #e5e7eb',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                 animation: 'slideDown 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
                 transformOrigin: 'top',
                 zIndex: 30, // Above content but below nav

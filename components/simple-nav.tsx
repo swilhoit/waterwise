@@ -69,7 +69,7 @@ export function SimpleNav({ items }: SimpleNavProps) {
               {/* Invisible bridge to maintain hover state */}
               <div className="absolute top-full left-0 w-full h-2" />
               <div className="absolute top-full left-0 pt-2 z-50">
-                <div className="w-56 bg-white border border-gray-200 rounded-md shadow-lg">
+                <div className="w-56 bg-white border border-gray-200 rounded-md">
                   <div className="py-1">
                     {item.dropdown.map((dropdownItem) => (
                       <Link

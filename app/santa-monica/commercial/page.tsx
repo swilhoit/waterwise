@@ -52,7 +52,7 @@ export default function SantaMonicaCommercial() {
       {/* Compliance Alert */}
       <section className="py-12 bg-red-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white border-l-4 border-red-500 rounded-lg p-6 shadow-sm">
+          <div className="max-w-4xl mx-auto bg-white border-l-4 border-red-500 rounded-lg p-6">
             <div className="flex items-start gap-4">
               <AlertCircle className="h-8 w-8 text-red-600 flex-shrink-0 mt-1" />
               <div>

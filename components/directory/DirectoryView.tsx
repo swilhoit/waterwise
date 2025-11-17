@@ -503,7 +503,7 @@ export default function DirectoryView({
         return (
           <Card 
             key={item.state_jurisdiction_id}
-            className="hover:shadow-lg transition-all duration-300 cursor-pointer hover:border-blue-500"
+            className=" transition-all duration-300 cursor-pointer hover:border-blue-500"
             onClick={() => selectState(item)}
           >
             <CardHeader>
@@ -572,7 +572,7 @@ export default function DirectoryView({
         return (
           <Card 
             key={item.county_jurisdiction_id}
-            className="hover:shadow-lg transition-all duration-300 cursor-pointer hover:border-blue-500"
+            className=" transition-all duration-300 cursor-pointer hover:border-blue-500"
             onClick={() => selectCounty(item)}
           >
             <CardHeader>
@@ -610,7 +610,7 @@ export default function DirectoryView({
         return (
           <Card 
             key={`city-${item.city_name}-${item.county_name || item.state_code}-${index}`}
-            className="hover:shadow-lg transition-all duration-300 cursor-pointer hover:border-blue-500"
+            className=" transition-all duration-300 cursor-pointer hover:border-blue-500"
             onClick={() => selectCity(item)}
           >
             <CardHeader>

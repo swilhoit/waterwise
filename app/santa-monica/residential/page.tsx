@@ -97,7 +97,7 @@ export default function SantaMonicaResidential() {
 
             {/* Incentives Table */}
             <div className="mb-12">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-lg  border border-gray-200 overflow-hidden">
                 <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
                   <h3 className="text-xl font-bold text-white">Available Water Conservation Rebates</h3>
                   <p className="text-blue-100 text-sm mt-1">Prioritized for greywater and irrigation projects</p>
@@ -517,7 +517,7 @@ export default function SantaMonicaResidential() {
               </div>
             </div>
 
-            <div className="mt-12 bg-white p-8 rounded-lg shadow-lg">
+            <div className="mt-12 bg-white p-8 rounded-lg ">
               <h3 className="text-xl font-bold mb-4 text-center">What's Included in Our Service</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>

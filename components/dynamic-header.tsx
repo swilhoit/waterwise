@@ -395,7 +395,7 @@ export function DynamicHeader() {
                                   <Link
                                     key={subIndex}
                                     href={subItem.href || '#'}
-                                    className="flex items-start gap-3 p-3 bg-white/80 rounded-lg hover:bg-white hover:shadow-md transition-all"
+                                    className="flex items-start gap-3 p-3 bg-white/80 rounded-lg hover:bg-white transition-all"
                                     onClick={() => {
                                       setIsOpen(false)
                                       setActiveSubmenu(null)

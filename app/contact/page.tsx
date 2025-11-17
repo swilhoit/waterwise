@@ -51,7 +51,7 @@ export default function Contact() {
             
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Request Your Free Consultation</CardTitle>
                   <CardDescription>

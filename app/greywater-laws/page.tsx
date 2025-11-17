@@ -191,7 +191,7 @@ export default function GreywaterStateLaws() {
               {stateData.map((state, index) => (
                 <Card 
                   key={index} 
-                  className="hover-lift transition-all duration-300 cursor-pointer hover:shadow-lg"
+                  className="hover-lift transition-all duration-300 cursor-pointer"
                   onClick={() => navigateToState(state.state)}
                 >
                   <CardHeader>
@@ -214,7 +214,7 @@ export default function GreywaterStateLaws() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse rounded-lg shadow-sm">
+              <table className="w-full border-collapse rounded-lg">
                 <thead>
                   <tr className="border-b-2 border-black">
                     <th className="text-left p-4 font-semibold text-gray-900">State</th>

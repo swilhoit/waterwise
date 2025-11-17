@@ -197,7 +197,7 @@ export default function CustomerStories() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {stories.map((story, index) => (
-              <Card key={story.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white">
+              <Card key={story.id} className="overflow-hidden transition-all duration-300 bg-white">
                 <CardHeader className="bg-gradient-to-r from-blue-50 to-green-50 pb-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-1">

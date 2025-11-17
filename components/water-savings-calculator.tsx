@@ -77,7 +77,7 @@ export function WaterSavingsCalculator({ isOpen, onClose }: WaterSavingsCalculat
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl bg-white">
+      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl bg-white">
         <div className="relative overflow-hidden rounded-t-xl">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-5 text-white">
             <div className="flex items-center justify-between">
