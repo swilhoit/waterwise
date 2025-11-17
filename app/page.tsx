@@ -7,30 +7,12 @@ import { CheckCircle, Droplets, Home as HomeIcon, Leaf, DollarSign, TreePine, Us
 import { getProducts } from "@/lib/shopify"
 import { Testimonials } from "@/components/testimonials"
 import { formatPriceDisplay } from "@/lib/price-utils"
-
-
-const iconMap: { [key: string]: any } = {
-  droplets: Droplets,
-  dollar: DollarSign,
-  leaf: Leaf,
-  tree: TreePine,
-  home: HomeIcon,
-  users: Users,
-}
+import { FeatureGrid, StatsSection, CTASection, ContentBlock, ProcessSteps, SectionCardGrid } from "@/components/sections"
+import { commonCTAButtons } from "@/lib/section-utils"
+import { Filter } from "lucide-react"
 
 export default async function Home() {
   const products = await getProducts()
-
-  const defaultBenefits = [
-    { title: "Save 50% on Water Usage", description: "Recycle water from showers, washing machines, and sinks to irrigate your garden", icon: "droplets" },
-    { title: "Lower Your Water Bills", description: "Reduce monthly water costs by reusing greywater for landscape irrigation", icon: "dollar" },
-    { title: "Eco-Friendly Solution", description: "Reduce strain on water treatment facilities and conserve precious freshwater resources", icon: "leaf" },
-    { title: "Local Code Compliance", description: "Engineered to meet state and city greywater codes—with support for permits and inspections", icon: "tree" },
-    { title: "Incentives & Rebates", description: "Tap into utility rebates and sustainability incentives to lower upfront costs", icon: "home" },
-    { title: "Increase Property Value", description: "Sustainable renovations like greywater systems can boost resale value and marketability", icon: "users" }
-  ]
-
-  const displayBenefits = defaultBenefits
 
   return (
     <div>
@@ -79,65 +61,91 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-12">
+      {/* As Featured In Section */}
+      <section className="py-12 bg-gray-50 border-y border-gray-200">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
+          <p className="text-center text-sm font-medium text-gray-500 mb-6 uppercase tracking-wider">
+            As Featured In
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-20">
             <Image
               src="/images/architect.png"
               alt="Architect Magazine"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
+              width={140}
+              height={45}
+              className="h-12 w-auto grayscale opacity-50 hover:opacity-70 transition-opacity"
             />
             <Image
               src="/images/family-handyman.svg"
               alt="Family Handyman"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
+              width={140}
+              height={45}
+              className="h-12 w-auto grayscale opacity-50 hover:opacity-70 transition-opacity"
             />
             <Image
               src="/images/The_Washington_Post_Newspaper.svg"
               alt="The Washington Post"
-              width={120}
-              height={40}
-              className="h-10 w-auto grayscale opacity-60"
+              width={140}
+              height={45}
+              className="h-12 w-auto grayscale opacity-50 hover:opacity-70 transition-opacity"
             />
           </div>
         </div>
       </section>
 
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Why Install a Greywater System?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Join thousands of homeowners who are saving water and money while creating healthier landscapes
-            </p>
-          </div>
+      <FeatureGrid
+        title="Why Install a Greywater System?"
+        subtitle="Join thousands of homeowners who are saving water and money while creating healthier landscapes"
+        columns={3}
+        variant="cards"
+        features={[
+          {
+            icon: Droplets,
+            title: "Save 50% on Water Usage",
+            description: "Recycle water from showers, washing machines, and sinks to irrigate your garden",
+            iconColor: "text-blue-600",
+            iconBgColor: "bg-blue-100"
+          },
+          {
+            icon: DollarSign,
+            title: "Lower Your Water Bills",
+            description: "Reduce monthly water costs by reusing greywater for landscape irrigation",
+            iconColor: "text-green-600",
+            iconBgColor: "bg-green-100"
+          },
+          {
+            icon: Leaf,
+            title: "Eco-Friendly Solution",
+            description: "Reduce strain on water treatment facilities and conserve precious freshwater resources",
+            iconColor: "text-green-600",
+            iconBgColor: "bg-green-100"
+          },
+          {
+            icon: TreePine,
+            title: "Local Code Compliance",
+            description: "Engineered to meet state and city greywater codes—with support for permits and inspections",
+            iconColor: "text-blue-600",
+            iconBgColor: "bg-blue-100"
+          },
+          {
+            icon: HomeIcon,
+            title: "Incentives & Rebates",
+            description: "Tap into utility rebates and sustainability incentives to lower upfront costs",
+            iconColor: "text-purple-600",
+            iconBgColor: "bg-purple-100"
+          },
+          {
+            icon: Users,
+            title: "Increase Property Value",
+            description: "Sustainable renovations like greywater systems can boost resale value and marketability",
+            iconColor: "text-orange-600",
+            iconBgColor: "bg-orange-100"
+          }
+        ]}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayBenefits.map((benefit: any, index: number) => {
-              const IconComponent = iconMap[benefit.icon] || Droplets
-              return (
-                <Card key={index} className="hover-lift transition-all duration-300 border-gray-100">
-                  <CardHeader>
-                    <IconComponent className="h-10 w-10 text-gray-600 mb-4" />
-                    <CardTitle>{benefit.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription>{benefit.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20">
+      {/* Products Section */}
+      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -149,108 +157,138 @@ export default async function Home() {
           </div>
 
           {products.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
               {products.slice(0, 2).map((product: any) => (
-                <Card key={product.id} className="hover-lift transition-all duration-300">
-                  <CardHeader>
+                <Card key={product.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-blue-400">
+                  <CardHeader className="p-0">
                     {product.images?.edges?.[0]?.node && (
-                      <Image
-                        src={product.images.edges[0].node.url}
-                        alt={product.images.edges[0].node.altText || product.title}
-                        width={400}
-                        height={300}
-                        className="rounded-lg mb-4"
-                      />
-                    )}
-                    <CardTitle>{product.title}</CardTitle>
-                    <CardDescription>{product.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {product.priceRange?.minVariantPrice && (
-                      <div className="text-2xl font-bold text-gray-600 mb-4">
-                        {formatPriceDisplay(product.priceRange.minVariantPrice.amount, "From ")}
+                      <div className="relative h-72">
+                        <Image
+                          src={product.images.edges[0].node.url}
+                          alt={product.images.edges[0].node.altText || product.title}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute top-4 right-4">
+                          <Badge className="bg-green-600 text-white px-3 py-1.5 text-sm font-semibold shadow-lg">
+                            Popular Choice
+                          </Badge>
+                        </div>
                       </div>
                     )}
-                    <Button className="w-full bg-black hover:bg-gray-800 text-white" asChild>
-                      <Link href={`/products/${product.handle}`}>Learn More</Link>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <CardTitle className="text-2xl mb-3">{product.title}</CardTitle>
+                    <CardDescription className="text-base mb-4 leading-relaxed">{product.description}</CardDescription>
+                    {product.priceRange?.minVariantPrice && (
+                      <div className="flex items-baseline gap-2 mb-6">
+                        <span className="text-3xl font-bold text-gray-900">
+                          {formatPriceDisplay(product.priceRange.minVariantPrice.amount, "From ")}
+                        </span>
+                      </div>
+                    )}
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-6" asChild>
+                      <Link href={`/products/${product.handle}`}>View Details →</Link>
                     </Button>
                   </CardContent>
                 </Card>
               ))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              <Card className="hover-lift transition-all duration-300">
-                <CardHeader>
-                  <Image
-                    src="/images/gwdd-gravity.jpg"
-                    alt="Aqua2use GWDD"
-                    width={400}
-                    height={300}
-                    className="rounded-lg mb-4"
-                  />
-                  <CardTitle>Aqua2use GWDD</CardTitle>
-                  <CardDescription>Gravity & Pump Systems</CardDescription>
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-blue-400">
+                <CardHeader className="p-0">
+                  <div className="relative h-72">
+                    <Image
+                      src="/images/gwdd-gravity.jpg"
+                      alt="Aqua2use GWDD"
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-green-600 text-white px-3 py-1.5 text-sm font-semibold shadow-lg">
+                        Best Seller
+                      </Badge>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <span>Perfect for homes and cabins</span>
+                <CardContent className="p-6">
+                  <CardTitle className="text-2xl mb-3">Aqua2use GWDD</CardTitle>
+                  <CardDescription className="text-base mb-4">Gravity & Pump Systems</CardDescription>
+                  <ul className="space-y-3 mb-6">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">Perfect for homes and cabins</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <span>Processes up to 150 gallons per day</span>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">Processes up to 150 gallons per day</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <span>Progressive filtration system</span>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">Progressive filtration system</span>
                     </li>
                   </ul>
-                  <Button className="w-full mt-6 bg-black hover:bg-gray-800 text-white" asChild>
-                    <Link href="/products/aqua2use-gwdd">Learn More</Link>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-6" asChild>
+                    <Link href="/products/aqua2use-gwdd">View Details →</Link>
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="hover-lift transition-all duration-300">
-                <CardHeader>
-                  <Image
-                    src="/images/gwdd-ug.jpg"
-                    alt="Aqua2use Pro"
-                    width={400}
-                    height={300}
-                    className="rounded-lg mb-4"
-                  />
-                  <CardTitle>Aqua2use Pro</CardTitle>
-                  <CardDescription>Commercial Grade System</CardDescription>
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-blue-400">
+                <CardHeader className="p-0">
+                  <div className="relative h-72">
+                    <Image
+                      src="/images/gwdd-ug.jpg"
+                      alt="Aqua2use Pro"
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-blue-600 text-white px-3 py-1.5 text-sm font-semibold shadow-lg">
+                        Commercial Grade
+                      </Badge>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <span>For larger properties & developments</span>
+                <CardContent className="p-6">
+                  <CardTitle className="text-2xl mb-3">Aqua2use Pro</CardTitle>
+                  <CardDescription className="text-base mb-4">Commercial Grade System</CardDescription>
+                  <ul className="space-y-3 mb-6">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">For larger properties & developments</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <span>Processes up to 500 gallons per day</span>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">Processes up to 500 gallons per day</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <span>Advanced multi-stage filtration</span>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">Advanced multi-stage filtration</span>
                     </li>
                   </ul>
-                  <Button className="w-full mt-6 bg-black hover:bg-gray-800 text-white" asChild>
-                    <Link href="/products/aqua2use-pro">Learn More</Link>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-6" asChild>
+                    <Link href="/products/aqua2use-pro">View Details →</Link>
                   </Button>
                 </CardContent>
               </Card>
             </div>
           )}
+          
+          <div className="text-center mt-12">
+            <Link href="/products" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-lg">
+              View All Products
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="py-20">
+      {/* How It Works Section */}
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -261,12 +299,12 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto mb-16">
             <a 
               href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="block relative aspect-video bg-gray-200 rounded-lg overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+              className="block relative aspect-video bg-gray-200 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300 shadow-xl"
             >
               <Image
                 src="/images/maxresdefault.jpg"
@@ -276,44 +314,42 @@ export default async function Home() {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                <div className="bg-white rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
-                  <Play className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" />
+                <div className="bg-white rounded-full p-6 group-hover:scale-110 transition-transform duration-300 shadow-2xl">
+                  <Play className="h-12 w-12 text-blue-600 fill-blue-600 ml-1" />
                 </div>
+              </div>
+              <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg">
+                ▶ Watch Demo (2:30)
               </div>
             </a>
-
-            <div className="grid md:grid-cols-3 gap-8 mt-12">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-gray-600">1</span>
-                </div>
-                <h3 className="font-semibold mb-2">Collect</h3>
-                <p className="text-gray-600">
-                  Water from showers, washing machines, and sinks flows to the system
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-gray-600">2</span>
-                </div>
-                <h3 className="font-semibold mb-2">Filter</h3>
-                <p className="text-gray-600">
-                  Progressive filtration removes particles and prepares water for reuse
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-gray-600">3</span>
-                </div>
-                <h3 className="font-semibold mb-2">Irrigate</h3>
-                <p className="text-gray-600">
-                  Clean greywater automatically waters your landscape via drip irrigation
-                </p>
-              </div>
-            </div>
           </div>
+
+          <ProcessSteps
+            steps={[
+              {
+                number: 1,
+                title: "Collect",
+                description: "Water from showers, washing machines, and sinks flows automatically to the system",
+                icon: Droplets,
+                color: "blue"
+              },
+              {
+                number: 2,
+                title: "Filter",
+                description: "Progressive filtration removes particles and prepares water for reuse",
+                icon: Filter,
+                color: "green"
+              },
+              {
+                number: 3,
+                title: "Irrigate",
+                description: "Clean greywater automatically waters your landscape via drip irrigation",
+                icon: Leaf,
+                color: "purple"
+              }
+            ]}
+            variant="large"
+          />
         </div>
       </section>
 
@@ -472,44 +508,37 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Environmental Impact by the Numbers
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See the real difference greywater recycling makes
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-gray-600 mb-2">40K</div>
-              <div className="text-lg font-semibold mb-2">Gallons/Year</div>
-              <div className="text-gray-600">Water saved annually per system</div>
-            </div>
-
-            <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-green-600 mb-2">40%</div>
-              <div className="text-lg font-semibold mb-2">Lower Bills</div>
-              <div className="text-gray-600">Average water bill reduction</div>
-            </div>
-
-            <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-purple-600 mb-2">5K+</div>
-              <div className="text-lg font-semibold mb-2">Systems Sold</div>
-              <div className="text-gray-600">Since 2010</div>
-            </div>
-
-            <div className="text-center">
-              <div className="text-4xl lg:text-6xl font-bold text-orange-600 mb-2">4</div>
-              <div className="text-lg font-semibold mb-2">Stage Filtration</div>
-              <div className="text-gray-600">Progressive Matala filter system</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StatsSection
+        title="Environmental Impact by the Numbers"
+        subtitle="See the real difference greywater recycling makes"
+        bgColor="white"
+        stats={[
+          {
+            value: "40K",
+            label: "Gallons/Year",
+            sublabel: "Water saved annually per system",
+            color: "blue"
+          },
+          {
+            value: "40%",
+            label: "Lower Bills",
+            sublabel: "Average water bill reduction",
+            color: "green"
+          },
+          {
+            value: "5K+",
+            label: "Systems Sold",
+            sublabel: "Since 2010",
+            color: "purple"
+          },
+          {
+            value: "4",
+            label: "Stage Filtration",
+            sublabel: "Progressive Matala filter system",
+            color: "orange"
+          }
+        ]}
+      />
 
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -775,28 +804,15 @@ export default async function Home() {
 
       <Testimonials />
 
-      <section className="py-24 bg-gradient-to-br from-blue-600 to-blue-800 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
-        </div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6 animate-fade-in">
-            Ready to Start Saving Water?
-          </h2>
-          <p className="text-xl mb-10 max-w-2xl mx-auto text-blue-50">
-            Get a personalized quote for your greywater recycling system today
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all" asChild>
-              <Link href="/contact">Get Your Free Quote</Link>
-            </Button>
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all" asChild>
-              <Link href="/products">View Products</Link>
-            </Button>
-          </div>
-          <p className="mt-8 text-sm text-blue-100">No obligation • Expert consultation • Same-day response</p>
-        </div>
-      </section>
+      <CTASection
+        title="Ready to Start Saving Water?"
+        description="Get a personalized quote for your greywater recycling system today"
+        variant="blue"
+        buttons={[
+          { label: "Get Your Free Quote", href: "/contact", variant: "primary" },
+          { label: "View Products", href: "/products", variant: "secondary" }
+        ]}
+      />
     </div>
   )
 }

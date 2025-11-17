@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Home as HomeIcon, TreePine, Truck, Building, Mountain, Car } from "lucide-react"
+import { StatsSection, CTASection } from "@/components/sections"
 
 export default function Solutions() {
   const solutions = [
@@ -168,52 +169,37 @@ export default function Solutions() {
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50">
-        <div className="px-4">
-          <div className="max-w-7xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Why Choose Aqua2use for Your Property?
-            </h2>
-            <p className="text-xl text-gray-600 mb-12">
-              Over a decade of experience serving diverse property types and needs
-            </p>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-gray-600">50%</span>
-                </div>
-                <h3 className="font-semibold mb-2">Average Water Savings</h3>
-                <p className="text-sm text-gray-600">Typical reduction in outdoor water usage</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-green-600">10K+</span>
-                </div>
-                <h3 className="font-semibold mb-2">Systems Installed</h3>
-                <p className="text-sm text-gray-600">Across diverse property types</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-purple-600">2-4</span>
-                </div>
-                <h3 className="font-semibold mb-2">Year Payback</h3>
-                <p className="text-sm text-gray-600">Typical return on investment period</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-orange-600">24/7</span>
-                </div>
-                <h3 className="font-semibold mb-2">Automatic Operation</h3>
-                <p className="text-sm text-gray-600">Set it and forget it functionality</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StatsSection
+        title="Why Choose Aqua2use for Your Property?"
+        subtitle="Over a decade of experience serving diverse property types and needs"
+        bgColor="gray"
+        stats={[
+          {
+            value: "50%",
+            label: "Average Water Savings",
+            sublabel: "Typical reduction in outdoor water usage",
+            color: "blue"
+          },
+          {
+            value: "10K+",
+            label: "Systems Installed",
+            sublabel: "Across diverse property types",
+            color: "green"
+          },
+          {
+            value: "2-4",
+            label: "Year Payback",
+            sublabel: "Typical return on investment period",
+            color: "purple"
+          },
+          {
+            value: "24/7",
+            label: "Automatic Operation",
+            sublabel: "Set it and forget it functionality",
+            color: "orange"
+          }
+        ]}
+      />
 
       <section className="py-20">
         <div className="px-4">
@@ -252,24 +238,15 @@ export default function Solutions() {
         </div>
       </section>
 
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="px-4 text-center">
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-            Ready to Transform Your Water Usage?
-          </h2>
-          <p className="text-xl mb-10 max-w-2xl mx-auto opacity-90">
-            Join thousands of property owners who are saving water and money with our proven solutions
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
-              <Link href="/contact">Get Your Quote Today</Link>
-            </Button>
-            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
-              <Link href="/customer-stories">Read Success Stories</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <CTASection
+        title="Ready to Transform Your Water Usage?"
+        description="Join thousands of property owners who are saving water and money with our proven solutions"
+        variant="blue"
+        buttons={[
+          { label: "Get Your Quote Today", href: "/contact", variant: "secondary" },
+          { label: "Read Success Stories", href: "/customer-stories", variant: "secondary" }
+        ]}
+      />
     </div>
   )
 }

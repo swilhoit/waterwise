@@ -100,22 +100,24 @@ interface DirectoryViewProps {
   basePath?: string
   stateData?: any
   showStateDetail?: boolean
+  initialData?: HierarchyItem[] // Pre-fetched data from server
 }
 
-export default function DirectoryView({ 
-  initialState, 
-  initialCounty, 
-  initialCity, 
+export default function DirectoryView({
+  initialState,
+  initialCounty,
+  initialCity,
   level,
   basePath = '/directory',
   stateData,
-  showStateDetail = false
+  showStateDetail = false,
+  initialData = []
 }: DirectoryViewProps) {
   const router = useRouter()
-  
+
   const [currentLevel, setCurrentLevel] = useState<'states' | 'counties' | 'cities'>(level)
-  const [data, setData] = useState<HierarchyItem[]>([])
-  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<HierarchyItem[]>(initialData) // Start with pre-fetched data
+  const [loading, setLoading] = useState(!initialData.length) // Don't show loading if we have initial data
   const [error, setError] = useState<string | null>(null)
   const [selectedState, setSelectedState] = useState<HierarchyItem | null>(null)
   const [selectedCounty, setSelectedCounty] = useState<HierarchyItem | null>(null)
@@ -280,11 +282,20 @@ export default function DirectoryView({
       if (initialState) {
         // Load states first to get state data
         try {
-          const statesResponse = await fetch('/api/greywater-directory/hierarchy?level=states')
-          const statesResult = await statesResponse.json()
-          
-          if (statesResult.status === 'success') {
-            const stateData = statesResult.data.find((s: HierarchyItem) => s.state_code === initialState)
+          // Use initialData if available, otherwise fetch from API
+          let statesData = initialData.length > 0 ? initialData : []
+
+          if (statesData.length === 0) {
+            const statesResponse = await fetch('/api/greywater-directory/hierarchy?level=states')
+            const statesResult = await statesResponse.json()
+
+            if (statesResult.status === 'success') {
+              statesData = statesResult.data
+            }
+          }
+
+          if (statesData.length > 0) {
+            const stateData = statesData.find((s: HierarchyItem) => s.state_code === initialState)
             
             if (stateData) {
               setSelectedState(stateData)
@@ -349,19 +360,26 @@ export default function DirectoryView({
                 }
               } else {
                 // Show counties in this state
-                fetchData('counties', stateData.state_jurisdiction_id)
-                fetchAllCitiesForState(stateData.state_jurisdiction_id)
-                fetchComplianceDetails(initialState)
+                if (stateData.state_jurisdiction_id) {
+                  fetchData('counties', stateData.state_jurisdiction_id)
+                  fetchAllCitiesForState(stateData.state_jurisdiction_id)
+                  fetchComplianceDetails(initialState)
+                }
               }
             }
           }
         } catch (error) {
           console.error('Failed to initialize directory:', error)
-          fetchData('states')
+          // Only fetch if we don't have initial data
+          if (initialData.length === 0) {
+            fetchData('states')
+          }
         }
       } else {
-        // Show all states
-        fetchData('states')
+        // Show all states - only fetch if we don't have initial data
+        if (initialData.length === 0) {
+          fetchData('states')
+        }
       }
 
       setBreadcrumbs(newBreadcrumbs)

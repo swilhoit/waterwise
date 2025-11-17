@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle, Droplets, Home as HomeIcon, Building } from "lucide-react"
 import { QuickAddToCart } from './quick-add-to-cart'
 import { formatPriceDisplay } from '@/lib/price-utils'
+import { CTASection } from '@/components/sections'
 
 export default async function ProductsPage() {
   const products = await getProducts()
@@ -205,24 +206,15 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-            Ready to Start Saving Water?
-          </h2>
-          <p className="text-xl mb-10 max-w-2xl mx-auto opacity-90">
-            Get a personalized quote for your greywater recycling system today
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-gray-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold hover-lift" asChild>
-              <Link href="/contact">Get Your Free Quote</Link>
-            </Button>
-            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
-              <Link href="/how-it-works">Learn How It Works</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <CTASection
+        title="Ready to Start Saving Water?"
+        description="Get a personalized quote for your greywater recycling system today"
+        variant="blue"
+        buttons={[
+          { label: "Get Your Free Quote", href: "/contact", variant: "secondary" },
+          { label: "Learn How It Works", href: "/how-it-works", variant: "secondary" }
+        ]}
+      />
     </div>
   )
 }
