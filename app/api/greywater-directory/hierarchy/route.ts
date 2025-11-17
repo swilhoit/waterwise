@@ -1,300 +1,282 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBigQueryClient } from '@/lib/bigquery';
 
-/**
- * GET /api/greywater-directory/hierarchy
- * 
- * Fetches hierarchical greywater compliance data from BigQuery
- * 
- * Query parameters:
- * - level: 'states' | 'counties' | 'cities'
- * - parentId: ID of parent jurisdiction (required for counties and cities)
- * - parentType: 'state' | 'county' (optional hint for parsing parentId)
- */
+// Cache for hierarchy data to reduce BigQuery calls
+let hierarchyCache: { [key: string]: { data: any[], timestamp: number } } = {};
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// GET hierarchy data from BigQuery only - no fallback data
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const level = searchParams.get('level');
+    const level = searchParams.get('level') || 'states';
     const parentId = searchParams.get('parentId');
     const parentType = searchParams.get('parentType');
-
-    console.log(`[Hierarchy API] Request: level=${level}, parentId=${parentId}, parentType=${parentType}`);
-
-    // Validate required parameters
-    if (!level) {
-      return NextResponse.json({ 
-        error: 'Missing required parameter: level',
-        usage: 'Valid levels are: states, counties, cities'
-      }, { status: 400 });
+    
+    // Check cache first
+    const cacheKey = `${level}-${parentId || 'all'}-${parentType || 'none'}`;
+    const cached = hierarchyCache[cacheKey];
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION && cached.data.length > 0) {
+      return NextResponse.json({
+        status: 'success',
+        data: cached.data,
+        cached: true
+      });
     }
 
-    const bigquery = getBigQueryClient();
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
-    const datasetId = 'greywater_compliance';
-    
     let data: any[] = [];
+    let bigquery;
+    try {
+      bigquery = getBigQueryClient();
+      console.log('BigQuery client initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize BigQuery client:', error);
+      return NextResponse.json({
+        status: 'error',
+        message: 'Failed to initialize BigQuery client',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }, { status: 500 });
+    }
 
-    switch (level.toLowerCase()) {
+    // Map state codes to full names
+    const stateNames: {[key: string]: string} = {
+      'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
+      'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware',
+      'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho',
+      'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas',
+      'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+      'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi',
+      'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
+      'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
+      'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma',
+      'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+      'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah',
+      'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
+      'WI': 'Wisconsin', 'WY': 'Wyoming'
+    };
+
+    switch (level) {
       case 'states':
-        const statesQuery = `
+        // Query all states from greywater_laws table
+        const stateQuery = `
           SELECT
-            j.jurisdiction_id,
-            j.state_code,
-            j.state_name,
-            j.population,
-            j.website,
-            j.contact_phone,
-            j.contact_email,
-            -- Count counties
-            (SELECT COUNT(DISTINCT county_name)
-             FROM \`${projectId}.${datasetId}.jurisdictions_master\`
-             WHERE state_code = j.state_code AND jurisdiction_type = 'county') as county_count,
-            -- Count cities
-            (SELECT COUNT(*)
-             FROM \`${projectId}.${datasetId}.jurisdictions_master\`
-             WHERE state_code = j.state_code AND jurisdiction_type = 'city') as city_count,
-            -- State regulations
-            STRING_AGG(DISTINCT r.regulation_name, '; ') as state_regulations,
-            STRING_AGG(DISTINCT r.system_allowance, ', ') as state_allowance,
-            -- Count active programs
-            (SELECT COUNT(DISTINCT prog.program_id)
-             FROM \`${projectId}.${datasetId}.program_jurisdiction_link\` pjl
-             JOIN \`${projectId}.${datasetId}.incentive_programs\` prog
-               ON pjl.program_id = prog.program_id
-             WHERE pjl.jurisdiction_id = j.jurisdiction_id
-               AND prog.program_status = 'active') as active_program_count
-          FROM \`${projectId}.${datasetId}.jurisdictions_master\` j
-          LEFT JOIN \`${projectId}.${datasetId}.regulations_master\` r
-            ON j.jurisdiction_id = r.jurisdiction_id
-          WHERE j.jurisdiction_type = 'state'
-          GROUP BY
-            j.jurisdiction_id, j.state_code, j.state_name, j.population,
-            j.website, j.contact_phone, j.contact_email
-          ORDER BY j.state_name
+            state_code,
+            state_name,
+            jurisdiction_id,
+            legal_status
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
+          ORDER BY state_name
         `;
 
         try {
-          const [rows] = await bigquery.query({
-            query: statesQuery,
+          const [stateRows] = await bigquery.query({
+            query: stateQuery,
             location: 'US'
+          }) as any;
+
+          console.log('BigQuery returned', stateRows.length, 'states from greywater_laws table');
+
+          // Query to count counties and cities per state from city_county_mapping
+          const countsQuery = `
+            SELECT
+              state_code,
+              COUNT(DISTINCT county_jurisdiction_id) as county_count,
+              COUNT(DISTINCT city_jurisdiction_id) as city_count
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
+            GROUP BY state_code
+          `;
+
+          let stateCounts = new Map<string, {county_count: number, city_count: number}>();
+          try {
+            const [countRows] = await bigquery.query({
+              query: countsQuery,
+              location: 'US'
+            }) as any;
+
+            countRows.forEach((row: any) => {
+              stateCounts.set(row.state_code, {
+                county_count: parseInt(row.county_count) || 0,
+                city_count: parseInt(row.city_count) || 0
+              });
+            });
+            console.log('State counts calculated for', stateCounts.size, 'states');
+          } catch (error) {
+            console.error('Error querying state counts:', error);
+          }
+
+          data = stateRows.map((row: any) => {
+            const counts = stateCounts.get(row.state_code) || { county_count: 0, city_count: 0 };
+            return {
+              state_jurisdiction_id: row.jurisdiction_id,
+              state_name: row.state_name,
+              state_code: row.state_code,
+              legal_status: row.legal_status,
+              county_count: counts.county_count,
+              city_count: counts.city_count,
+              has_programs: false // Will be updated when program_jurisdiction_link table exists
+            };
           });
-          data = rows;
-          console.log(`[Hierarchy API] States query returned ${data.length} results`);
+
+          console.log('Returning all', data.length, 'states from directory');
         } catch (error) {
-          console.error('[Hierarchy API] States query error:', error);
-          throw error;
+          console.error('Error executing state query:', error);
+          throw new Error('Failed to fetch state data from BigQuery');
         }
         break;
 
       case 'counties':
         if (!parentId) {
-          return NextResponse.json({ 
-            error: 'Missing required parameter: parentId',
-            usage: 'For counties level, provide parentId (e.g., CA_STATE or CA)'
+          return NextResponse.json({
+            status: 'error',
+            message: 'parentId (state_code) is required for counties'
           }, { status: 400 });
         }
 
         // Extract state code from parentId (e.g., "CA_STATE" -> "CA")
-        const stateCodeForCounties = parentId.replace('_STATE', '').substring(0, 2);
-        
-        const countiesQuery = `
-          WITH county_cities AS (
-            SELECT
-              county_name,
-              COUNT(DISTINCT city_name) as city_count,
-              SUM(population) as total_population
-            FROM \`${projectId}.${datasetId}.jurisdictions_master\`
-            WHERE state_code = @stateCode
-              AND jurisdiction_type = 'city'
-              AND population > 0
-            GROUP BY county_name
-          )
-          SELECT
-            j.jurisdiction_id,
-            j.jurisdiction_name,
-            j.county_name,
-            j.state_code,
-            j.state_name,
-            j.population,
-            j.website,
-            j.contact_phone,
-            j.contact_email,
-            COALESCE(cc.city_count, 0) as city_count,
-            COALESCE(cc.total_population, 0) as total_city_population,
-            -- County-specific regulations (LOCAL only, not state)
-            STRING_AGG(DISTINCT
-              CASE WHEN r.regulation_type IN ('county_ordinance', 'local_ordinance')
-              THEN r.regulation_name END, '; ') as local_regulations,
-            STRING_AGG(DISTINCT
-              CASE WHEN r.regulation_type IN ('county_ordinance', 'local_ordinance')
-              THEN r.system_allowance END, ', ') as county_allowance,
-            -- Permit data
-            MIN(p.base_fee) as base_permit_fee,
-            MIN(p.processing_time_days) as processing_time_days,
-            STRING_AGG(DISTINCT p.application_url, '; ') as application_url,
-            -- Count of active incentive programs
-            (SELECT COUNT(DISTINCT prog.program_id)
-             FROM \`${projectId}.${datasetId}.program_jurisdiction_link\` pjl
-             JOIN \`${projectId}.${datasetId}.jurisdictions_master\` j2
-               ON pjl.jurisdiction_id = j2.jurisdiction_id
-             JOIN \`${projectId}.${datasetId}.incentive_programs\` prog
-               ON pjl.program_id = prog.program_id
-             WHERE (pjl.jurisdiction_id = j.jurisdiction_id
-                    OR (j2.county_name = j.county_name AND j2.jurisdiction_type IN ('water_district', 'county')))
-               AND prog.program_status = 'active') as active_program_count
-          FROM \`${projectId}.${datasetId}.jurisdictions_master\` j
-          LEFT JOIN county_cities cc ON j.county_name = cc.county_name
-          LEFT JOIN \`${projectId}.${datasetId}.regulations_master\` r
-            ON j.jurisdiction_id = r.jurisdiction_id
-          LEFT JOIN \`${projectId}.${datasetId}.permits_master\` p
-            ON j.jurisdiction_id = p.jurisdiction_id
-          WHERE j.state_code = @stateCode
-            AND j.jurisdiction_type = 'county'
-          GROUP BY 
-            j.jurisdiction_id, j.jurisdiction_name, j.county_name,
-            j.state_code, j.state_name, j.population, j.website,
-            j.contact_phone, j.contact_email, cc.city_count, cc.total_population
-          ORDER BY j.county_name
+        const stateCode = parentId.replace('_STATE', '');
+
+        // Query for ALL counties in a state from the city_county_mapping table
+        const countyQuery = `
+          SELECT DISTINCT
+            m.county_jurisdiction_id,
+            m.county_name,
+            COUNT(DISTINCT m.city_jurisdiction_id) as city_count
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
+          WHERE m.state_code = '${stateCode}'
+          GROUP BY m.county_jurisdiction_id, m.county_name
+          ORDER BY m.county_name
         `;
 
         try {
-          const [rows] = await bigquery.query({
-            query: countiesQuery,
-            params: { stateCode: stateCodeForCounties },
+          const [countyRows] = await bigquery.query({
+            query: countyQuery,
             location: 'US'
-          });
-          data = rows;
-          console.log(`[Hierarchy API] Counties query for ${stateCodeForCounties} returned ${data.length} results`);
+          }) as any;
+
+          console.log('County query returned', countyRows.length, 'rows');
+
+          data = countyRows
+            .filter((row: any) => row.county_name)
+            .map((row: any) => ({
+              county_jurisdiction_id: row.county_jurisdiction_id,
+              county_name: row.county_name,
+              state_code: stateCode,
+              state_name: stateNames[stateCode] || stateCode,
+              city_count: parseInt(row.city_count) || 0,
+              cities_with_programs: 0 // Will be populated when program_jurisdiction_link table exists
+            }));
         } catch (error) {
-          console.error('[Hierarchy API] Counties query error:', error);
-          throw error;
+          console.error('Error executing county query:', error);
+          throw new Error('Failed to fetch county data from BigQuery');
         }
         break;
 
       case 'cities':
         if (!parentId) {
-          return NextResponse.json({ 
-            error: 'Missing required parameter: parentId',
-            usage: 'For cities level, provide parentId (state code or county ID)'
+          return NextResponse.json({
+            status: 'error',
+            message: 'parentId is required for cities'
           }, { status: 400 });
         }
 
-        // Determine if parentId is a state or county
-        let stateCodeForCities: string;
-        let countyName: string | null = null;
-        
-        if (parentType === 'state' || parentId.includes('_STATE')) {
-          // Parent is a state
-          stateCodeForCities = parentId.replace('_STATE', '').substring(0, 2);
-        } else {
-          // Parent might be a county ID (e.g., "CA_COUNTY_LOS_ANGELES")
-          const parts = parentId.split('_');
-          if (parts.length >= 3 && parts[1] === 'COUNTY') {
-            stateCodeForCities = parts[0];
-            countyName = parts.slice(2).join(' ');
-          } else {
-            // Assume it's a state code
-            stateCodeForCities = parentId.substring(0, 2);
-          }
-        }
-        
-        const citiesQuery = `
-          SELECT
-            j.jurisdiction_id,
-            j.city_name,
-            j.county_name,
-            j.state_code,
-            j.state_name,
-            j.population,
-            j.website,
-            j.contact_phone,
-            j.contact_email,
-            -- Only LOCAL city regulations (not county/state inherited)
-            STRING_AGG(DISTINCT
-              CASE WHEN r.regulation_type IN ('municipal_code', 'city_ordinance')
-              THEN r.regulation_name END, '; ') as local_city_regulations,
-            STRING_AGG(DISTINCT
-              CASE WHEN r.regulation_type IN ('municipal_code', 'city_ordinance')
-              THEN r.system_allowance END, ', ') as city_allowance,
-            STRING_AGG(DISTINCT
-              CASE WHEN r.regulation_type IN ('municipal_code', 'city_ordinance')
-              THEN r.use_restrictions END, '; ') as city_use_restrictions,
-            -- Permit info (city-specific)
-            MIN(p.base_fee) as city_permit_fee,
-            MIN(p.processing_time_days) as processing_days,
-            MAX(r.professional_installation_required) as pro_required,
-            -- Incentives
-            (SELECT STRING_AGG(DISTINCT prog.program_name, '; ')
-             FROM \`${projectId}.${datasetId}.program_jurisdiction_link\` pjl
-             JOIN \`${projectId}.${datasetId}.incentive_programs\` prog
-               ON pjl.program_id = prog.program_id
-             WHERE pjl.jurisdiction_id = j.jurisdiction_id
-               AND prog.program_status = 'active') as incentives,
-            -- Count of active programs
-            (SELECT COUNT(DISTINCT prog.program_id)
-             FROM \`${projectId}.${datasetId}.program_jurisdiction_link\` pjl
-             JOIN \`${projectId}.${datasetId}.incentive_programs\` prog
-               ON pjl.program_id = prog.program_id
-             WHERE pjl.jurisdiction_id = j.jurisdiction_id
-               AND prog.program_status = 'active') as active_program_count,
-            -- Flag: does city have LOCAL regulations different from county?
-            MAX(CASE WHEN r.regulation_type IN ('municipal_code', 'city_ordinance') THEN 1 ELSE 0 END) as has_local_rules
-          FROM \`${projectId}.${datasetId}.jurisdictions_master\` j
-          LEFT JOIN \`${projectId}.${datasetId}.regulations_master\` r
-            ON j.jurisdiction_id = r.jurisdiction_id
-          LEFT JOIN \`${projectId}.${datasetId}.permits_master\` p
-            ON j.jurisdiction_id = p.jurisdiction_id
-          WHERE j.state_code = @stateCode
-            AND j.jurisdiction_type = 'city'
-            ${countyName ? 'AND j.county_name = @countyName' : ''}
-          GROUP BY
-            j.jurisdiction_id, j.city_name, j.county_name,
-            j.state_code, j.state_name, j.population, j.website,
-            j.contact_phone, j.contact_email
-          ORDER BY j.population DESC, j.city_name
-        `;
+        // Determine if parent is a state or county based on parentId format
+        const isCountyParent = parentId.includes('_COUNTY_');
+        const isStateParent = parentId.includes('_STATE') || parentType === 'state';
 
-        const citiesParams: any = { stateCode: stateCodeForCities };
-        if (countyName) {
-          citiesParams.countyName = countyName;
+        let cityQuery = '';
+
+        if (isCountyParent) {
+          // Query cities for a specific county using the mapping table
+          // Show ALL cities in the county
+          cityQuery = `
+            SELECT DISTINCT
+              m.city_jurisdiction_id,
+              m.city_name,
+              m.county_name,
+              m.state_code
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
+            WHERE m.county_jurisdiction_id = '${parentId}'
+            ORDER BY m.city_name
+          `;
+        } else if (isStateParent) {
+          // Query all cities in a state
+          const cityStateCode = parentId.replace('_STATE', '');
+          cityQuery = `
+            SELECT DISTINCT
+              m.city_jurisdiction_id,
+              m.city_name,
+              m.county_name,
+              m.state_code
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
+            WHERE m.state_code = '${cityStateCode}'
+            ORDER BY m.city_name
+            LIMIT 100
+          `;
+        } else {
+          return NextResponse.json({
+            status: 'error',
+            message: 'Invalid parentId format for cities query'
+          }, { status: 400 });
         }
 
         try {
-          const [rows] = await bigquery.query({
-            query: citiesQuery,
-            params: citiesParams,
+          const [cityRows] = await bigquery.query({
+            query: cityQuery,
             location: 'US'
-          });
-          data = rows;
-          console.log(`[Hierarchy API] Cities query for ${stateCodeForCities}${countyName ? `/${countyName}` : ''} returned ${data.length} results`);
+          }) as any;
+
+          console.log('City query returned', cityRows.length, 'rows for parent:', parentId);
+
+          data = cityRows.map((row: any) => ({
+            city_jurisdiction_id: row.city_jurisdiction_id,
+            city_name: row.city_name,
+            county_name: row.county_name,
+            state_code: row.state_code,
+            state_name: stateNames[row.state_code] || row.state_code,
+            population: null
+          }));
         } catch (error) {
-          console.error('[Hierarchy API] Cities query error:', error);
-          throw error;
+          console.error('Error executing city query:', error);
+          throw new Error('Failed to fetch city data from BigQuery');
         }
         break;
 
+      case 'water_districts':
+        // Return empty for water districts for now
+        data = [];
+        break;
+
       default:
-        return NextResponse.json({ 
-          error: `Invalid level: ${level}`,
-          usage: 'Valid levels are: states, counties, cities'
+        return NextResponse.json({
+          status: 'error',
+          message: 'Invalid level parameter'
         }, { status: 400 });
+    }
+    
+    // Cache the successful result only if we have data
+    if (data.length > 0) {
+      hierarchyCache[cacheKey] = {
+        data,
+        timestamp: Date.now()
+      };
+    }
+    
+    return NextResponse.json({
+      status: 'success',
+      data
+    });
+  } catch (error) {
+    console.error('Hierarchy API Error:', error);
+    
+    let errorMessage = 'Failed to query hierarchy data';
+    if (error instanceof Error) {
+      errorMessage = error.message;
     }
 
     return NextResponse.json({
-      success: true,
-      level,
-      parentId,
-      count: data.length,
-      data
-    });
-
-  } catch (error) {
-    console.error('[Hierarchy API] Error:', error);
-    
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      details: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined
+      status: 'error',
+      message: errorMessage,
+      error: error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : 'Unknown error'
     }, { status: 500 });
   }
 }
