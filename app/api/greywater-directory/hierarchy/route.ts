@@ -3,7 +3,7 @@ import { getBigQueryClient } from '@/lib/bigquery';
 
 // Cache for hierarchy data to reduce BigQuery calls
 let hierarchyCache: { [key: string]: { data: any[], timestamp: number } } = {};
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour (states/counties don't change often)
 
 // GET hierarchy data from BigQuery only - no fallback data
 export async function GET(request: NextRequest) {
@@ -21,6 +21,10 @@ export async function GET(request: NextRequest) {
         status: 'success',
         data: cached.data,
         cached: true
+      }, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        }
       });
     }
 
@@ -57,65 +61,45 @@ export async function GET(request: NextRequest) {
 
     switch (level) {
       case 'states':
-        // Query all states from greywater_laws table
+        // Optimized query: JOIN states with counts in a single query
         const stateQuery = `
           SELECT
-            state_code,
-            state_name,
-            jurisdiction_id,
-            legal_status
-          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
-          ORDER BY state_name
-        `;
-
-        try {
-          const [stateRows] = await bigquery.query({
-            query: stateQuery,
-            location: 'US'
-          }) as any;
-
-          console.log('BigQuery returned', stateRows.length, 'states from greywater_laws table');
-
-          // Query to count counties and cities per state from city_county_mapping
-          const countsQuery = `
+            s.state_code,
+            s.state_name,
+            s.jurisdiction_id,
+            s.legal_status,
+            COALESCE(c.county_count, 0) as county_count,
+            COALESCE(c.city_count, 0) as city_count
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` s
+          LEFT JOIN (
             SELECT
               state_code,
               COUNT(DISTINCT county_jurisdiction_id) as county_count,
               COUNT(DISTINCT city_jurisdiction_id) as city_count
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
             GROUP BY state_code
-          `;
+          ) c ON s.state_code = c.state_code
+          ORDER BY s.state_name
+        `;
 
-          let stateCounts = new Map<string, {county_count: number, city_count: number}>();
-          try {
-            const [countRows] = await bigquery.query({
-              query: countsQuery,
-              location: 'US'
-            }) as any;
+        try {
+          const [stateRows] = await bigquery.query({
+            query: stateQuery,
+            location: 'US',
+            useQueryCache: true // Enable BigQuery query caching
+          }) as any;
 
-            countRows.forEach((row: any) => {
-              stateCounts.set(row.state_code, {
-                county_count: parseInt(row.county_count) || 0,
-                city_count: parseInt(row.city_count) || 0
-              });
-            });
-            console.log('State counts calculated for', stateCounts.size, 'states');
-          } catch (error) {
-            console.error('Error querying state counts:', error);
-          }
+          console.log('BigQuery returned', stateRows.length, 'states (optimized single query)');
 
-          data = stateRows.map((row: any) => {
-            const counts = stateCounts.get(row.state_code) || { county_count: 0, city_count: 0 };
-            return {
-              state_jurisdiction_id: row.jurisdiction_id,
-              state_name: row.state_name,
-              state_code: row.state_code,
-              legal_status: row.legal_status,
-              county_count: counts.county_count,
-              city_count: counts.city_count,
-              has_programs: false // Will be updated when program_jurisdiction_link table exists
-            };
-          });
+          data = stateRows.map((row: any) => ({
+            state_jurisdiction_id: row.jurisdiction_id,
+            state_name: row.state_name,
+            state_code: row.state_code,
+            legal_status: row.legal_status,
+            county_count: parseInt(row.county_count) || 0,
+            city_count: parseInt(row.city_count) || 0,
+            has_programs: false // Will be updated when program_jurisdiction_link table exists
+          }));
 
           console.log('Returning all', data.length, 'states from directory');
         } catch (error) {
@@ -150,7 +134,8 @@ export async function GET(request: NextRequest) {
         try {
           const [countyRows] = await bigquery.query({
             query: countyQuery,
-            location: 'US'
+            location: 'US',
+            useQueryCache: true // Enable BigQuery query caching
           }) as any;
 
           console.log('County query returned', countyRows.length, 'rows');
@@ -222,7 +207,8 @@ export async function GET(request: NextRequest) {
         try {
           const [cityRows] = await bigquery.query({
             query: cityQuery,
-            location: 'US'
+            location: 'US',
+            useQueryCache: true // Enable BigQuery query caching
           }) as any;
 
           console.log('City query returned', cityRows.length, 'rows for parent:', parentId);
@@ -260,10 +246,16 @@ export async function GET(request: NextRequest) {
         timestamp: Date.now()
       };
     }
-    
+
+    // Return with cache headers for CDN/browser caching
     return NextResponse.json({
       status: 'success',
       data
+    }, {
+      headers: {
+        // Cache for 1 hour in browser/CDN, revalidate in background
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      }
     });
   } catch (error) {
     console.error('Hierarchy API Error:', error);
