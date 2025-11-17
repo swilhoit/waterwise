@@ -66,12 +66,13 @@ export default function CountyDetailView({
 
   return (
     <div className="space-y-6">
-      <div className="border-b pb-4">
-        <h2 className="text-2xl font-bold text-gray-900">
-          {countyName} County, {stateCode}
+      <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-l-purple-600">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center gap-2">
+          <Building2 className="h-8 w-8 text-purple-600" />
+          {countyName} County
         </h2>
-        <p className="text-gray-600 mt-1">
-          Greywater Regulations & Incentives
+        <p className="text-base text-gray-600 mt-2">
+          {stateCode} • Greywater Regulations & Incentives
         </p>
       </div>
       
@@ -83,18 +84,18 @@ export default function CountyDetailView({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Greywater Status */}
-        <Card className="p-4">
+        <Card className="p-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 p-2 bg-green-50 rounded-lg">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">Greywater Status</p>
-              <div className="text-sm text-gray-600 mt-1">
+              <p className="text-sm font-semibold text-gray-900">Greywater Status</p>
+              <div className="text-sm text-gray-600 mt-2">
                 {countyCompliance?.greywater_allowed !== false ? (
-                  <Badge className="bg-green-100 text-green-800">Allowed</Badge>
+                  <Badge className="bg-green-100 text-green-800 border-green-200">Allowed</Badge>
                 ) : (
-                  <Badge className="bg-red-100 text-red-800">Not Allowed</Badge>
+                  <Badge className="bg-red-100 text-red-800 border-red-200">Not Allowed</Badge>
                 )}
               </div>
               {countyCompliance?.permit_required && (
@@ -105,17 +106,17 @@ export default function CountyDetailView({
         </Card>
 
         {/* Financial Incentives */}
-        <Card className="p-4">
+        <Card className="p-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 p-2 bg-blue-50 rounded-lg">
               <DollarSign className="h-6 w-6 text-blue-600" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">Financial Incentives</p>
-              <div className="text-sm text-gray-600 mt-1">
+              <p className="text-sm font-semibold text-gray-900">Financial Incentives</p>
+              <div className="text-sm text-gray-600 mt-2">
                 {hasIncentives ? (
                   <>
-                    <Badge className="bg-green-100 text-green-800">
+                    <Badge className="bg-green-100 text-green-800 border-green-200">
                       {countyCompliance.incentive_count} Available
                     </Badge>
                     {maxIncentive && (
@@ -125,7 +126,7 @@ export default function CountyDetailView({
                     )}
                   </>
                 ) : (
-                  <Badge className="bg-gray-100 text-gray-800">None Available</Badge>
+                  <Badge className="bg-gray-100 text-gray-800 border-gray-200">None Available</Badge>
                 )}
               </div>
             </div>
@@ -134,15 +135,15 @@ export default function CountyDetailView({
 
         {/* Cities in County */}
         {countyData?.city_count > 0 && (
-          <Card className="p-4">
+          <Card className="p-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 p-2 bg-purple-50 rounded-lg">
                 <Building2 className="h-6 w-6 text-purple-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">Cities</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  <Badge className="bg-purple-100 text-purple-800">
+                <p className="text-sm font-semibold text-gray-900">Cities</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  <Badge className="bg-purple-100 text-purple-800 border-purple-200">
                     {countyData.city_count} Cities
                   </Badge>
                 </p>
@@ -158,20 +159,23 @@ export default function CountyDetailView({
       {/* Incentive Programs */}
       {hasIncentives && countyCompliance?.incentives?.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Available Incentive Programs</h3>
+          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-green-600" />
+            Available Incentive Programs
+          </h3>
           <div className="grid gap-4">
             {countyCompliance.incentives.map((program: any, index: number) => (
-              <Card key={index} className="p-4">
+              <Card key={index} className="p-5 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-green-500">
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="font-medium text-gray-900">{program.program_name}</h4>
+                      <h4 className="font-semibold text-gray-900">{program.program_name}</h4>
                       <p className="text-sm text-gray-600 mt-1">
                         {program.incentive_type || 'Rebate Program'}
                       </p>
                     </div>
                     {program.incentive_amount_max && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-green-100 text-green-800 border-green-200 text-sm px-3 py-1">
                         Up to ${program.incentive_amount_max.toLocaleString()}
                       </Badge>
                     )}
@@ -209,12 +213,14 @@ export default function CountyDetailView({
 
       {/* Compliance Summary */}
       {countyCompliance?.regulation_summary && (
-        <Card className="p-4">
+        <Card className="p-5 shadow-sm border-l-4 border-l-blue-500">
           <div className="flex items-start space-x-3">
-            <FileText className="h-5 w-5 text-gray-600 flex-shrink-0 mt-0.5" />
+            <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
+              <FileText className="h-5 w-5 text-blue-600" />
+            </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-900 mb-2">Compliance Summary</h3>
-              <p className="text-sm text-gray-600">{countyCompliance.regulation_summary}</p>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Compliance Summary</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{countyCompliance.regulation_summary}</p>
             </div>
           </div>
         </Card>

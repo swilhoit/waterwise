@@ -775,24 +775,26 @@ export default async function Home() {
 
       <Testimonials />
 
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+      <section className="py-24 bg-gradient-to-br from-blue-600 to-blue-800 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
+        </div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6 animate-fade-in">
             Ready to Start Saving Water?
           </h2>
-          <p className="text-xl mb-10 max-w-2xl mx-auto opacity-90">
+          <p className="text-xl mb-10 max-w-2xl mx-auto text-blue-50">
             Get a personalized quote for your greywater recycling system today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold hover-lift" asChild>
+            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all" asChild>
               <Link href="/contact">Get Your Free Quote</Link>
             </Button>
-            <Button size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white/10 px-8 py-6 text-lg" asChild>
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all" asChild>
               <Link href="/products">View Products</Link>
             </Button>
           </div>
-          <p className="mt-8 text-sm opacity-75">No obligation • Expert consultation • Same-day response</p>
+          <p className="mt-8 text-sm text-blue-100">No obligation • Expert consultation • Same-day response</p>
         </div>
       </section>
     </div>

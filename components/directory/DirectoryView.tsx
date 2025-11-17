@@ -503,14 +503,14 @@ export default function DirectoryView({
         return (
           <Card 
             key={item.state_jurisdiction_id}
-            className=" transition-all duration-300 cursor-pointer hover:border-blue-500"
+            className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-blue-400 hover:-translate-y-1"
             onClick={() => selectState(item)}
           >
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-xl flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-gray-500" />
+                    <MapPin className="h-5 w-5 text-blue-600" />
                     {item.state_name}
                   </CardTitle>
                   <CardDescription className="mt-1">
@@ -572,14 +572,14 @@ export default function DirectoryView({
         return (
           <Card 
             key={item.county_jurisdiction_id}
-            className=" transition-all duration-300 cursor-pointer hover:border-blue-500"
+            className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-blue-400 hover:-translate-y-1"
             onClick={() => selectCounty(item)}
           >
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-xl flex items-center gap-2">
-                    <Building className="h-5 w-5 text-gray-500" />
+                    <Building className="h-5 w-5 text-purple-600" />
                     {item.county_name}
                   </CardTitle>
                   <CardDescription className="mt-1">
@@ -610,14 +610,14 @@ export default function DirectoryView({
         return (
           <Card 
             key={`city-${item.city_name}-${item.county_name || item.state_code}-${index}`}
-            className=" transition-all duration-300 cursor-pointer hover:border-blue-500"
+            className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-blue-400 hover:-translate-y-1"
             onClick={() => selectCity(item)}
           >
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-xl flex items-center gap-2">
-                    <Home className="h-5 w-5 text-gray-500" />
+                    <Home className="h-5 w-5 text-green-600" />
                     {item.city_name}
                   </CardTitle>
                   <CardDescription className="mt-1">
@@ -651,19 +651,6 @@ export default function DirectoryView({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-            Greywater Compliance Directory
-          </h1>
-          <p className="text-xl opacity-90 max-w-3xl">
-            Explore greywater regulations, permits, and incentives across the United States. 
-            Navigate through states, counties, cities, and water districts to find local requirements.
-          </p>
-        </div>
-      </section>
-
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumbs */}

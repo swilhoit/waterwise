@@ -113,28 +113,30 @@ export default function StateDetailView({ stateData: initialStateData, complianc
   return (
     <div className="space-y-6 mb-8">
       {/* Header Card */}
-      <Card className="border-2">
-        <CardHeader>
+      <Card className="border-l-4 border-l-blue-600 shadow-md">
+        <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
             <div>
-              <CardTitle className="text-3xl font-bold flex items-center gap-3">
+              <CardTitle className="text-2xl lg:text-3xl font-bold flex items-center gap-3 mb-2">
                 <Building className="h-8 w-8 text-blue-600" />
                 {stateData.state_name}
               </CardTitle>
-              <p className="text-lg text-gray-600 mt-2">
+              <p className="text-base text-gray-600">
                 Comprehensive Greywater Regulations & Compliance Information
               </p>
               <div className="flex gap-4 mt-3">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 flex items-center gap-1">
+                  <Building className="h-3 w-3" />
                   {stateData.county_count} Counties
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 flex items-center gap-1">
+                  <Home className="h-3 w-3" />
                   {stateData.city_count} Cities
                 </span>
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <Badge className={`text-sm px-3 py-1 ${getLegalStatusColor(stateData.legalStatus)}`}>
+              <Badge className={`text-sm px-3 py-1.5 ${getLegalStatusColor(stateData.legalStatus)}`}>
                 {stateData.legalStatus}
               </Badge>
               {stateData.regulatoryClassification && (
@@ -148,7 +150,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
         </CardHeader>
         <CardContent>
           {stateData.summary && (
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
               <p className="text-sm text-gray-700 leading-relaxed">{stateData.summary}</p>
             </div>
           )}
@@ -156,23 +158,23 @@ export default function StateDetailView({ stateData: initialStateData, complianc
       </Card>
       
       {/* Sector Toggle */}
-      <div className="flex items-center justify-center gap-2 border rounded-lg p-2 bg-white sticky top-2 z-10">
+      <div className="flex items-center justify-center gap-2 border rounded-lg p-1.5 bg-white shadow-sm sticky top-2 z-10">
         <Button
           variant={sectorView === 'residential' ? 'default' : 'ghost'}
           size="lg"
           onClick={() => setSectorView('residential')}
-          className="flex-1 flex items-center gap-2"
+          className="flex-1 flex items-center justify-center gap-2"
         >
-          <Home className="h-5 w-5" />
+          <Home className="h-4 w-4" />
           Residential
         </Button>
         <Button
           variant={sectorView === 'commercial' ? 'default' : 'ghost'}
           size="lg"
           onClick={() => setSectorView('commercial')}
-          className="flex-1 flex items-center gap-2"
+          className="flex-1 flex items-center justify-center gap-2"
         >
-          <Building className="h-5 w-5" />
+          <Building className="h-4 w-4" />
           Commercial
         </Button>
       </div>
@@ -185,10 +187,10 @@ export default function StateDetailView({ stateData: initialStateData, complianc
       )}
 
       {/* Regulatory Information - Common to Both */}
-      <Card>
-        <CardHeader>
+      <Card className="shadow-sm">
+        <CardHeader className="bg-gray-50">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Scale className="h-5 w-5 text-purple-500" />
+            <Scale className="h-5 w-5 text-blue-600" />
             Regulatory Information
           </CardTitle>
         </CardHeader>
@@ -251,7 +253,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
 
       {/* Recent Changes */}
       {stateData.recentChanges && (
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-l-4 border-l-blue-500 bg-blue-50/50 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="h-5 w-5 text-blue-600" />
@@ -259,7 +261,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-700">{stateData.recentChanges}</p>
+            <p className="text-sm text-gray-700 leading-relaxed">{stateData.recentChanges}</p>
           </CardContent>
         </Card>
       )}
@@ -271,10 +273,10 @@ export default function StateDetailView({ stateData: initialStateData, complianc
 const ResidentialView = ({ stateData, incentives }: { stateData: StateData, incentives: any[] }) => (
   <div className="space-y-6">
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3 bg-orange-50">
           <CardTitle className="text-base flex items-center gap-2">
-            <FileText className="h-4 w-4 text-orange-500" />
+            <FileText className="h-4 w-4 text-orange-600" />
             Permit Requirements
           </CardTitle>
         </CardHeader>
@@ -286,10 +288,10 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3 bg-blue-50">
           <CardTitle className="text-base flex items-center gap-2">
-            <Droplets className="h-4 w-4 text-blue-500" />
+            <Droplets className="h-4 w-4 text-blue-600" />
             System & Use Regulations
           </CardTitle>
         </CardHeader>
@@ -299,10 +301,10 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3 bg-green-50">
           <CardTitle className="text-base flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-green-500" />
+            <DollarSign className="h-4 w-4 text-green-600" />
             Financial Incentives
           </CardTitle>
         </CardHeader>
@@ -329,10 +331,10 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
 const CommercialView = ({ stateData, incentives }: { stateData: StateData, incentives: any[] }) => (
   <div className="space-y-6">
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3 bg-orange-50">
           <CardTitle className="text-base flex items-center gap-2">
-            <FileText className="h-4 w-4 text-orange-500" />
+            <FileText className="h-4 w-4 text-orange-600" />
             Permit Requirements
           </CardTitle>
         </CardHeader>
@@ -344,10 +346,10 @@ const CommercialView = ({ stateData, incentives }: { stateData: StateData, incen
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3 bg-blue-50">
           <CardTitle className="text-base flex items-center gap-2">
-            <Droplets className="h-4 w-4 text-blue-500" />
+            <Droplets className="h-4 w-4 text-blue-600" />
             System & Use Regulations
           </CardTitle>
         </CardHeader>
@@ -357,10 +359,10 @@ const CommercialView = ({ stateData, incentives }: { stateData: StateData, incen
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="pb-3">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3 bg-green-50">
           <CardTitle className="text-base flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-green-500" />
+            <DollarSign className="h-4 w-4 text-green-600" />
             Financial Incentives
           </CardTitle>
         </CardHeader>
