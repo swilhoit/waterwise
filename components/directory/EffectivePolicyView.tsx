@@ -1,7 +1,7 @@
+"use client"
 
 import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
-import { FileText, CheckCircle, Scale } from 'lucide-react'
+import { FileText, CheckCircle, Scale, ExternalLink } from 'lucide-react'
 
 interface ComplianceData {
   compliance_level?: string;
@@ -34,81 +34,110 @@ export default function EffectivePolicyView({ complianceData, jurisdictionName }
     return null;
   }
 
-  const getPolicySourceColor = () => {
+  const getPolicySourceStyles = () => {
     switch (policySource) {
       case 'City':
-        return 'border-green-500 bg-green-50';
+        return {
+          border: 'border-l-teal-500',
+          bg: 'bg-teal-50/50',
+          badge: 'bg-teal-100 text-teal-700 border-teal-200',
+          icon: 'text-teal-600'
+        };
       case 'County':
-        return 'border-purple-500 bg-purple-50';
+        return {
+          border: 'border-l-purple-500',
+          bg: 'bg-purple-50/50',
+          badge: 'bg-purple-100 text-purple-700 border-purple-200',
+          icon: 'text-purple-600'
+        };
       case 'State':
-        return 'border-blue-500 bg-blue-50';
+        return {
+          border: 'border-l-blue-500',
+          bg: 'bg-blue-50/50',
+          badge: 'bg-blue-100 text-blue-700 border-blue-200',
+          icon: 'text-blue-600'
+        };
       default:
-        return 'border-gray-300 bg-gray-50';
+        return {
+          border: 'border-l-slate-400',
+          bg: 'bg-slate-50/50',
+          badge: 'bg-slate-100 text-slate-700 border-slate-200',
+          icon: 'text-slate-600'
+        };
     }
   }
-  
+
+  const styles = getPolicySourceStyles();
+
   return (
-    <Card className={`mb-8 p-6 border-2 ${getPolicySourceColor()}`}>
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <Scale className="h-6 w-6 text-gray-600" />
-            Effective Regulations for {jurisdictionName}
-          </h2>
-          <p className="text-gray-600 mt-1">
-            These are the primary rules you need to follow, based on the most local regulations available.
-          </p>
+    <div className={`bg-white border border-slate-200 rounded-xl overflow-hidden border-l-4 ${styles.border}`}>
+      <div className={`p-5 ${styles.bg}`}>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className={`p-2 rounded-lg bg-white border border-slate-200`}>
+              <Scale className={`h-5 w-5 ${styles.icon}`} />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-800">
+                Effective Regulations
+              </h2>
+              <p className="text-sm text-slate-600 mt-0.5">
+                Primary rules for {jurisdictionName}
+              </p>
+            </div>
+          </div>
+          <Badge className={styles.badge}>
+            {policySource} Policy
+          </Badge>
         </div>
-        <Badge className="mt-4 md:mt-0 text-lg px-4 py-2">
-          Policy Source: {policySource}
-        </Badge>
       </div>
-      
-      <div className="mt-6 space-y-4">
+
+      <div className="p-5 space-y-4">
         {/* Summary */}
         {effectivePolicy.regulation_summary && (
-          <div className="bg-white rounded-lg p-4 border">
-            <h3 className="font-semibold text-gray-800 mb-2">Summary</h3>
-            <p className="text-sm text-gray-600">
+          <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+            <h3 className="font-semibold text-slate-800 text-sm mb-2">Summary</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
               {effectivePolicy.regulation_summary}
             </p>
           </div>
         )}
-        
+
         {/* Key Details Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card className="p-4">
-            <h4 className="text-sm font-medium text-gray-500">Permit Status</h4>
-            <p className={`text-lg font-semibold ${effectivePolicy.permit_required ? 'text-orange-600' : 'text-green-600'}`}>
-              {effectivePolicy.permit_required ? 'Permit Required' : 'Permit Not Required'}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="bg-white rounded-lg p-4 border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Permit Status</h4>
+            <p className={`text-base font-semibold ${effectivePolicy.permit_required ? 'text-amber-600' : 'text-emerald-600'}`}>
+              {effectivePolicy.permit_required ? 'Required' : 'Not Required'}
             </p>
             {effectivePolicy.permit_required && effectivePolicy.permit_type && (
-              <p className="text-xs text-gray-500 mt-1">{effectivePolicy.permit_type}</p>
+              <p className="text-xs text-slate-500 mt-1">{effectivePolicy.permit_type}</p>
             )}
-          </Card>
-          
-          <Card className="p-4">
-            <h4 className="text-sm font-medium text-gray-500">Permit Fee</h4>
-            <p className={`text-lg font-semibold ${effectivePolicy.permit_fee ? 'text-gray-800' : 'text-gray-500'}`}>
+          </div>
+
+          <div className="bg-white rounded-lg p-4 border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Permit Fee</h4>
+            <p className={`text-base font-semibold ${effectivePolicy.permit_fee ? 'text-slate-800' : 'text-slate-400'}`}>
               {effectivePolicy.permit_fee ? `$${effectivePolicy.permit_fee}` : 'None or Varies'}
             </p>
-          </Card>
+          </div>
 
           {effectivePolicy.documentation_url && (
-             <Card className="p-4 flex items-center justify-center">
-                <a 
-                    href={effectivePolicy.documentation_url}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
-                >
-                    <FileText className="h-5 w-5" />
-                    View Official Documents
-                </a>
-            </Card>
+            <div className="bg-white rounded-lg p-4 border border-slate-200 flex items-center">
+              <a
+                href={effectivePolicy.documentation_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold text-sm"
+              >
+                <FileText className="h-4 w-4" />
+                View Official Documents
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
           )}
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Badge } from '@/components/ui/badge'
 import {
   Building,
@@ -15,8 +15,15 @@ import {
   Check,
   X,
   AlertTriangle,
-  ExternalLink
+  ExternalLink,
+  MapPin,
+  Scale,
+  Layers,
+  Banknote,
+  ClipboardList,
+  Sparkles
 } from 'lucide-react'
+import CollapsibleSection, { InlineCollapsible } from './CollapsibleSection'
 import EffectivePolicyView from './EffectivePolicyView'
 
 interface HierarchyItem {
@@ -39,12 +46,12 @@ interface HierarchyItem {
 }
 
 interface RegulationDetail {
-  allowed_sources?: string;
-  prohibited_sources?: string;
-  treatment_requirements?: string;
-  system_size_limits?: string;
-  setback_requirements?: string;
-  inspection_required?: boolean;
+  allowed_sources?: string
+  prohibited_sources?: string
+  treatment_requirements?: string
+  system_size_limits?: string
+  setback_requirements?: string
+  inspection_required?: boolean
 }
 
 interface ProgramTier {
@@ -124,10 +131,8 @@ interface ComplianceData {
   max_incentive?: number
   incentive_count?: number
   permit_count?: number
-  // Add regulation details to each level
-  regulations?: RegulationDetail;
-  // Add laws property for state-level greywater laws
-  laws?: GreywaterLaws | null;
+  regulations?: RegulationDetail
+  laws?: GreywaterLaws | null
 }
 
 interface DetailedComplianceViewProps {
@@ -143,17 +148,45 @@ interface DetailedComplianceViewProps {
   sectorView?: 'residential' | 'commercial'
 }
 
-export default function DetailedComplianceView({ 
-  selectedState, 
-  selectedCounty, 
+export default function DetailedComplianceView({
+  selectedState,
+  selectedCounty,
   selectedCity,
   complianceData,
   sectorView = 'residential'
 }: DetailedComplianceViewProps) {
   const [userType, setUserType] = useState<string>('homeowner')
-  
-  // User type options based on sector
-  const userTypeOptions = sectorView === 'residential' 
+
+  // Compute stats for quick overview
+  const stats = useMemo(() => {
+    const allPrograms = [
+      ...(complianceData?.state?.incentives || []),
+      ...(complianceData?.county?.incentives || []),
+      ...(complianceData?.city?.incentives || [])
+    ]
+
+    const sectorPrograms = allPrograms.filter(p =>
+      sectorView === 'residential'
+        ? p.residential_eligibility !== false
+        : p.commercial_eligibility === true
+    )
+
+    const maxIncentive = Math.max(...sectorPrograms.map(p => p.incentive_amount_max || 0), 0)
+    const totalPotential = sectorPrograms.reduce((sum, p) => sum + (p.incentive_amount_max || 0), 0)
+
+    return {
+      programCount: sectorPrograms.length,
+      maxIncentive,
+      totalPotential,
+      hasLaws: !!complianceData?.state?.laws,
+      hasRegulations: !!(complianceData?.effective?.regulations?.allowed_sources ||
+                        complianceData?.effective?.regulations?.treatment_requirements),
+      hasCityPolicy: selectedCity?.has_greywater_policy === 1,
+      hasCountyPolicy: selectedCounty?.has_greywater_policy === 1
+    }
+  }, [complianceData, sectorView, selectedCity, selectedCounty])
+
+  const userTypeOptions = sectorView === 'residential'
     ? [
         { value: 'homeowner', label: 'Homeowner' },
         { value: 'small_farm', label: 'Small Farm' },
@@ -165,1020 +198,850 @@ export default function DetailedComplianceView({
         { value: 'affordable_housing', label: 'Affordable Housing' },
         { value: 'industrial', label: 'Industrial' }
       ]
-  
-  // Filter tiers based on user type
-  const filterTiersByUserType = (tiers: ProgramTier[] | undefined) => {
-    if (!tiers || tiers.length === 0) return tiers
-    
-    // Score each tier based on user type match
-    return tiers.map(tier => {
-      let score = 0
-      let isMatch = false
-      
-      // Check if user type matches
-      if (tier.user_types?.includes(userType)) {
-        score = 100 // Perfect match
-        isMatch = true
-      } else if (tier.typical_applicants?.toLowerCase().includes(userType.replace('_', ' '))) {
-        score = 75 // Good match
-        isMatch = true
-      } else if (sectorView === 'residential' && tier.typical_applicants?.toLowerCase().includes('resident')) {
-        score = 50 // Sector match
-        isMatch = true
-      } else if (sectorView === 'commercial' && tier.typical_applicants?.toLowerCase().includes('business')) {
-        score = 50 // Sector match
-        isMatch = true
-      }
-      
-      return { ...tier, matchScore: score, isMatch }
-    }).filter(tier => tier.isMatch).sort((a, b) => b.matchScore - a.matchScore)
-  }
-  
-  // Filter programs based on sector view
-  const filterProgramsBySector = (programs: IncentiveProgram[]) => {
-    if (!programs) return []
-    return programs.filter(program => {
-      if (sectorView === 'residential') {
-        return program.residential_eligibility !== false
-      } else {
-        return program.commercial_eligibility === true
-      }
-    })
-  }
-  
-  // Get counts and max amounts for residential and commercial programs
-  const getProgramStats = (programs: IncentiveProgram[]) => {
-    if (!programs) return { residential: { count: 0, max: 0 }, commercial: { count: 0, max: 0 } }
-    
-    const residential = programs.filter(p => p.residential_eligibility !== false)
-    const commercial = programs.filter(p => p.commercial_eligibility === true)
-    
-    return {
-      residential: {
-        count: residential.length,
-        max: Math.max(...residential.map(p => p.incentive_amount_max || 0), 0)
-      },
-      commercial: {
-        count: commercial.length,
-        max: Math.max(...commercial.map(p => p.incentive_amount_max || 0), 0)
-      }
-    }
-  }
-  
-  // Helper function to render incentive amount
-  const renderIncentiveAmount = (program: IncentiveProgram) => {
-    if (program.incentive_amount_min && program.incentive_amount_max) {
-      return `$${program.incentive_amount_min?.toLocaleString()} - $${program.incentive_amount_max?.toLocaleString()}`;
-    } else if (program.incentive_amount_max) {
-      return `Up to $${program.incentive_amount_max?.toLocaleString()}`;
-    } else if (program.rebate_percentage) {
-      return `${program.rebate_percentage}% rebate`;
-    }
-    return 'Varies';
-  };
+
   if (selectedCity) {
-    // Detailed City-Level View
     return (
-      <div className="mb-8 space-y-6">
-        {/* City Header */}
-        <div className="bg-white border-l-4 border-l-green-600 rounded-lg p-6 border">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center gap-2">
-                <Home className="h-8 w-8 text-green-600" />
-                {selectedCity.city_name}
-              </h2>
-              <p className="text-base text-gray-600 mt-2">
-                {selectedCounty?.county_name} County • {selectedState?.state_name}
-              </p>
+      <div className="mb-8 space-y-4">
+        {/* Hero Header with Gradient */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-800 rounded-2xl p-5 sm:p-8 text-white">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+          <div className="relative">
+            <div className="flex items-center gap-2 text-teal-200 text-sm mb-2">
+              <MapPin className="h-4 w-4" />
+              <span>{selectedCounty?.county_name} County, {selectedState?.state_name}</span>
             </div>
-            <div className="flex flex-col gap-2">
-              <Badge variant="default" className="bg-green-100 text-green-800 border-green-200 px-3 py-1.5">
-                <CheckCircle className="h-4 w-4 mr-1" />
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+              {selectedCity.city_name}
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              <Badge className="bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 backdrop-blur-sm">
+                <CheckCircle className="h-3 w-3 mr-1" />
                 Greywater Allowed
               </Badge>
-              {complianceData?.city?.incentive_count && complianceData.city.incentive_count > 0 && (
-                <Badge variant="default" className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1.5">
-                  <DollarSign className="h-4 w-4 mr-1" />
-                  {complianceData.city.incentive_count} Incentive{complianceData.city.incentive_count > 1 ? 's' : ''} Available
+              {stats.hasCityPolicy && (
+                <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
+                  City Ordinance
                 </Badge>
               )}
             </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10">
+              <QuickStat
+                label="Incentive Programs"
+                value={stats.programCount}
+                icon={Banknote}
+              />
+              <QuickStat
+                label="Max Single Rebate"
+                value={stats.maxIncentive > 0 ? `$${stats.maxIncentive.toLocaleString()}` : '-'}
+                icon={DollarSign}
+              />
+              <QuickStat
+                label="Total Potential"
+                value={stats.totalPotential > 0 ? `$${stats.totalPotential.toLocaleString()}` : '-'}
+                icon={Sparkles}
+              />
+              <QuickStat
+                label="Policy Source"
+                value={stats.hasCityPolicy ? 'City' : stats.hasCountyPolicy ? 'County' : 'State'}
+                icon={Scale}
+              />
+            </div>
           </div>
         </div>
-        
-        {/* Effective Policy View */}
-        <EffectivePolicyView 
+
+        {/* User Type Selector */}
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center gap-2 text-sm">
+            <div className="p-1.5 bg-slate-100 rounded-lg">
+              <User className="h-4 w-4 text-slate-600" />
+            </div>
+            <span className="text-slate-700 font-medium">Viewing as:</span>
+          </div>
+          <select
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white font-medium text-slate-700"
+          >
+            {userTypeOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Effective Policy - Always visible */}
+        <EffectivePolicyView
           complianceData={complianceData}
           jurisdictionName={selectedCity.city_name || ''}
         />
 
-        {/* User Type Selector for Tier Matching */}
-        <div className="bg-white border rounded-lg p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <User className="h-5 w-5 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">I am a:</span>
-              <div className="relative group">
-                <Info className="h-4 w-4 text-gray-400 cursor-pointer" />
-                <div className="absolute bottom-full mb-2 w-64 bg-gray-800 text-white text-xs rounded py-2 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  Select your profile to see personalized funding tier recommendations for state-level incentive programs.
-                  <svg className="absolute text-gray-800 h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255">
-                    <polygon className="fill-current" points="0,0 127.5,127.5 255,0"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <select 
-              value={userType}
-              onChange={(e) => setUserType(e.target.value)}
-              className="px-3 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {userTypeOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+        {/* Policy Hierarchy */}
+        <CollapsibleSection
+          title="Policy Hierarchy"
+          icon={Layers}
+          accentColor="blue"
+          summary={`${selectedState?.state_name} → ${selectedCounty?.county_name} → ${selectedCity.city_name}`}
+          defaultOpen={false}
+        >
+          <div className="space-y-3 pt-4">
+            <PolicyLevelCard
+              level="State"
+              name={selectedState?.state_name || ''}
+              color="blue"
+              hasPolicy={!!selectedState?.has_greywater_policy}
+              programCount={complianceData?.state?.incentive_count}
+              summary={selectedState?.regulation_summary}
+            />
+            <PolicyLevelCard
+              level="County"
+              name={selectedCounty?.county_name || ''}
+              color="purple"
+              hasPolicy={selectedCounty?.has_greywater_policy === 1}
+              programCount={complianceData?.county?.incentive_count}
+              summary={selectedCounty?.regulation_summary}
+            />
+            <PolicyLevelCard
+              level="City"
+              name={selectedCity.city_name || ''}
+              color="teal"
+              hasPolicy={selectedCity.has_greywater_policy === 1}
+              programCount={complianceData?.city?.incentive_count}
+              summary={selectedCity.regulation_summary}
+            />
           </div>
-        </div>
+        </CollapsibleSection>
 
-        {/* Policy Hierarchy Breakdown */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Building className="h-5 w-5 text-blue-600" />
-            Compliance Policy Hierarchy
-          </h3>
-          <div className="space-y-4">
-            {/* State Level Policy */}
-            <div className="border-l-4 border-blue-500 pl-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900">State Level ({selectedState?.state_name})</h4>
-                {complianceData?.state?.incentive_count && complianceData.state.incentive_count > 0 ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    {complianceData.state.incentive_count} Program{complianceData.state.incentive_count > 1 ? 's' : ''}
-                  </Badge>
-                ) : selectedState?.has_greywater_policy ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    Active Policy
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">No State Policy</Badge>
-                )}
-              </div>
-              {selectedState?.regulation_summary && (
-                <p className="text-sm text-gray-600 mt-2">{selectedState.regulation_summary}</p>
-              )}
-              {complianceData?.state?.incentives && (() => {
-                const stats = getProgramStats(complianceData.state.incentives)
-                return (
-                  <div className="mt-2 space-y-1">
-                    {stats.residential.count > 0 && (
-                      <p className="text-sm text-green-700 font-medium flex items-center gap-2">
-                        <Home className="h-3 w-3" />
-                        Residential: {stats.residential.count} program{stats.residential.count > 1 ? 's' : ''} 
-                        {stats.residential.max > 0 && ` • Up to $${stats.residential.max.toLocaleString()}`}
-                      </p>
-                    )}
-                    {stats.commercial.count > 0 && (
-                      <p className="text-sm text-purple-700 font-medium flex items-center gap-2">
-                        <Building className="h-3 w-3" />
-                        Commercial: {stats.commercial.count} program{stats.commercial.count > 1 ? 's' : ''}
-                        {stats.commercial.max > 0 && ` • Up to $${stats.commercial.max.toLocaleString()}`}
-                      </p>
-                    )}
-                  </div>
-                )
-              })()}
-            </div>
-
-            {/* County Level Policy */}
-            <div className="border-l-4 border-purple-500 pl-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900">County Level ({selectedCounty?.county_name})</h4>
-                {complianceData?.county?.incentive_count && complianceData.county.incentive_count > 0 ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    {complianceData.county.incentive_count} Program{complianceData.county.incentive_count > 1 ? 's' : ''}
-                  </Badge>
-                ) : selectedCounty?.has_greywater_policy === 1 ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    Active Policy
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">Follows State Policy</Badge>
-                )}
-              </div>
-              {selectedCounty?.regulation_summary && (
-                <p className="text-sm text-gray-600 mt-2">{selectedCounty.regulation_summary}</p>
-              )}
-              {complianceData?.county?.incentives && (() => {
-                const stats = getProgramStats(complianceData.county.incentives)
-                return (
-                  <div className="mt-2 space-y-1">
-                    {stats.residential.count > 0 && (
-                      <p className="text-sm text-green-700 font-medium flex items-center gap-2">
-                        <Home className="h-3 w-3" />
-                        Residential: {stats.residential.count} program{stats.residential.count > 1 ? 's' : ''} 
-                        {stats.residential.max > 0 && ` • Up to $${stats.residential.max.toLocaleString()}`}
-                      </p>
-                    )}
-                    {stats.commercial.count > 0 && (
-                      <p className="text-sm text-purple-700 font-medium flex items-center gap-2">
-                        <Building className="h-3 w-3" />
-                        Commercial: {stats.commercial.count} program{stats.commercial.count > 1 ? 's' : ''}
-                        {stats.commercial.max > 0 && ` • Up to $${stats.commercial.max.toLocaleString()}`}
-                      </p>
-                    )}
-                  </div>
-                )
-              })()}
-            </div>
-
-            {/* City Level Policy */}
-            <div className="border-l-4 border-green-500 pl-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900">City Level ({selectedCity.city_name})</h4>
-                {selectedCity.has_greywater_policy === 1 ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    City Ordinance
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">Follows County/State</Badge>
-                )}
-              </div>
-              {selectedCity.regulation_summary && (
-                <p className="text-sm text-gray-600 mt-2">{selectedCity.regulation_summary}</p>
-              )}
-              {complianceData?.city?.incentives && (() => {
-                const stats = getProgramStats(complianceData.city.incentives)
-                
-                return (
-                  <div className="mt-2 space-y-1">
-                    {stats.residential.count > 0 && (
-                      <p className="text-sm text-green-700 font-medium flex items-center gap-1">
-                        <Home className="h-3 w-3" />
-                        Residential: {stats.residential.count} program{stats.residential.count > 1 ? 's' : ''}
-                        {stats.residential.max > 0 && ` • Up to $${stats.residential.max.toLocaleString()}`}
-                      </p>
-                    )}
-                    {stats.commercial.count > 0 && (
-                      <p className="text-sm text-blue-700 font-medium flex items-center gap-1">
-                        <Building className="h-3 w-3" />
-                        Commercial: {stats.commercial.count} program{stats.commercial.count > 1 ? 's' : ''}
-                        {stats.commercial.max > 0 && ` • Up to $${stats.commercial.max.toLocaleString()}`}
-                      </p>
-                    )}
-                  </div>
-                )
-              })()}
-            </div>
-          </div>
-        </div>
-
-        {/* Greywater Laws & Regulations */}
-        {complianceData?.state?.laws && (
-          <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
-              State Greywater Laws & Regulations
-            </h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Legal Status</h4>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={complianceData.state.laws.legal_status?.toLowerCase().includes('legal') ? 'default' : 'secondary'}>
-                      {complianceData.state.laws.legal_status}
-                    </Badge>
-                    <span className="text-sm text-gray-600">{complianceData.state.laws.regulatory_classification}</span>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Permit Required</h4>
-                  <p className="text-sm text-gray-600">{complianceData.state.laws.permit_required}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    Allowed Uses
-                  </h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    {complianceData.state.laws.approved_uses?.map((use: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-green-500 mt-0.5">•</span>
-                        <span>{use}</span>
-                      </li>
-                    )) || <li className="text-sm text-gray-500">No specific uses listed</li>}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-orange-500" />
-                    Key Restrictions
-                  </h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    {complianceData.state.laws.key_restrictions?.map((restriction: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-orange-500 mt-0.5">•</span>
-                        <span>{restriction}</span>
-                      </li>
-                    )) || <li className="text-sm text-gray-500">No specific restrictions listed</li>}
-                  </ul>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Governing Code</h4>
-                <p className="text-sm text-gray-600">{complianceData.state.laws.governing_code}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Primary Agency</h4>
-                  <p className="text-sm text-gray-600">{complianceData.state.laws.primary_agency}</p>
-                  {complianceData.state.laws.agency_contact && (
-                    <p className="text-sm text-blue-600 mt-1">{complianceData.state.laws.agency_contact}</p>
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Use Permissions</h4>
-                  <div className="flex gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Indoor:</span>
-                      {complianceData.state.laws.indoor_use_allowed ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <X className="h-4 w-4 text-red-500" />
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Outdoor:</span>
-                      {complianceData.state.laws.outdoor_use_allowed ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <X className="h-4 w-4 text-red-500" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {complianceData.state.laws.recent_changes && (
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                    <Info className="h-4 w-4" />
-                    Recent Changes
-                  </h4>
-                  <p className="text-sm text-blue-800">{complianceData.state.laws.recent_changes}</p>
-                </div>
-              )}
-
-              {complianceData.state.laws.government_website && (
-                <div className="flex justify-end">
-                  <a
-                    href={complianceData.state.laws.government_website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2"
-                  >
-                    Visit Official Website
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Greywater Laws */}
+        {stats.hasLaws && complianceData?.state?.laws && (
+          <CollapsibleSection
+            title="State Greywater Laws"
+            icon={FileText}
+            accentColor="slate"
+            badge={
+              <Badge className={getLegalStatusBadgeClass(complianceData.state.laws.legal_status)}>
+                {complianceData.state.laws.legal_status}
+              </Badge>
+            }
+            summary={complianceData.state.laws.governing_code}
+            defaultOpen={false}
+          >
+            <GreywaterLawsContent laws={complianceData.state.laws} />
+          </CollapsibleSection>
         )}
 
-        {/* Requirements Section Based on Sector View */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            {sectorView === 'residential' ? (
-              <>
-                <Home className="h-5 w-5 text-blue-600" />
-                Residential Requirements
-              </>
-            ) : (
-              <>
-                <Building className="h-5 w-5 text-purple-600" />
-                Commercial Requirements
-              </>
-            )}
-          </h3>
-          <div className="space-y-4">
-            {(complianceData?.effective?.regulations) ? (
-              <>
-                <RegulationItem title="Allowed Sources" content={complianceData.effective.regulations.allowed_sources} />
-                <RegulationItem title="Prohibited Sources" content={complianceData.effective.regulations.prohibited_sources} />
-                <RegulationItem title="Treatment Requirements" content={complianceData.effective.regulations.treatment_requirements} />
-                <RegulationItem title="System Size Limits" content={complianceData.effective.regulations.system_size_limits} />
-                <RegulationItem title="Setback Requirements" content={complianceData.effective.regulations.setback_requirements} />
-                <RegulationItem title="Inspection Required" content={complianceData.effective.regulations.inspection_required ? 'Yes' : 'Varies by system size'} />
-              </>
-            ) : (
-              <p className="text-sm text-gray-500">
-                Detailed requirements for {sectorView} systems are based on the effective jurisdiction's policy. Contact the local authority for specific guidelines.
-              </p>
-            )}
-          </div>
-        </div>
+        {/* Requirements */}
+        {stats.hasRegulations && (
+          <CollapsibleSection
+            title={`${sectorView === 'residential' ? 'Residential' : 'Commercial'} Requirements`}
+            icon={sectorView === 'residential' ? Home : Building}
+            accentColor={sectorView === 'residential' ? 'teal' : 'purple'}
+            summary="Allowed sources, treatment, setbacks & more"
+            defaultOpen={false}
+          >
+            <RequirementsContent
+              regulations={complianceData?.effective?.regulations}
+              sectorView={sectorView}
+            />
+          </CollapsibleSection>
+        )}
 
-        {/* Enhanced Incentive Programs */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-600" />
-            Available Incentive Programs
-          </h3>
-          
-          {complianceData ? (
-            <div className="space-y-6">
-              <IncentiveSection level="State" programs={complianceData.state?.incentives} sectorView={sectorView} />
-              <IncentiveSection level="County" programs={complianceData.county?.incentives} sectorView={sectorView} />
-              <IncentiveSection level="City" programs={complianceData.city?.incentives} sectorView={sectorView} />
-
-              {/* Summary Statistics */}
-              {complianceData.effective && (
-                <div className="border-t-2 border-dashed border-gray-200 pt-6 mt-6">
-                  <h4 className="font-medium text-gray-900 mb-4">Incentive Summary for {sectorView === 'residential' ? 'Residential' : 'Commercial'} Applicants</h4>
-                  
-                  {(() => {
-                    const allPrograms = [
-                      ...(complianceData.state?.incentives || []),
-                      ...(complianceData.county?.incentives || []),
-                      ...(complianceData.city?.incentives || [])
-                    ];
-                    const sectorPrograms = filterProgramsBySector(allPrograms);
-                    
-                    if (sectorPrograms.length === 0) {
-                      return (
-                        <p className="text-sm text-gray-500">
-                          No {sectorView} incentive programs found for this location.
-                        </p>
-                      )
-                    }
-
-                    const maxIncentive = Math.max(...sectorPrograms.map(p => p.incentive_amount_max || 0), 0);
-                    const potentialTotal = sectorPrograms.reduce((sum, p) => sum + (p.incentive_amount_max || 0), 0);
-
-                    return (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-gray-50 rounded-lg p-4 text-center">
-                          <p className="text-sm text-gray-600">Programs Available</p>
-                          <p className="text-2xl font-bold text-gray-800">
-                            {sectorPrograms.length}
-                          </p>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg p-4 text-center">
-                          <p className="text-sm text-gray-600">Maximum Single Incentive</p>
-                          <p className="text-2xl font-bold text-green-700">
-                            ${maxIncentive.toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg p-4 text-center">
-                          <p className="text-sm text-gray-600">Potential Combined Total</p>
-                          <p className="text-2xl font-bold text-green-700">
-                            ${potentialTotal.toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                    )
-                  })()}
-                  
-                  <p className="text-xs text-gray-500 mt-4 text-center">
-                    Note: Program eligibility requirements vary and incentives may not be combinable.
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500">Loading incentive program details...</p>
-            </div>
-          )}
-        </div>
+        {/* Incentive Programs - Primary section, always open */}
+        {stats.programCount > 0 && (
+          <CollapsibleSection
+            title="Incentive Programs"
+            icon={DollarSign}
+            accentColor="emerald"
+            badge={
+              <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
+                {stats.programCount} Available
+              </Badge>
+            }
+            summary={`Up to $${stats.maxIncentive.toLocaleString()} per program`}
+            defaultOpen={true}
+          >
+            <IncentiveProgramsContent
+              complianceData={complianceData}
+              sectorView={sectorView}
+              stats={stats}
+            />
+          </CollapsibleSection>
+        )}
 
         {/* Permit Requirements */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <FileText className="h-5 w-5 text-orange-600" />
-            Permit Requirements
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Simple Systems</h4>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Permit Required:</span> No (under 250 gal/day)
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Inspection:</span> Not required
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Examples:</span> Laundry-to-landscape
-                </p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Standard Systems</h4>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Permit Required:</span> Yes
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Permit Fee:</span> ${selectedCity?.permit_fee || '150-500'}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Inspection:</span> Required
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Processing Time:</span> 2-4 weeks
-                </p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Complex Systems</h4>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Permit Required:</span> Yes
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Engineering Plans:</span> Required
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Permit Fee:</span> $500-2000+
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Processing Time:</span> 4-8 weeks
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  } else if (selectedCounty) {
-    // Detailed County-Level View
-    return (
-      <div className="mb-8 space-y-6">
-        {/* County Header */}
-        <div className="bg-white border rounded-lg p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">
-                {selectedCounty.county_name} County
-              </h2>
-              <p className="text-lg text-gray-600 mt-1">
-                {selectedState?.state_name}
-              </p>
-              {selectedCounty.city_count && (
-                <p className="text-sm text-gray-500 mt-1">
-                  {selectedCounty.city_count} cities
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <Badge variant="default" className="bg-green-100 text-green-800">
-                <CheckCircle className="h-4 w-4 mr-1" />
-                Greywater Allowed
-              </Badge>
-              {complianceData?.county?.incentive_count && complianceData.county.incentive_count > 0 && (
-                <Badge variant="default" className="bg-blue-100 text-blue-800">
-                  <DollarSign className="h-4 w-4 mr-1" />
-                  {complianceData.county.incentive_count} Incentive{complianceData.county.incentive_count > 1 ? 's' : ''} Available
-                </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Policy Hierarchy (State + County) */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Building className="h-5 w-5 text-gray-500" />
-            Policy Framework
-          </h3>
-          <div className="space-y-4">
-            {/* State Level */}
-            <div className="border-l-4 border-blue-500 pl-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900">State Framework ({selectedState?.state_name})</h4>
-                {complianceData?.state?.incentive_count && complianceData.state.incentive_count > 0 ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    {complianceData.state.incentive_count} Program{complianceData.state.incentive_count > 1 ? 's' : ''}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="text-gray-500 border-gray-300">
-                    No Programs
-                  </Badge>
-                )}
-              </div>
-              {selectedState?.regulation_summary && (
-                <p className="text-sm text-gray-600 mt-2">{selectedState.regulation_summary}</p>
-              )}
-            </div>
-
-            {/* County Level */}
-            <div className="border-l-4 border-purple-500 pl-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900">County Policy ({selectedCounty.county_name})</h4>
-                {complianceData?.county?.incentive_count && complianceData.county.incentive_count > 0 ? (
-                  <Badge variant="outline" className="text-green-700 border-green-700">
-                    {complianceData.county.incentive_count} Program{complianceData.county.incentive_count > 1 ? 's' : ''}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="text-gray-500 border-gray-300">
-                    No Programs
-                  </Badge>
-                )}
-              </div>
-              {selectedCounty.regulation_summary && (
-                <p className="text-sm text-gray-600 mt-2">{selectedCounty.regulation_summary}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Residential vs Commercial */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Home className="h-5 w-5 text-blue-500" />
-              Residential Compliance
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm font-medium text-gray-700">County Requirements:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  {selectedCounty.has_greywater_policy === 1 
-                    ? "County-specific residential requirements apply"
-                    : "Follows state residential guidelines"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Permit Process:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Applications processed at county level
-                </p>
-              </div>
-              {selectedCounty.max_rebate_amount && selectedCounty.max_rebate_amount > 0 && (
-                <div>
-                  <p className="text-sm font-medium text-gray-700">County Rebates:</p>
-                  <p className="text-sm text-green-700 font-semibold mt-1">
-                    Up to ${selectedCounty.max_rebate_amount.toLocaleString()}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Building className="h-5 w-5 text-purple-500" />
-              Commercial Compliance
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm font-medium text-gray-700">Review Process:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  All commercial systems require county review and approval
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Additional Requirements:</p>
-                <ul className="text-sm text-gray-600 mt-1 ml-4 list-disc">
-                  <li>Health department approval</li>
-                  <li>Environmental review for large systems</li>
-                  <li>Regular compliance monitoring</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Available Incentives */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-500" />
-            County Incentive Programs
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            {selectedState?.has_incentives === 1 && (
-              <div className="border rounded-lg p-4 bg-blue-50">
-                <h4 className="font-medium text-gray-900 mb-2">State Program</h4>
-                <p className="text-lg font-bold text-green-700">
-                  Up to ${selectedState.max_rebate_amount?.toLocaleString() || '500'}
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Available to all county residents
-                </p>
-              </div>
-            )}
-            
-            {selectedCounty?.has_incentives === 1 && (
-              <div className="border rounded-lg p-4 bg-purple-50">
-                <h4 className="font-medium text-gray-900 mb-2">County Program</h4>
-                <p className="text-lg font-bold text-green-700">
-                  Up to ${selectedCounty.max_rebate_amount?.toLocaleString() || '250'}
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  {selectedCounty.county_name} County additional rebate
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  } else if (selectedState) {
-    // Detailed State-Level View  
-    return (
-      <div className="mb-8 space-y-6">
-        {/* State Header */}
-        <div className="bg-white border rounded-lg p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">
-                {selectedState.state_name}
-              </h2>
-              <p className="text-lg text-gray-600 mt-1">
-                State of {selectedState.state_name}
-              </p>
-              <div className="flex gap-4 text-sm text-gray-500 mt-1">
-                {selectedState.county_count && (
-                  <span>{selectedState.county_count} counties</span>
-                )}
-                {selectedState.city_count && (
-                  <span>{selectedState.city_count} cities</span>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              {selectedState?.has_greywater_policy ? (
-                <Badge variant="default" className="bg-green-100 text-green-800">
-                  <CheckCircle className="h-4 w-4 mr-1" />
-                  State Policy Active
-                </Badge>
-              ) : (
-                <Badge variant="secondary">
-                  <XCircle className="h-4 w-4 mr-1" />
-                  No State Framework
-                </Badge>
-              )}
-              {selectedState?.has_incentives === 1 && (
-                <Badge variant="default" className="bg-blue-100 text-blue-800">
-                  <DollarSign className="h-4 w-4 mr-1" />
-                  State Incentives
-                </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* State Policy Framework */}
-        <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Building className="h-5 w-5 text-gray-500" />
-            State Policy Framework
-          </h3>
-          <div className="border-l-4 border-blue-500 pl-4">
-            <div className="flex items-center justify-between">
-              <h4 className="font-medium text-gray-900">Statewide Regulations</h4>
-              {selectedState.has_greywater_policy ? (
-                <Badge variant="outline" className="text-green-700 border-green-700">
-                  Active Statewide Policy
-                </Badge>
-              ) : (
-                <Badge variant="outline">Local Jurisdictions Decide</Badge>
-              )}
-            </div>
-            {selectedState.regulation_summary && (
-              <p className="text-sm text-gray-600 mt-2">{selectedState.regulation_summary}</p>
-            )}
-            <p className="text-xs text-gray-500 mt-2">
-              Local jurisdictions may have additional or more restrictive requirements
-            </p>
-          </div>
-        </div>
-
-        {/* Statewide Requirements */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Home className="h-5 w-5 text-blue-500" />
-              Residential Framework
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm font-medium text-gray-700">State Standards:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  {selectedState.has_greywater_policy 
-                    ? "Statewide standards for residential greywater systems"
-                    : "No statewide standards - varies by local jurisdiction"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Local Authority:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Counties and cities may implement additional requirements
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Building className="h-5 w-5 text-purple-500" />
-              Commercial Framework
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm font-medium text-gray-700">State Oversight:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Large commercial systems may require state-level review
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Environmental Review:</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Systems over 5,000 gallons/day typically require environmental assessment
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* State Incentives */}
-        {complianceData?.state?.incentive_count && complianceData.state.incentive_count > 0 && (
-          <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-green-500" />
-              State Incentive Programs ({complianceData.state.incentive_count})
-            </h3>
-            {complianceData.state.max_incentive && (
-              <div className="border rounded-lg p-4 bg-blue-50">
-                <p className="text-lg font-bold text-green-700">
-                  Up to ${complianceData.state.max_incentive.toLocaleString()}
-                </p>
-                <p className="text-sm text-gray-600 mt-2">
-                  {complianceData.state.regulation_summary}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+        <CollapsibleSection
+          title="Permit Requirements"
+          icon={ClipboardList}
+          accentColor="amber"
+          summary="Simple, Standard & Complex system permits"
+          defaultOpen={false}
+        >
+          <PermitRequirementsContent permitFee={selectedCity?.permit_fee} />
+        </CollapsibleSection>
       </div>
     )
   }
-  
+
+  // County-level view
+  if (selectedCounty) {
+    return <CountyLevelView
+      selectedState={selectedState}
+      selectedCounty={selectedCounty}
+      complianceData={complianceData}
+      sectorView={sectorView}
+    />
+  }
+
+  // State-level view
+  if (selectedState) {
+    return <StateLevelView
+      selectedState={selectedState}
+      complianceData={complianceData}
+      sectorView={sectorView}
+    />
+  }
+
   return null
 }
 
-const RegulationItem = ({ title, content }: { title: string, content?: string | null }) => {
-  if (!content) return null;
-  
-  // Split content by common delimiters (;, |) and trim whitespace
-  const items = content.split(/;|,|\|/).map(item => item.trim()).filter(Boolean);
-
+// Quick stat component for hero section
+function QuickStat({
+  label,
+  value,
+  icon: Icon
+}: {
+  label: string
+  value: string | number
+  icon: any
+}) {
   return (
-    <div>
-      <p className="text-sm font-medium text-gray-700">{title}:</p>
-      <ul className="text-sm text-gray-600 mt-1 ml-4 list-disc space-y-1">
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
+    <div className="text-center">
+      <div className="flex items-center justify-center gap-1.5 text-white mb-0.5">
+        <Icon className="h-4 w-4 text-teal-200" />
+        <span className="font-bold text-xl">{value}</span>
+      </div>
+      <p className="text-xs text-teal-200">{label}</p>
     </div>
-  );
-};
-
-const colors = {
-  State: 'bg-blue-50 text-blue-700 border-blue-200',
-  County: 'bg-purple-50 text-purple-700 border-purple-200',
-  City: 'bg-green-50 text-green-700 border-green-200',
-} as const;
-
-type Level = keyof typeof colors;
-
-interface IncentiveSectionProps {
-  level: Level;
-  programs: any[] | undefined;
-  sectorView: 'residential' | 'commercial';
+  )
 }
 
-const IncentiveSection = ({ level, programs, sectorView }: IncentiveSectionProps) => {
-  const filterProgramsBySector = (programs: any[]) => {
-    if (!programs) return []
-    return programs.filter(program => {
-      if (sectorView === 'residential') {
-        return program.residential_eligibility !== false
-      } else {
-        return program.commercial_eligibility === true
-      }
-    })
-  }
-
-  const renderIncentiveAmount = (program: any) => {
-    if (program.incentive_amount_min && program.incentive_amount_max) {
-      return `$${program.incentive_amount_min?.toLocaleString()} - $${program.incentive_amount_max?.toLocaleString()}`;
-    } else if (program.incentive_amount_max) {
-      return `Up to $${program.incentive_amount_max?.toLocaleString()}`;
-    } else if (program.rebate_percentage) {
-      return `${program.rebate_percentage}% rebate`;
-    }
-    return 'Varies';
-  };
-
-  const filteredPrograms = filterProgramsBySector(programs || []);
-
-  if (filteredPrograms.length === 0) {
-    return null;
+// Policy level card for hierarchy
+function PolicyLevelCard({
+  level,
+  name,
+  color,
+  hasPolicy,
+  programCount,
+  summary
+}: {
+  level: string
+  name: string
+  color: 'blue' | 'purple' | 'teal'
+  hasPolicy: boolean
+  programCount?: number
+  summary?: string
+}) {
+  const colorClasses = {
+    blue: 'border-l-blue-500 bg-blue-50/50',
+    purple: 'border-l-purple-500 bg-purple-50/50',
+    teal: 'border-l-teal-500 bg-teal-50/50'
   }
 
   return (
-    <div>
-      <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-        <Badge variant="outline" className={colors[level]}>
-          {level} {sectorView === 'commercial' ? 'Commercial' : 'Residential'} Programs ({filteredPrograms.length})
-        </Badge>
-      </h4>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Program Name
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Type
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Amount
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-3 py-2 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Apply
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredPrograms.map((program, idx) => (
-              <tr key={idx} className="hover:bg-gray-50">
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-gray-900">{program.program_name || `${level} Program`}</span>
-                    {program.water_types && (
-                      <Badge className="bg-cyan-100 text-cyan-800 text-xs">
-                        <Droplets className="h-3 w-3 mr-1" />
-                        {program.water_types}
-                      </Badge>
-                    )}
-                  </div>
-                  {program.program_description && (
-                    <p className="text-xs text-gray-500 mt-1 max-w-md">{program.program_description}</p>
-                  )}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <span className="text-gray-700 capitalize">{program.program_type || 'Rebate'}</span>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <span className="font-semibold text-green-700">{renderIncentiveAmount(program)}</span>
-                  {program.incentive_per_unit && (
-                    <p className="text-xs text-gray-500">{program.incentive_per_unit}</p>
-                  )}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <Badge className={`${level === 'State' ? 'bg-blue-100 text-blue-800' :
-                                      level === 'County' ? 'bg-purple-100 text-purple-800' :
-                                      'bg-green-100 text-green-800'} text-xs`}>
-                    {program.program_status || 'Active'}
-                  </Badge>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-center">
-                  {program.incentive_url ? (
-                    <a
-                      href={program.incentive_url}
-                      className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  ) : (
-                    <span className="text-gray-400">-</span>
-                  )}
-                </td>
-              </tr>
+    <div className={`border-l-4 ${colorClasses[color]} rounded-r-xl p-4`}>
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{level}</span>
+          <p className="font-semibold text-slate-800">{name}</p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {hasPolicy ? (
+            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+              Active Policy
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-slate-500 border-slate-300 text-xs">
+              Follows {level === 'City' ? 'County/State' : 'State'}
+            </Badge>
+          )}
+          {programCount && programCount > 0 && (
+            <Badge className="bg-teal-100 text-teal-700 border-teal-200 text-xs">
+              {programCount} Programs
+            </Badge>
+          )}
+        </div>
+      </div>
+      {summary && (
+        <p className="text-sm text-slate-600 mt-2">{summary}</p>
+      )}
+    </div>
+  )
+}
+
+// Greywater laws content
+function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
+  return (
+    <div className="space-y-4 pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <h4 className="text-sm font-semibold text-slate-700 mb-2">Permit Required</h4>
+          <p className="text-sm text-slate-600">{laws.permit_required || 'Varies by system'}</p>
+        </div>
+        <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <h4 className="text-sm font-semibold text-slate-700 mb-2">Use Permissions</h4>
+          <div className="flex gap-4 text-sm">
+            <span className="flex items-center gap-1.5">
+              Indoor: {laws.indoor_use_allowed ? <Check className="h-4 w-4 text-emerald-500" /> : <X className="h-4 w-4 text-red-500" />}
+            </span>
+            <span className="flex items-center gap-1.5">
+              Outdoor: {laws.outdoor_use_allowed ? <Check className="h-4 w-4 text-emerald-500" /> : <X className="h-4 w-4 text-red-500" />}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {laws.approved_uses && laws.approved_uses.length > 0 && (
+        <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <h4 className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+            <Check className="h-4 w-4 text-emerald-500" />
+            Approved Uses
+          </h4>
+          <ul className="text-sm text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+            {laws.approved_uses.map((use, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span className="text-emerald-500 mt-0.5">•</span>
+                {use}
+              </li>
             ))}
-          </tbody>
-        </table>
+          </ul>
+        </div>
+      )}
+
+      {laws.key_restrictions && laws.key_restrictions.length > 0 && (
+        <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-200">
+          <h4 className="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
+            <AlertTriangle className="h-4 w-4 text-amber-600" />
+            Key Restrictions
+          </h4>
+          <ul className="text-sm text-amber-900 space-y-1.5">
+            {laws.key_restrictions.map((restriction, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span className="text-amber-600 mt-0.5">•</span>
+                {restriction}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {laws.governing_code && (
+        <div className="bg-slate-100 rounded-xl p-4">
+          <h4 className="text-sm font-semibold text-slate-700 mb-1">Governing Code</h4>
+          <p className="text-sm text-slate-600">{laws.governing_code}</p>
+        </div>
+      )}
+
+      {laws.recent_changes && (
+        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+          <h4 className="text-sm font-semibold text-blue-800 mb-1 flex items-center gap-1.5">
+            <Info className="h-4 w-4" />
+            Recent Changes
+          </h4>
+          <p className="text-sm text-blue-700">{laws.recent_changes}</p>
+        </div>
+      )}
+
+      {laws.government_website && (
+        <a
+          href={laws.government_website}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-700 font-medium"
+        >
+          <ExternalLink className="h-4 w-4" />
+          Visit Official Website
+        </a>
+      )}
+    </div>
+  )
+}
+
+// Requirements content
+function RequirementsContent({
+  regulations,
+  sectorView
+}: {
+  regulations?: RegulationDetail
+  sectorView: 'residential' | 'commercial'
+}) {
+  if (!regulations) {
+    return (
+      <p className="text-sm text-slate-500 pt-4">
+        Detailed requirements vary by jurisdiction. Contact local authorities for specifics.
+      </p>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+      <RegulationCard title="Allowed Sources" content={regulations.allowed_sources} icon={Check} color="emerald" />
+      <RegulationCard title="Prohibited Sources" content={regulations.prohibited_sources} icon={X} color="red" />
+      <RegulationCard title="Treatment Requirements" content={regulations.treatment_requirements} icon={Droplets} color="blue" />
+      <RegulationCard title="System Size Limits" content={regulations.system_size_limits} icon={Scale} color="slate" />
+      <RegulationCard title="Setback Requirements" content={regulations.setback_requirements} icon={MapPin} color="purple" />
+      <RegulationCard
+        title="Inspection Required"
+        content={regulations.inspection_required ? 'Yes' : 'Varies by system size'}
+        icon={ClipboardList}
+        color="amber"
+      />
+    </div>
+  )
+}
+
+// Regulation card component
+function RegulationCard({
+  title,
+  content,
+  icon: Icon,
+  color
+}: {
+  title: string
+  content?: string | null
+  icon: any
+  color: 'emerald' | 'red' | 'blue' | 'slate' | 'purple' | 'amber'
+}) {
+  if (!content) return null
+
+  const colorClasses = {
+    emerald: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+    red: 'bg-red-50 border-red-200 text-red-700',
+    blue: 'bg-blue-50 border-blue-200 text-blue-700',
+    slate: 'bg-slate-50 border-slate-200 text-slate-700',
+    purple: 'bg-purple-50 border-purple-200 text-purple-700',
+    amber: 'bg-amber-50 border-amber-200 text-amber-700'
+  }
+
+  const items = content.split(/;|,|\|/).map(item => item.trim()).filter(Boolean)
+
+  return (
+    <div className="bg-white rounded-xl p-4 border border-slate-200">
+      <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-semibold mb-2 ${colorClasses[color]}`}>
+        <Icon className="h-3 w-3" />
+        {title}
+      </div>
+      {items.length === 1 ? (
+        <p className="text-sm text-slate-600">{items[0]}</p>
+      ) : (
+        <ul className="text-sm text-slate-600 space-y-1">
+          {items.slice(0, 3).map((item, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <span className="text-slate-400 mt-0.5">•</span>
+              {item}
+            </li>
+          ))}
+          {items.length > 3 && (
+            <InlineCollapsible label={`${items.length - 3} more`}>
+              <ul className="space-y-1">
+                {items.slice(3).map((item, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-slate-400 mt-0.5">•</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </InlineCollapsible>
+          )}
+        </ul>
+      )}
+    </div>
+  )
+}
+
+// Incentive programs content
+function IncentiveProgramsContent({
+  complianceData,
+  sectorView,
+  stats
+}: {
+  complianceData: any
+  sectorView: 'residential' | 'commercial'
+  stats: { programCount: number; maxIncentive: number; totalPotential: number }
+}) {
+  const filterBySector = (programs: IncentiveProgram[] | undefined) => {
+    if (!programs) return []
+    return programs.filter(p =>
+      sectorView === 'residential'
+        ? p.residential_eligibility !== false
+        : p.commercial_eligibility === true
+    )
+  }
+
+  const statePrograms = filterBySector(complianceData?.state?.incentives)
+  const countyPrograms = filterBySector(complianceData?.county?.incentives)
+  const cityPrograms = filterBySector(complianceData?.city?.incentives)
+
+  return (
+    <div className="space-y-4 pt-4">
+      {statePrograms.length > 0 && (
+        <IncentiveLevelSection level="State" programs={statePrograms} color="blue" />
+      )}
+      {countyPrograms.length > 0 && (
+        <IncentiveLevelSection level="County" programs={countyPrograms} color="purple" />
+      )}
+      {cityPrograms.length > 0 && (
+        <IncentiveLevelSection level="City" programs={cityPrograms} color="teal" />
+      )}
+
+      {/* Summary Card */}
+      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-5 border border-emerald-200">
+        <h4 className="font-semibold text-slate-800 mb-4">Summary</h4>
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p className="text-2xl font-bold text-slate-800">{stats.programCount}</p>
+            <p className="text-xs text-slate-500">Programs</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-emerald-600">${stats.maxIncentive.toLocaleString()}</p>
+            <p className="text-xs text-slate-500">Max Single</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-emerald-600">${stats.totalPotential.toLocaleString()}</p>
+            <p className="text-xs text-slate-500">Combined Total</p>
+          </div>
+        </div>
+        <p className="text-xs text-slate-500 mt-4 text-center">
+          Programs may not be combinable. Check eligibility requirements.
+        </p>
       </div>
     </div>
   )
+}
+
+// Incentive level section
+function IncentiveLevelSection({
+  level,
+  programs,
+  color
+}: {
+  level: string
+  programs: IncentiveProgram[]
+  color: 'blue' | 'purple' | 'teal'
+}) {
+  const colorClasses = {
+    blue: { badge: 'bg-blue-100 text-blue-700 border-blue-200', border: 'border-l-blue-400' },
+    purple: { badge: 'bg-purple-100 text-purple-700 border-purple-200', border: 'border-l-purple-400' },
+    teal: { badge: 'bg-teal-100 text-teal-700 border-teal-200', border: 'border-l-teal-400' }
+  }
+
+  return (
+    <div>
+      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+        <Badge className={colorClasses[color].badge}>
+          {level} Programs ({programs.length})
+        </Badge>
+      </h4>
+      <div className="space-y-2">
+        {programs.map((program, idx) => (
+          <div key={idx} className={`bg-white border border-slate-200 rounded-xl p-4 hover:border-slate-300 transition-colors border-l-4 ${colorClasses[color].border}`}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-slate-800">{program.program_name || `${level} Program`}</p>
+                {program.program_description && (
+                  <p className="text-sm text-slate-500 mt-1 line-clamp-2">{program.program_description}</p>
+                )}
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="font-bold text-emerald-600 text-lg">
+                  {renderIncentiveAmount(program)}
+                </p>
+                {program.incentive_url && (
+                  <a
+                    href={program.incentive_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700 font-medium mt-1"
+                  >
+                    Apply <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Permit requirements content
+function PermitRequirementsContent({ permitFee }: { permitFee?: number }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+      <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-200">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 bg-emerald-100 rounded-lg">
+            <Check className="h-4 w-4 text-emerald-600" />
+          </div>
+          <h4 className="font-semibold text-emerald-800">Simple Systems</h4>
+        </div>
+        <div className="space-y-1.5 text-sm text-emerald-900">
+          <p><span className="font-medium">Permit:</span> Usually not required</p>
+          <p><span className="font-medium">Limit:</span> Under 250 gal/day</p>
+          <p><span className="font-medium">Example:</span> Laundry-to-landscape</p>
+        </div>
+      </div>
+      <div className="bg-blue-50 rounded-xl p-5 border border-blue-200">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <FileText className="h-4 w-4 text-blue-600" />
+          </div>
+          <h4 className="font-semibold text-blue-800">Standard Systems</h4>
+        </div>
+        <div className="space-y-1.5 text-sm text-blue-900">
+          <p><span className="font-medium">Permit:</span> Required</p>
+          <p><span className="font-medium">Fee:</span> ${permitFee || '150-500'}</p>
+          <p><span className="font-medium">Time:</span> 2-4 weeks</p>
+        </div>
+      </div>
+      <div className="bg-amber-50 rounded-xl p-5 border border-amber-200">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 bg-amber-100 rounded-lg">
+            <ClipboardList className="h-4 w-4 text-amber-600" />
+          </div>
+          <h4 className="font-semibold text-amber-800">Complex Systems</h4>
+        </div>
+        <div className="space-y-1.5 text-sm text-amber-900">
+          <p><span className="font-medium">Permit:</span> Required + Plans</p>
+          <p><span className="font-medium">Fee:</span> $500-2000+</p>
+          <p><span className="font-medium">Time:</span> 4-8 weeks</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// County level view
+function CountyLevelView({
+  selectedState,
+  selectedCounty,
+  complianceData,
+  sectorView
+}: {
+  selectedState?: HierarchyItem | null
+  selectedCounty: HierarchyItem
+  complianceData: any
+  sectorView: 'residential' | 'commercial'
+}) {
+  return (
+    <div className="mb-8 space-y-4">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 rounded-2xl p-5 sm:p-8 text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+        <div className="relative">
+          <div className="flex items-center gap-2 text-purple-200 text-sm mb-2">
+            <MapPin className="h-4 w-4" />
+            <span>{selectedState?.state_name}</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+            {selectedCounty.county_name} County
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <Badge className="bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 backdrop-blur-sm">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              Greywater Allowed
+            </Badge>
+            {selectedCounty.city_count && (
+              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
+                {selectedCounty.city_count} Cities
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Policy Framework */}
+      <CollapsibleSection
+        title="Policy Framework"
+        icon={Layers}
+        accentColor="purple"
+        defaultOpen={true}
+      >
+        <div className="space-y-3 pt-4">
+          <PolicyLevelCard
+            level="State"
+            name={selectedState?.state_name || ''}
+            color="blue"
+            hasPolicy={!!selectedState?.has_greywater_policy}
+            programCount={complianceData?.state?.incentive_count}
+            summary={selectedState?.regulation_summary}
+          />
+          <PolicyLevelCard
+            level="County"
+            name={selectedCounty.county_name || ''}
+            color="purple"
+            hasPolicy={selectedCounty.has_greywater_policy === 1}
+            programCount={complianceData?.county?.incentive_count}
+            summary={selectedCounty.regulation_summary}
+          />
+        </div>
+      </CollapsibleSection>
+
+      {/* Compliance by Sector */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="p-2 bg-teal-50 rounded-lg">
+              <Home className="h-4 w-4 text-teal-600" />
+            </div>
+            <h3 className="font-semibold text-slate-800">Residential</h3>
+          </div>
+          <p className="text-sm text-slate-600">
+            {selectedCounty.has_greywater_policy === 1
+              ? 'County-specific residential requirements apply'
+              : 'Follows state residential guidelines'}
+          </p>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="p-2 bg-purple-50 rounded-lg">
+              <Building className="h-4 w-4 text-purple-600" />
+            </div>
+            <h3 className="font-semibold text-slate-800">Commercial</h3>
+          </div>
+          <p className="text-sm text-slate-600">
+            Commercial systems require county review and approval
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// State level view
+function StateLevelView({
+  selectedState,
+  complianceData,
+  sectorView
+}: {
+  selectedState: HierarchyItem
+  complianceData: any
+  sectorView: 'residential' | 'commercial'
+}) {
+  return (
+    <div className="mb-8 space-y-4">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-5 sm:p-8 text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+        <div className="relative">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+            {selectedState.state_name}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {selectedState.has_greywater_policy ? (
+              <Badge className="bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 backdrop-blur-sm">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                State Policy Active
+              </Badge>
+            ) : (
+              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
+                <XCircle className="h-3 w-3 mr-1" />
+                No State Framework
+              </Badge>
+            )}
+            {selectedState.county_count && (
+              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
+                {selectedState.county_count} Counties
+              </Badge>
+            )}
+            {selectedState.city_count && (
+              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
+                {selectedState.city_count} Cities
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* State Policy Framework */}
+      <CollapsibleSection
+        title="State Policy Framework"
+        icon={Scale}
+        accentColor="blue"
+        defaultOpen={true}
+      >
+        <div className="pt-4">
+          <PolicyLevelCard
+            level="State"
+            name={selectedState.state_name || ''}
+            color="blue"
+            hasPolicy={!!selectedState.has_greywater_policy}
+            programCount={complianceData?.state?.incentive_count}
+            summary={selectedState.regulation_summary}
+          />
+          <p className="text-xs text-slate-500 mt-4">
+            Local jurisdictions may have additional or more restrictive requirements
+          </p>
+        </div>
+      </CollapsibleSection>
+
+      {/* Compliance by Sector */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="p-2 bg-teal-50 rounded-lg">
+              <Home className="h-4 w-4 text-teal-600" />
+            </div>
+            <h3 className="font-semibold text-slate-800">Residential Framework</h3>
+          </div>
+          <p className="text-sm text-slate-600">
+            {selectedState.has_greywater_policy
+              ? 'Statewide standards for residential greywater systems'
+              : 'No statewide standards - varies by local jurisdiction'}
+          </p>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="p-2 bg-purple-50 rounded-lg">
+              <Building className="h-4 w-4 text-purple-600" />
+            </div>
+            <h3 className="font-semibold text-slate-800">Commercial Framework</h3>
+          </div>
+          <p className="text-sm text-slate-600">
+            Large commercial systems may require state-level review
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Helper functions
+function getLegalStatusBadgeClass(status?: string) {
+  switch (status?.toLowerCase()) {
+    case 'legal':
+      return 'bg-emerald-100 text-emerald-700 border-emerald-200'
+    case 'regulated':
+      return 'bg-blue-100 text-blue-700 border-blue-200'
+    case 'highly regulated':
+      return 'bg-amber-100 text-amber-700 border-amber-200'
+    case 'limited/unclear':
+    case 'prohibited':
+      return 'bg-red-100 text-red-700 border-red-200'
+    default:
+      return 'bg-slate-100 text-slate-700 border-slate-200'
+  }
+}
+
+function renderIncentiveAmount(program: IncentiveProgram) {
+  if (program.incentive_amount_min && program.incentive_amount_max) {
+    return `$${program.incentive_amount_min.toLocaleString()} - $${program.incentive_amount_max.toLocaleString()}`
+  } else if (program.incentive_amount_max) {
+    return `Up to $${program.incentive_amount_max.toLocaleString()}`
+  } else if (program.rebate_percentage) {
+    return `${program.rebate_percentage}% rebate`
+  }
+  return 'Varies'
 }

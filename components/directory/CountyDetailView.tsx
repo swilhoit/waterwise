@@ -1,9 +1,19 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
+import { useEffect, useState, useMemo } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { Building2, Users, DollarSign, FileText, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
+import {
+  Building,
+  Home,
+  DollarSign,
+  CheckCircle,
+  MapPin,
+  Layers,
+  ExternalLink,
+  Building2,
+  FileText
+} from 'lucide-react'
+import CollapsibleSection from './CollapsibleSection'
 import EffectivePolicyView from './EffectivePolicyView'
 
 interface CountyDetailViewProps {
@@ -14,12 +24,12 @@ interface CountyDetailViewProps {
   sectorView?: 'residential' | 'commercial' | 'both'
 }
 
-export default function CountyDetailView({ 
-  countyData, 
-  stateCode, 
+export default function CountyDetailView({
+  countyData,
+  stateCode,
   countyName,
   complianceData,
-  sectorView = 'both' 
+  sectorView = 'residential'
 }: CountyDetailViewProps) {
   const [localCompliance, setLocalCompliance] = useState<any>(null)
   const [loading, setLoading] = useState(false)
@@ -47,17 +57,46 @@ export default function CountyDetailView({
     }
   }
 
+  // Calculate stats
+  const stats = useMemo(() => {
+    const stateIncentives = localCompliance?.state?.incentives || []
+    const countyIncentives = localCompliance?.county?.incentives || []
+
+    const filterBySector = (programs: any[]) => {
+      if (sectorView === 'both') return programs
+      return programs.filter(p =>
+        sectorView === 'residential'
+          ? p.residential_eligibility !== false
+          : p.commercial_eligibility === true
+      )
+    }
+
+    const filteredState = filterBySector(stateIncentives)
+    const filteredCounty = filterBySector(countyIncentives)
+    const allPrograms = [...filteredState, ...filteredCounty]
+    const maxAmount = Math.max(...allPrograms.map(p => p.incentive_amount_max || 0), 0)
+
+    return {
+      stateCount: filteredState.length,
+      countyCount: filteredCounty.length,
+      totalCount: allPrograms.length,
+      maxAmount,
+      hasCountyPolicy: countyData?.has_greywater_policy === 1
+    }
+  }, [localCompliance, sectorView, countyData])
+
   const countyCompliance = localCompliance?.county || localCompliance?.effective
-  const hasIncentives = countyCompliance?.incentive_count > 0
-  const maxIncentive = countyCompliance?.max_incentive
 
   if (loading) {
     return (
-      <div className="animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mb-8 space-y-4">
+        <div className="bg-white border rounded-lg p-6 animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            <div key={i} className="h-24 bg-gray-200 rounded animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -65,166 +104,350 @@ export default function CountyDetailView({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg p-6 border border-l-4 border-l-purple-600">
-        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center gap-2">
-          <Building2 className="h-8 w-8 text-purple-600" />
-          {countyName} County
-        </h2>
-        <p className="text-base text-gray-600 mt-2">
-          {stateCode} • Greywater Regulations & Incentives
-        </p>
+    <div className="mb-8 space-y-4">
+      {/* Compact Header */}
+      <div className="bg-white border rounded-lg p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+              <MapPin className="h-3.5 w-3.5" />
+              <span>{stateCode}</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <Building2 className="h-6 w-6 text-purple-600 flex-shrink-0" />
+              {countyName} County
+            </h2>
+            {countyData?.city_count && (
+              <p className="text-sm text-gray-500 mt-1">
+                {countyData.city_count} cities
+              </p>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge className="bg-green-100 text-green-800 border-green-200">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              Greywater Allowed
+            </Badge>
+            {stats.hasCountyPolicy && (
+              <Badge variant="outline" className="text-purple-700 border-purple-300">
+                County Policy
+              </Badge>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t">
+          <QuickStat
+            label="Cities"
+            value={countyData?.city_count || 0}
+            icon={Home}
+            color="text-green-600"
+          />
+          <QuickStat
+            label="Incentive Programs"
+            value={stats.totalCount}
+            icon={DollarSign}
+            color="text-green-600"
+          />
+          <QuickStat
+            label="Max Rebate"
+            value={stats.maxAmount > 0 ? `$${stats.maxAmount.toLocaleString()}` : '-'}
+            icon={DollarSign}
+            color="text-green-600"
+          />
+        </div>
       </div>
-      
-      {/* Effective Policy */}
-      <EffectivePolicyView 
+
+      {/* Effective Policy View */}
+      <EffectivePolicyView
         complianceData={localCompliance}
         jurisdictionName={`${countyName} County`}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Greywater Status */}
-        <Card className="p-4 border hover:border-gray-300 transition-colors">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 p-2 bg-green-50 rounded-lg">
-              <CheckCircle2 className="h-6 w-6 text-green-600" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-900">Greywater Status</p>
-              <div className="text-sm text-gray-600 mt-2">
-                {countyCompliance?.greywater_allowed !== false ? (
-                  <Badge className="bg-green-100 text-green-800 border-green-200">Allowed</Badge>
-                ) : (
-                  <Badge className="bg-red-100 text-red-800 border-red-200">Not Allowed</Badge>
-                )}
-              </div>
-              {countyCompliance?.permit_required && (
-                <p className="text-xs text-gray-500 mt-2">Permit required</p>
-              )}
-            </div>
-          </div>
-        </Card>
+      {/* Policy Framework */}
+      <CollapsibleSection
+        title="Policy Framework"
+        icon={Layers}
+        iconColor="text-purple-600"
+        summary={`State + ${stats.hasCountyPolicy ? 'County policy' : 'Follows state'}`}
+        defaultOpen={true}
+      >
+        <div className="space-y-3 pt-3">
+          {/* State Level */}
+          <PolicyLevelCard
+            level="State"
+            name={stateCode}
+            color="blue"
+            hasPolicy={true}
+            programCount={stats.stateCount}
+            summary={localCompliance?.state?.regulation_summary}
+          />
 
-        {/* Financial Incentives */}
-        <Card className="p-4 border hover:border-gray-300 transition-colors">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 p-2 bg-blue-50 rounded-lg">
-              <DollarSign className="h-6 w-6 text-blue-600" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-900">Financial Incentives</p>
-              <div className="text-sm text-gray-600 mt-2">
-                {hasIncentives ? (
-                  <>
-                    <Badge className="bg-green-100 text-green-800 border-green-200">
-                      {countyCompliance.incentive_count} Available
-                    </Badge>
-                    {maxIncentive && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Up to ${maxIncentive.toLocaleString()}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  <Badge className="bg-gray-100 text-gray-800 border-gray-200">None Available</Badge>
-                )}
-              </div>
-            </div>
-          </div>
-        </Card>
+          {/* County Level */}
+          <PolicyLevelCard
+            level="County"
+            name={countyName}
+            color="purple"
+            hasPolicy={stats.hasCountyPolicy}
+            programCount={stats.countyCount}
+            summary={countyCompliance?.regulation_summary}
+          />
+        </div>
+      </CollapsibleSection>
 
-        {/* Cities in County */}
-        {countyData?.city_count > 0 && (
-          <Card className="p-4 border hover:border-gray-300 transition-colors">
-            <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0 p-2 bg-purple-50 rounded-lg">
-                <Building2 className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-900">Cities</p>
-                <p className="text-sm text-gray-600 mt-2">
-                  <Badge className="bg-purple-100 text-purple-800 border-purple-200">
-                    {countyData.city_count} Cities
-                  </Badge>
-                </p>
-                <p className="text-xs text-gray-500 mt-2">
-                  With local regulations
-                </p>
-              </div>
-            </div>
-          </Card>
-        )}
+      {/* Compliance by Sector */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="bg-white border rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
+            <Home className="h-4 w-4 text-blue-600" />
+            Residential
+          </h3>
+          <p className="text-sm text-gray-600">
+            {stats.hasCountyPolicy
+              ? 'County-specific residential requirements apply'
+              : 'Follows state residential guidelines'}
+          </p>
+          {countyData?.max_rebate_amount && countyData.max_rebate_amount > 0 && (
+            <p className="text-sm text-green-700 font-semibold mt-2">
+              Up to ${countyData.max_rebate_amount.toLocaleString()} in county rebates
+            </p>
+          )}
+        </div>
+        <div className="bg-white border rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
+            <Building className="h-4 w-4 text-purple-600" />
+            Commercial
+          </h3>
+          <p className="text-sm text-gray-600">
+            Commercial systems require county review and approval
+          </p>
+          <ul className="text-xs text-gray-500 mt-2 space-y-1">
+            <li>• Health department approval may be required</li>
+            <li>• Environmental review for large systems</li>
+          </ul>
+        </div>
       </div>
 
       {/* Incentive Programs */}
-      {hasIncentives && countyCompliance?.incentives?.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-600" />
-            Available Incentive Programs
-          </h3>
-          <div className="grid gap-4">
-            {countyCompliance.incentives.map((program: any, index: number) => (
-              <Card key={index} className="p-5 border hover:border-green-300 transition-colors border-l-4 border-l-green-500">
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{program.program_name}</h4>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {program.incentive_type || 'Rebate Program'}
-                      </p>
-                    </div>
-                    {program.incentive_amount_max && (
-                      <Badge className="bg-green-100 text-green-800 border-green-200 text-sm px-3 py-1">
-                        Up to ${program.incentive_amount_max.toLocaleString()}
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  {program.program_description && (
-                    <p className="text-sm text-gray-600">{program.program_description}</p>
-                  )}
-                  
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    {program.residential_eligibility && (
-                      <Badge variant="outline">Residential</Badge>
-                    )}
-                    {program.commercial_eligibility && (
-                      <Badge variant="outline">Commercial</Badge>
-                    )}
-                  </div>
-                  
-                  {program.incentive_url && (
-                    <a 
-                      href={program.incentive_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:text-blue-800 underline"
-                    >
-                      Learn More →
-                    </a>
-                  )}
-                </div>
-              </Card>
-            ))}
+      {stats.totalCount > 0 && (
+        <CollapsibleSection
+          title="Available Incentives"
+          icon={DollarSign}
+          iconColor="text-green-600"
+          badge={
+            <Badge className="bg-green-100 text-green-800">
+              {stats.totalCount} Programs
+            </Badge>
+          }
+          summary={stats.maxAmount > 0 ? `Up to $${stats.maxAmount.toLocaleString()}` : undefined}
+          defaultOpen={true}
+        >
+          <div className="space-y-4 pt-3">
+            {/* State Programs */}
+            {stats.stateCount > 0 && (
+              <IncentiveSection
+                level="State"
+                programs={localCompliance?.state?.incentives || []}
+                sectorView={sectorView}
+                color="blue"
+              />
+            )}
+
+            {/* County Programs */}
+            {stats.countyCount > 0 && (
+              <IncentiveSection
+                level="County"
+                programs={localCompliance?.county?.incentives || []}
+                sectorView={sectorView}
+                color="purple"
+              />
+            )}
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* No Incentives Message */}
+      {stats.totalCount === 0 && (
+        <div className="bg-white border rounded-lg p-4">
+          <div className="flex items-center gap-2 text-gray-500">
+            <DollarSign className="h-4 w-4" />
+            <span className="text-sm">
+              No {sectorView !== 'both' ? sectorView : ''} incentive programs found. Check individual cities for local programs.
+            </span>
           </div>
         </div>
       )}
 
       {/* Compliance Summary */}
       {countyCompliance?.regulation_summary && (
-        <Card className="p-5 border border-l-4 border-l-blue-500">
-          <div className="flex items-start space-x-3">
-            <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
-              <FileText className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Compliance Summary</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">{countyCompliance.regulation_summary}</p>
+        <CollapsibleSection
+          title="Compliance Summary"
+          icon={FileText}
+          iconColor="text-blue-600"
+          defaultOpen={false}
+        >
+          <p className="text-sm text-gray-600 leading-relaxed pt-3">
+            {countyCompliance.regulation_summary}
+          </p>
+        </CollapsibleSection>
+      )}
+    </div>
+  )
+}
+
+// Quick stat component
+function QuickStat({
+  label,
+  value,
+  icon: Icon,
+  color
+}: {
+  label: string
+  value: string | number
+  icon: any
+  color: string
+}) {
+  return (
+    <div className="text-center">
+      <div className={`flex items-center justify-center gap-1 ${color} mb-0.5`}>
+        <Icon className="h-3.5 w-3.5" />
+        <span className="font-bold text-lg">{value}</span>
+      </div>
+      <p className="text-xs text-gray-500">{label}</p>
+    </div>
+  )
+}
+
+// Policy level card
+function PolicyLevelCard({
+  level,
+  name,
+  color,
+  hasPolicy,
+  programCount,
+  summary
+}: {
+  level: string
+  name: string
+  color: 'blue' | 'purple'
+  hasPolicy: boolean
+  programCount?: number
+  summary?: string
+}) {
+  const colorClasses = {
+    blue: 'border-l-blue-500 bg-blue-50/30',
+    purple: 'border-l-purple-500 bg-purple-50/30'
+  }
+
+  return (
+    <div className={`border-l-4 ${colorClasses[color]} rounded-r-lg p-3`}>
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <span className="text-xs font-medium text-gray-500 uppercase">{level}</span>
+          <p className="font-medium text-gray-900">{name}</p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {hasPolicy ? (
+            <Badge variant="outline" className="text-green-700 border-green-300 text-xs">
+              Active Policy
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-gray-500 text-xs">
+              Follows State
+            </Badge>
+          )}
+          {programCount && programCount > 0 && (
+            <Badge className="bg-green-100 text-green-800 text-xs">
+              {programCount} Programs
+            </Badge>
+          )}
+        </div>
+      </div>
+      {summary && (
+        <p className="text-sm text-gray-600 mt-2">{summary}</p>
+      )}
+    </div>
+  )
+}
+
+// Incentive section
+function IncentiveSection({
+  level,
+  programs,
+  sectorView,
+  color
+}: {
+  level: string
+  programs: any[]
+  sectorView: string
+  color: 'blue' | 'purple'
+}) {
+  const filtered = sectorView === 'both' ? programs : programs.filter(p =>
+    sectorView === 'residential'
+      ? p.residential_eligibility !== false
+      : p.commercial_eligibility === true
+  )
+
+  if (filtered.length === 0) return null
+
+  const colorClasses = {
+    blue: 'bg-blue-50 text-blue-700 border-blue-200',
+    purple: 'bg-purple-50 text-purple-700 border-purple-200'
+  }
+
+  return (
+    <div>
+      <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+        <Badge variant="outline" className={colorClasses[color]}>
+          {level} Programs ({filtered.length})
+        </Badge>
+      </h4>
+      <div className="space-y-2">
+        {filtered.map((program: any, idx: number) => (
+          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-gray-900 text-sm">
+                  {program.program_name || `${level} Program`}
+                </p>
+                {program.program_description && (
+                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+                    {program.program_description}
+                  </p>
+                )}
+                <div className="flex gap-1 mt-1">
+                  {program.residential_eligibility && (
+                    <Badge variant="outline" className="text-xs py-0">Residential</Badge>
+                  )}
+                  {program.commercial_eligibility && (
+                    <Badge variant="outline" className="text-xs py-0">Commercial</Badge>
+                  )}
+                </div>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="font-bold text-green-700 text-sm">
+                  {program.incentive_amount_max
+                    ? `Up to $${program.incentive_amount_max.toLocaleString()}`
+                    : program.rebate_percentage
+                    ? `${program.rebate_percentage}% rebate`
+                    : 'Varies'}
+                </p>
+                {program.incentive_url && (
+                  <a
+                    href={program.incentive_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-0.5 justify-end mt-1"
+                  >
+                    Apply <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
-        </Card>
-      )}
+        ))}
+      </div>
     </div>
   )
 }

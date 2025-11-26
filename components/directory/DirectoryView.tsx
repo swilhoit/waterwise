@@ -276,7 +276,7 @@ export default function DirectoryView({
     const initializeDirectory = async () => {
       // Build breadcrumbs based on current path
       const newBreadcrumbs: BreadcrumbItem[] = [
-        { label: 'United States', path: basePath, type: 'states' }
+        { label: 'All States', path: basePath, type: 'states' }
       ]
 
       if (initialState) {
