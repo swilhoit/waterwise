@@ -81,8 +81,8 @@ export function CTASection({
                   size="lg"
                   className={
                     button.variant === 'secondary'
-                      ? 'bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all'
-                      : 'bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all'
+                      ? 'bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold transition-all'
+                      : 'bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg font-semibold transition-all'
                   }
                   asChild
                 >

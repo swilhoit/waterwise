@@ -113,7 +113,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
   return (
     <div className="space-y-6 mb-8">
       {/* Header Card */}
-      <Card className="border-l-4 border-l-blue-600 shadow-md">
+      <Card className="border-l-4 border-l-blue-600 border">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
             <div>
@@ -158,7 +158,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
       </Card>
       
       {/* Sector Toggle */}
-      <div className="flex items-center justify-center gap-2 border rounded-lg p-1.5 bg-white shadow-sm sticky top-2 z-10">
+      <div className="flex items-center justify-center gap-2 border rounded-lg p-1.5 bg-white sticky top-2 z-10">
         <Button
           variant={sectorView === 'residential' ? 'default' : 'ghost'}
           size="lg"
@@ -187,7 +187,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
       )}
 
       {/* Regulatory Information - Common to Both */}
-      <Card className="shadow-sm">
+      <Card className="border">
         <CardHeader className="bg-gray-50">
           <CardTitle className="text-lg flex items-center gap-2">
             <Scale className="h-5 w-5 text-blue-600" />
@@ -253,7 +253,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
 
       {/* Recent Changes */}
       {stateData.recentChanges && (
-        <Card className="border-l-4 border-l-blue-500 bg-blue-50/50 shadow-sm">
+        <Card className="border-l-4 border-l-blue-500 bg-blue-50/50 border">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="h-5 w-5 text-blue-600" />
@@ -273,7 +273,7 @@ export default function StateDetailView({ stateData: initialStateData, complianc
 const ResidentialView = ({ stateData, incentives }: { stateData: StateData, incentives: any[] }) => (
   <div className="space-y-6">
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-gray-200 hover:border-gray-300 transition-colors">
         <CardHeader className="pb-3 bg-orange-50">
           <CardTitle className="text-base flex items-center gap-2">
             <FileText className="h-4 w-4 text-orange-600" />
@@ -288,7 +288,7 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
         </CardContent>
       </Card>
 
-      <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-gray-200 hover:border-gray-300 transition-colors">
         <CardHeader className="pb-3 bg-blue-50">
           <CardTitle className="text-base flex items-center gap-2">
             <Droplets className="h-4 w-4 text-blue-600" />
@@ -301,7 +301,7 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
         </CardContent>
       </Card>
       
-      <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-gray-200 hover:border-gray-300 transition-colors">
         <CardHeader className="pb-3 bg-green-50">
           <CardTitle className="text-base flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-green-600" />
@@ -331,7 +331,7 @@ const ResidentialView = ({ stateData, incentives }: { stateData: StateData, ince
 const CommercialView = ({ stateData, incentives }: { stateData: StateData, incentives: any[] }) => (
   <div className="space-y-6">
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-gray-200 hover:border-gray-300 transition-colors">
         <CardHeader className="pb-3 bg-orange-50">
           <CardTitle className="text-base flex items-center gap-2">
             <FileText className="h-4 w-4 text-orange-600" />
@@ -346,7 +346,7 @@ const CommercialView = ({ stateData, incentives }: { stateData: StateData, incen
         </CardContent>
       </Card>
 
-      <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-gray-200 hover:border-gray-300 transition-colors">
         <CardHeader className="pb-3 bg-blue-50">
           <CardTitle className="text-base flex items-center gap-2">
             <Droplets className="h-4 w-4 text-blue-600" />
@@ -359,7 +359,7 @@ const CommercialView = ({ stateData, incentives }: { stateData: StateData, incen
         </CardContent>
       </Card>
 
-      <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <Card className="border-gray-200 hover:border-gray-300 transition-colors">
         <CardHeader className="pb-3 bg-green-50">
           <CardTitle className="text-base flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-green-600" />

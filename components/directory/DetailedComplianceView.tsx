@@ -241,7 +241,7 @@ export default function DetailedComplianceView({
     return (
       <div className="mb-8 space-y-6">
         {/* City Header */}
-        <div className="bg-white border-l-4 border-l-green-600 rounded-lg p-6 shadow-md">
+        <div className="bg-white border-l-4 border-l-green-600 rounded-lg p-6 border">
           <div className="flex items-start justify-between mb-4">
             <div>
               <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center gap-2">
@@ -304,7 +304,7 @@ export default function DetailedComplianceView({
         </div>
 
         {/* Policy Hierarchy Breakdown */}
-        <div className="bg-white border rounded-lg p-6 shadow-sm">
+        <div className="bg-white border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Building className="h-5 w-5 text-blue-600" />
             Compliance Policy Hierarchy
@@ -437,7 +437,7 @@ export default function DetailedComplianceView({
 
         {/* Greywater Laws & Regulations */}
         {complianceData?.state?.laws && (
-          <div className="bg-white border rounded-lg p-6 shadow-sm">
+          <div className="bg-white border rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <FileText className="h-5 w-5 text-blue-600" />
               State Greywater Laws & Regulations
@@ -554,7 +554,7 @@ export default function DetailedComplianceView({
         )}
 
         {/* Requirements Section Based on Sector View */}
-        <div className="bg-white border rounded-lg p-6 shadow-sm">
+        <div className="bg-white border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             {sectorView === 'residential' ? (
               <>
@@ -587,7 +587,7 @@ export default function DetailedComplianceView({
         </div>
 
         {/* Enhanced Incentive Programs */}
-        <div className="bg-white border rounded-lg p-6 shadow-sm">
+        <div className="bg-white border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-green-600" />
             Available Incentive Programs
@@ -661,7 +661,7 @@ export default function DetailedComplianceView({
         </div>
 
         {/* Permit Requirements */}
-        <div className="bg-white border rounded-lg p-6 shadow-sm">
+        <div className="bg-white border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <FileText className="h-5 w-5 text-orange-600" />
             Permit Requirements

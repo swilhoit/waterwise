@@ -1197,24 +1197,47 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Product Images */}
-              <div className="relative">
-
+      <section className="relative bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+        <div className="container mx-auto px-4 py-10 lg:py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+              {/* Product Images - Sticky on desktop */}
+              <div className="lg:sticky lg:top-24">
                 {product.images?.edges?.length > 0 ? (
-                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border">
-                    <Image
-                      src={product.images.edges[0].node.url}
-                      alt={product.images.edges[0].node.altText || product.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                      priority
-                      unoptimized
-                    />
+                  <div className="space-y-4">
+                    {/* Main Image */}
+                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm">
+                      <Image
+                        src={product.images.edges[0].node.url}
+                        alt={product.images.edges[0].node.altText || product.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                        className="object-contain p-4"
+                        priority
+                        unoptimized
+                      />
+                    </div>
+                    
+                    {/* Thumbnail Gallery */}
+                    {product.images.edges.length > 1 && (
+                      <div className="grid grid-cols-4 gap-3">
+                        {product.images.edges.slice(0, 4).map((image: any, index: number) => (
+                          <div 
+                            key={index} 
+                            className={`relative aspect-square rounded-lg overflow-hidden bg-white border-2 transition-all cursor-pointer hover:border-blue-400 ${index === 0 ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200'}`}
+                          >
+                            <Image
+                              src={image.node.url}
+                              alt={image.node.altText || `${product.title} view ${index + 1}`}
+                              fill
+                              sizes="100px"
+                              className="object-contain p-2"
+                              unoptimized
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border">
@@ -1226,61 +1249,58 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     </div>
                   </div>
                 )}
-
-                {/* Additional Product Images Gallery */}
-                {product.images?.edges?.length > 1 && (
-                  <div className="mt-6 grid grid-cols-2 gap-4">
-                    {product.images.edges.slice(1, 3).map((image: any, index: number) => (
-                      <div key={index} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border hover:border-gray-300 transition-colors">
-                        <Image
-                          src={image.node.url}
-                          alt={image.node.altText || `${product.title} view ${index + 2}`}
-                          fill
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
 
               {/* Product Info */}
               <div className="space-y-6">
+                {/* Breadcrumb */}
+                <nav className="text-sm text-gray-500">
+                  <a href="/products" className="hover:text-blue-600 transition-colors">Shop</a>
+                  <span className="mx-2">/</span>
+                  <span className="text-gray-900">{product.title}</span>
+                </nav>
+                
                 {/* Badges */}
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge variant="default" className="bg-green-100 text-green-800 border-green-200 hover:bg-green-200 px-3 py-1">
-                    <Shield className="h-3 w-3 mr-1" />
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 text-xs font-semibold">
+                    <Shield className="h-3.5 w-3.5 mr-1.5" />
                     WaterMark Approved
                   </Badge>
-                  <Badge variant="secondary" className="border-blue-200 text-blue-700 hover:bg-blue-50 px-3 py-1">
-                    <Zap className="h-3 w-3 mr-1" />
+                  <Badge className="bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100 px-3 py-1.5 text-xs font-semibold">
+                    <Zap className="h-3.5 w-3.5 mr-1.5" />
                     12 Month Warranty
+                  </Badge>
+                  <Badge className="bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-100 px-3 py-1.5 text-xs font-semibold">
+                    <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />
+                    5.0 Rating
                   </Badge>
                 </div>
                 
                 {/* Title */}
                 <div>
-                  <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
+                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4">
                     {product.title}
                   </h1>
                   
-                  {/* Price */}
+                  {/* Price Block */}
                   {product.priceRange?.minVariantPrice && (
-                    <div className="flex items-baseline gap-2 mb-6">
-                      <span className="text-4xl font-bold text-gray-600">
-                        {formatPriceDisplay(product.priceRange.minVariantPrice.amount)}
-                      </span>
-                      <span className="text-lg text-gray-500 font-medium">
-                        {product.priceRange.minVariantPrice.currencyCode}
-                      </span>
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-sm text-gray-500">From</span>
+                        <span className="text-4xl font-bold text-gray-900">
+                          {formatPriceDisplay(product.priceRange.minVariantPrice.amount)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full">
+                        <Truck className="h-4 w-4 text-emerald-600" />
+                        <span className="text-sm font-medium text-emerald-700">Free Shipping</span>
+                      </div>
                     </div>
                   )}
                 </div>
 
                 {/* Description */}
-                <div className="prose prose-xl text-gray-600 leading-relaxed max-w-none">
+                <div className="prose prose-lg text-gray-600 leading-relaxed max-w-none">
                   {product.descriptionHtml ? (
                     <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
                   ) : (
@@ -1289,25 +1309,23 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </div>
 
                 {/* Key Features Grid */}
-                <div className="bg-white rounded-xl border p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Settings className="h-5 w-5 text-gray-600" />
+                <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <Settings className="h-5 w-5 text-blue-600" />
                     Key Features
                   </h3>
-                  <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="grid sm:grid-cols-2 gap-2">
                     {productContent.features.slice(0, 6).map((feature: string, index: number) => (
-                      <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-blue-50 transition-colors">
-                        <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-700 leading-relaxed">{feature}</span>
+                      <div key={index} className="flex items-start gap-3 p-2.5 rounded-lg bg-white border border-gray-100">
+                        <CheckCircle className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm text-gray-700 leading-snug">{feature}</span>
                       </div>
                     ))}
                   </div>
                   {productContent.features.length > 6 && (
-                    <div className="mt-4 pt-4 border-t">
-                      <p className="text-sm text-gray-500">
-                        +{productContent.features.length - 6} more features in detailed specifications
-                      </p>
-                    </div>
+                    <p className="text-xs text-gray-500 mt-4 text-center">
+                      +{productContent.features.length - 6} more features below
+                    </p>
                   )}
                 </div>
 
@@ -1316,18 +1334,18 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   <AddToCartButton product={product} />
                   
                   {/* Trust Signals */}
-                  <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Shield className="h-4 w-4 text-green-600" />
-                      <span>12 Month Warranty</span>
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
+                    <div className="flex flex-col items-center text-center p-3 rounded-lg bg-gray-50">
+                      <Shield className="h-5 w-5 text-emerald-600 mb-1" />
+                      <span className="text-xs font-medium text-gray-900">12 Month Warranty</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Truck className="h-4 w-4 text-gray-600" />
-                      <span>Free Shipping</span>
+                    <div className="flex flex-col items-center text-center p-3 rounded-lg bg-gray-50">
+                      <Truck className="h-5 w-5 text-blue-600 mb-1" />
+                      <span className="text-xs font-medium text-gray-900">Free Shipping</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Users className="h-4 w-4 text-purple-600" />
-                      <span>Expert Support</span>
+                    <div className="flex flex-col items-center text-center p-3 rounded-lg bg-gray-50">
+                      <Users className="h-5 w-5 text-purple-600 mb-1" />
+                      <span className="text-xs font-medium text-gray-900">Expert Support</span>
                     </div>
                   </div>
                 </div>
@@ -1335,38 +1353,57 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Water Savings Infographic Section */}
-      <div className="bg-blue-50 border-t border-b">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Why Greywater Systems Make Sense
+      <section className="py-16 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }} />
+        
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-5xl mx-auto text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+              Why Greywater Makes Sense
             </h2>
-            <div className="grid md:grid-cols-3 gap-8 mb-8">
-              <div className="bg-white p-6 rounded-xl ">
-                <div className="text-4xl font-bold text-blue-600 mb-2">55%</div>
-                <div className="text-lg font-semibold text-gray-900 mb-2">Outdoor Irrigation</div>
-                <p className="text-gray-600 text-sm">Average household water used for landscape watering</p>
+            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+              Transform water waste into a sustainable resource for your landscape
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-10">
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
+                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Droplets className="h-7 w-7 text-white" />
+                </div>
+                <div className="text-4xl font-bold mb-2">55%</div>
+                <div className="text-lg font-semibold mb-1">Outdoor Usage</div>
+                <p className="text-blue-200 text-sm">Household water used for landscape irrigation</p>
               </div>
-              <div className="bg-white p-6 rounded-xl ">
-                <div className="text-4xl font-bold text-green-600 mb-2">40%</div>
-                <div className="text-lg font-semibold text-gray-900 mb-2">Water Bill Savings</div>
-                <p className="text-gray-600 text-sm">Typical reduction in monthly water costs</p>
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
+                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Zap className="h-7 w-7 text-white" />
+                </div>
+                <div className="text-4xl font-bold mb-2">40%</div>
+                <div className="text-lg font-semibold mb-1">Bill Savings</div>
+                <p className="text-blue-200 text-sm">Typical reduction in monthly water costs</p>
               </div>
-              <div className="bg-white p-6 rounded-xl ">
-                <div className="text-4xl font-bold text-purple-600 mb-2">17K</div>
-                <div className="text-lg font-semibold text-gray-900 mb-2">Gallons/Year</div>
-                <p className="text-gray-600 text-sm">Water recycled by average household system</p>
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
+                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Calculator className="h-7 w-7 text-white" />
+                </div>
+                <div className="text-4xl font-bold mb-2">17K+</div>
+                <div className="text-lg font-semibold mb-1">Gallons/Year</div>
+                <p className="text-blue-200 text-sm">Water recycled by average household system</p>
               </div>
             </div>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Transform your household's water waste into a sustainable resource that nourishes your landscape while reducing environmental impact and utility costs.
+            
+            <p className="text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
+              Reduce your environmental impact while nourishing your landscape with clean, filtered greywater.
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Product Description & Demo Video Section */}
       <div className="bg-white border-b">
@@ -1868,34 +1905,31 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             )}
 
             {/* Technical Specifications Section */}
-            <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-              <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <Settings className="h-6 w-6 text-gray-600" />
+            <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+              <CardHeader className="bg-gradient-to-r from-gray-900 to-gray-800 text-white pb-6">
+                <CardTitle className="flex items-center gap-3 text-2xl text-white">
+                  <Ruler className="h-6 w-6" />
                   Technical Specifications
                 </CardTitle>
-                <CardDescription className="text-gray-600 mt-2">
-                  Detailed technical information and performance specifications
+                <CardDescription className="text-gray-300 mt-2">
+                  Complete technical details and performance data
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-8">
-                <div className="grid lg:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    {productContent.specifications && Object.entries(productContent.specifications).slice(0, Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                      <div key={key} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                        <span className="font-medium text-gray-700">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                        <span className="text-gray-900 font-semibold text-right flex-shrink-0 ml-4">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="space-y-3">
-                    {productContent.specifications && Object.entries(productContent.specifications).slice(Math.ceil(Object.keys(productContent.specifications).length / 2)).map(([key, value]: [string, any]) => (
-                      <div key={key} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                        <span className="font-medium text-gray-700">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-                        <span className="text-gray-900 font-semibold text-right flex-shrink-0 ml-4">{value}</span>
-                      </div>
-                    ))}
-                  </div>
+              <CardContent className="p-0">
+                <div className="divide-y divide-gray-100">
+                  {productContent.specifications && Object.entries(productContent.specifications).map(([key, value]: [string, any], index: number) => (
+                    <div 
+                      key={key} 
+                      className={`flex justify-between items-center px-6 py-4 ${index % 2 === 0 ? 'bg-gray-50/50' : 'bg-white'} hover:bg-blue-50/50 transition-colors`}
+                    >
+                      <span className="font-medium text-gray-600">
+                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                      </span>
+                      <span className="text-gray-900 font-semibold text-right flex-shrink-0 ml-4">
+                        {value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -2093,29 +2127,38 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* FAQ Section */}
-            <div className="bg-white">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-8 text-center">
+                <MessageSquare className="h-10 w-10 mx-auto mb-4 opacity-90" />
+                <h2 className="text-2xl lg:text-3xl font-bold mb-2">
                   Frequently Asked Questions
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p className="text-blue-100 max-w-2xl mx-auto">
                   Everything you need to know about this greywater system
                 </p>
               </div>
               
-              <div className="max-w-4xl mx-auto">
-                {productContent.faq.map((item: any, index: number) => (
-                  <div key={index}>
-                    <div className="py-8">
-                      <h3 className="text-xl font-bold text-gray-900 mb-4">{item.question}</h3>
-                      <p className="text-gray-600 leading-relaxed">{item.answer}</p>
-                    </div>
-                    {index < productContent.faq.length - 1 && (
-                      <div className="border-t border-black"></div>
-                    )}
+              <div className="divide-y divide-gray-100">
+                {productContent.faq.slice(0, 8).map((item: any, index: number) => (
+                  <div key={index} className="px-8 py-6 hover:bg-gray-50/50 transition-colors">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-start gap-3">
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 text-blue-700 text-sm font-bold flex-shrink-0 mt-0.5">
+                        {index + 1}
+                      </span>
+                      {item.question}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed pl-10">{item.answer}</p>
                   </div>
                 ))}
               </div>
+              
+              {productContent.faq.length > 8 && (
+                <div className="px-8 py-6 bg-gray-50 text-center border-t border-gray-100">
+                  <p className="text-sm text-gray-600">
+                    Have more questions? <a href="/contact" className="text-blue-600 font-medium hover:underline">Contact our team</a>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

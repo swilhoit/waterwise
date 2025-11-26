@@ -66,7 +66,7 @@ export default function CountyDetailView({
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-l-purple-600">
+      <div className="bg-white rounded-lg p-6 border border-l-4 border-l-purple-600">
         <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center gap-2">
           <Building2 className="h-8 w-8 text-purple-600" />
           {countyName} County
@@ -84,7 +84,7 @@ export default function CountyDetailView({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Greywater Status */}
-        <Card className="p-4 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="p-4 border hover:border-gray-300 transition-colors">
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0 p-2 bg-green-50 rounded-lg">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
@@ -106,7 +106,7 @@ export default function CountyDetailView({
         </Card>
 
         {/* Financial Incentives */}
-        <Card className="p-4 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="p-4 border hover:border-gray-300 transition-colors">
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0 p-2 bg-blue-50 rounded-lg">
               <DollarSign className="h-6 w-6 text-blue-600" />
@@ -135,7 +135,7 @@ export default function CountyDetailView({
 
         {/* Cities in County */}
         {countyData?.city_count > 0 && (
-          <Card className="p-4 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="p-4 border hover:border-gray-300 transition-colors">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0 p-2 bg-purple-50 rounded-lg">
                 <Building2 className="h-6 w-6 text-purple-600" />
@@ -165,7 +165,7 @@ export default function CountyDetailView({
           </h3>
           <div className="grid gap-4">
             {countyCompliance.incentives.map((program: any, index: number) => (
-              <Card key={index} className="p-5 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-green-500">
+              <Card key={index} className="p-5 border hover:border-green-300 transition-colors border-l-4 border-l-green-500">
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
@@ -213,7 +213,7 @@ export default function CountyDetailView({
 
       {/* Compliance Summary */}
       {countyCompliance?.regulation_summary && (
-        <Card className="p-5 shadow-sm border-l-4 border-l-blue-500">
+        <Card className="p-5 border border-l-4 border-l-blue-500">
           <div className="flex items-start space-x-3">
             <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
               <FileText className="h-5 w-5 text-blue-600" />

@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, ShoppingCart, ChevronDown } from "lucide-react"
+import { Menu, ShoppingCart, ChevronDown, ArrowRight } from "lucide-react"
 import { useState } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
@@ -52,106 +52,137 @@ export function Header() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-100" suppressHydrationWarning>
+      <div className="container mx-auto px-4" suppressHydrationWarning>
+        <div className="flex h-16 items-center justify-between" suppressHydrationWarning>
+          {/* Logo */}
+          <Link href="/" className="flex items-center flex-shrink-0">
             <Image
               src="/images/logo-water-wise-group.png"
               alt="Water Wise Group"
               width={150}
               height={40}
-              className="h-10 w-auto"
+              className="h-9 w-auto"
+              suppressHydrationWarning
             />
           </Link>
 
+          {/* Desktop Navigation */}
           <SimpleNav items={navItems} />
 
-          <div className="hidden lg:flex items-center gap-4">
+          {/* Desktop Actions */}
+          <div className="hidden lg:flex items-center gap-2">
             <CartSheet>
-              <Button variant="ghost" size="icon" className="relative">
+              <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
-              </Button>
+              </button>
             </CartSheet>
             
-            <Button asChild className="bg-black hover:bg-gray-800 text-white">
-              <Link href="/contact">Get Quote</Link>
-            </Button>
+            <Link 
+              href="/contact"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              Get a Quote
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
+          {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
+              <button className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
                 <Menu className="h-5 w-5" />
-              </Button>
+              </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] overflow-y-auto">
-              <nav className="flex flex-col gap-2 mt-8">
-                {navItems.map((item) => (
-                  <div key={item.label}>
-                    {item.dropdown ? (
-                      <div>
-                        <button
-                          onClick={() => setExpandedSection(expandedSection === item.label ? null : item.label)}
-                          className="flex items-center justify-between w-full text-left text-lg font-medium py-2 hover:bg-gray-100 rounded-md px-2"
+            <SheetContent side="right" className="w-[320px] p-0">
+              <div className="flex flex-col h-full">
+                {/* Mobile Header */}
+                <div className="p-4 border-b border-gray-100">
+                  <Image
+                    src="/images/logo-water-wise-group.png"
+                    alt="Water Wise Group"
+                    width={120}
+                    height={32}
+                    className="h-8 w-auto"
+                  />
+                </div>
+                
+                {/* Mobile Nav */}
+                <nav className="flex-1 overflow-y-auto py-4">
+                  {navItems.map((item) => (
+                    <div key={item.label} className="px-2">
+                      {item.dropdown ? (
+                        <div>
+                          <button
+                            onClick={() => setExpandedSection(expandedSection === item.label ? null : item.label)}
+                            className="flex items-center justify-between w-full text-left px-3 py-3 text-[15px] font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                          >
+                            {item.label}
+                            <ChevronDown 
+                              className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+                                expandedSection === item.label ? 'rotate-180' : ''
+                              }`}
+                            />
+                          </button>
+                          {expandedSection === item.label && (
+                            <div className="ml-3 mt-1 mb-2 border-l-2 border-gray-100 pl-3 space-y-1">
+                              {item.dropdown.map((subItem) => (
+                                <Link
+                                  key={subItem.href}
+                                  href={subItem.href}
+                                  className="block py-2 px-3 text-[14px] text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                                  onClick={() => setIsOpen(false)}
+                                >
+                                  {subItem.title}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <Link
+                          href={item.href!}
+                          className="block px-3 py-3 text-[15px] font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                          onClick={() => setIsOpen(false)}
                         >
                           {item.label}
-                          <ChevronDown 
-                            className={`h-4 w-4 transition-transform ${
-                              expandedSection === item.label ? 'rotate-180' : ''
-                            }`}
-                          />
-                        </button>
-                        {expandedSection === item.label && (
-                          <div className="ml-4 mt-1 space-y-1">
-                            {item.dropdown.map((subItem) => (
-                              <Link
-                                key={subItem.href}
-                                href={subItem.href}
-                                className="block py-2 px-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-                                onClick={() => setIsOpen(false)}
-                              >
-                                {subItem.title}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <Link
-                        href={item.href!}
-                        className="block text-lg font-medium py-2 px-2 hover:bg-gray-100 rounded-md"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </div>
-                ))}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                </nav>
                 
-                <div className="mt-6 space-y-3 px-2">
+                {/* Mobile Footer Actions */}
+                <div className="p-4 border-t border-gray-100 space-y-3">
                   <CartSheet>
-                    <Button variant="outline" className="w-full justify-start">
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      Cart
+                    <button className="flex items-center justify-between w-full px-4 py-3 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                      <span className="flex items-center gap-2 text-[14px] font-medium">
+                        <ShoppingCart className="h-4 w-4" />
+                        Shopping Cart
+                      </span>
                       {totalItems > 0 && (
-                        <span className="ml-auto bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        <span className="bg-emerald-600 text-white text-[11px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
                           {totalItems}
                         </span>
                       )}
-                    </Button>
+                    </button>
                   </CartSheet>
                   
-                  <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
-                    <Link href="/contact">Get Quote</Link>
-                  </Button>
+                  <Link 
+                    href="/contact"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-[14px] font-medium rounded-lg transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Get a Quote
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
-              </nav>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

@@ -29,7 +29,7 @@ export function SectionCard({
   children
 }: SectionCardProps) {
   const cardContent = (
-    <Card className="h-full hover-lift transition-all duration-300 hover:shadow-lg">
+    <Card className={`h-full transition-all duration-300 ${href && !children ? 'hover:border-blue-400 cursor-pointer' : ''}`}>
       <CardHeader>
         {/* Icon Variant */}
         {variant === 'icon' && Icon && (
@@ -50,7 +50,7 @@ export function SectionCard({
               className="object-cover rounded-t-lg"
             />
             {Icon && (
-              <div className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+              <div className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center">
                 <Icon className="h-6 w-6 text-blue-600" />
               </div>
             )}
@@ -83,10 +83,16 @@ export function SectionCard({
 
         {children}
 
+        {/* Only show button if we're NOT wrapping the whole card in a link */}
         {href && !children && (
-          <Button asChild className="w-full">
-            <Link href={href}>Learn More</Link>
-          </Button>
+          <div className="mt-4">
+            <span className="text-blue-600 font-medium inline-flex items-center gap-2">
+              Learn More 
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </div>
         )}
       </CardContent>
     </Card>

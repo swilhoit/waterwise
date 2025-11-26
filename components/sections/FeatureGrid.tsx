@@ -60,7 +60,7 @@ export function FeatureGrid({
               return (
                 <div
                   key={index}
-                  className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow"
+                  className="bg-white border rounded-lg p-6 hover:border-blue-300 transition-colors"
                 >
                   <div className={`inline-flex items-center justify-center w-12 h-12 ${iconBgColor} rounded-lg mb-4`}>
                     <IconComponent className={`h-6 w-6 ${iconColor}`} />

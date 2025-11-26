@@ -521,7 +521,7 @@ export default function DirectoryView({
         return (
           <Card 
             key={item.state_jurisdiction_id}
-            className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-blue-400 hover:-translate-y-1"
+            className="transition-all duration-200 cursor-pointer hover:border-blue-400 hover:-translate-y-1"
             onClick={() => selectState(item)}
           >
             <CardHeader>
@@ -590,7 +590,7 @@ export default function DirectoryView({
         return (
           <Card 
             key={item.county_jurisdiction_id}
-            className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-blue-400 hover:-translate-y-1"
+            className="transition-all duration-200 cursor-pointer hover:border-blue-400 hover:-translate-y-1"
             onClick={() => selectCounty(item)}
           >
             <CardHeader>
@@ -628,7 +628,7 @@ export default function DirectoryView({
         return (
           <Card 
             key={`city-${item.city_name}-${item.county_name || item.state_code}-${index}`}
-            className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-blue-400 hover:-translate-y-1"
+            className="transition-all duration-200 cursor-pointer hover:border-blue-400 hover:-translate-y-1"
             onClick={() => selectCity(item)}
           >
             <CardHeader>
@@ -672,7 +672,7 @@ export default function DirectoryView({
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6 lg:py-8">
         {/* Breadcrumbs */}
-        <nav className="flex flex-wrap items-center gap-2 mb-6 text-sm bg-white px-4 py-3 rounded-lg shadow-sm">
+        <nav className="flex flex-wrap items-center gap-2 mb-6 text-sm bg-white px-4 py-3 rounded-lg border">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-2">
               {index > 0 && <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />}
@@ -709,7 +709,7 @@ export default function DirectoryView({
             
             <div className="flex flex-wrap items-center gap-3">
               {/* Residential/Commercial Toggle */}
-              <div className="flex items-center gap-1 border rounded-lg p-1 shadow-sm bg-white">
+              <div className="flex items-center gap-1 border rounded-lg p-1 bg-white">
                 <Button
                   variant={sectorView === 'residential' ? 'default' : 'ghost'}
                   size="sm"
@@ -732,7 +732,7 @@ export default function DirectoryView({
               
               {/* View Mode Toggle */}
               {data.length > 0 && (
-                <div className="flex items-center gap-1 border rounded-lg p-1 shadow-sm bg-white">
+                <div className="flex items-center gap-1 border rounded-lg p-1 bg-white">
                   <Button
                     variant={viewMode === 'table' ? 'default' : 'ghost'}
                     size="sm"

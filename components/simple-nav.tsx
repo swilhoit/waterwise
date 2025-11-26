@@ -25,7 +25,6 @@ export function SimpleNav({ items }: SimpleNavProps) {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
 
   const handleMouseEnter = (label: string) => {
-    // Clear any pending timeout
     if (timeoutId) {
       clearTimeout(timeoutId)
       setTimeoutId(null)
@@ -34,56 +33,65 @@ export function SimpleNav({ items }: SimpleNavProps) {
   }
 
   const handleMouseLeave = () => {
-    // Add a small delay before closing to prevent accidental closures
     const id = setTimeout(() => {
       setActiveDropdown(null)
-    }, 100)
+    }, 150)
     setTimeoutId(id)
   }
 
   return (
-    <nav className="hidden lg:flex items-center gap-6">
+    <nav className="hidden lg:flex items-center gap-1">
       {items.map((item) => (
         <div
           key={item.label}
-          className="relative group"
+          className="relative"
           onMouseEnter={() => item.dropdown && handleMouseEnter(item.label)}
           onMouseLeave={handleMouseLeave}
         >
           {item.href ? (
             <Link
               href={item.href}
-              className="inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900"
+              className="inline-flex h-10 items-center justify-center px-4 py-2 text-[14px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50 rounded-lg"
             >
               {item.label}
             </Link>
           ) : (
-            <button className="inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900">
+            <button 
+              className={`inline-flex h-10 items-center justify-center px-4 py-2 text-[14px] font-medium transition-colors rounded-lg ${
+                activeDropdown === item.label 
+                  ? 'text-gray-900 bg-gray-50' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
               {item.label}
-              <ChevronDown className={`ml-1 h-3 w-3 transition-transform ${activeDropdown === item.label ? 'rotate-180' : ''}`} />
+              <ChevronDown 
+                className={`ml-1 h-3.5 w-3.5 transition-transform duration-200 ${
+                  activeDropdown === item.label ? 'rotate-180' : ''
+                }`} 
+              />
             </button>
           )}
 
           {item.dropdown && activeDropdown === item.label && (
             <>
-              {/* Invisible bridge to maintain hover state */}
-              <div className="absolute top-full left-0 w-full h-2" />
-              <div className="absolute top-full left-0 pt-2 z-50">
-                <div className="w-56 bg-white border border-gray-200 rounded-md">
-                  <div className="py-1">
-                    {item.dropdown.map((dropdownItem) => (
+              <div className="absolute top-full left-0 w-full h-3" />
+              <div className="absolute top-full left-0 pt-3 z-50">
+                <div 
+                  className="w-72 bg-white border border-gray-200 rounded-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-200"
+                  style={{ animationDuration: '150ms' }}
+                >
+                  <div className="p-2">
+                    {item.dropdown.map((dropdownItem, index) => (
                       <Link
                         key={dropdownItem.href}
                         href={dropdownItem.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                        className="flex flex-col gap-0.5 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                         onClick={() => setActiveDropdown(null)}
                       >
-                        <div>
-                          <div className="font-medium">{dropdownItem.title}</div>
-                          {dropdownItem.description && (
-                            <div className="text-xs text-gray-500 mt-1">{dropdownItem.description}</div>
-                          )}
-                        </div>
+                        <span className="text-[14px] font-medium">{dropdownItem.title}</span>
+                        {dropdownItem.description && (
+                          <span className="text-[12px] text-gray-500 leading-snug">{dropdownItem.description}</span>
+                        )}
                       </Link>
                     ))}
                   </div>
