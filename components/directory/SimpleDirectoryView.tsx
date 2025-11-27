@@ -351,16 +351,16 @@ export default function SimpleDirectoryView({
   // ==========================================================================
 
   if (selectedState && !selectedCounty && !selectedCity) {
-    // Sort cities: top cities first, then alphabetically
+    // Sort cities: top cities first (alphabetically), then remaining cities alphabetically
     const sortedCities = [...allCities].sort((a, b) => {
-      const aIndex = TOP_CA_CITIES.findIndex(c => c.toLowerCase() === a.city_name?.toLowerCase())
-      const bIndex = TOP_CA_CITIES.findIndex(c => c.toLowerCase() === b.city_name?.toLowerCase())
-      // Both are top cities - sort by rank
-      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
+      const aIsTop = TOP_CA_CITIES.some(c => c.toLowerCase() === a.city_name?.toLowerCase())
+      const bIsTop = TOP_CA_CITIES.some(c => c.toLowerCase() === b.city_name?.toLowerCase())
+      // Both are top cities - sort alphabetically
+      if (aIsTop && bIsTop) return (a.city_name || '').localeCompare(b.city_name || '')
       // Only a is a top city
-      if (aIndex !== -1) return -1
+      if (aIsTop) return -1
       // Only b is a top city
-      if (bIndex !== -1) return 1
+      if (bIsTop) return 1
       // Neither is a top city - sort alphabetically
       return (a.city_name || '').localeCompare(b.city_name || '')
     })
