@@ -801,7 +801,15 @@ export default function SimpleDirectoryView({
                         rel="noopener noreferrer"
                         className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
                       >
-                        <ExternalLink className="h-3 w-3" /> Apply
+                        <ExternalLink className="h-3 w-3" />
+                        {(() => {
+                          try {
+                            const domain = new URL(incentive.incentive_url).hostname.replace('www.', '');
+                            return domain;
+                          } catch {
+                            return 'Apply';
+                          }
+                        })()}
                       </a>
                     )}
                   </div>
@@ -1155,7 +1163,15 @@ export default function SimpleDirectoryView({
                         rel="noopener noreferrer"
                         className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
                       >
-                        <ExternalLink className="h-3 w-3" /> Apply
+                        <ExternalLink className="h-3 w-3" />
+                        {(() => {
+                          try {
+                            const domain = new URL(program.incentive_url).hostname.replace('www.', '');
+                            return domain;
+                          } catch {
+                            return 'Apply';
+                          }
+                        })()}
                       </a>
                     )}
                     {program.program_contact_email && (
