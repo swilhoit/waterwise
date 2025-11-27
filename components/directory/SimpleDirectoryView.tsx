@@ -50,35 +50,70 @@ interface ComplianceData {
   effective?: any
 }
 
-interface StateStaticData {
-  resourceType?: string
+// Greywater-specific regulation data
+interface GreywaterData {
   legalStatus?: string
   governingCode?: string
-  permitThresholdGpd?: number | null
-  collectionLimitGallons?: number | null  // For rainwater
   permitRequired?: string
   permitExplanation?: string
   permitProcess?: string
+  permitThresholdGpd?: number | null
   indoorUseAllowed?: boolean
   outdoorUseAllowed?: boolean
-  potableUseAllowed?: boolean  // For rainwater
   approvedUses?: string[]
   keyRestrictions?: string[]
   recentChanges?: string | null
-  primaryAgency?: string
-  agencyContact?: string
-  agencyPhone?: string
-  governmentWebsite?: string
   regulatoryClassification?: string
-  taxIncentives?: string  // For rainwater
   summary?: string
-  state_name?: string
-  state_code?: string
-  has_incentives?: boolean
-  incentive_count?: number
-  max_rebate_amount?: number
-  // For multi-resource responses
-  resources?: StateStaticData[]
+}
+
+// Rainwater-specific regulation data
+interface RainwaterData {
+  legalStatus?: string
+  governingCode?: string
+  permitRequired?: string
+  permitExplanation?: string
+  permitProcess?: string
+  collectionLimitGallons?: number | null
+  potableUseAllowed?: boolean
+  taxIncentives?: string
+  approvedUses?: string[]
+  keyRestrictions?: string[]
+  recentChanges?: string | null
+  regulatoryClassification?: string
+  summary?: string
+}
+
+// Agency info
+interface AgencyData {
+  name?: string
+  contact?: string
+  phone?: string
+  website?: string
+}
+
+// Incentive summary
+interface IncentiveSummary {
+  total: number
+  greywater: number
+  rainwater: number
+  conservation: number
+  maxRebate: number
+}
+
+// Unified state data from API
+interface UnifiedStateData {
+  state_code: string
+  state_name: string
+  greywater: GreywaterData | null
+  rainwater: RainwaterData | null
+  conservation: {
+    hasRegulations: boolean
+    message: string
+    incentiveCount: number
+  }
+  agency: AgencyData | null
+  incentives: IncentiveSummary
 }
 
 interface SimpleDirectoryViewProps {
@@ -113,8 +148,17 @@ export default function SimpleDirectoryView({
   const [cities, setCities] = useState<CityItem[]>([])
   const [allCities, setAllCities] = useState<CityItem[]>([])
   const [compliance, setCompliance] = useState<ComplianceData | null>(null)
-  const [stateStaticData, setStateStaticData] = useState<StateStaticData | null>(null)
-  const [rainwaterData, setRainwaterData] = useState<StateStaticData | null>(null)
+  const [stateData, setStateData] = useState<UnifiedStateData | null>(null)
+
+  // Computed: greywater data for backward compatibility with county/city pages
+  const stateStaticData = stateData?.greywater ? {
+    ...stateData.greywater,
+    primaryAgency: stateData.agency?.name,
+    agencyPhone: stateData.agency?.phone,
+    governmentWebsite: stateData.agency?.website,
+    state_name: stateData.state_name,
+    state_code: stateData.state_code
+  } : null
 
   // Selection states - initialize from initialData if available
   const [selectedState, setSelectedState] = useState<StateItem | null>(initialSelectedState)
@@ -262,17 +306,14 @@ export default function SimpleDirectoryView({
 
   const fetchStateStaticData = async (stateCode: string) => {
     try {
-      // Fetch greywater data (default)
-      const res = await fetch(`/api/greywater-directory/state-data?state=${stateCode}&resource_type=greywater`)
+      // Fetch unified state data (includes greywater, rainwater, conservation, agency)
+      const res = await fetch(`/api/greywater-directory/state-data?state=${stateCode}`)
       const data = await res.json()
-      if (data.status === 'success') setStateStaticData(data.data)
-
-      // Also fetch rainwater data
-      const rainwaterRes = await fetch(`/api/greywater-directory/state-data?state=${stateCode}&resource_type=rainwater`)
-      const rainwaterResData = await rainwaterRes.json()
-      if (rainwaterResData.status === 'success') setRainwaterData(rainwaterResData.data)
+      if (data.status === 'success') {
+        setStateData(data.data)
+      }
     } catch (err) {
-      console.error('Failed to fetch state static data:', err)
+      console.error('Failed to fetch state data:', err)
     }
   }
 
@@ -446,7 +487,7 @@ export default function SimpleDirectoryView({
   }
 
   // ==========================================================================
-  // RENDER: STATE PAGE (Level 2) - ENHANCED
+  // RENDER: STATE PAGE (Level 2) - UNIFIED SIDE-BY-SIDE VIEW
   // ==========================================================================
 
   if (selectedState && !selectedCounty && !selectedCity) {
@@ -454,13 +495,9 @@ export default function SimpleDirectoryView({
     const sortedCities = [...allCities].sort((a, b) => {
       const aIsTop = TOP_CA_CITIES.some(c => c.toLowerCase() === a.city_name?.toLowerCase())
       const bIsTop = TOP_CA_CITIES.some(c => c.toLowerCase() === b.city_name?.toLowerCase())
-      // Both are top cities - sort alphabetically
       if (aIsTop && bIsTop) return (a.city_name || '').localeCompare(b.city_name || '')
-      // Only a is a top city
       if (aIsTop) return -1
-      // Only b is a top city
       if (bIsTop) return 1
-      // Neither is a top city - sort alphabetically
       return (a.city_name || '').localeCompare(b.city_name || '')
     })
 
@@ -472,8 +509,18 @@ export default function SimpleDirectoryView({
       c.county_name?.toLowerCase().includes(searchTerm.toLowerCase())
     ).sort((a, b) => (a.county_name || '').localeCompare(b.county_name || ''))
 
+    // Helper to get status badge color
+    const getStatusBadgeClass = (status?: string) => {
+      if (!status) return 'bg-gray-100 text-gray-700'
+      const s = status.toLowerCase()
+      if (s.includes('legal')) return 'bg-emerald-100 text-emerald-700'
+      if (s.includes('regulated')) return 'bg-blue-100 text-blue-700'
+      if (s.includes('limited') || s.includes('unclear')) return 'bg-amber-100 text-amber-700'
+      return 'bg-gray-100 text-gray-700'
+    }
+
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">
           <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
@@ -483,33 +530,40 @@ export default function SimpleDirectoryView({
           <span className="font-medium text-gray-900">{selectedState.state_name}</span>
         </nav>
 
-        {/* Recent Changes Banner */}
-        {stateStaticData?.recentChanges && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-amber-800">Recent Regulatory Update</p>
-              <p className="text-sm text-amber-700">{stateStaticData.recentChanges}</p>
-            </div>
-          </div>
-        )}
-
-        {/* State Header */}
+        {/* State Header with Status Badges */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedState.state_name}</h1>
-              <div className="flex items-center gap-3 flex-wrap">
-                <Badge className={
-                  stateStaticData?.legalStatus === 'Legal' ? 'bg-emerald-100 text-emerald-700' :
-                  stateStaticData?.legalStatus === 'Regulated' ? 'bg-blue-100 text-blue-700' :
-                  stateStaticData?.legalStatus === 'Limited/Unclear' ? 'bg-amber-100 text-amber-700' :
-                  'bg-gray-100 text-gray-700'
-                }>
-                  {stateStaticData?.legalStatus || selectedState.legalStatus || 'Legal'}
-                </Badge>
-                {stateStaticData?.regulatoryClassification && (
-                  <span className="text-sm text-gray-500">{stateStaticData.regulatoryClassification}</span>
+              <h1 className="text-2xl font-bold text-gray-900 mb-3">{selectedState.state_name}</h1>
+              <p className="text-gray-500 mb-4">Water Sustainability Regulations & Incentives</p>
+              {/* Status badges for each resource type */}
+              <div className="flex flex-wrap gap-3">
+                {stateData?.greywater && (
+                  <div className="flex items-center gap-2">
+                    <Droplets className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm text-gray-600">Greywater:</span>
+                    <Badge className={getStatusBadgeClass(stateData.greywater.legalStatus)}>
+                      {stateData.greywater.legalStatus || 'Legal'}
+                    </Badge>
+                  </div>
+                )}
+                {stateData?.rainwater && (
+                  <div className="flex items-center gap-2">
+                    <CloudRain className="h-4 w-4 text-cyan-600" />
+                    <span className="text-sm text-gray-600">Rainwater:</span>
+                    <Badge className={getStatusBadgeClass(stateData.rainwater.legalStatus)}>
+                      {stateData.rainwater.legalStatus || 'Legal'}
+                    </Badge>
+                  </div>
+                )}
+                {stateData?.incentives && stateData.incentives.total > 0 && (
+                  <div className="flex items-center gap-2">
+                    <Leaf className="h-4 w-4 text-emerald-600" />
+                    <span className="text-sm text-gray-600">Programs:</span>
+                    <Badge className="bg-emerald-100 text-emerald-700">
+                      {stateData.incentives.total} Available
+                    </Badge>
+                  </div>
                 )}
               </div>
             </div>
@@ -518,249 +572,247 @@ export default function SimpleDirectoryView({
               <p className="text-sm text-gray-500">cities</p>
             </div>
           </div>
+        </div>
 
-          {/* Summary */}
-          {stateStaticData?.summary && (
-            <p className="text-gray-600 mb-4">{stateStaticData.summary}</p>
-          )}
-
-          {/* Use Type Indicators */}
-          <div className="flex gap-4 pt-4 border-t border-gray-100">
-            <div className={`flex items-center gap-2 ${stateStaticData?.outdoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
-              <Droplets className="h-4 w-4" />
-              <span className="text-sm font-medium">Outdoor Use {stateStaticData?.outdoorUseAllowed ? 'Allowed' : 'Not Allowed'}</span>
+        {/* Recent Changes Banner */}
+        {(stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges) && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-amber-800">Recent Regulatory Update</p>
+              <p className="text-sm text-amber-700">
+                {stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges}
+              </p>
             </div>
-            <div className={`flex items-center gap-2 ${stateStaticData?.indoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
-              <Building2 className="h-4 w-4" />
-              <span className="text-sm font-medium">Indoor Use {stateStaticData?.indoorUseAllowed ? 'Allowed' : 'Not Allowed'}</span>
+          </div>
+        )}
+
+        {/* Side-by-Side Regulations Comparison */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Greywater Column */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-blue-900 mb-4 flex items-center gap-2">
+              <Droplets className="h-5 w-5 text-blue-600" />
+              Greywater Reuse
+            </h2>
+
+            {stateData?.greywater ? (
+              <div className="space-y-4">
+                {/* Status & Classification */}
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-700">Status</span>
+                  <Badge className={getStatusBadgeClass(stateData.greywater.legalStatus)}>
+                    {stateData.greywater.legalStatus || 'Legal'}
+                  </Badge>
+                </div>
+
+                {stateData.greywater.regulatoryClassification && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-blue-700">Classification</span>
+                    <span className="text-sm font-medium text-blue-900">{stateData.greywater.regulatoryClassification}</span>
+                  </div>
+                )}
+
+                {/* Use Allowances */}
+                <div className="flex gap-4 py-2">
+                  <div className={`flex items-center gap-1.5 ${stateData.greywater.outdoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
+                    {stateData.greywater.outdoorUseAllowed ? <Check className="h-4 w-4" /> : <span className="h-4 w-4 text-center">✗</span>}
+                    <span className="text-sm">Outdoor</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${stateData.greywater.indoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
+                    {stateData.greywater.indoorUseAllowed ? <Check className="h-4 w-4" /> : <span className="h-4 w-4 text-center">✗</span>}
+                    <span className="text-sm">Indoor</span>
+                  </div>
+                </div>
+
+                {/* Permit Info */}
+                <div className="pt-3 border-t border-blue-200">
+                  <p className="text-xs font-semibold text-blue-700 uppercase mb-2">Permits</p>
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-blue-600">Required</span>
+                      <span className="font-medium text-blue-900">{stateData.greywater.permitRequired || 'Varies'}</span>
+                    </div>
+                    {stateData.greywater.permitThresholdGpd !== null && stateData.greywater.permitThresholdGpd !== undefined && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-blue-600">No-Permit Threshold</span>
+                        <span className="font-medium text-blue-900">
+                          {stateData.greywater.permitThresholdGpd > 0 ? `< ${stateData.greywater.permitThresholdGpd} GPD` : 'All need permit'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Governing Code */}
+                {stateData.greywater.governingCode && (
+                  <div className="pt-3 border-t border-blue-200">
+                    <p className="text-xs font-semibold text-blue-700 uppercase mb-1">Governing Code</p>
+                    <p className="text-sm text-blue-800">{stateData.greywater.governingCode}</p>
+                  </div>
+                )}
+
+                {/* Approved Uses */}
+                {stateData.greywater.approvedUses && stateData.greywater.approvedUses.length > 0 && (
+                  <div className="pt-3 border-t border-blue-200">
+                    <p className="text-xs font-semibold text-blue-700 uppercase mb-2">Approved Uses</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {stateData.greywater.approvedUses.slice(0, 4).map((use, idx) => (
+                        <Badge key={idx} className="bg-blue-100 text-blue-700 text-xs">{use}</Badge>
+                      ))}
+                      {stateData.greywater.approvedUses.length > 4 && (
+                        <Badge className="bg-blue-100 text-blue-700 text-xs">+{stateData.greywater.approvedUses.length - 4} more</Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-blue-600 text-sm">No greywater data available for this state.</p>
+            )}
+          </div>
+
+          {/* Rainwater Column */}
+          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-cyan-900 mb-4 flex items-center gap-2">
+              <CloudRain className="h-5 w-5 text-cyan-600" />
+              Rainwater Harvesting
+            </h2>
+
+            {stateData?.rainwater ? (
+              <div className="space-y-4">
+                {/* Status */}
+                <div className="flex justify-between items-center">
+                  <span className="text-cyan-700">Status</span>
+                  <Badge className={getStatusBadgeClass(stateData.rainwater.legalStatus)}>
+                    {stateData.rainwater.legalStatus || 'Legal'}
+                  </Badge>
+                </div>
+
+                {/* Collection Limit */}
+                <div className="flex justify-between items-center">
+                  <span className="text-cyan-700">Collection Limit</span>
+                  <span className="font-medium text-cyan-900">
+                    {stateData.rainwater.collectionLimitGallons && stateData.rainwater.collectionLimitGallons > 0
+                      ? `${stateData.rainwater.collectionLimitGallons.toLocaleString()} gal`
+                      : 'Unlimited'}
+                  </span>
+                </div>
+
+                {/* Potable Use */}
+                <div className="flex justify-between items-center">
+                  <span className="text-cyan-700">Potable Use</span>
+                  <span className={`font-medium ${stateData.rainwater.potableUseAllowed ? 'text-emerald-600' : 'text-gray-500'}`}>
+                    {stateData.rainwater.potableUseAllowed ? 'Allowed (w/ treatment)' : 'Non-potable only'}
+                  </span>
+                </div>
+
+                {/* Permit Info */}
+                <div className="pt-3 border-t border-cyan-200">
+                  <p className="text-xs font-semibold text-cyan-700 uppercase mb-2">Permits</p>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-cyan-600">Required</span>
+                    <span className="font-medium text-cyan-900">{stateData.rainwater.permitRequired || 'No'}</span>
+                  </div>
+                </div>
+
+                {/* Tax Incentives */}
+                {stateData.rainwater.taxIncentives && (
+                  <div className="pt-3 border-t border-cyan-200">
+                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-1 flex items-center gap-1">
+                      <DollarSign className="h-3 w-3" />
+                      Tax Incentives
+                    </p>
+                    <p className="text-sm text-cyan-800">{stateData.rainwater.taxIncentives}</p>
+                  </div>
+                )}
+
+                {/* Governing Code */}
+                {stateData.rainwater.governingCode && (
+                  <div className="pt-3 border-t border-cyan-200">
+                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-1">Governing Code</p>
+                    <p className="text-sm text-cyan-800">{stateData.rainwater.governingCode}</p>
+                  </div>
+                )}
+
+                {/* Approved Uses */}
+                {stateData.rainwater.approvedUses && stateData.rainwater.approvedUses.length > 0 && (
+                  <div className="pt-3 border-t border-cyan-200">
+                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-2">Approved Uses</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {stateData.rainwater.approvedUses.slice(0, 4).map((use, idx) => (
+                        <Badge key={idx} className="bg-cyan-100 text-cyan-700 text-xs">{use}</Badge>
+                      ))}
+                      {stateData.rainwater.approvedUses.length > 4 && (
+                        <Badge className="bg-cyan-100 text-cyan-700 text-xs">+{stateData.rainwater.approvedUses.length - 4} more</Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-cyan-600 text-sm">No rainwater data available for this state.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Conservation Note */}
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
+          <div className="flex items-center gap-3">
+            <Leaf className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-emerald-900">Water Conservation</p>
+              <p className="text-sm text-emerald-700">
+                {stateData?.conservation?.message || 'Conservation programs are incentive-based. See available rebates below.'}
+                {stateData?.incentives?.conservation ? ` (${stateData.incentives.conservation} programs available)` : ''}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Permit Explanation - Full Width */}
-        {stateStaticData?.permitExplanation && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
-              What This Means for You
-            </h2>
-            <p className="text-blue-800 leading-relaxed">{stateStaticData.permitExplanation}</p>
-            {stateStaticData?.permitProcess && (
-              <div className="mt-4 pt-4 border-t border-blue-200">
-                <h3 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                  <ClipboardList className="h-4 w-4 text-blue-600" />
-                  How to Get Started
-                </h3>
-                <p className="text-sm text-blue-700">{stateStaticData.permitProcess}</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Permit & Regulations Info */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Permit Requirements */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-gray-400" />
-              Permit Requirements
-            </h2>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Permit Required</span>
-                <span className="font-medium">{stateStaticData?.permitRequired || 'Varies'}</span>
-              </div>
-              {stateStaticData?.permitThresholdGpd !== null && stateStaticData?.permitThresholdGpd !== undefined && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">No-Permit Threshold</span>
-                  <span className="font-medium">{stateStaticData.permitThresholdGpd > 0 ? `Under ${stateStaticData.permitThresholdGpd} GPD` : 'All systems need permit'}</span>
-                </div>
-              )}
-              {stateStaticData?.governingCode && (
-                <div className="pt-3 border-t border-gray-100">
-                  <span className="text-sm text-gray-500">Governing Code:</span>
-                  <p className="text-sm font-medium text-gray-700 mt-1">{stateStaticData.governingCode}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Agency Info */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
+        {/* Regulatory Agency */}
+        {stateData?.agency?.name && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Building2 className="h-5 w-5 text-gray-400" />
               Regulatory Agency
             </h2>
             <div className="space-y-3">
-              {stateStaticData?.primaryAgency && (
-                <p className="font-medium text-gray-900">{stateStaticData.primaryAgency}</p>
-              )}
-              {stateStaticData?.agencyPhone && (
-                <a href={`tel:${stateStaticData.agencyPhone}`} className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
+              <p className="font-medium text-gray-900">{stateData.agency.name}</p>
+              {stateData.agency.phone && (
+                <a href={`tel:${stateData.agency.phone}`} className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
                   <Phone className="h-4 w-4" />
-                  {stateStaticData.agencyPhone}
+                  {stateData.agency.phone}
                 </a>
               )}
-              {stateStaticData?.governmentWebsite && (
-                <a href={stateStaticData.governmentWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
+              {stateData.agency.website && (
+                <a href={stateData.agency.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
                   <ExternalLink className="h-4 w-4" />
                   Official Website
                 </a>
               )}
             </div>
           </div>
-        </div>
-
-        {/* Rainwater Harvesting Info */}
-        {rainwaterData && (
-          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-cyan-900 mb-4 flex items-center gap-2">
-              <CloudRain className="h-5 w-5 text-cyan-600" />
-              Rainwater Harvesting in {selectedState.state_name}
-            </h2>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Left column - Status & Limits */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-cyan-700">Legal Status</span>
-                  <Badge className={
-                    rainwaterData.legalStatus === 'Legal' ? 'bg-emerald-100 text-emerald-700' :
-                    rainwaterData.legalStatus === 'Regulated' ? 'bg-blue-100 text-blue-700' :
-                    rainwaterData.legalStatus === 'Limited' ? 'bg-amber-100 text-amber-700' :
-                    'bg-gray-100 text-gray-700'
-                  }>
-                    {rainwaterData.legalStatus || 'Legal'}
-                  </Badge>
-                </div>
-
-                {rainwaterData.collectionLimitGallons && rainwaterData.collectionLimitGallons > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-cyan-700">Collection Limit</span>
-                    <span className="font-medium text-cyan-900">{rainwaterData.collectionLimitGallons.toLocaleString()} gallons</span>
-                  </div>
-                )}
-
-                {rainwaterData.permitRequired && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-cyan-700">Permit Required</span>
-                    <span className="font-medium text-cyan-900">{rainwaterData.permitRequired}</span>
-                  </div>
-                )}
-
-                <div className="flex justify-between items-center">
-                  <span className="text-cyan-700">Potable Use</span>
-                  <span className={`font-medium ${rainwaterData.potableUseAllowed ? 'text-emerald-600' : 'text-gray-500'}`}>
-                    {rainwaterData.potableUseAllowed ? 'Allowed (with treatment)' : 'Non-potable only'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Right column - Tax Incentives & Uses */}
-              <div className="space-y-3">
-                {rainwaterData.taxIncentives && (
-                  <div className="bg-white/60 rounded-lg p-3">
-                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-1 flex items-center gap-1">
-                      <DollarSign className="h-3 w-3" />
-                      Tax Incentives
-                    </p>
-                    <p className="text-sm text-cyan-800">{rainwaterData.taxIncentives}</p>
-                  </div>
-                )}
-
-                {rainwaterData.approvedUses && rainwaterData.approvedUses.length > 0 && (
-                  <div>
-                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-2">Approved Uses</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {rainwaterData.approvedUses.slice(0, 4).map((use, idx) => (
-                        <Badge key={idx} className="bg-cyan-100 text-cyan-700 text-xs">{use}</Badge>
-                      ))}
-                      {rainwaterData.approvedUses.length > 4 && (
-                        <Badge className="bg-cyan-100 text-cyan-700 text-xs">+{rainwaterData.approvedUses.length - 4} more</Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {rainwaterData.summary && (
-              <p className="text-sm text-cyan-700 mt-4 pt-4 border-t border-cyan-200">{rainwaterData.summary}</p>
-            )}
-
-            {rainwaterData.governmentWebsite && (
-              <a
-                href={rainwaterData.governmentWebsite}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700 mt-3"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-                State Rainwater Regulations
-              </a>
-            )}
-          </div>
         )}
 
-        {/* Approved Uses & Restrictions */}
-        {(stateStaticData?.approvedUses?.length || stateStaticData?.keyRestrictions?.length) && (
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Approved Uses */}
-            {stateStaticData?.approvedUses && stateStaticData.approvedUses.length > 0 && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-emerald-900 mb-4 flex items-center gap-2">
-                  <Check className="h-5 w-5 text-emerald-600" />
-                  Approved Uses
-                </h2>
-                <ul className="space-y-2">
-                  {stateStaticData.approvedUses.map((use, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-emerald-800">
-                      <Check className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">{use}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Key Restrictions */}
-            {stateStaticData?.keyRestrictions && stateStaticData.keyRestrictions.length > 0 && (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  Key Restrictions
-                </h2>
-                <ul className="space-y-2">
-                  {stateStaticData.keyRestrictions.map((restriction, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-amber-800">
-                      <span className="text-amber-500 mt-1">•</span>
-                      <span className="text-sm">{restriction}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* State Incentives - Detailed View */}
+        {/* State Incentives */}
         {compliance?.state?.incentives && compliance.state.incentives.length > 0 && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-emerald-600" />
-                {selectedState.state_name} Rebates & Incentives
+                Available Incentives & Rebates
                 <span className="text-sm font-normal text-gray-500">({filterIncentivesByResourceType(compliance.state.incentives).length})</span>
               </h2>
-              {stateStaticData?.max_rebate_amount && stateStaticData.max_rebate_amount > 0 && (
+              {stateData?.incentives?.maxRebate && stateData.incentives.maxRebate > 0 && (
                 <div className="text-right">
                   <p className="text-xs text-gray-500">Up to</p>
-                  <p className="text-xl font-bold text-emerald-600">${stateStaticData.max_rebate_amount.toLocaleString()}</p>
+                  <p className="text-xl font-bold text-emerald-600">${stateData.incentives.maxRebate.toLocaleString()}</p>
                 </div>
               )}
             </div>
 
-            {/* Resource Type Filter for Incentives */}
+            {/* Resource Type Filter */}
             <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
               {RESOURCE_TYPES.map((type) => {
                 const Icon = type.icon
@@ -798,16 +850,13 @@ export default function SimpleDirectoryView({
                     <div>
                       <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
                       <div className="flex flex-wrap gap-1.5 mt-1">
-                        {/* Resource Type Badge */}
                         <Badge className={`${resourceBadge.className} text-xs flex items-center gap-1`}>
                           <ResourceIcon className="h-3 w-3" />
                           {resourceBadge.label}
                         </Badge>
-                        {/* Program Subtype Badge */}
                         {subtypeBadge && (
                           <Badge className={`${subtypeBadge.className} text-xs`}>{subtypeBadge.label}</Badge>
                         )}
-                        {/* Incentive Type Badge */}
                         {incentive.incentive_type === 'rebate' && (
                           <Badge className="bg-gray-200 text-gray-700 text-xs">Rebate</Badge>
                         )}
@@ -817,44 +866,25 @@ export default function SimpleDirectoryView({
                         {incentive.incentive_type === 'tax_exemption' && (
                           <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
                         )}
-                        {incentive.incentive_type === 'grant' && (
-                          <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
-                        )}
                         {incentive.residential_eligible && (
                           <Badge className="bg-slate-100 text-slate-700 text-xs">Residential</Badge>
                         )}
                         {incentive.commercial_eligible && (
                           <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
                         )}
-                        {/* Water Utility Badge */}
-                        {incentive.water_utility && (
-                          <Badge className="bg-amber-100 text-amber-700 text-xs">{incentive.water_utility}</Badge>
-                        )}
                       </div>
                     </div>
-                    {(incentive.incentive_amount_max || incentive.max_funding_per_application) && (
+                    {incentive.incentive_amount_max && (
                       <div className="text-right">
                         <p className="text-xs text-gray-500">Up to</p>
                         <p className="text-lg font-bold text-emerald-600">
-                          ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
+                          ${incentive.incentive_amount_max.toLocaleString()}
                         </p>
                       </div>
                     )}
                   </div>
                   {incentive.program_description && (
                     <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
-                  )}
-                  {incentive.eligibility_details && (
-                    <div className="mb-3">
-                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Eligibility</p>
-                      <p className="text-sm text-gray-700">{incentive.eligibility_details}</p>
-                    </div>
-                  )}
-                  {incentive.how_to_apply && (
-                    <div className="mb-3">
-                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">How to Apply</p>
-                      <p className="text-sm text-gray-700">{incentive.how_to_apply}</p>
-                    </div>
                   )}
                   {incentive.incentive_url && (
                     <a
@@ -873,7 +903,7 @@ export default function SimpleDirectoryView({
           </div>
         )}
 
-        {/* View Toggle & Search */}
+        {/* View Toggle & Search for Cities/Counties */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -883,9 +913,7 @@ export default function SimpleDirectoryView({
               <button
                 onClick={() => { setViewMode('cities'); setSearchTerm(''); setShowAllCities(false); }}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                  viewMode === 'cities'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                  viewMode === 'cities' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 Cities
@@ -893,9 +921,7 @@ export default function SimpleDirectoryView({
               <button
                 onClick={() => { setViewMode('counties'); setSearchTerm(''); }}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                  viewMode === 'counties'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                  viewMode === 'counties' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 Counties
@@ -925,9 +951,7 @@ export default function SimpleDirectoryView({
               >
                 <div>
                   <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
-                  {city.county_name && (
-                    <p className="text-sm text-gray-500">{city.county_name} County</p>
-                  )}
+                  {city.county_name && <p className="text-sm text-gray-500">{city.county_name} County</p>}
                 </div>
                 <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
               </button>

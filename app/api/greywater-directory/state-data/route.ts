@@ -2,27 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getStateNameFromCode } from '@/lib/state-utils'
 import { getBigQueryClient } from '@/lib/bigquery'
 
-// Valid resource types
-const VALID_RESOURCE_TYPES = ['greywater', 'rainwater', 'all']
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const stateCode = searchParams.get('state')
-    const resourceType = searchParams.get('resource_type') || 'greywater' // Default to greywater for backward compatibility
 
     if (!stateCode) {
       return NextResponse.json({
         status: 'error',
         message: 'State code is required'
-      }, { status: 400 })
-    }
-
-    // Validate resource_type
-    if (!VALID_RESOURCE_TYPES.includes(resourceType)) {
-      return NextResponse.json({
-        status: 'error',
-        message: `Invalid resource_type. Must be one of: ${VALID_RESOURCE_TYPES.join(', ')}`
       }, { status: 400 })
     }
 
@@ -38,44 +26,40 @@ export async function GET(request: NextRequest) {
 
     const bigquery = getBigQueryClient()
 
-    // Build WHERE clause based on resource_type
-    const resourceFilter = resourceType === 'all'
-      ? ''
-      : `AND resource_type = '${resourceType}'`
-
-    // Query BigQuery for all state data from greywater_laws table
+    // Query for BOTH greywater and rainwater data in one call
     const stateQuery = `
       SELECT
         state_code,
         state_name,
-        resource_type as resourceType,
-        legal_status as legalStatus,
-        governing_code as governingCode,
-        permit_threshold_gpd as permitThresholdGpd,
-        collection_limit_gallons as collectionLimitGallons,
-        permit_required as permitRequired,
-        permit_explanation as permitExplanation,
-        permit_process as permitProcess,
-        indoor_use_allowed as indoorUseAllowed,
-        outdoor_use_allowed as outdoorUseAllowed,
-        potable_use_allowed as potableUseAllowed,
-        approved_uses as approvedUses,
-        key_restrictions as keyRestrictions,
-        recent_changes as recentChanges,
-        primary_agency as primaryAgency,
-        agency_contact as agencyContact,
-        agency_phone as agencyPhone,
-        government_website as governmentWebsite,
-        regulatory_classification as regulatoryClassification,
-        tax_incentives as taxIncentives,
+        resource_type,
+        legal_status,
+        governing_code,
+        permit_threshold_gpd,
+        collection_limit_gallons,
+        permit_required,
+        permit_explanation,
+        permit_process,
+        indoor_use_allowed,
+        outdoor_use_allowed,
+        potable_use_allowed,
+        approved_uses,
+        key_restrictions,
+        recent_changes,
+        primary_agency,
+        agency_contact,
+        agency_phone,
+        government_website,
+        regulatory_classification,
+        tax_incentives,
         summary
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
       WHERE state_code = @stateCode
-      ${resourceFilter}
       ORDER BY resource_type
     `
 
-    let stateData: any = null
+    let greywater: any = null
+    let rainwater: any = null
+    let agency: any = null
 
     try {
       const [rows] = await bigquery.query({
@@ -85,90 +69,84 @@ export async function GET(request: NextRequest) {
         }
       })
 
-      if (rows && rows.length > 0) {
-        // For 'all' resource type, return array of all resource types
-        // For specific resource type, return single object
-        if (resourceType === 'all' && rows.length > 1) {
-          stateData = {
-            state_name: rows[0].state_name || stateName,
-            state_code: stateCode.toUpperCase(),
-            resources: rows.map((row: any) => ({
-              resourceType: row.resourceType,
-              legalStatus: row.legalStatus,
-              governingCode: row.governingCode,
-              permitThresholdGpd: row.permitThresholdGpd,
-              collectionLimitGallons: row.collectionLimitGallons,
-              permitRequired: row.permitRequired,
-              permitExplanation: row.permitExplanation,
-              permitProcess: row.permitProcess,
-              indoorUseAllowed: row.indoorUseAllowed,
-              outdoorUseAllowed: row.outdoorUseAllowed,
-              potableUseAllowed: row.potableUseAllowed,
-              approvedUses: row.approvedUses || [],
-              keyRestrictions: row.keyRestrictions || [],
-              recentChanges: row.recentChanges,
-              primaryAgency: row.primaryAgency,
-              agencyContact: row.agencyContact,
-              agencyPhone: row.agencyPhone,
-              governmentWebsite: row.governmentWebsite,
-              regulatoryClassification: row.regulatoryClassification,
-              taxIncentives: row.taxIncentives,
-              summary: row.summary
-            }))
+      rows.forEach((row: any) => {
+        const resourceData = {
+          legalStatus: row.legal_status,
+          governingCode: row.governing_code,
+          permitRequired: row.permit_required,
+          permitExplanation: row.permit_explanation,
+          permitProcess: row.permit_process,
+          approvedUses: row.approved_uses || [],
+          keyRestrictions: row.key_restrictions || [],
+          recentChanges: row.recent_changes,
+          regulatoryClassification: row.regulatory_classification,
+          summary: row.summary
+        }
+
+        if (row.resource_type === 'greywater') {
+          greywater = {
+            ...resourceData,
+            permitThresholdGpd: row.permit_threshold_gpd,
+            indoorUseAllowed: row.indoor_use_allowed,
+            outdoorUseAllowed: row.outdoor_use_allowed
           }
-        } else {
-          const row = rows[0]
-          stateData = {
-            resourceType: row.resourceType,
-            legalStatus: row.legalStatus,
-            governingCode: row.governingCode,
-            permitThresholdGpd: row.permitThresholdGpd,
-            collectionLimitGallons: row.collectionLimitGallons,
-            permitRequired: row.permitRequired,
-            permitExplanation: row.permitExplanation,
-            permitProcess: row.permitProcess,
-            indoorUseAllowed: row.indoorUseAllowed,
-            outdoorUseAllowed: row.outdoorUseAllowed,
-            potableUseAllowed: row.potableUseAllowed,
-            approvedUses: row.approvedUses || [],
-            keyRestrictions: row.keyRestrictions || [],
-            recentChanges: row.recentChanges,
-            primaryAgency: row.primaryAgency,
-            agencyContact: row.agencyContact,
-            agencyPhone: row.agencyPhone,
-            governmentWebsite: row.governmentWebsite,
-            regulatoryClassification: row.regulatoryClassification,
-            taxIncentives: row.taxIncentives,
-            summary: row.summary,
-            state_name: row.state_name || stateName,
-            state_code: stateCode.toUpperCase()
+          // Use greywater agency as primary (usually same for both)
+          if (!agency) {
+            agency = {
+              name: row.primary_agency,
+              contact: row.agency_contact,
+              phone: row.agency_phone,
+              website: row.government_website
+            }
+          }
+        } else if (row.resource_type === 'rainwater') {
+          rainwater = {
+            ...resourceData,
+            collectionLimitGallons: row.collection_limit_gallons,
+            potableUseAllowed: row.potable_use_allowed,
+            taxIncentives: row.tax_incentives
+          }
+          // Use rainwater agency if greywater didn't provide one
+          if (!agency || !agency.name) {
+            agency = {
+              name: row.primary_agency,
+              contact: row.agency_contact,
+              phone: row.agency_phone,
+              website: row.government_website
+            }
           }
         }
-      }
+      })
     } catch (error) {
       console.error('Failed to fetch state data from BigQuery:', error)
     }
 
-    if (!stateData) {
+    if (!greywater && !rainwater) {
       return NextResponse.json({
         status: 'error',
         message: 'State data not found'
       }, { status: 404 })
     }
 
-    // Query BigQuery for incentive data
-    let hasIncentives = false
-    let maxRebateAmount = 0
-    let incentiveCount = 0
+    // Query for incentive counts by resource type
+    let incentiveSummary = {
+      total: 0,
+      greywater: 0,
+      rainwater: 0,
+      conservation: 0,
+      maxRebate: 0
+    }
 
     try {
       const incentiveQuery = `
         SELECT
+          COALESCE(resource_type, 'greywater') as resource_type,
           COUNT(*) as count,
           MAX(incentive_amount_max) as max_amount
         FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\`
         WHERE program_id LIKE @statePattern
         AND LOWER(program_status) = 'active'
+        GROUP BY resource_type
       `
 
       const [rows] = await bigquery.query({
@@ -178,20 +156,39 @@ export async function GET(request: NextRequest) {
         }
       })
 
-      if (rows && rows[0]) {
-        incentiveCount = Number(rows[0].count) || 0
-        hasIncentives = incentiveCount > 0
-        maxRebateAmount = Number(rows[0].max_amount) || 0
-      }
+      let maxRebate = 0
+      rows.forEach((row: any) => {
+        const count = Number(row.count) || 0
+        const max = Number(row.max_amount) || 0
+        incentiveSummary.total += count
+        if (max > maxRebate) maxRebate = max
+
+        if (row.resource_type === 'greywater') {
+          incentiveSummary.greywater = count
+        } else if (row.resource_type === 'rainwater') {
+          incentiveSummary.rainwater = count
+        } else if (row.resource_type === 'conservation') {
+          incentiveSummary.conservation = count
+        }
+      })
+      incentiveSummary.maxRebate = maxRebate
     } catch (error) {
       console.error('Failed to fetch incentive data:', error)
     }
 
+    // Build unified response
     const responseData = {
-      ...stateData,
-      has_incentives: hasIncentives,
-      incentive_count: incentiveCount,
-      max_rebate_amount: maxRebateAmount
+      state_code: stateCode.toUpperCase(),
+      state_name: stateName,
+      greywater,
+      rainwater,
+      conservation: {
+        hasRegulations: false,
+        message: 'Conservation programs are incentive-based. See available rebates below.',
+        incentiveCount: incentiveSummary.conservation
+      },
+      agency,
+      incentives: incentiveSummary
     }
 
     return NextResponse.json({
