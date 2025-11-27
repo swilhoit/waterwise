@@ -59,17 +59,21 @@ export async function GET(request: NextRequest) {
       console.error('Failed to fetch regulations:', error);
     }
 
-    // First, query for any active incentive programs
+    // First, query for any active incentive programs from programs_master
     let incentivePrograms: any[] = [];
     let programTiers: any[] = [];
-    
+
+    // Build jurisdiction patterns for matching program_id
+    const countyPattern = county ? `%${state}_COUNTY_${county.toUpperCase().replace(/\s+/g, '_')}%` : '';
+    const cityPattern = city ? `%${state}_CITY_${city.toUpperCase().replace(/\s+/g, '_')}%` : '';
+
     try {
-      // Query for all active incentives - MWD or any jurisdiction-specific
+      // Query for all active programs - match by program_id pattern or notes containing jurisdiction
       const incentiveQuery = `
-        SELECT 
-          jurisdiction_id,
+        SELECT
+          program_id,
           program_name,
-          incentive_type,
+          program_type as incentive_type,
           incentive_amount_min,
           incentive_amount_max,
           eligible_system_types,
@@ -79,52 +83,54 @@ export async function GET(request: NextRequest) {
           installation_requirements,
           contact_email,
           contact_phone,
-          sector_applicability
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.incentives_master\`
+          CASE
+            WHEN program_id LIKE '%_COUNTY_%' THEN 'county'
+            WHEN program_id LIKE '%_CITY_%' THEN 'city'
+            WHEN program_id LIKE 'CA_%' AND program_id NOT LIKE '%_COUNTY_%' AND program_id NOT LIKE '%_CITY_%' THEN 'state'
+            ELSE 'regional'
+          END as jurisdiction_level,
+          CASE
+            WHEN program_id LIKE '%MWD%' THEN 'MWD_SERVICE_AREA'
+            WHEN program_id LIKE '%_COUNTY_%' THEN REGEXP_EXTRACT(program_id, r'(CA_COUNTY_[A-Z_]+)')
+            WHEN program_id LIKE '%_CITY_%' THEN REGEXP_EXTRACT(program_id, r'(CA_CITY_[A-Z_]+)')
+            ELSE 'STATE_${state}'
+          END as jurisdiction_id
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\`
         WHERE LOWER(program_status) = 'active'
           AND (
-            jurisdiction_id = 'MWD_SERVICE_AREA'
-            OR jurisdiction_id = ?
-            OR jurisdiction_id = ?
-            OR jurisdiction_id = ?
-            OR jurisdiction_id = ?
+            program_id LIKE 'CA_%'
+            OR LOWER(notes) LIKE '%${state.toLowerCase()}%'
           )
       `;
-      
+
       const [rows] = await bigquery.query({
         query: incentiveQuery,
-        params: [stateJurisdictionId, countyJurisdictionId, cityJurisdictionId, cityJurisdictionIdAlt],
-        parameterMode: 'POSITIONAL'
+        location: 'US'
       });
-      
-      incentivePrograms = rows;
-      
-      // Query for program tiers if we have state programs
-      if (incentivePrograms.some(p => p.jurisdiction_id === stateJurisdictionId)) {
-        const tierQuery = `
-          SELECT 
-            pt.*,
-            im.program_name,
-            im.jurisdiction_id
-          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_tiers\` pt
-          JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.incentives_master\` im
-            ON pt.program_id = im.program_id
-          WHERE im.jurisdiction_id = ?
-            AND LOWER(im.program_status) = 'active'
-          ORDER BY pt.program_id, pt.tier_level
-        `;
-        
-        try {
-          const [tierRows] = await bigquery.query({
-            query: tierQuery,
-            params: [stateJurisdictionId],
-            parameterMode: 'POSITIONAL'
-          });
-          programTiers = tierRows;
-        } catch (tierError) {
-          console.error('Failed to fetch program tiers:', tierError);
-        }
-      }
+
+      // Filter to relevant jurisdictions
+      incentivePrograms = rows.filter((p: any) => {
+        const pid = p.program_id?.toUpperCase() || '';
+        const notes = p.notes?.toLowerCase() || '';
+
+        // Match MWD programs for LA County
+        if (pid.includes('MWD') && county?.toLowerCase() === 'los angeles') return true;
+
+        // Match county-specific programs
+        if (county && (
+          pid.includes(`_COUNTY_${county.toUpperCase().replace(/\s+/g, '_')}`) ||
+          notes.includes(county.toLowerCase())
+        )) return true;
+
+        // Match city-specific programs
+        if (city && pid.includes(`_CITY_${city.toUpperCase().replace(/\s+/g, '_')}`)) return true;
+
+        // Match state-level programs (no county/city in ID)
+        if (!pid.includes('_COUNTY_') && !pid.includes('_CITY_') && !pid.includes('MWD')) return true;
+
+        return false;
+      });
+
     } catch (error) {
       console.error('Failed to fetch incentives:', error);
     }
@@ -215,9 +221,6 @@ export async function GET(request: NextRequest) {
     
     // Process and assign incentives to appropriate levels
     Array.from(seenPrograms.values()).forEach(program => {
-      // Find tiers for this program if it's a state program
-      const programTiersData = programTiers.filter(t => t.program_name === program.program_name);
-      
       const formattedProgram = {
         program_name: program.program_name,
         incentive_type: program.incentive_type,
@@ -228,57 +231,43 @@ export async function GET(request: NextRequest) {
         program_status: program.program_status,
         program_description: program.notes,
         max_funding_per_application: program.incentive_amount_max,
-        residential_eligibility: program.sector_applicability?.includes('residential') || false,
-        commercial_eligibility: program.sector_applicability?.includes('commercial') || false,
         installation_requirements: program.installation_requirements,
         program_contact_email: program.contact_email,
         program_contact_phone: program.contact_phone,
-        tiers: programTiersData.map(tier => ({
-          tier_name: tier.tier_name,
-          tier_number: tier.tier_level,
-          min_amount: tier.min_amount,
-          max_amount: tier.max_amount,
-          requirements: tier.requirements,
-          typical_applicants: tier.typical_applicant,
-          processing_time: tier.processing_time,
-          user_types: tier.user_types
-        }))
+        tiers: []
       };
-      
+
+      const pid = program.program_id?.toUpperCase() || '';
+      const notes = program.notes?.toLowerCase() || '';
+      const countyUpper = county?.toUpperCase().replace(/\s+/g, '_') || '';
+      const cityUpper = city?.toUpperCase().replace(/\s+/g, '_') || '';
+
       // Assign MWD programs to county level for LA County
-      if (program.jurisdiction_id === 'MWD_SERVICE_AREA' && county === 'Los Angeles' && compliance.county) {
+      if (pid.includes('MWD') && county?.toLowerCase() === 'los angeles' && compliance.county) {
         compliance.county.incentives.push(formattedProgram);
         compliance.county.incentive_count++;
-        compliance.county.max_incentive = compliance.county.max_incentive === null 
-          ? (program.incentive_amount_max || null)
-          : Math.max(compliance.county.max_incentive, program.incentive_amount_max || 0);
+        compliance.county.max_incentive = Math.max(compliance.county.max_incentive || 0, program.incentive_amount_max || 0);
       }
-      // Assign state programs to state level
-      else if (program.jurisdiction_id === `STATE_${state}` && compliance.state) {
-        compliance.state.incentives.push(formattedProgram);
-        compliance.state.incentive_count++;
-        compliance.state.max_incentive = compliance.state.max_incentive === null 
-          ? (program.incentive_amount_max || null)
-          : Math.max(compliance.state.max_incentive, program.incentive_amount_max || 0);
-      }
-      // Assign county programs to county level
-      else if (county && program.jurisdiction_id === `COUNTY_${state}_${county.replace(/\s+/g, '_')}` && compliance.county) {
+      // Assign county-specific programs to county level
+      else if (county && compliance.county && (
+        pid.includes(`_COUNTY_${countyUpper}`) ||
+        (notes.includes(county.toLowerCase()) && !pid.includes('_CITY_'))
+      )) {
         compliance.county.incentives.push(formattedProgram);
         compliance.county.incentive_count++;
-        compliance.county.max_incentive = compliance.county.max_incentive === null 
-          ? (program.incentive_amount_max || null)
-          : Math.max(compliance.county.max_incentive, program.incentive_amount_max || 0);
+        compliance.county.max_incentive = Math.max(compliance.county.max_incentive || 0, program.incentive_amount_max || 0);
       }
-      // Assign city programs to city level (handle both with and without underscores in city name)
-      else if (city && (
-        program.jurisdiction_id === `CITY_${state}_${city}` || 
-        program.jurisdiction_id === `CITY_${state}_${city.replace(/\s+/g, '_')}`
-      ) && compliance.city) {
+      // Assign city programs to city level
+      else if (city && compliance.city && pid.includes(`_CITY_${cityUpper}`)) {
         compliance.city.incentives.push(formattedProgram);
         compliance.city.incentive_count++;
-        compliance.city.max_incentive = compliance.city.max_incentive === null 
-          ? (program.incentive_amount_max || null)
-          : Math.max(compliance.city.max_incentive, program.incentive_amount_max || 0);
+        compliance.city.max_incentive = Math.max(compliance.city.max_incentive || 0, program.incentive_amount_max || 0);
+      }
+      // Assign state-level programs (no county/city in ID)
+      else if (compliance.state && !pid.includes('_COUNTY_') && !pid.includes('_CITY_') && !pid.includes('MWD')) {
+        compliance.state.incentives.push(formattedProgram);
+        compliance.state.incentive_count++;
+        compliance.state.max_incentive = Math.max(compliance.state.max_incentive || 0, program.incentive_amount_max || 0);
       }
     });
     
