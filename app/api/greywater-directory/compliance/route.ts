@@ -290,8 +290,24 @@ export async function GET(request: NextRequest) {
       return null;
     };
 
+    // Helper to determine residential/commercial eligibility
+    const parseEligibility = (eligibleTypes: string, notes: string) => {
+      const text = `${eligibleTypes || ''} ${notes || ''}`.toLowerCase();
+      const hasResidential = text.includes('residential') || text.includes('homeowner') ||
+        text.includes('single-family') || text.includes('lawn') || text.includes('turf');
+      const hasCommercial = text.includes('commercial') || text.includes('business') ||
+        text.includes('multi-family') || text.includes('municipal') || text.includes('large-scale');
+      // If neither specified, assume both (general programs)
+      if (!hasResidential && !hasCommercial) {
+        return { residential: true, commercial: true };
+      }
+      return { residential: hasResidential, commercial: hasCommercial };
+    };
+
     // Process and assign incentives to appropriate levels
     Array.from(seenPrograms.values()).forEach(program => {
+      const eligibility = parseEligibility(program.eligible_system_types, program.notes);
+
       const formattedProgram = {
         program_name: program.program_name,
         incentive_type: program.incentive_type,
@@ -305,6 +321,8 @@ export async function GET(request: NextRequest) {
         installation_requirements: program.installation_requirements,
         program_contact_email: program.contact_email,
         program_contact_phone: program.contact_phone,
+        residential_eligible: eligibility.residential,
+        commercial_eligible: eligibility.commercial,
         tiers: []
       };
 

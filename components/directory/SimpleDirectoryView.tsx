@@ -107,6 +107,7 @@ export default function SimpleDirectoryView({
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
   const [viewMode, setViewMode] = useState<'cities' | 'counties'>('cities')
+  const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'residential' | 'commercial'>('all')
   const INITIAL_CITIES_SHOWN = 50
 
   // Top California cities by population (for sorting)
@@ -1024,22 +1025,64 @@ export default function SimpleDirectoryView({
         {/* Rebates & Incentives - Show ALL */}
         {allIncentives.length > 0 && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-gray-400" />
-              Available Rebates ({allIncentives.length})
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-gray-400" />
+                Available Rebates
+              </h2>
+              {/* Property Type Filter */}
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setPropertyTypeFilter('all')}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    propertyTypeFilter === 'all'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setPropertyTypeFilter('residential')}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    propertyTypeFilter === 'residential'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Residential
+                </button>
+                <button
+                  onClick={() => setPropertyTypeFilter('commercial')}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    propertyTypeFilter === 'commercial'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Commercial
+                </button>
+              </div>
+            </div>
 
             <div className="space-y-4">
-              {allIncentives.map((program: any, idx: number) => (
+              {allIncentives
+                .filter((program: any) => {
+                  if (propertyTypeFilter === 'all') return true;
+                  if (propertyTypeFilter === 'residential') return program.residential_eligible !== false;
+                  if (propertyTypeFilter === 'commercial') return program.commercial_eligible !== false;
+                  return true;
+                })
+                .map((program: any, idx: number) => (
                 <div key={idx} className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <p className="font-semibold text-gray-900">{program.program_name || 'Rebate Program'}</p>
                       <div className="flex gap-2 mt-1">
-                        {program.residential_eligibility && (
+                        {program.residential_eligible && (
                           <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
                         )}
-                        {program.commercial_eligibility && (
+                        {program.commercial_eligible && (
                           <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
                         )}
                       </div>
