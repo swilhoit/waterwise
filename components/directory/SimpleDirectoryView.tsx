@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronRight, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge } from 'lucide-react'
+import { ChevronRight, ChevronDown, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge, MapPin, ListChecks, ClipboardList } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { nameToSlug, findBySlug } from '@/lib/url-utils'
 
@@ -45,6 +45,8 @@ interface StateStaticData {
   governingCode?: string
   permitThresholdGpd?: number | null
   permitRequired?: string
+  permitExplanation?: string
+  permitProcess?: string
   indoorUseAllowed?: boolean
   outdoorUseAllowed?: boolean
   approvedUses?: string[]
@@ -109,7 +111,21 @@ export default function SimpleDirectoryView({
   const [viewMode, setViewMode] = useState<'cities' | 'counties'>('cities')
   const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'residential' | 'commercial'>('all')
   const [programTypeFilter, setProgramTypeFilter] = useState<'all' | 'rebates' | 'tax' | 'grants'>('all')
+  const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set())
   const INITIAL_CITIES_SHOWN = 50
+
+  // Toggle program expansion
+  const toggleProgramExpanded = (programName: string) => {
+    setExpandedPrograms(prev => {
+      const next = new Set(prev)
+      if (next.has(programName)) {
+        next.delete(programName)
+      } else {
+        next.add(programName)
+      }
+      return next
+    })
+  }
 
   // Top California cities by population (for sorting)
   const TOP_CA_CITIES = [
@@ -440,6 +456,26 @@ export default function SimpleDirectoryView({
           </div>
         </div>
 
+        {/* Permit Explanation - Full Width */}
+        {stateStaticData?.permitExplanation && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-blue-600" />
+              What This Means for You
+            </h2>
+            <p className="text-blue-800 leading-relaxed">{stateStaticData.permitExplanation}</p>
+            {stateStaticData?.permitProcess && (
+              <div className="mt-4 pt-4 border-t border-blue-200">
+                <h3 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4 text-blue-600" />
+                  How to Get Started
+                </h3>
+                <p className="text-sm text-blue-700">{stateStaticData.permitProcess}</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Permit & Regulations Info */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* Permit Requirements */}
@@ -767,7 +803,7 @@ export default function SimpleDirectoryView({
             </h2>
             <div className="space-y-4">
               {countyIncentives.map((incentive: any, idx: number) => (
-                <div key={idx} className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4">
+                <div key={idx} className="bg-white border border-gray-200 rounded-lg p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
@@ -805,7 +841,7 @@ export default function SimpleDirectoryView({
                   {incentive.program_description && (
                     <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
                   )}
-                  <div className="flex items-center gap-4 pt-3 border-t border-emerald-200 text-sm">
+                  <div className="flex items-center gap-4 pt-3 border-t border-gray-100 text-sm">
                     {incentive.incentive_url && (
                       <a
                         href={incentive.incentive_url}
@@ -888,10 +924,11 @@ export default function SimpleDirectoryView({
       ...(compliance?.city?.incentives || [])
     ]
 
-    // Parse allowed sources
-    const allowedSources = effective?.allowed_sources?.split(',').map((s: string) => s.trim()).filter(Boolean) ||
-                          stateStaticData?.approvedUses || []
+    // Parse allowed sources - prioritize state static data since it's more complete
+    const allowedSources = stateStaticData?.approvedUses ||
+                          effective?.allowed_sources?.split(',').map((s: string) => s.trim()).filter(Boolean) || []
     const prohibitedSources = effective?.prohibited_sources?.split(',').map((s: string) => s.trim()).filter(Boolean) || []
+    const keyRestrictions = stateStaticData?.keyRestrictions || []
 
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -930,7 +967,7 @@ export default function SimpleDirectoryView({
           )}
         </div>
 
-        {/* Permit Requirements - Using Actual Data */}
+        {/* Permit Requirements - Using State Data since most cities defer to state */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <FileText className="h-5 w-5 text-gray-400" />
@@ -938,72 +975,83 @@ export default function SimpleDirectoryView({
           </h2>
 
           <div className="space-y-4">
-            {/* Show actual permit info if available */}
-            {effective && effective.permit_required !== null && (
+            {/* Permit Status - use stateStaticData as most cities defer to state */}
+            {(stateStaticData?.permitRequired || effective?.permit_required !== null) && (
               <div className="flex items-start justify-between py-3 border-b border-gray-100">
                 <div>
                   <p className="font-medium text-gray-900">Permit Status</p>
-                  <p className="text-sm text-gray-500">{effective.permit_type || 'Standard permit'}</p>
+                  <p className="text-sm text-gray-500">{selectedState.state_name} state regulations</p>
                 </div>
-                <span className={effective.permit_required ? 'text-amber-600 font-medium' : 'text-emerald-600 font-medium'}>
-                  {effective.permit_required ? 'Required' : 'Not required'}
+                <span className="font-medium text-gray-900">
+                  {stateStaticData?.permitRequired || (effective?.permit_required ? 'Required' : 'Not required')}
                 </span>
               </div>
             )}
 
-            {/* Permit Fee */}
-            {effective && (effective.permit_fee || effective.annual_fee) && (
+            {/* No-Permit Threshold */}
+            {stateStaticData?.permitThresholdGpd !== null && stateStaticData?.permitThresholdGpd !== undefined && (
               <div className="flex items-start justify-between py-3 border-b border-gray-100">
                 <div>
-                  <p className="font-medium text-gray-900">Permit Fees</p>
-                  {effective.processing_time_days && (
-                    <p className="text-sm text-gray-500">Processing: ~{effective.processing_time_days} days</p>
-                  )}
+                  <p className="font-medium text-gray-900">No-Permit Threshold</p>
+                  <p className="text-sm text-gray-500">Simple systems under this limit</p>
                 </div>
-                <div className="text-right">
-                  {effective.permit_fee && (
-                    <p className="font-medium text-gray-900">${effective.permit_fee} initial</p>
-                  )}
-                  {effective.annual_fee && (
-                    <p className="text-sm text-gray-500">${effective.annual_fee}/year</p>
-                  )}
-                </div>
+                <span className="font-medium text-emerald-600">
+                  {stateStaticData.permitThresholdGpd > 0 ? `Under ${stateStaticData.permitThresholdGpd} GPD` : 'All systems need permit'}
+                </span>
               </div>
             )}
 
-            {/* System Size Limits */}
-            {effective?.system_size_limits && (
+            {/* Governing Code */}
+            {stateStaticData?.governingCode && (
               <div className="flex items-start justify-between py-3 border-b border-gray-100">
                 <div>
-                  <p className="font-medium text-gray-900">System Size Limits</p>
+                  <p className="font-medium text-gray-900">Governing Code</p>
                 </div>
-                <span className="text-gray-700">{effective.system_size_limits}</span>
+                <span className="text-gray-700 text-sm text-right max-w-xs">{stateStaticData.governingCode}</span>
               </div>
             )}
 
-            {/* Inspection Required */}
-            {effective && effective.inspection_required !== undefined && (
+            {/* Indoor/Outdoor Use */}
+            <div className="flex items-start justify-between py-3 border-b border-gray-100">
+              <div>
+                <p className="font-medium text-gray-900">Allowed Uses</p>
+              </div>
+              <div className="flex gap-3">
+                <span className={`text-sm font-medium ${stateStaticData?.outdoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
+                  {stateStaticData?.outdoorUseAllowed ? '✓ Outdoor' : '✗ Outdoor'}
+                </span>
+                <span className={`text-sm font-medium ${stateStaticData?.indoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
+                  {stateStaticData?.indoorUseAllowed ? '✓ Indoor' : '✗ Indoor'}
+                </span>
+              </div>
+            </div>
+
+            {/* Regulatory Agency */}
+            {stateStaticData?.primaryAgency && (
               <div className="flex items-start justify-between py-3">
                 <div>
-                  <p className="font-medium text-gray-900">Inspection Required</p>
+                  <p className="font-medium text-gray-900">Regulatory Agency</p>
+                  {stateStaticData.agencyPhone && (
+                    <a href={`tel:${stateStaticData.agencyPhone}`} className="text-sm text-emerald-600 hover:text-emerald-700">
+                      {stateStaticData.agencyPhone}
+                    </a>
+                  )}
                 </div>
-                <span className={effective.inspection_required ? 'text-amber-600 font-medium' : 'text-emerald-600 font-medium'}>
-                  {effective.inspection_required ? 'Yes' : 'No'}
-                </span>
+                <span className="text-gray-700 text-sm text-right max-w-xs">{stateStaticData.primaryAgency}</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Water Sources - Allowed & Prohibited */}
-        {(allowedSources.length > 0 || prohibitedSources.length > 0) && (
+        {/* Approved Uses & Key Restrictions */}
+        {(allowedSources.length > 0 || keyRestrictions.length > 0) && (
           <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Allowed Sources */}
+            {/* Approved Uses */}
             {allowedSources.length > 0 && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
                 <h2 className="text-lg font-semibold text-emerald-900 mb-4 flex items-center gap-2">
                   <Check className="h-5 w-5 text-emerald-600" />
-                  Allowed Water Sources
+                  Approved Uses
                 </h2>
                 <ul className="space-y-2">
                   {allowedSources.map((source: string, idx: number) => (
@@ -1016,18 +1064,18 @@ export default function SimpleDirectoryView({
               </div>
             )}
 
-            {/* Prohibited Sources */}
-            {prohibitedSources.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-red-900 mb-4 flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
-                  Prohibited Sources
+            {/* Key Restrictions */}
+            {keyRestrictions.length > 0 && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600" />
+                  Key Restrictions
                 </h2>
                 <ul className="space-y-2">
-                  {prohibitedSources.map((source: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-red-800">
-                      <span className="text-red-500 mt-1">✕</span>
-                      <span className="text-sm">{source}</span>
+                  {keyRestrictions.map((restriction: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-amber-800">
+                      <span className="text-amber-500 mt-1">•</span>
+                      <span className="text-sm">{restriction}</span>
                     </li>
                   ))}
                 </ul>
@@ -1172,111 +1220,194 @@ export default function SimpleDirectoryView({
 
                   return true;
                 })
-                .map((program: any, idx: number) => (
-                <div key={idx} className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <p className="font-semibold text-gray-900">{program.program_name || 'Rebate Program'}</p>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
-                        {/* Program Type Badge */}
-                        {program.incentive_type === 'rebate' && (
-                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">Rebate</Badge>
-                        )}
-                        {program.incentive_type === 'tax_credit' && (
-                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
-                        )}
-                        {program.incentive_type === 'tax_exemption' && (
-                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
-                        )}
-                        {program.incentive_type === 'grant' && (
-                          <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
-                        )}
-                        {program.incentive_type === 'subsidy' && (
-                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">Subsidy</Badge>
-                        )}
-                        {/* Property Type Badges */}
-                        {program.residential_eligible && (
-                          <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
-                        )}
-                        {program.commercial_eligible && (
-                          <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
-                        )}
-                        {program.applicant_type === 'business' && !program.residential_eligible && (
-                          <Badge className="bg-amber-100 text-amber-700 text-xs">Business Only</Badge>
+                .map((program: any, idx: number) => {
+                  const isExpanded = expandedPrograms.has(program.program_name)
+                  const hasDetails = program.eligibility_details || program.how_to_apply || program.documentation_required || program.coverage_area || program.deadline_info
+
+                  return (
+                <div key={idx} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                  {/* Main Card Content */}
+                  <div className="p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="font-semibold text-gray-900">{program.program_name || 'Rebate Program'}</p>
+                        <div className="flex flex-wrap gap-1.5 mt-1">
+                          {/* Program Type Badge */}
+                          {program.incentive_type === 'rebate' && (
+                            <Badge className="bg-emerald-100 text-emerald-700 text-xs">Rebate</Badge>
+                          )}
+                          {program.incentive_type === 'tax_credit' && (
+                            <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
+                          )}
+                          {program.incentive_type === 'tax_exemption' && (
+                            <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
+                          )}
+                          {program.incentive_type === 'grant' && (
+                            <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
+                          )}
+                          {program.incentive_type === 'subsidy' && (
+                            <Badge className="bg-emerald-100 text-emerald-700 text-xs">Subsidy</Badge>
+                          )}
+                          {/* Property Type Badges */}
+                          {program.residential_eligible && (
+                            <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
+                          )}
+                          {program.commercial_eligible && (
+                            <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
+                          )}
+                          {program.applicant_type === 'business' && !program.residential_eligible && (
+                            <Badge className="bg-amber-100 text-amber-700 text-xs">Business Only</Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-emerald-700 text-lg">
+                          {program.incentive_amount_max
+                            ? `Up to $${program.incentive_amount_max.toLocaleString()}`
+                            : 'Varies'}
+                        </p>
+                        {program.incentive_amount_min && program.incentive_amount_min !== program.incentive_amount_max && (
+                          <p className="text-xs text-gray-500">Min: ${program.incentive_amount_min.toLocaleString()}</p>
                         )}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-emerald-700 text-lg">
-                        {program.incentive_amount_max
-                          ? `Up to $${program.incentive_amount_max.toLocaleString()}`
-                          : 'Varies'}
-                      </p>
-                      {program.incentive_amount_min && program.incentive_amount_min !== program.incentive_amount_max && (
-                        <p className="text-xs text-gray-500">Min: ${program.incentive_amount_min.toLocaleString()}</p>
+
+                    {program.program_description && (
+                      <p className="text-sm text-gray-600 mb-3">{program.program_description}</p>
+                    )}
+
+                    {/* Program Tiers */}
+                    {program.tiers && program.tiers.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Tier Structure:</p>
+                        <div className="space-y-2">
+                          {program.tiers.map((tier: any, tierIdx: number) => (
+                            <div key={tierIdx} className="flex justify-between text-sm bg-white/50 rounded px-3 py-2">
+                              <div>
+                                <span className="font-medium">{tier.tier_name || `Tier ${tier.tier_number}`}</span>
+                                {tier.requirements && <span className="text-gray-500 ml-2">- {tier.requirements}</span>}
+                              </div>
+                              <span className="font-medium text-emerald-700">
+                                ${tier.min_amount?.toLocaleString()} - ${tier.max_amount?.toLocaleString()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Contact & Apply Row */}
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 text-sm">
+                      <div className="flex items-center gap-4">
+                        {program.incentive_url && (
+                          <a
+                            href={program.incentive_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            {(() => {
+                              try {
+                                const domain = new URL(program.incentive_url).hostname.replace('www.', '');
+                                return domain;
+                              } catch {
+                                return 'Apply';
+                              }
+                            })()}
+                          </a>
+                        )}
+                        {program.program_contact_email && (
+                          <a href={`mailto:${program.program_contact_email}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
+                            <Mail className="h-3 w-3" />
+                            Email
+                          </a>
+                        )}
+                        {program.program_contact_phone && (
+                          <a href={`tel:${program.program_contact_phone}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
+                            <Phone className="h-3 w-3" />
+                            {program.program_contact_phone}
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Expand/Collapse Button */}
+                      {hasDetails && (
+                        <button
+                          onClick={() => toggleProgramExpanded(program.program_name)}
+                          className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-medium"
+                        >
+                          {isExpanded ? 'Less' : 'More details'}
+                          {isExpanded ? <ChevronDown className="h-4 w-4 rotate-180" /> : <ChevronDown className="h-4 w-4" />}
+                        </button>
                       )}
                     </div>
                   </div>
 
-                  {program.program_description && (
-                    <p className="text-sm text-gray-600 mb-3">{program.program_description}</p>
-                  )}
+                  {/* Expanded Details Section */}
+                  {isExpanded && hasDetails && (
+                    <div className="bg-gray-50 border-t border-gray-200 p-4 space-y-4">
+                      {/* Eligibility Details */}
+                      {program.eligibility_details && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
+                            <Check className="h-4 w-4 text-emerald-600" />
+                            Eligibility Requirements
+                          </h4>
+                          <p className="text-sm text-gray-600 pl-6">{program.eligibility_details}</p>
+                        </div>
+                      )}
 
-                  {/* Program Tiers */}
-                  {program.tiers && program.tiers.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-emerald-200">
-                      <p className="text-sm font-medium text-gray-700 mb-2">Tier Structure:</p>
-                      <div className="space-y-2">
-                        {program.tiers.map((tier: any, tierIdx: number) => (
-                          <div key={tierIdx} className="flex justify-between text-sm bg-white/50 rounded px-3 py-2">
-                            <div>
-                              <span className="font-medium">{tier.tier_name || `Tier ${tier.tier_number}`}</span>
-                              {tier.requirements && <span className="text-gray-500 ml-2">- {tier.requirements}</span>}
+                      {/* How to Apply */}
+                      {program.how_to_apply && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
+                            <ListChecks className="h-4 w-4 text-emerald-600" />
+                            How to Apply
+                          </h4>
+                          <p className="text-sm text-gray-600 pl-6 whitespace-pre-line">{program.how_to_apply}</p>
+                        </div>
+                      )}
+
+                      {/* Documentation Required */}
+                      {program.documentation_required && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
+                            <ClipboardList className="h-4 w-4 text-emerald-600" />
+                            Required Documentation
+                          </h4>
+                          <p className="text-sm text-gray-600 pl-6">{program.documentation_required}</p>
+                        </div>
+                      )}
+
+                      {/* Coverage Area & Deadline in a row */}
+                      {(program.coverage_area || program.deadline_info) && (
+                        <div className="flex flex-wrap gap-6 pt-2">
+                          {program.coverage_area && (
+                            <div className="flex items-start gap-2">
+                              <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+                              <div>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">Coverage Area</p>
+                                <p className="text-sm text-gray-700">{program.coverage_area}</p>
+                              </div>
                             </div>
-                            <span className="font-medium text-emerald-700">
-                              ${tier.min_amount?.toLocaleString()} - ${tier.max_amount?.toLocaleString()}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                          )}
+                          {program.deadline_info && (
+                            <div className="flex items-start gap-2">
+                              <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
+                              <div>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">Timing</p>
+                                <p className="text-sm text-gray-700">{program.deadline_info}</p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
-
-                  {/* Contact & Apply */}
-                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-emerald-200 text-sm">
-                    {program.incentive_url && (
-                      <a
-                        href={program.incentive_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                        {(() => {
-                          try {
-                            const domain = new URL(program.incentive_url).hostname.replace('www.', '');
-                            return domain;
-                          } catch {
-                            return 'Apply';
-                          }
-                        })()}
-                      </a>
-                    )}
-                    {program.program_contact_email && (
-                      <a href={`mailto:${program.program_contact_email}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
-                        <Mail className="h-3 w-3" />
-                        Email
-                      </a>
-                    )}
-                    {program.program_contact_phone && (
-                      <a href={`tel:${program.program_contact_phone}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
-                        <Phone className="h-3 w-3" />
-                        {program.program_contact_phone}
-                      </a>
-                    )}
-                  </div>
                 </div>
-              ))}
+                  )
+              })}
             </div>
           </div>
         )}

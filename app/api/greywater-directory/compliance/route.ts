@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
 
     try {
       // Query for all active programs - match by program_id pattern or notes containing jurisdiction
-      // Now includes proper eligibility fields from database
+      // Now includes proper eligibility fields and enhanced program details from database
       const incentiveQuery = `
         SELECT
           program_id,
@@ -89,6 +89,12 @@ export async function GET(request: NextRequest) {
           commercial_eligible,
           municipal_eligible,
           agricultural_eligible,
+          program_description,
+          eligibility_details,
+          how_to_apply,
+          documentation_required,
+          coverage_area,
+          deadline_info,
           CASE
             WHEN program_id LIKE '%_COUNTY_%' THEN 'county'
             WHEN program_id LIKE '%_CITY_%' THEN 'city'
@@ -313,7 +319,8 @@ export async function GET(request: NextRequest) {
         eligibility_requirements: program.eligible_system_types,
         incentive_url: program.application_url,
         program_status: program.program_status,
-        program_description: program.notes,
+        // Use enriched program_description if available, fall back to notes
+        program_description: program.program_description || program.notes,
         max_funding_per_application: program.incentive_amount_max,
         installation_requirements: program.installation_requirements,
         program_contact_email: program.contact_email,
@@ -321,6 +328,12 @@ export async function GET(request: NextRequest) {
         residential_eligible: residentialEligible,
         commercial_eligible: commercialEligible,
         applicant_type: program.applicant_type,
+        // New enriched fields
+        eligibility_details: program.eligibility_details,
+        how_to_apply: program.how_to_apply,
+        documentation_required: program.documentation_required,
+        coverage_area: program.coverage_area,
+        deadline_info: program.deadline_info,
         tiers: []
       };
 

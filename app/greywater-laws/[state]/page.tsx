@@ -13,17 +13,17 @@ export async function generateMetadata({
   params: Promise<{ state: string }>
 }): Promise<Metadata> {
   const { state: stateSlug } = await params
-  const stateName = getStateFromSlug(stateSlug)
-  
+  const stateName = await getStateFromSlug(stateSlug)
+
   if (!stateName) {
     return {
       title: "State Not Found | Water Wise Group",
       description: "The requested state greywater laws page could not be found.",
     }
   }
-  
-  const stateInfo = getStateInfo(stateName)
-  
+
+  const stateInfo = await getStateInfo(stateName)
+
   if (!stateInfo) {
     return {
       title: `${stateName} Greywater Laws | Water Wise Group`,
@@ -44,14 +44,14 @@ export default async function StatePage({
   params: Promise<{ state: string }>
 }) {
   const { state: stateSlug } = await params
-  const stateName = getStateFromSlug(stateSlug)
-  
+  const stateName = await getStateFromSlug(stateSlug)
+
   if (!stateName) {
     notFound()
   }
-  
-  const stateInfo = getStateInfo(stateName)
-  
+
+  const stateInfo = await getStateInfo(stateName)
+
   if (!stateInfo) {
     notFound()
   }
@@ -113,6 +113,23 @@ export default async function StatePage({
                   </p>
                 </CardContent>
               </Card>
+
+              {stateInfo.permitExplanation && (
+                <Card className="bg-green-50 border-green-200 mt-6">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-green-900">What This Means for You</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-green-800">{stateInfo.permitExplanation}</p>
+                    {stateInfo.permitProcess && (
+                      <div className="mt-4 pt-4 border-t border-green-200">
+                        <h4 className="font-semibold text-green-900 mb-2">How to Get Started</h4>
+                        <p className="text-green-800 text-sm">{stateInfo.permitProcess}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </div>
@@ -343,8 +360,8 @@ export default async function StatePage({
 }
 
 export async function generateStaticParams() {
-  const states = getAllStates()
-  
+  const states = await getAllStates()
+
   return states.map((stateName) => ({
     state: getStateSlug(stateName)
   }))

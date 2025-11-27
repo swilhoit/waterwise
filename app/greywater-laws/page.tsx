@@ -1,47 +1,66 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageTemplate, FeatureCard } from "@/components/page-template"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Shield, AlertTriangle, CheckCircle, BookOpen, Grid3X3, Table } from "lucide-react"
-import stateDirectory from "@/greywater-state-directory.json"
+import { Shield, AlertTriangle, CheckCircle, BookOpen, Grid3X3, Table, Loader2 } from "lucide-react"
 
-// Transform the imported data into the format needed for display
-const stateData = Object.entries(stateDirectory.states).map(([stateName, data]) => {
-  // Determine status category based on legalStatus
-  let status = "Limited"
-  if (data.legalStatus === "Legal" || data.legalStatus === "Legal and Regulated" || data.legalStatus === "Regulated and Permitted" || data.legalStatus === "Comprehensive Regulations") {
-    status = "Fully Legal"
-  } else if (data.legalStatus === "Restricted" || data.legalStatus === "Highly Restricted" || data.legalStatus === "Limited" || data.legalStatus === "Limited/Unclear") {
-    status = "Restricted"
-  } else if (data.legalStatus === "Effectively Prohibited" || data.legalStatus === "No Formal Regulations" || data.legalStatus === "No Specific Regulations") {
-    status = "Prohibited"
-  }
-  
-  // Create a brief description from the regulatory classification
-  const description = data.regulatoryClassification || data.legalStatus
-  
-  // Extract key details from the summary
-  const details = data.keyRestrictions?.join(". ") || data.summary?.substring(0, 150) + "..."
-  
-  return {
-    state: stateName,
-    status,
-    description,
-    details,
-    fullSummary: data.summary,
-    permitRequired: data.permitRequired,
-    permitThresholdGpd: data.permitThresholdGpd,
-    indoorUseAllowed: data.indoorUseAllowed,
-    outdoorUseAllowed: data.outdoorUseAllowed,
-    approvedUses: data.approvedUses,
-    keyRestrictions: data.keyRestrictions,
-    governingCode: data.governingCode,
-    primaryAgency: data.primaryAgency
-  }
-}).sort((a, b) => a.state.localeCompare(b.state))
+interface StateData {
+  state: string
+  status: string
+  description: string
+  details: string
+  fullSummary: string
+  permitRequired: string
+  permitThresholdGpd: number | null
+  indoorUseAllowed: boolean
+  outdoorUseAllowed: boolean
+  approvedUses: string[]
+  keyRestrictions: string[]
+  governingCode: string
+  primaryAgency: string
+}
+
+function transformStateData(rawStates: any[]): StateData[] {
+  return rawStates.map((data) => {
+    // Determine status category based on legalStatus
+    let status = "Limited"
+    if (data.legalStatus === "Legal" || data.legalStatus === "Legal and Regulated" || data.legalStatus === "Regulated and Permitted" || data.legalStatus === "Comprehensive Regulations") {
+      status = "Fully Legal"
+    } else if (data.legalStatus === "Restricted" || data.legalStatus === "Highly Restricted" || data.legalStatus === "Limited" || data.legalStatus === "Limited/Unclear") {
+      status = "Restricted"
+    } else if (data.legalStatus === "Effectively Prohibited" || data.legalStatus === "No Formal Regulations" || data.legalStatus === "No Specific Regulations") {
+      status = "Prohibited"
+    }
+
+    // Create a brief description from the regulatory classification
+    const description = data.regulatoryClassification || data.legalStatus
+
+    // Extract key details from the summary
+    const keyRestrictions = data.keyRestrictions || []
+    const details = keyRestrictions.length > 0
+      ? keyRestrictions.join(". ")
+      : (data.summary?.substring(0, 150) + "..." || "")
+
+    return {
+      state: data.state_name,
+      status,
+      description,
+      details,
+      fullSummary: data.summary,
+      permitRequired: data.permitRequired,
+      permitThresholdGpd: data.permitThresholdGpd,
+      indoorUseAllowed: data.indoorUseAllowed,
+      outdoorUseAllowed: data.outdoorUseAllowed,
+      approvedUses: data.approvedUses || [],
+      keyRestrictions,
+      governingCode: data.governingCode,
+      primaryAgency: data.primaryAgency
+    }
+  }).sort((a, b) => a.state.localeCompare(b.state))
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -60,8 +79,30 @@ const getStatusColor = (status: string) => {
 
 export default function GreywaterStateLaws() {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('table')
+  const [stateData, setStateData] = useState<StateData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  
+
+  useEffect(() => {
+    async function fetchStates() {
+      try {
+        const response = await fetch('/api/greywater-directory/all-states')
+        const result = await response.json()
+        if (result.status === 'success') {
+          setStateData(transformStateData(result.data))
+        } else {
+          setError('Failed to load state data')
+        }
+      } catch (err) {
+        setError('Failed to load state data')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchStates()
+  }, [])
+
   // Calculate statistics from the data
   const fullyLegalCount = stateData.filter(s => s.status === "Fully Legal").length
   const restrictedCount = stateData.filter(s => s.status === "Restricted").length
@@ -77,7 +118,37 @@ export default function GreywaterStateLaws() {
   const navigateToState = (stateName: string) => {
     router.push(`/greywater-laws/${getStateSlug(stateName)}`)
   }
-  
+
+  if (loading) {
+    return (
+      <PageTemplate
+        title="Greywater State Laws & Regulations"
+        subtitle="Understanding the legal landscape for greywater systems across the United States."
+        plainHero
+      >
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <span className="ml-3 text-gray-600">Loading state data...</span>
+        </div>
+      </PageTemplate>
+    )
+  }
+
+  if (error) {
+    return (
+      <PageTemplate
+        title="Greywater State Laws & Regulations"
+        subtitle="Understanding the legal landscape for greywater systems across the United States."
+        plainHero
+      >
+        <div className="text-center py-20">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <p className="text-red-600">{error}</p>
+        </div>
+      </PageTemplate>
+    )
+  }
+
   return (
     <PageTemplate
       title="Greywater State Laws & Regulations"
