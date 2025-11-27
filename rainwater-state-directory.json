@@ -1,0 +1,1186 @@
+{
+  "metadata": {
+    "title": "Comprehensive State-by-State Directory of Rainwater Harvesting Laws and Regulations",
+    "lastUpdated": "2025",
+    "dataSource": "State and federal regulatory agencies, NCSL, DOE",
+    "totalStates": 50,
+    "summary": "Rainwater harvesting is legal in all 50 US states, though regulations vary significantly. Western states like Colorado and Utah have historically restricted collection due to water rights concerns, but have relaxed rules in recent years. States like Texas, Virginia, Arizona, and Rhode Island actively encourage rainwater harvesting through tax credits and rebates. Most states have no restrictions on residential rainwater collection for outdoor irrigation, while indoor and potable use may require permits or professional design in some jurisdictions."
+  },
+  "states": {
+    "Alabama": {
+      "legalStatus": "Legal",
+      "governingCode": "No specific state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Garden watering",
+        "Indoor non-potable uses with treatment"
+      ],
+      "keyRestrictions": [
+        "Indoor potable use requires treatment to drinking water standards"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Alabama Department of Environmental Management",
+      "agencyContact": "adem.alabama.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.adem.alabama.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Alabama has no state restrictions on rainwater harvesting. Collection is approved and encouraged for residential use. Outdoor non-potable uses like irrigation and gardening have no requirements. Indoor use and potable applications must meet drinking water treatment standards through the Clean Water State Revolving Fund program."
+    },
+    "Alaska": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Potable water supply",
+        "Non-potable domestic use",
+        "Irrigation"
+      ],
+      "keyRestrictions": [
+        "Climate may limit practical collection in many areas"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Alaska Department of Environmental Conservation",
+      "agencyContact": "dec.alaska.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dec.alaska.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Alaska has no regulations restricting rainwater harvesting. The State Legislature has recommended rainwater harvesting as an alternative water source, particularly for rural communities. An estimated 30,000-60,000 residents already rely on rainwater as their primary water supply. Climate extremes may limit feasibility in some regions."
+    },
+    "Arizona": {
+      "legalStatus": "Legal",
+      "governingCode": "House Bill 2830, Arizona Revised Statutes",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Landscape irrigation",
+        "Garden watering",
+        "Indoor non-potable with filtration",
+        "Commercial building irrigation"
+      ],
+      "keyRestrictions": [
+        "Must use on property where collected",
+        "Tucson requires 50% rainwater for new commercial outdoor irrigation"
+      ],
+      "recentChanges": "Tucson became first US city to require rainwater harvesting for commercial buildings (2010)",
+      "primaryAgency": "Arizona Department of Water Resources",
+      "agencyContact": "azwater.gov",
+      "agencyPhone": "602-771-8500",
+      "governmentWebsite": "https://www.azwater.gov/",
+      "regulatoryClassification": "Incentivized",
+      "taxIncentives": "Level 1 grants (50% or $500 max); Level 2 grants (up to $2,000); 25% tax credit available",
+      "summary": "Arizona is a national leader in rainwater harvesting support. No permit required for residential rooftop collection to rain barrels or cisterns. The City of Tucson became the first US location to require new commercial buildings to use rainwater for at least 50% of outdoor irrigation. State offers grants up to $2,000 and tax credits for system installation. Indoor non-potable use acceptable with proper filtration and disinfection."
+    },
+    "Arkansas": {
+      "legalStatus": "Legal",
+      "governingCode": "Arkansas Code Annotated § 17-38-201",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Lawn watering",
+        "Garden use",
+        "Indoor non-potable with engineer design"
+      ],
+      "keyRestrictions": [
+        "Non-potable use only",
+        "Indoor systems must be designed by licensed professional engineer",
+        "Must comply with state plumbing code"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Arkansas Department of Health",
+      "agencyContact": "healthy.arkansas.gov",
+      "agencyPhone": "501-661-2000",
+      "governmentWebsite": "https://www.healthy.arkansas.gov/",
+      "regulatoryClassification": "Regulated",
+      "taxIncentives": null,
+      "summary": "Arkansas allows rainwater harvesting for non-potable purposes. Outdoor use for lawns and gardens is unrestricted. Indoor non-potable systems must be designed by a professional engineer licensed in Arkansas and comply with state plumbing code requirements. Potable use is not permitted under current regulations."
+    },
+    "California": {
+      "legalStatus": "Legal",
+      "governingCode": "Rainwater Capture Act of 2012, California Water Code §10570-10574",
+      "collectionLimit": null,
+      "permitRequired": "Tiered",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Landscape irrigation",
+        "Garden watering",
+        "Toilet flushing",
+        "Laundry",
+        "Potable with treatment"
+      ],
+      "keyRestrictions": [
+        "Spray irrigation systems up to 360 gallons no permit",
+        "Non-spray outdoor up to 5,000 gallons no permit",
+        "Larger systems require permits",
+        "Requirements vary by local jurisdiction"
+      ],
+      "recentChanges": "Rainwater Capture Act of 2012 established statewide framework",
+      "primaryAgency": "State Water Resources Control Board",
+      "agencyContact": "waterboards.ca.gov",
+      "agencyPhone": "916-341-5250",
+      "governmentWebsite": "https://www.waterboards.ca.gov/",
+      "regulatoryClassification": "Comprehensive Framework",
+      "taxIncentives": "Various local rebate programs available",
+      "summary": "California strongly encourages rainwater harvesting through the Rainwater Capture Act of 2012. Residential, commercial, and governmental landowners may install and operate rainwater capture systems. Systems under 360 gallons for spray irrigation or 5,000 gallons for non-spray outdoor use typically don't require permits. Many local water agencies offer rebates for rain barrels and cisterns. Indoor non-potable use and potable applications may require additional permits depending on jurisdiction."
+    },
+    "Colorado": {
+      "legalStatus": "Legal",
+      "governingCode": "Colorado Revised Statutes §37-96.5-103, House Bill 16-1005",
+      "collectionLimit": 110,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor lawn irrigation",
+        "Garden watering",
+        "Outdoor domestic use only"
+      ],
+      "keyRestrictions": [
+        "Maximum two containers",
+        "Combined capacity not to exceed 110 gallons",
+        "Single-family residences or up to 4-unit buildings only",
+        "Outdoor use only - no indoor use",
+        "No potable use"
+      ],
+      "recentChanges": "House Bill 16-1005 (2016) legalized limited residential collection",
+      "primaryAgency": "Colorado Division of Water Resources",
+      "agencyContact": "water.state.co.us",
+      "agencyPhone": "303-866-3581",
+      "governmentWebsite": "https://dwr.colorado.gov/",
+      "regulatoryClassification": "Restricted",
+      "taxIncentives": null,
+      "summary": "Colorado historically prohibited rainwater collection due to prior appropriation water rights doctrine. In 2016, House Bill 16-1005 legalized limited residential rainwater harvesting. Residents may now collect rainwater in up to two containers with a combined maximum of 110 gallons. Collection is limited to single-family homes or buildings with up to four units. Water may only be used outdoors for lawn and garden irrigation - indoor and potable use remains prohibited."
+    },
+    "Connecticut": {
+      "legalStatus": "Legal",
+      "governingCode": "No specific state regulations",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Garden watering",
+        "Indoor non-potable with local approval"
+      ],
+      "keyRestrictions": [
+        "Outdoor-only systems typically don't require permits",
+        "Indoor use regulated by local jurisdiction"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Connecticut Department of Energy and Environmental Protection",
+      "agencyContact": "portal.ct.gov/deep",
+      "agencyPhone": null,
+      "governmentWebsite": "https://portal.ct.gov/deep",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Rain barrel rebate programs in some cities",
+      "summary": "Connecticut has no state restrictions on rainwater harvesting for residential or commercial properties. Outdoor-only systems typically don't require permits. Indoor non-potable use may require local approval depending on jurisdiction. Some municipalities offer rain barrel rebate programs to encourage conservation."
+    },
+    "Delaware": {
+      "legalStatus": "Legal",
+      "governingCode": "No specific state regulations",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable uses"
+      ],
+      "keyRestrictions": [
+        "Indoor connections require permit",
+        "Licensed plumber required for indoor connections"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Delaware Department of Natural Resources and Environmental Control",
+      "agencyContact": "dnrec.delaware.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dnrec.delaware.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Runoff reduction credit consideration for stormwater management",
+      "summary": "Delaware supports rainwater harvesting with minimal restrictions. Outdoor collection and use is unrestricted. Indoor connections require a permit and must be installed by a licensed plumber. Rainwater harvesting systems may qualify for runoff reduction credits in stormwater management calculations."
+    },
+    "Florida": {
+      "legalStatus": "Legal",
+      "governingCode": "Florida Statutes, local building codes",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Landscape irrigation",
+        "Indoor non-potable",
+        "Potable with proper design"
+      ],
+      "keyRestrictions": [
+        "Simple setups typically don't require permits",
+        "Larger systems may require permits",
+        "Requirements vary by municipality",
+        "Key West requires ARCSA standards compliance"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Florida Department of Environmental Protection",
+      "agencyContact": "floridadep.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://floridadep.gov/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": "Some cities offer rebates for non-residential systems",
+      "summary": "Florida encourages rainwater harvesting with flexible regulations. Simple rain barrel setups typically don't require permits. Larger systems and commercial applications may need permits depending on municipality. Both potable and non-potable use is allowed with proper system design. Key West specifically requires ARCSA (American Rainwater Catchment Systems Association) standards compliance. Some cities offer rebates for non-residential installations."
+    },
+    "Georgia": {
+      "legalStatus": "Legal",
+      "governingCode": "Georgia Department of Natural Resources regulations",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable",
+        "Potable with permits (Atlanta)"
+      ],
+      "keyRestrictions": [
+        "Outdoor use typically unrestricted",
+        "Regulated by Department of Natural Resources",
+        "City of Atlanta allows potable systems with permits"
+      ],
+      "recentChanges": "25% income tax credit for water efficiency equipment",
+      "primaryAgency": "Georgia Department of Natural Resources",
+      "agencyContact": "gadnr.org",
+      "agencyPhone": null,
+      "governmentWebsite": "https://gadnr.org/",
+      "regulatoryClassification": "Incentivized",
+      "taxIncentives": "25% income tax credit up to $2,500 for water efficiency equipment",
+      "summary": "Georgia supports rainwater harvesting with a generous 25% income tax credit up to $2,500 for water efficiency equipment including rainwater systems. Outdoor use for irrigation is unrestricted and doesn't require permits. Indoor non-potable use is allowed. The City of Atlanta permits potable rainwater systems with proper permitting. Regulations are administered by the Department of Natural Resources."
+    },
+    "Hawaii": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Potable water supply",
+        "Non-potable domestic use",
+        "Irrigation"
+      ],
+      "keyRestrictions": [
+        "Homeowner-operated systems not state-regulated"
+      ],
+      "recentChanges": "Pending income tax credit bill under consideration",
+      "primaryAgency": "Hawaii Department of Health",
+      "agencyContact": "health.hawaii.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://health.hawaii.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Tax credit bill pending consideration",
+      "summary": "Hawaii has no state regulations restricting rainwater harvesting. An estimated 30,000-60,000 residents already use rainwater catchment systems as their primary water source, particularly in rural areas. Both potable and non-potable use is permitted. Homeowner-operated systems are not subject to state regulation. A tax credit bill is under consideration to further encourage adoption."
+    },
+    "Idaho": {
+      "legalStatus": "Legal",
+      "governingCode": "Idaho Water Code",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Any beneficial use"
+      ],
+      "keyRestrictions": [
+        "Cannot impact existing water rights",
+        "May require beneficial use permit for some applications",
+        "Excludes surface water collection"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Idaho Department of Water Resources",
+      "agencyContact": "idwr.idaho.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://idwr.idaho.gov/",
+      "regulatoryClassification": "Conditional",
+      "taxIncentives": null,
+      "summary": "Idaho allows rainwater harvesting for any beneficial use, but systems must not impact existing water rights under the state's prior appropriation doctrine. Rooftop collection is generally permitted, but surface water collection is excluded. Some applications may require a beneficial use permit from the Department of Water Resources."
+    },
+    "Illinois": {
+      "legalStatus": "Legal",
+      "governingCode": "Illinois State Plumbing Code",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable applications"
+      ],
+      "keyRestrictions": [
+        "Non-potable use only",
+        "Indoor use must comply with State Plumbing Code"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Illinois Environmental Protection Agency",
+      "agencyContact": "epa.illinois.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www2.illinois.gov/epa/",
+      "regulatoryClassification": "Regulated",
+      "taxIncentives": "Listed as green infrastructure option",
+      "summary": "Illinois allows rainwater harvesting for non-potable purposes only. Outdoor irrigation use has minimal restrictions. Indoor non-potable applications must comply with the State Plumbing Code. Rainwater harvesting is recognized as a green infrastructure practice. Potable use is not permitted under current regulations."
+    },
+    "Indiana": {
+      "legalStatus": "Legal",
+      "governingCode": "2020 Residential Code Chapter 29",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable per building code"
+      ],
+      "keyRestrictions": [
+        "Indoor non-potable use covered in building code"
+      ],
+      "recentChanges": "2020 Residential Code updated Chapter 29",
+      "primaryAgency": "Indiana Department of Environmental Management",
+      "agencyContact": "in.gov/idem",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.in.gov/idem/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Some cities offer rain barrel programs",
+      "summary": "Indiana has no restrictions on rainwater harvesting. The 2020 Residential Code Chapter 29 addresses indoor non-potable use. Outdoor irrigation is unrestricted. Some cities offer rain barrel distribution or rebate programs to encourage conservation."
+    },
+    "Iowa": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Garden watering",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Iowa Department of Natural Resources",
+      "agencyContact": "iowadnr.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.iowadnr.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Some cities offer rain barrel rebates",
+      "summary": "Iowa has no state regulations restricting rainwater harvesting. Collection and use is permitted without permits. Some cities offer rain barrel rebate programs to encourage water conservation and stormwater management."
+    },
+    "Kansas": {
+      "legalStatus": "Legal",
+      "governingCode": "Kansas Water Appropriation Act",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Domestic use (household, livestock, up to 2 acres irrigation)"
+      ],
+      "keyRestrictions": [
+        "Domestic uses exempt from permit",
+        "Non-domestic uses may require permit",
+        "Prior appropriation water rights apply"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Kansas Department of Agriculture - Division of Water Resources",
+      "agencyContact": "agriculture.ks.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://agriculture.ks.gov/divisions-programs/dwr",
+      "regulatoryClassification": "Conditional",
+      "taxIncentives": "Recommended as stormwater best management practice",
+      "summary": "Kansas allows rainwater harvesting under its water appropriation framework. Domestic uses including household needs, livestock watering, and irrigation up to 2 acres are exempt from permit requirements. Non-domestic or larger scale uses may require a water appropriation permit. Prior appropriation water rights doctrine applies to larger systems."
+    },
+    "Kentucky": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Agricultural use",
+        "Farm water management",
+        "Domestic use"
+      ],
+      "keyRestrictions": [
+        "No permit required for agricultural use"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Kentucky Division of Water",
+      "agencyContact": "eec.ky.gov/Environmental-Protection/Water",
+      "agencyPhone": null,
+      "governmentWebsite": "https://eec.ky.gov/Environmental-Protection/Water/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "On-Farm Water Management Program funding; city grants for water quality projects",
+      "summary": "Kentucky has no restrictions on rainwater harvesting. Agricultural use is particularly supported through the On-Farm Water Management Program which provides funding assistance. No permits are required for residential or agricultural rainwater collection. Some cities offer grants for water quality improvement projects including rainwater harvesting."
+    },
+    "Louisiana": {
+      "legalStatus": "Legal",
+      "governingCode": "No specific state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Garden watering"
+      ],
+      "keyRestrictions": [
+        "Containers must be sealed or screened to prevent mosquito breeding"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Louisiana Department of Environmental Quality",
+      "agencyContact": "deq.louisiana.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.deq.louisiana.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Louisiana allows rainwater harvesting without permits for outdoor irrigation and gardening. The primary requirement is that collection containers must be sealed or screened to prevent mosquito breeding - an important consideration given the state's climate. No permits are required for residential collection."
+    },
+    "Maine": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations for residential",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Residential use"
+      ],
+      "keyRestrictions": [
+        "Encouraged as low-impact development for non-residential"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Maine Department of Environmental Protection",
+      "agencyContact": "maine.gov/dep",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.maine.gov/dep/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Maine has no regulations restricting personal residential rainwater harvesting. Collection and use is permitted without permits. Rainwater harvesting is encouraged as a low-impact development practice for non-residential properties."
+    },
+    "Maryland": {
+      "legalStatus": "Legal",
+      "governingCode": "Maryland building codes",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable (toilets, cleaning, laundry)"
+      ],
+      "keyRestrictions": [
+        "Indoor use limited to non-potable applications",
+        "May require permit for indoor connections"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Maryland Department of the Environment",
+      "agencyContact": "mde.maryland.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://mde.maryland.gov/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": "Promoted as stormwater best management practice",
+      "summary": "Maryland encourages rainwater harvesting as a stormwater best management practice. Outdoor irrigation is unrestricted. Indoor non-potable use for toilets, cleaning, and laundry is permitted but may require permits for indoor plumbing connections. Potable use is not permitted."
+    },
+    "Massachusetts": {
+      "legalStatus": "Legal",
+      "governingCode": "No specific state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Massachusetts Department of Environmental Protection",
+      "agencyContact": "mass.gov/orgs/massdep",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.mass.gov/orgs/massachusetts-department-of-environmental-protection",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": "Rain barrel discount programs in various cities",
+      "summary": "Massachusetts encourages rainwater harvesting with no state restrictions. Basic outdoor and indoor non-potable systems don't require permits. Various cities offer rain barrel discount programs to promote conservation. The practice is supported as a water conservation and stormwater management tool."
+    },
+    "Michigan": {
+      "legalStatus": "Legal",
+      "governingCode": "2018 Michigan Plumbing Code Appendix A",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable"
+      ],
+      "keyRestrictions": [
+        "Indoor systems covered by 2018 Plumbing Code Appendix A",
+        "May require permit for indoor systems"
+      ],
+      "recentChanges": "2018 Plumbing Code updated to include rainwater harvesting provisions",
+      "primaryAgency": "Michigan Department of Environment, Great Lakes, and Energy",
+      "agencyContact": "michigan.gov/egle",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.michigan.gov/egle/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": "Eligible as green infrastructure project for state funding",
+      "summary": "Michigan encourages rainwater harvesting and recognizes it as eligible green infrastructure for state funding. The 2018 Plumbing Code Appendix A provides guidance for indoor non-potable systems. Outdoor irrigation is unrestricted. Indoor systems may require permits depending on local jurisdiction."
+    },
+    "Minnesota": {
+      "legalStatus": "Legal",
+      "governingCode": "Minnesota Plumbing Code",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation (no permit)",
+        "Indoor non-potable (with permit)"
+      ],
+      "keyRestrictions": [
+        "Outdoor-only use requires no permit",
+        "Indoor non-potable systems require permit",
+        "Licensed professional installation required for indoor systems"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Minnesota Department of Health",
+      "agencyContact": "health.state.mn.us",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.health.state.mn.us/",
+      "regulatoryClassification": "Regulated",
+      "taxIncentives": "Stormwater best management practice recognition",
+      "summary": "Minnesota allows rainwater harvesting with a tiered approach. Outdoor irrigation use requires no permit. Indoor non-potable systems require a permit and licensed professional installation. Rainwater harvesting is recognized as a stormwater best management practice."
+    },
+    "Mississippi": {
+      "legalStatus": "Legal",
+      "governingCode": "No state-specific codes",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor use",
+        "Stormwater management"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Mississippi Department of Environmental Quality",
+      "agencyContact": "mdeq.ms.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.mdeq.ms.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Recommended for stormwater management and pollution prevention",
+      "summary": "Mississippi has no state-specific codes restricting rainwater harvesting. Collection is encouraged for stormwater management and pollution prevention. Both outdoor and indoor use is permitted without specific state restrictions."
+    },
+    "Missouri": {
+      "legalStatus": "Legal",
+      "governingCode": "Missouri Department of Natural Resources rules",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Any use on own property"
+      ],
+      "keyRestrictions": [
+        "Must comply with Department of Natural Resources rules"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Missouri Department of Natural Resources",
+      "agencyContact": "dnr.mo.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dnr.mo.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Missouri explicitly protects landowner rights to rainwater harvesting. State law declares that 'all Missouri landowners retain the right to have, use, and own systems for rainwater collection anytime and anywhere on their own property.' Both potable and non-potable use is permitted, subject to Department of Natural Resources rules."
+    },
+    "Montana": {
+      "legalStatus": "Legal",
+      "governingCode": "Montana water law",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Lawn irrigation",
+        "Garden watering"
+      ],
+      "keyRestrictions": [
+        "Systems greater than 0.1 acre-feet require DNRC contact",
+        "Containers must be mosquito-proof"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Montana Department of Natural Resources and Conservation",
+      "agencyContact": "dnrc.mt.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dnrc.mt.gov/",
+      "regulatoryClassification": "Conditional",
+      "taxIncentives": null,
+      "summary": "Montana allows rainwater harvesting for lawn and garden irrigation. Small residential systems are unrestricted, but systems with capacity greater than 0.1 acre-feet (about 32,500 gallons) must contact the Department of Natural Resources and Conservation. Collection containers must be mosquito-proof."
+    },
+    "Nebraska": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Nebraska Department of Environment and Energy",
+      "agencyContact": "dee.ne.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dee.ne.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Some cities offer rain barrel programs",
+      "summary": "Nebraska has no state regulations restricting rainwater harvesting. Collection and use is unrestricted. Some cities offer rain barrel distribution or rebate programs to encourage water conservation."
+    },
+    "Nevada": {
+      "legalStatus": "Legal",
+      "governingCode": "Nevada Assembly Bill 138 (2017)",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Lawn watering",
+        "Livestock watering",
+        "Vehicle washing",
+        "Toilet flushing"
+      ],
+      "keyRestrictions": [
+        "Single-family dwellings only",
+        "Rooftop collection to rain barrels or cisterns",
+        "Non-potable domestic use only"
+      ],
+      "recentChanges": "Assembly Bill 138 (2017) legalized residential collection",
+      "primaryAgency": "Nevada Division of Water Resources",
+      "agencyContact": "water.nv.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "http://water.nv.gov/",
+      "regulatoryClassification": "Regulated",
+      "taxIncentives": null,
+      "summary": "Nevada legalized residential rainwater harvesting in 2017 through Assembly Bill 138. Single-family homeowners may collect rainwater from rooftops into rain barrels or cisterns without a permit. Water may be used for non-potable domestic purposes including lawn irrigation, livestock watering, vehicle washing, and toilet flushing. Potable use is not permitted."
+    },
+    "New Hampshire": {
+      "legalStatus": "Legal",
+      "governingCode": "No state restrictions for outdoor use",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable"
+      ],
+      "keyRestrictions": [
+        "Indoor use covered in building codes"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "New Hampshire Department of Environmental Services",
+      "agencyContact": "des.nh.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.des.nh.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Soak Up the Rain program encourages conservation",
+      "summary": "New Hampshire has no restrictions on rainwater harvesting for outdoor use. Indoor non-potable applications are covered in building codes. The state's 'Soak Up the Rain' program actively encourages rainwater collection and other conservation practices."
+    },
+    "New Jersey": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Stormwater management",
+        "Irrigation",
+        "General use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "New Jersey Department of Environmental Protection",
+      "agencyContact": "nj.gov/dep",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.nj.gov/dep/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "University resources promote practice",
+      "summary": "New Jersey has no state regulations restricting rainwater harvesting. The practice is encouraged as a stormwater best management practice. Rutgers University and other institutions provide resources and guidance promoting rainwater collection for residents."
+    },
+    "New Mexico": {
+      "legalStatus": "Legal",
+      "governingCode": "New Mexico Office of State Engineer guidance",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Landscape irrigation (up to 1 acre)",
+        "Domestic residential use",
+        "Commercial domestic use"
+      ],
+      "keyRestrictions": [
+        "Harvested rainwater may not be appropriated for other uses",
+        "Limited to domestic and landscape purposes"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "New Mexico Office of the State Engineer",
+      "agencyContact": "ose.state.nm.us",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.ose.state.nm.us/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": null,
+      "summary": "New Mexico actively supports rainwater harvesting through the Office of the State Engineer. No permit is required for domestic residential or commercial use, including landscape irrigation up to 1 acre. Harvested rainwater may only be used for domestic and landscape purposes and cannot be appropriated for other uses under water rights law."
+    },
+    "New York": {
+      "legalStatus": "Legal",
+      "governingCode": "No specific state laws",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "New York State Department of Environmental Conservation",
+      "agencyContact": "dec.ny.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.dec.ny.gov/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": "Rain barrel rebate programs in multiple cities; NYC rain barrel giveaway program",
+      "summary": "New York has no state laws restricting rainwater harvesting. Collection is encouraged and supported through various local programs. Multiple cities offer rain barrel rebates. New York City has a rain barrel giveaway program providing free barrels to residents. Indoor non-potable use is permitted."
+    },
+    "North Carolina": {
+      "legalStatus": "Legal",
+      "governingCode": "North Carolina General Statutes",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Toilet flushing",
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [
+        "State law prohibits local governments from banning cistern use"
+      ],
+      "recentChanges": "2009 law explicitly protects rainwater harvesting from local bans",
+      "primaryAgency": "North Carolina Department of Environmental Quality",
+      "agencyContact": "deq.nc.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://deq.nc.gov/",
+      "regulatoryClassification": "Protected",
+      "taxIncentives": "Water conservation incentives",
+      "summary": "North Carolina strongly supports rainwater harvesting. A 2009 law explicitly states that 'no state, county or local building code, or regulation from prohibiting the use of cisterns.' No permit is required for collection. Indoor use including toilet flushing is permitted. The state provides water conservation incentives for rainwater systems."
+    },
+    "North Dakota": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Drought preparedness",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "North Dakota Department of Environmental Quality",
+      "agencyContact": "deq.nd.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://deq.nd.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "North Dakota has no state regulations restricting rainwater harvesting. Collection is unrestricted and is recognized as valuable for drought preparedness in the region."
+    },
+    "Ohio": {
+      "legalStatus": "Legal",
+      "governingCode": "Ohio Administrative Code Rule 3701-28-12",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Potable water supply",
+        "Non-potable domestic use"
+      ],
+      "keyRestrictions": [
+        "Private water systems require permit",
+        "Must comply with Ohio Administrative Code"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Ohio Department of Health",
+      "agencyContact": "odh.ohio.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://odh.ohio.gov/",
+      "regulatoryClassification": "Regulated",
+      "taxIncentives": null,
+      "summary": "Ohio allows rainwater harvesting for both potable and non-potable use. Systems serving as private water systems must obtain permits and comply with Ohio Administrative Code Rule 3701-28-12. The code specifically addresses rainwater as an approved water source when properly treated."
+    },
+    "Oklahoma": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Oklahoma Water Resources Board",
+      "agencyContact": "owrb.ok.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.owrb.ok.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Oklahoma has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes."
+    },
+    "Oregon": {
+      "legalStatus": "Legal",
+      "governingCode": "Oregon Revised Statutes, water law exemptions",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Any beneficial use from rooftop collection"
+      ],
+      "keyRestrictions": [
+        "Must be rooftop collection only",
+        "Surface water collection requires permit",
+        "Portland requires minimum 1,500 gallon cistern capacity"
+      ],
+      "recentChanges": null,
+      "primaryAgency": "Oregon Water Resources Department",
+      "agencyContact": "oregon.gov/owrd",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.oregon.gov/owrd/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": null,
+      "summary": "Oregon encourages rainwater harvesting from rooftops as an exempt use that doesn't require a water permit. Oregon's water laws are based on prior appropriation, but rooftop collection is specifically exempted. Surface water collection still requires a permit. Portland's building code requires cisterns to have a minimum 1,500 gallon capacity."
+    },
+    "Pennsylvania": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable",
+        "Stormwater management"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Pennsylvania Department of Environmental Protection",
+      "agencyContact": "dep.pa.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.dep.pa.gov/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": "Philadelphia offers stormwater credits",
+      "summary": "Pennsylvania has no state regulations restricting rainwater harvesting. The practice is encouraged for stormwater management. Philadelphia offers stormwater fee credits for properties that implement rainwater harvesting and other green infrastructure."
+    },
+    "Rhode Island": {
+      "legalStatus": "Legal",
+      "governingCode": "Rhode Island House Bill 7070 (2012), Plumbing Code",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable"
+      ],
+      "keyRestrictions": [
+        "Collection only from above-ground impervious roof surfaces",
+        "Approved roofing materials only"
+      ],
+      "recentChanges": "House Bill 7070 (2012) created tax credit incentive",
+      "primaryAgency": "Rhode Island Department of Environmental Management",
+      "agencyContact": "dem.ri.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dem.ri.gov/",
+      "regulatoryClassification": "Incentivized",
+      "taxIncentives": "10% state income tax credit for cistern installation",
+      "summary": "Rhode Island encourages rainwater harvesting through a 10% state income tax credit for cistern installation, established by House Bill 7070 in 2012. The plumbing code specifies that rainwater may only be collected from above-ground impervious roof surfaces made of approved materials. Both individuals and businesses are eligible for the tax credit."
+    },
+    "South Carolina": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "South Carolina Department of Health and Environmental Control",
+      "agencyContact": "scdhec.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://scdhec.gov/",
+      "regulatoryClassification": "Encouraged",
+      "taxIncentives": null,
+      "summary": "South Carolina has no state regulations restricting rainwater harvesting. Collection and use is encouraged without permits. The practice is promoted as a water conservation and stormwater management tool."
+    },
+    "South Dakota": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "South Dakota Department of Agriculture and Natural Resources",
+      "agencyContact": "danr.sd.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://danr.sd.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "South Dakota has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes."
+    },
+    "Tennessee": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Tennessee Department of Environment and Conservation",
+      "agencyContact": "tn.gov/environment",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.tn.gov/environment.html",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Tennessee has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes."
+    },
+    "Texas": {
+      "legalStatus": "Legal",
+      "governingCode": "Texas Tax Code §151.355, Texas Health and Safety Code §341.042",
+      "collectionLimit": null,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable",
+        "Potable with proper treatment"
+      ],
+      "keyRestrictions": [
+        "System must be incorporated into building design for new construction",
+        "Must provide municipal notice for potable systems",
+        "Financial institutions cannot prohibit rainwater harvesting"
+      ],
+      "recentChanges": "Sales tax exemption for rainwater harvesting equipment",
+      "primaryAgency": "Texas Commission on Environmental Quality",
+      "agencyContact": "tceq.texas.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.tceq.texas.gov/",
+      "regulatoryClassification": "Incentivized",
+      "taxIncentives": "Sales tax exemption on rainwater harvesting equipment; Property tax exemptions available",
+      "summary": "Texas is a national leader in rainwater harvesting support. State law provides sales tax exemptions for rainwater harvesting equipment and allows property tax exemptions for water conservation systems. Financial institutions are prohibited from refusing loans based on rainwater harvesting systems. New construction must incorporate rainwater systems into building design. Potable use requires municipal notification. Texas A&M AgriLife Extension provides extensive guidance and resources."
+    },
+    "Utah": {
+      "legalStatus": "Legal",
+      "governingCode": "Utah Code §73-3-1.5, Senate Bill 32",
+      "collectionLimit": 2500,
+      "permitRequired": "Conditional",
+      "potableUseAllowed": false,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Beneficial use on property"
+      ],
+      "keyRestrictions": [
+        "Maximum 2,500 gallons with registration",
+        "Maximum 200 gallons (two 100-gal containers) without registration",
+        "Must register systems over 200 gallons with Division of Water Rights",
+        "Must be used for beneficial purpose"
+      ],
+      "recentChanges": "Senate Bill 32 expanded collection limits",
+      "primaryAgency": "Utah Division of Water Rights",
+      "agencyContact": "waterrights.utah.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://waterrights.utah.gov/",
+      "regulatoryClassification": "Restricted",
+      "taxIncentives": null,
+      "summary": "Utah allows rainwater harvesting with specific volume limits based on registration status. Unregistered collection is limited to two containers up to 100 gallons each (200 gallons total). Registered systems may collect up to 2,500 gallons. Registration is free and done through the Division of Water Rights. Water must be used for beneficial purposes on the property where collected."
+    },
+    "Vermont": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Vermont Department of Environmental Conservation",
+      "agencyContact": "dec.vermont.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dec.vermont.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Vermont has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes."
+    },
+    "Virginia": {
+      "legalStatus": "Legal",
+      "governingCode": "Virginia Senate Bill 1416",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable",
+        "Potable with treatment"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": "Senate Bill 1416 established comprehensive tax credit program",
+      "primaryAgency": "Virginia Department of Environmental Quality",
+      "agencyContact": "deq.virginia.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://www.deq.virginia.gov/",
+      "regulatoryClassification": "Incentivized",
+      "taxIncentives": "50% tax credit up to $2,000 (residential) or $50,000 (commercial); $4/gallon reimbursement up to $20,000 for tanks over 250 gallons",
+      "summary": "Virginia strongly encourages rainwater harvesting through generous tax incentives established by Senate Bill 1416. Residents can receive a tax credit of up to 50% of installation costs, capped at $2,000 for individuals and $50,000 for corporations. Systems with tanks over 250 gallons may qualify for reimbursement of $4 per gallon of roof runoff capacity, up to $20,000. No permit required for collection."
+    },
+    "Washington": {
+      "legalStatus": "Legal",
+      "governingCode": "Washington State water law exemptions",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "Indoor non-potable",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Washington State Department of Ecology",
+      "agencyContact": "ecology.wa.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://ecology.wa.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": "Some local incentive programs",
+      "summary": "Washington state allows rainwater harvesting without restriction for the average homeowner. Collection is legal and non-encumbered for residential use. The Department of Ecology provides policy guidance supporting the practice. Some local jurisdictions offer incentive programs."
+    },
+    "West Virginia": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "West Virginia Department of Environmental Protection",
+      "agencyContact": "dep.wv.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dep.wv.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "West Virginia has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes."
+    },
+    "Wisconsin": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Wisconsin Department of Natural Resources",
+      "agencyContact": "dnr.wisconsin.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "https://dnr.wisconsin.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Wisconsin has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes."
+    },
+    "Wyoming": {
+      "legalStatus": "Legal",
+      "governingCode": "No state regulations",
+      "collectionLimit": null,
+      "permitRequired": "No",
+      "potableUseAllowed": true,
+      "nonPotableUseAllowed": true,
+      "approvedUses": [
+        "Outdoor irrigation",
+        "General domestic use"
+      ],
+      "keyRestrictions": [],
+      "recentChanges": null,
+      "primaryAgency": "Wyoming State Engineer's Office",
+      "agencyContact": "seo.wyo.gov",
+      "agencyPhone": null,
+      "governmentWebsite": "http://seo.wyo.gov/",
+      "regulatoryClassification": "Unrestricted",
+      "taxIncentives": null,
+      "summary": "Wyoming has no state regulations restricting rainwater harvesting. Collection and use is unrestricted for residential and domestic purposes despite the state's prior appropriation water rights system."
+    }
+  }
+}

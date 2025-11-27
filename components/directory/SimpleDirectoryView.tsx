@@ -2,9 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronRight, ChevronDown, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge, MapPin, ListChecks, ClipboardList } from 'lucide-react'
+import { ChevronRight, ChevronDown, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge, MapPin, ListChecks, ClipboardList, CloudRain, Leaf } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { nameToSlug, findBySlug } from '@/lib/url-utils'
+
+// Resource type configuration
+type ResourceType = 'all' | 'greywater' | 'rainwater' | 'conservation'
+
+const RESOURCE_TYPES: { id: ResourceType; label: string; icon: any; color: string; bgColor: string }[] = [
+  { id: 'all', label: 'All Programs', icon: Droplets, color: 'text-gray-700', bgColor: 'bg-gray-100' },
+  { id: 'greywater', label: 'Greywater', icon: Droplets, color: 'text-blue-700', bgColor: 'bg-blue-100' },
+  { id: 'rainwater', label: 'Rainwater', icon: CloudRain, color: 'text-cyan-700', bgColor: 'bg-cyan-100' },
+  { id: 'conservation', label: 'Conservation', icon: Leaf, color: 'text-emerald-700', bgColor: 'bg-emerald-100' },
+]
 
 // =============================================================================
 // TYPES
@@ -41,14 +51,17 @@ interface ComplianceData {
 }
 
 interface StateStaticData {
+  resourceType?: string
   legalStatus?: string
   governingCode?: string
   permitThresholdGpd?: number | null
+  collectionLimitGallons?: number | null  // For rainwater
   permitRequired?: string
   permitExplanation?: string
   permitProcess?: string
   indoorUseAllowed?: boolean
   outdoorUseAllowed?: boolean
+  potableUseAllowed?: boolean  // For rainwater
   approvedUses?: string[]
   keyRestrictions?: string[]
   recentChanges?: string | null
@@ -57,12 +70,15 @@ interface StateStaticData {
   agencyPhone?: string
   governmentWebsite?: string
   regulatoryClassification?: string
+  taxIncentives?: string  // For rainwater
   summary?: string
   state_name?: string
   state_code?: string
   has_incentives?: boolean
   incentive_count?: number
   max_rebate_amount?: number
+  // For multi-resource responses
+  resources?: StateStaticData[]
 }
 
 interface SimpleDirectoryViewProps {
@@ -98,6 +114,7 @@ export default function SimpleDirectoryView({
   const [allCities, setAllCities] = useState<CityItem[]>([])
   const [compliance, setCompliance] = useState<ComplianceData | null>(null)
   const [stateStaticData, setStateStaticData] = useState<StateStaticData | null>(null)
+  const [rainwaterData, setRainwaterData] = useState<StateStaticData | null>(null)
 
   // Selection states - initialize from initialData if available
   const [selectedState, setSelectedState] = useState<StateItem | null>(initialSelectedState)
@@ -109,6 +126,7 @@ export default function SimpleDirectoryView({
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
   const [viewMode, setViewMode] = useState<'cities' | 'counties'>('cities')
+  const [resourceTypeFilter, setResourceTypeFilter] = useState<ResourceType>('all')
   const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'residential' | 'commercial'>('all')
   const [programTypeFilter, setProgramTypeFilter] = useState<'all' | 'rebates' | 'tax' | 'grants'>('all')
   const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set())
@@ -124,6 +142,42 @@ export default function SimpleDirectoryView({
         next.add(programName)
       }
       return next
+    })
+  }
+
+  // Get resource type badge styling
+  const getResourceTypeBadge = (resourceType: string) => {
+    switch (resourceType) {
+      case 'rainwater':
+        return { className: 'bg-cyan-100 text-cyan-700', label: 'Rainwater', icon: CloudRain }
+      case 'conservation':
+        return { className: 'bg-emerald-100 text-emerald-700', label: 'Conservation', icon: Leaf }
+      case 'greywater':
+      default:
+        return { className: 'bg-blue-100 text-blue-700', label: 'Greywater', icon: Droplets }
+    }
+  }
+
+  // Get program subtype badge for conservation programs
+  const getSubtypeBadge = (subtype: string) => {
+    const subtypes: Record<string, { label: string; className: string }> = {
+      'turf_removal': { label: 'Turf Removal', className: 'bg-green-100 text-green-700' },
+      'smart_irrigation': { label: 'Smart Irrigation', className: 'bg-sky-100 text-sky-700' },
+      'efficient_fixtures': { label: 'Efficient Fixtures', className: 'bg-violet-100 text-violet-700' },
+      'pool_covers': { label: 'Pool Covers', className: 'bg-indigo-100 text-indigo-700' },
+      'leak_detection': { label: 'Leak Detection', className: 'bg-orange-100 text-orange-700' },
+      'water_audit': { label: 'Water Audit', className: 'bg-pink-100 text-pink-700' },
+      'appliance_rebate': { label: 'Appliance', className: 'bg-rose-100 text-rose-700' },
+    }
+    return subtypes[subtype] || null
+  }
+
+  // Filter incentives by resource type
+  const filterIncentivesByResourceType = (incentives: any[]) => {
+    if (resourceTypeFilter === 'all') return incentives
+    return incentives.filter(p => {
+      const pType = p.resource_type || 'greywater'
+      return pType === resourceTypeFilter
     })
   }
 
@@ -208,9 +262,15 @@ export default function SimpleDirectoryView({
 
   const fetchStateStaticData = async (stateCode: string) => {
     try {
-      const res = await fetch(`/api/greywater-directory/state-data?state=${stateCode}`)
+      // Fetch greywater data (default)
+      const res = await fetch(`/api/greywater-directory/state-data?state=${stateCode}&resource_type=greywater`)
       const data = await res.json()
       if (data.status === 'success') setStateStaticData(data.data)
+
+      // Also fetch rainwater data
+      const rainwaterRes = await fetch(`/api/greywater-directory/state-data?state=${stateCode}&resource_type=rainwater`)
+      const rainwaterResData = await rainwaterRes.json()
+      if (rainwaterResData.status === 'success') setRainwaterData(rainwaterResData.data)
     } catch (err) {
       console.error('Failed to fetch state static data:', err)
     }
@@ -316,8 +376,29 @@ export default function SimpleDirectoryView({
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Greywater Regulations by State</h1>
-          <p className="text-gray-600">Find greywater rules and rebates for your location</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Water Sustainability Directory</h1>
+          <p className="text-gray-600">Find water regulations, rebates, and incentive programs by state</p>
+        </div>
+
+        {/* Resource Type Filter */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {RESOURCE_TYPES.map((type) => {
+            const Icon = type.icon
+            return (
+              <button
+                key={type.id}
+                onClick={() => setResourceTypeFilter(type.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  resourceTypeFilter === type.id
+                    ? `${type.bgColor} ${type.color} ring-2 ring-offset-1 ring-current`
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {type.label}
+              </button>
+            )
+          })}
         </div>
 
         {/* Search */}
@@ -530,6 +611,97 @@ export default function SimpleDirectoryView({
           </div>
         </div>
 
+        {/* Rainwater Harvesting Info */}
+        {rainwaterData && (
+          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-cyan-900 mb-4 flex items-center gap-2">
+              <CloudRain className="h-5 w-5 text-cyan-600" />
+              Rainwater Harvesting in {selectedState.state_name}
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Left column - Status & Limits */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-cyan-700">Legal Status</span>
+                  <Badge className={
+                    rainwaterData.legalStatus === 'Legal' ? 'bg-emerald-100 text-emerald-700' :
+                    rainwaterData.legalStatus === 'Regulated' ? 'bg-blue-100 text-blue-700' :
+                    rainwaterData.legalStatus === 'Limited' ? 'bg-amber-100 text-amber-700' :
+                    'bg-gray-100 text-gray-700'
+                  }>
+                    {rainwaterData.legalStatus || 'Legal'}
+                  </Badge>
+                </div>
+
+                {rainwaterData.collectionLimitGallons && rainwaterData.collectionLimitGallons > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-cyan-700">Collection Limit</span>
+                    <span className="font-medium text-cyan-900">{rainwaterData.collectionLimitGallons.toLocaleString()} gallons</span>
+                  </div>
+                )}
+
+                {rainwaterData.permitRequired && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-cyan-700">Permit Required</span>
+                    <span className="font-medium text-cyan-900">{rainwaterData.permitRequired}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center">
+                  <span className="text-cyan-700">Potable Use</span>
+                  <span className={`font-medium ${rainwaterData.potableUseAllowed ? 'text-emerald-600' : 'text-gray-500'}`}>
+                    {rainwaterData.potableUseAllowed ? 'Allowed (with treatment)' : 'Non-potable only'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right column - Tax Incentives & Uses */}
+              <div className="space-y-3">
+                {rainwaterData.taxIncentives && (
+                  <div className="bg-white/60 rounded-lg p-3">
+                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-1 flex items-center gap-1">
+                      <DollarSign className="h-3 w-3" />
+                      Tax Incentives
+                    </p>
+                    <p className="text-sm text-cyan-800">{rainwaterData.taxIncentives}</p>
+                  </div>
+                )}
+
+                {rainwaterData.approvedUses && rainwaterData.approvedUses.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-2">Approved Uses</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {rainwaterData.approvedUses.slice(0, 4).map((use, idx) => (
+                        <Badge key={idx} className="bg-cyan-100 text-cyan-700 text-xs">{use}</Badge>
+                      ))}
+                      {rainwaterData.approvedUses.length > 4 && (
+                        <Badge className="bg-cyan-100 text-cyan-700 text-xs">+{rainwaterData.approvedUses.length - 4} more</Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {rainwaterData.summary && (
+              <p className="text-sm text-cyan-700 mt-4 pt-4 border-t border-cyan-200">{rainwaterData.summary}</p>
+            )}
+
+            {rainwaterData.governmentWebsite && (
+              <a
+                href={rainwaterData.governmentWebsite}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700 mt-3"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                State Rainwater Regulations
+              </a>
+            )}
+          </div>
+        )}
+
         {/* Approved Uses & Restrictions */}
         {(stateStaticData?.approvedUses?.length || stateStaticData?.keyRestrictions?.length) && (
           <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -571,25 +743,132 @@ export default function SimpleDirectoryView({
           </div>
         )}
 
-        {/* Incentives Summary */}
-        {stateStaticData?.has_incentives && (
-          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-emerald-600" />
-                  Rebates Available
-                </h2>
-                <p className="text-gray-600 mt-1">
-                  {stateStaticData.incentive_count} rebate program{stateStaticData.incentive_count !== 1 ? 's' : ''} available in {selectedState.state_name}
-                </p>
-              </div>
-              {stateStaticData.max_rebate_amount && stateStaticData.max_rebate_amount > 0 && (
+        {/* State Incentives - Detailed View */}
+        {compliance?.state?.incentives && compliance.state.incentives.length > 0 && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-emerald-600" />
+                {selectedState.state_name} Rebates & Incentives
+                <span className="text-sm font-normal text-gray-500">({filterIncentivesByResourceType(compliance.state.incentives).length})</span>
+              </h2>
+              {stateStaticData?.max_rebate_amount && stateStaticData.max_rebate_amount > 0 && (
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">Up to</p>
-                  <p className="text-2xl font-bold text-emerald-600">${stateStaticData.max_rebate_amount.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500">Up to</p>
+                  <p className="text-xl font-bold text-emerald-600">${stateStaticData.max_rebate_amount.toLocaleString()}</p>
                 </div>
               )}
+            </div>
+
+            {/* Resource Type Filter for Incentives */}
+            <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
+              {RESOURCE_TYPES.map((type) => {
+                const Icon = type.icon
+                const count = type.id === 'all'
+                  ? compliance.state.incentives.length
+                  : compliance.state.incentives.filter((p: any) => (p.resource_type || 'greywater') === type.id).length
+                if (count === 0 && type.id !== 'all') return null
+                return (
+                  <button
+                    key={type.id}
+                    onClick={() => setResourceTypeFilter(type.id)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      resourceTypeFilter === type.id
+                        ? `${type.bgColor} ${type.color}`
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {type.label}
+                    <span className="opacity-70">({count})</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="space-y-4">
+              {filterIncentivesByResourceType(compliance.state.incentives).map((incentive: any, idx: number) => {
+                const resourceBadge = getResourceTypeBadge(incentive.resource_type || 'greywater')
+                const subtypeBadge = incentive.program_subtype ? getSubtypeBadge(incentive.program_subtype) : null
+                const ResourceIcon = resourceBadge.icon
+
+                return (
+                <div key={idx} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {/* Resource Type Badge */}
+                        <Badge className={`${resourceBadge.className} text-xs flex items-center gap-1`}>
+                          <ResourceIcon className="h-3 w-3" />
+                          {resourceBadge.label}
+                        </Badge>
+                        {/* Program Subtype Badge */}
+                        {subtypeBadge && (
+                          <Badge className={`${subtypeBadge.className} text-xs`}>{subtypeBadge.label}</Badge>
+                        )}
+                        {/* Incentive Type Badge */}
+                        {incentive.incentive_type === 'rebate' && (
+                          <Badge className="bg-gray-200 text-gray-700 text-xs">Rebate</Badge>
+                        )}
+                        {incentive.incentive_type === 'tax_credit' && (
+                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
+                        )}
+                        {incentive.incentive_type === 'tax_exemption' && (
+                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
+                        )}
+                        {incentive.incentive_type === 'grant' && (
+                          <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
+                        )}
+                        {incentive.residential_eligible && (
+                          <Badge className="bg-slate-100 text-slate-700 text-xs">Residential</Badge>
+                        )}
+                        {incentive.commercial_eligible && (
+                          <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
+                        )}
+                        {/* Water Utility Badge */}
+                        {incentive.water_utility && (
+                          <Badge className="bg-amber-100 text-amber-700 text-xs">{incentive.water_utility}</Badge>
+                        )}
+                      </div>
+                    </div>
+                    {(incentive.incentive_amount_max || incentive.max_funding_per_application) && (
+                      <div className="text-right">
+                        <p className="text-xs text-gray-500">Up to</p>
+                        <p className="text-lg font-bold text-emerald-600">
+                          ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  {incentive.program_description && (
+                    <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
+                  )}
+                  {incentive.eligibility_details && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Eligibility</p>
+                      <p className="text-sm text-gray-700">{incentive.eligibility_details}</p>
+                    </div>
+                  )}
+                  {incentive.how_to_apply && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">How to Apply</p>
+                      <p className="text-sm text-gray-700">{incentive.how_to_apply}</p>
+                    </div>
+                  )}
+                  {incentive.incentive_url && (
+                    <a
+                      href={incentive.incentive_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                    >
+                      Apply Now <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
+                )
+              })}
             </div>
           </div>
         )}
@@ -755,6 +1034,26 @@ export default function SimpleDirectoryView({
           )}
         </div>
 
+        {/* State Permit Explanation - What This Means For You */}
+        {stateStaticData?.permitExplanation && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-blue-600" />
+              {selectedState.state_name} Permit Requirements
+            </h2>
+            <p className="text-blue-800 leading-relaxed">{stateStaticData.permitExplanation}</p>
+            {stateStaticData?.permitProcess && (
+              <div className="mt-4 pt-4 border-t border-blue-200">
+                <h3 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4 text-blue-600" />
+                  How to Get Started
+                </h3>
+                <p className="text-sm text-blue-700">{stateStaticData.permitProcess}</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* County Permit Info - if available */}
         {countyData && (countyData.permit_required !== null || countyData.permit_fee || countyData.permit_type) && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
@@ -840,6 +1139,18 @@ export default function SimpleDirectoryView({
                   </div>
                   {incentive.program_description && (
                     <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
+                  )}
+                  {incentive.eligibility_details && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Eligibility</p>
+                      <p className="text-sm text-gray-700">{incentive.eligibility_details}</p>
+                    </div>
+                  )}
+                  {incentive.how_to_apply && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">How to Apply</p>
+                      <p className="text-sm text-gray-700">{incentive.how_to_apply}</p>
+                    </div>
                   )}
                   <div className="flex items-center gap-4 pt-3 border-t border-gray-100 text-sm">
                     {incentive.incentive_url && (
