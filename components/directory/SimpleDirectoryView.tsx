@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronRight, Search, Check, ExternalLink } from 'lucide-react'
+import { ChevronRight, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { nameToSlug, findBySlug } from '@/lib/url-utils'
 
@@ -40,6 +40,29 @@ interface ComplianceData {
   effective?: any
 }
 
+interface StateStaticData {
+  legalStatus?: string
+  governingCode?: string
+  permitThresholdGpd?: number | null
+  permitRequired?: string
+  indoorUseAllowed?: boolean
+  outdoorUseAllowed?: boolean
+  approvedUses?: string[]
+  keyRestrictions?: string[]
+  recentChanges?: string | null
+  primaryAgency?: string
+  agencyContact?: string
+  agencyPhone?: string
+  governmentWebsite?: string
+  regulatoryClassification?: string
+  summary?: string
+  state_name?: string
+  state_code?: string
+  has_incentives?: boolean
+  incentive_count?: number
+  max_rebate_amount?: number
+}
+
 interface SimpleDirectoryViewProps {
   initialState?: string
   initialCounty?: string
@@ -72,6 +95,7 @@ export default function SimpleDirectoryView({
   const [cities, setCities] = useState<CityItem[]>([])
   const [allCities, setAllCities] = useState<CityItem[]>([])
   const [compliance, setCompliance] = useState<ComplianceData | null>(null)
+  const [stateStaticData, setStateStaticData] = useState<StateStaticData | null>(null)
 
   // Selection states - initialize from initialData if available
   const [selectedState, setSelectedState] = useState<StateItem | null>(initialSelectedState)
@@ -81,6 +105,8 @@ export default function SimpleDirectoryView({
   // UI states
   const [loading, setLoading] = useState(!initialData.length && !initialSelectedState)
   const [searchTerm, setSearchTerm] = useState('')
+  const [showAllCities, setShowAllCities] = useState(false)
+  const INITIAL_CITIES_SHOWN = 50
 
   // ==========================================================================
   // DATA FETCHING
@@ -91,10 +117,9 @@ export default function SimpleDirectoryView({
       const res = await fetch('/api/greywater-directory/hierarchy?level=states')
       const data = await res.json()
       if (data.status === 'success') {
-        // Map states with legal status - no extra API calls needed
         const mapped = data.data.map((state: StateItem) => ({
           ...state,
-          legalStatus: state.legalStatus || 'Legal' // Default to Legal for greywater directory
+          legalStatus: state.legalStatus || 'Legal'
         }))
         setStates(mapped)
       }
@@ -148,23 +173,30 @@ export default function SimpleDirectoryView({
     }
   }
 
+  const fetchStateStaticData = async (stateCode: string) => {
+    try {
+      const res = await fetch(`/api/greywater-directory/state-data?state=${stateCode}`)
+      const data = await res.json()
+      if (data.status === 'success') setStateStaticData(data.data)
+    } catch (err) {
+      console.error('Failed to fetch state static data:', err)
+    }
+  }
+
   // ==========================================================================
   // INITIALIZATION
   // ==========================================================================
 
   useEffect(() => {
     const init = async () => {
-      // Use initialData if available, otherwise fetch from API
       let statesData = initialData.length > 0 ? initialData : []
 
       if (statesData.length === 0 && !initialState) {
-        // Only fetch states if we're on the main directory page with no data
         await fetchStates()
-        return // The state update will trigger a re-render
+        return
       }
 
       if (statesData.length === 0 && initialState) {
-        // Fetch states data if we're on a sub-page but don't have initial data
         const res = await fetch('/api/greywater-directory/hierarchy?level=states')
         const data = await res.json()
         if (data.status === 'success') {
@@ -181,6 +213,7 @@ export default function SimpleDirectoryView({
         const state = statesData.find((s: StateItem) => s.state_code === initialState)
         if (state) {
           setSelectedState(state)
+          fetchStateStaticData(initialState)
 
           if (state.state_jurisdiction_id) {
             fetchCounties(state.state_jurisdiction_id)
@@ -299,7 +332,7 @@ export default function SimpleDirectoryView({
   }
 
   // ==========================================================================
-  // RENDER: STATE PAGE (Level 2)
+  // RENDER: STATE PAGE (Level 2) - ENHANCED
   // ==========================================================================
 
   if (selectedState && !selectedCounty && !selectedCity) {
@@ -318,27 +351,177 @@ export default function SimpleDirectoryView({
           <span className="font-medium text-gray-900">{selectedState.state_name}</span>
         </nav>
 
+        {/* Recent Changes Banner */}
+        {stateStaticData?.recentChanges && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-amber-800">Recent Regulatory Update</p>
+              <p className="text-sm text-amber-700">{stateStaticData.recentChanges}</p>
+            </div>
+          </div>
+        )}
+
         {/* State Header */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedState.state_name}</h1>
-
-          <div className="flex items-center gap-3 mb-4">
-            {selectedState.legalStatus && (
-              <Badge className={
-                selectedState.legalStatus === 'Legal' ? 'bg-emerald-100 text-emerald-700' :
-                selectedState.legalStatus === 'Regulated' ? 'bg-gray-100 text-gray-700' :
-                'bg-amber-100 text-amber-700'
-              }>
-                {selectedState.legalStatus}
-              </Badge>
-            )}
-            <span className="text-gray-500">{selectedState.city_count} cities</span>
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedState.state_name}</h1>
+              <div className="flex items-center gap-3 flex-wrap">
+                <Badge className={
+                  stateStaticData?.legalStatus === 'Legal' ? 'bg-emerald-100 text-emerald-700' :
+                  stateStaticData?.legalStatus === 'Regulated' ? 'bg-blue-100 text-blue-700' :
+                  stateStaticData?.legalStatus === 'Limited/Unclear' ? 'bg-amber-100 text-amber-700' :
+                  'bg-gray-100 text-gray-700'
+                }>
+                  {stateStaticData?.legalStatus || selectedState.legalStatus || 'Legal'}
+                </Badge>
+                {stateStaticData?.regulatoryClassification && (
+                  <span className="text-sm text-gray-500">{stateStaticData.regulatoryClassification}</span>
+                )}
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-2xl font-bold text-gray-900">{selectedState.city_count}</span>
+              <p className="text-sm text-gray-500">cities</p>
+            </div>
           </div>
 
-          {compliance?.state?.regulation_summary && (
-            <p className="text-gray-600">{compliance.state.regulation_summary}</p>
+          {/* Summary */}
+          {stateStaticData?.summary && (
+            <p className="text-gray-600 mb-4">{stateStaticData.summary}</p>
           )}
+
+          {/* Use Type Indicators */}
+          <div className="flex gap-4 pt-4 border-t border-gray-100">
+            <div className={`flex items-center gap-2 ${stateStaticData?.outdoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
+              <Droplets className="h-4 w-4" />
+              <span className="text-sm font-medium">Outdoor Use {stateStaticData?.outdoorUseAllowed ? 'Allowed' : 'Not Allowed'}</span>
+            </div>
+            <div className={`flex items-center gap-2 ${stateStaticData?.indoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
+              <Building2 className="h-4 w-4" />
+              <span className="text-sm font-medium">Indoor Use {stateStaticData?.indoorUseAllowed ? 'Allowed' : 'Not Allowed'}</span>
+            </div>
+          </div>
         </div>
+
+        {/* Permit & Regulations Info */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Permit Requirements */}
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-gray-400" />
+              Permit Requirements
+            </h2>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Permit Required</span>
+                <span className="font-medium">{stateStaticData?.permitRequired || 'Varies'}</span>
+              </div>
+              {stateStaticData?.permitThresholdGpd !== null && stateStaticData?.permitThresholdGpd !== undefined && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">No-Permit Threshold</span>
+                  <span className="font-medium">{stateStaticData.permitThresholdGpd > 0 ? `Under ${stateStaticData.permitThresholdGpd} GPD` : 'All systems need permit'}</span>
+                </div>
+              )}
+              {stateStaticData?.governingCode && (
+                <div className="pt-3 border-t border-gray-100">
+                  <span className="text-sm text-gray-500">Governing Code:</span>
+                  <p className="text-sm font-medium text-gray-700 mt-1">{stateStaticData.governingCode}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Agency Info */}
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-gray-400" />
+              Regulatory Agency
+            </h2>
+            <div className="space-y-3">
+              {stateStaticData?.primaryAgency && (
+                <p className="font-medium text-gray-900">{stateStaticData.primaryAgency}</p>
+              )}
+              {stateStaticData?.agencyPhone && (
+                <a href={`tel:${stateStaticData.agencyPhone}`} className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
+                  <Phone className="h-4 w-4" />
+                  {stateStaticData.agencyPhone}
+                </a>
+              )}
+              {stateStaticData?.governmentWebsite && (
+                <a href={stateStaticData.governmentWebsite} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
+                  <ExternalLink className="h-4 w-4" />
+                  Official Website
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Approved Uses & Restrictions */}
+        {(stateStaticData?.approvedUses?.length || stateStaticData?.keyRestrictions?.length) && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* Approved Uses */}
+            {stateStaticData?.approvedUses && stateStaticData.approvedUses.length > 0 && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
+                <h2 className="text-lg font-semibold text-emerald-900 mb-4 flex items-center gap-2">
+                  <Check className="h-5 w-5 text-emerald-600" />
+                  Approved Uses
+                </h2>
+                <ul className="space-y-2">
+                  {stateStaticData.approvedUses.map((use, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-emerald-800">
+                      <Check className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm">{use}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Key Restrictions */}
+            {stateStaticData?.keyRestrictions && stateStaticData.keyRestrictions.length > 0 && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600" />
+                  Key Restrictions
+                </h2>
+                <ul className="space-y-2">
+                  {stateStaticData.keyRestrictions.map((restriction, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-amber-800">
+                      <span className="text-amber-500 mt-1">•</span>
+                      <span className="text-sm">{restriction}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Incentives Summary */}
+        {stateStaticData?.has_incentives && (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-emerald-600" />
+                  Rebates Available
+                </h2>
+                <p className="text-gray-600 mt-1">
+                  {stateStaticData.incentive_count} rebate program{stateStaticData.incentive_count !== 1 ? 's' : ''} available in {selectedState.state_name}
+                </p>
+              </div>
+              {stateStaticData.max_rebate_amount && stateStaticData.max_rebate_amount > 0 && (
+                <div className="text-right">
+                  <p className="text-sm text-gray-500">Up to</p>
+                  <p className="text-2xl font-bold text-emerald-600">${stateStaticData.max_rebate_amount.toLocaleString()}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* City Search */}
         <div className="mb-6">
@@ -357,7 +540,7 @@ export default function SimpleDirectoryView({
 
         {/* Cities List */}
         <div className="space-y-2">
-          {filteredCities.slice(0, 50).map((city, idx) => (
+          {(showAllCities || searchTerm ? filteredCities : filteredCities.slice(0, INITIAL_CITIES_SHOWN)).map((city, idx) => (
             <button
               key={`${city.city_name}-${idx}`}
               onClick={() => navigateToCity(city)}
@@ -372,13 +555,22 @@ export default function SimpleDirectoryView({
               <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
             </button>
           ))}
-          {filteredCities.length > 50 && (
-            <p className="text-center text-sm text-gray-500 py-4">
-              Showing 50 of {filteredCities.length} cities. Use search to narrow results.
-            </p>
+          {!showAllCities && !searchTerm && filteredCities.length > INITIAL_CITIES_SHOWN && (
+            <button
+              onClick={() => setShowAllCities(true)}
+              className="w-full py-4 text-center text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+            >
+              Show all {filteredCities.length} cities
+            </button>
           )}
           {filteredCities.length === 0 && searchTerm && (
             <p className="text-center text-gray-500 py-8">No cities found matching "{searchTerm}"</p>
+          )}
+          {filteredCities.length === 0 && !searchTerm && allCities.length === 0 && (
+            <div className="text-center py-8">
+              <div className="animate-spin h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3" />
+              <p className="text-gray-500">Loading cities...</p>
+            </div>
           )}
         </div>
       </div>
@@ -386,7 +578,7 @@ export default function SimpleDirectoryView({
   }
 
   // ==========================================================================
-  // RENDER: COUNTY PAGE (Level 2.5) - Simplified
+  // RENDER: COUNTY PAGE (Level 2.5)
   // ==========================================================================
 
   if (selectedState && selectedCounty && !selectedCity) {
@@ -413,6 +605,10 @@ export default function SimpleDirectoryView({
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedCounty.county_name} County</h1>
           <p className="text-gray-500">{selectedState.state_name} • {selectedCounty.city_count} cities</p>
+
+          {compliance?.county?.regulation_summary && compliance.county.regulation_summary !== `${selectedCounty.county_name} County defers to state regulations.` && (
+            <p className="text-gray-600 mt-4">{compliance.county.regulation_summary}</p>
+          )}
         </div>
 
         {/* City Search */}
@@ -448,19 +644,25 @@ export default function SimpleDirectoryView({
   }
 
   // ==========================================================================
-  // RENDER: CITY PAGE (Level 3) - The Answer Page
+  // RENDER: CITY PAGE (Level 3) - ENHANCED
   // ==========================================================================
 
   if (selectedState && selectedCounty && selectedCity) {
     const effective = compliance?.effective
-    const incentives = [
+    const stateData = compliance?.state
+    const allIncentives = [
       ...(compliance?.state?.incentives || []),
       ...(compliance?.county?.incentives || []),
       ...(compliance?.city?.incentives || [])
     ]
 
+    // Parse allowed sources
+    const allowedSources = effective?.allowed_sources?.split(',').map((s: string) => s.trim()).filter(Boolean) ||
+                          stateStaticData?.approvedUses || []
+    const prohibitedSources = effective?.prohibited_sources?.split(',').map((s: string) => s.trim()).filter(Boolean) || []
+
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6 flex-wrap">
           <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
@@ -481,9 +683,13 @@ export default function SimpleDirectoryView({
               <h1 className="text-2xl font-bold text-gray-900">{selectedCity.city_name}</h1>
               <p className="text-gray-500">{selectedCounty.county_name} County, {selectedState.state_name}</p>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full">
-              <Check className="h-4 w-4" />
-              <span className="font-medium text-sm">Greywater Legal</span>
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+              effective?.greywater_allowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+            }`}>
+              {effective?.greywater_allowed !== false ? <Check className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+              <span className="font-medium text-sm">
+                {effective?.greywater_allowed !== false ? 'Greywater Legal' : 'Greywater Restricted'}
+              </span>
             </div>
           </div>
 
@@ -492,72 +698,217 @@ export default function SimpleDirectoryView({
           )}
         </div>
 
-        {/* Permit Requirements */}
+        {/* Permit Requirements - Using Actual Data */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Permit Requirements</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-gray-400" />
+            Permit Requirements
+          </h2>
 
           <div className="space-y-4">
-            <div className="flex items-start justify-between py-3 border-b border-gray-100">
-              <div>
-                <p className="font-medium text-gray-900">Simple Systems</p>
-                <p className="text-sm text-gray-500">Laundry-to-landscape, under 250 gal/day</p>
+            {/* Show actual permit info if available */}
+            {effective?.permit_required !== null && (
+              <div className="flex items-start justify-between py-3 border-b border-gray-100">
+                <div>
+                  <p className="font-medium text-gray-900">Permit Status</p>
+                  <p className="text-sm text-gray-500">{effective.permit_type || 'Standard permit'}</p>
+                </div>
+                <span className={effective.permit_required ? 'text-amber-600 font-medium' : 'text-emerald-600 font-medium'}>
+                  {effective.permit_required ? 'Required' : 'Not required'}
+                </span>
               </div>
-              <span className="text-emerald-600 font-medium">No permit</span>
-            </div>
+            )}
 
-            <div className="flex items-start justify-between py-3 border-b border-gray-100">
-              <div>
-                <p className="font-medium text-gray-900">Standard Systems</p>
-                <p className="text-sm text-gray-500">Multi-fixture, 250+ gal/day</p>
+            {/* Permit Fee */}
+            {(effective?.permit_fee || effective?.annual_fee) && (
+              <div className="flex items-start justify-between py-3 border-b border-gray-100">
+                <div>
+                  <p className="font-medium text-gray-900">Permit Fees</p>
+                  {effective.processing_time_days && (
+                    <p className="text-sm text-gray-500">Processing: ~{effective.processing_time_days} days</p>
+                  )}
+                </div>
+                <div className="text-right">
+                  {effective.permit_fee && (
+                    <p className="font-medium text-gray-900">${effective.permit_fee} initial</p>
+                  )}
+                  {effective.annual_fee && (
+                    <p className="text-sm text-gray-500">${effective.annual_fee}/year</p>
+                  )}
+                </div>
               </div>
-              <div className="text-right">
-                <span className="text-gray-900 font-medium">Permit required</span>
-                {effective?.permit_fee && (
-                  <p className="text-sm text-gray-500">${effective.permit_fee} fee</p>
-                )}
-              </div>
-            </div>
+            )}
 
-            <div className="flex items-start justify-between py-3">
-              <div>
-                <p className="font-medium text-gray-900">Complex/Commercial</p>
-                <p className="text-sm text-gray-500">Indoor reuse, large systems</p>
+            {/* System Size Limits */}
+            {effective?.system_size_limits && (
+              <div className="flex items-start justify-between py-3 border-b border-gray-100">
+                <div>
+                  <p className="font-medium text-gray-900">System Size Limits</p>
+                </div>
+                <span className="text-gray-700">{effective.system_size_limits}</span>
               </div>
-              <span className="text-gray-900 font-medium">Permit + plans</span>
-            </div>
+            )}
+
+            {/* Inspection Required */}
+            {effective?.inspection_required !== undefined && (
+              <div className="flex items-start justify-between py-3">
+                <div>
+                  <p className="font-medium text-gray-900">Inspection Required</p>
+                </div>
+                <span className={effective.inspection_required ? 'text-amber-600 font-medium' : 'text-emerald-600 font-medium'}>
+                  {effective.inspection_required ? 'Yes' : 'No'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Rebates & Incentives */}
-        {incentives.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Available Rebates</h2>
+        {/* Water Sources - Allowed & Prohibited */}
+        {(allowedSources.length > 0 || prohibitedSources.length > 0) && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* Allowed Sources */}
+            {allowedSources.length > 0 && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
+                <h2 className="text-lg font-semibold text-emerald-900 mb-4 flex items-center gap-2">
+                  <Check className="h-5 w-5 text-emerald-600" />
+                  Allowed Water Sources
+                </h2>
+                <ul className="space-y-2">
+                  {allowedSources.map((source: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-emerald-800">
+                      <Droplets className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm">{source}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-            <div className="space-y-3">
-              {incentives.slice(0, 5).map((program: any, idx: number) => (
-                <div key={idx} className="flex items-start justify-between p-4 bg-emerald-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-gray-900">{program.program_name || 'Rebate Program'}</p>
-                    {program.program_description && (
-                      <p className="text-sm text-gray-600 mt-1">{program.program_description}</p>
-                    )}
+            {/* Prohibited Sources */}
+            {prohibitedSources.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+                <h2 className="text-lg font-semibold text-red-900 mb-4 flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  Prohibited Sources
+                </h2>
+                <ul className="space-y-2">
+                  {prohibitedSources.map((source: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-red-800">
+                      <span className="text-red-500 mt-1">✕</span>
+                      <span className="text-sm">{source}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Treatment & Setback Requirements */}
+        {(effective?.treatment_requirements || effective?.setback_requirements) && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-gray-400" />
+              System Requirements
+            </h2>
+            <div className="space-y-4">
+              {effective.treatment_requirements && (
+                <div>
+                  <p className="font-medium text-gray-900 mb-1">Treatment Requirements</p>
+                  <p className="text-sm text-gray-600">{effective.treatment_requirements}</p>
+                </div>
+              )}
+              {effective.setback_requirements && (
+                <div>
+                  <p className="font-medium text-gray-900 mb-1">Setback Requirements</p>
+                  <p className="text-sm text-gray-600">{effective.setback_requirements}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Rebates & Incentives - Show ALL */}
+        {allIncentives.length > 0 && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <DollarSign className="h-5 w-5 text-gray-400" />
+              Available Rebates ({allIncentives.length})
+            </h2>
+
+            <div className="space-y-4">
+              {allIncentives.map((program: any, idx: number) => (
+                <div key={idx} className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="font-semibold text-gray-900">{program.program_name || 'Rebate Program'}</p>
+                      <div className="flex gap-2 mt-1">
+                        {program.residential_eligibility && (
+                          <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
+                        )}
+                        {program.commercial_eligibility && (
+                          <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-emerald-700 text-lg">
+                        {program.incentive_amount_max
+                          ? `Up to $${program.incentive_amount_max.toLocaleString()}`
+                          : 'Varies'}
+                      </p>
+                      {program.incentive_amount_min && program.incentive_amount_min !== program.incentive_amount_max && (
+                        <p className="text-xs text-gray-500">Min: ${program.incentive_amount_min.toLocaleString()}</p>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-right ml-4">
-                    <p className="font-bold text-emerald-700">
-                      {program.incentive_amount_max
-                        ? `Up to $${program.incentive_amount_max.toLocaleString()}`
-                        : program.rebate_percentage
-                        ? `${program.rebate_percentage}%`
-                        : 'Varies'}
-                    </p>
+
+                  {program.program_description && (
+                    <p className="text-sm text-gray-600 mb-3">{program.program_description}</p>
+                  )}
+
+                  {/* Program Tiers */}
+                  {program.tiers && program.tiers.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-emerald-200">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Tier Structure:</p>
+                      <div className="space-y-2">
+                        {program.tiers.map((tier: any, tierIdx: number) => (
+                          <div key={tierIdx} className="flex justify-between text-sm bg-white/50 rounded px-3 py-2">
+                            <div>
+                              <span className="font-medium">{tier.tier_name || `Tier ${tier.tier_number}`}</span>
+                              {tier.requirements && <span className="text-gray-500 ml-2">- {tier.requirements}</span>}
+                            </div>
+                            <span className="font-medium text-emerald-700">
+                              ${tier.min_amount?.toLocaleString()} - ${tier.max_amount?.toLocaleString()}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Contact & Apply */}
+                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-emerald-200">
                     {program.incentive_url && (
                       <a
                         href={program.incentive_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 mt-1"
+                        className="inline-flex items-center gap-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium"
                       >
-                        Apply <ExternalLink className="h-3 w-3" />
+                        Apply Now <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                    {program.program_contact_email && (
+                      <a href={`mailto:${program.program_contact_email}`} className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700">
+                        <Mail className="h-4 w-4" />
+                        {program.program_contact_email}
+                      </a>
+                    )}
+                    {program.program_contact_phone && (
+                      <a href={`tel:${program.program_contact_phone}`} className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700">
+                        <Phone className="h-4 w-4" />
+                        {program.program_contact_phone}
                       </a>
                     )}
                   </div>
@@ -568,27 +919,46 @@ export default function SimpleDirectoryView({
         )}
 
         {/* No Rebates Message */}
-        {incentives.length === 0 && (
+        {allIncentives.length === 0 && (
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6 text-center">
+            <DollarSign className="h-8 w-8 text-gray-300 mx-auto mb-2" />
             <p className="text-gray-600">No rebate programs currently available for this location.</p>
+            <p className="text-sm text-gray-500 mt-1">Check back later or contact your local water utility.</p>
           </div>
         )}
 
         {/* Official Resources */}
-        {(compliance?.state?.documentation_url || compliance?.effective?.documentation_url) && (
+        {(effective?.documentation_url || stateStaticData?.governmentWebsite) && (
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Official Resources</h2>
-            <div className="space-y-2">
-              {compliance?.effective?.documentation_url && (
+            <div className="space-y-3">
+              {effective?.documentation_url && (
                 <a
-                  href={compliance.effective.documentation_url}
+                  href={effective.documentation_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700"
                 >
                   <ExternalLink className="h-4 w-4" />
-                  View Official Documentation
+                  View Local Regulations
                 </a>
+              )}
+              {stateStaticData?.governmentWebsite && (
+                <a
+                  href={stateStaticData.governmentWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  State Regulatory Agency
+                </a>
+              )}
+              {stateStaticData?.governingCode && (
+                <div className="pt-2 mt-2 border-t border-gray-100">
+                  <p className="text-sm text-gray-500">Governing Code:</p>
+                  <p className="text-sm text-gray-700">{stateStaticData.governingCode}</p>
+                </div>
               )}
             </div>
           </div>

@@ -185,7 +185,13 @@ export async function GET(request: NextRequest) {
           `;
         } else if (isStateParent) {
           // Query all cities in a state
-          const cityStateCode = parentId.replace('_STATE', '');
+          // Handle both STATE_CA and CA_STATE formats
+          let cityStateCode = parentId;
+          if (parentId.startsWith('STATE_')) {
+            cityStateCode = parentId.replace('STATE_', '');
+          } else if (parentId.endsWith('_STATE')) {
+            cityStateCode = parentId.replace('_STATE', '');
+          }
           cityQuery = `
             SELECT DISTINCT
               m.city_jurisdiction_id,
@@ -195,7 +201,6 @@ export async function GET(request: NextRequest) {
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
             WHERE m.state_code = '${cityStateCode}'
             ORDER BY m.city_name
-            LIMIT 100
           `;
         } else {
           return NextResponse.json({
