@@ -106,7 +106,22 @@ export default function SimpleDirectoryView({
   const [loading, setLoading] = useState(!initialData.length && !initialSelectedState)
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
+  const [viewMode, setViewMode] = useState<'cities' | 'counties'>('cities')
   const INITIAL_CITIES_SHOWN = 50
+
+  // Top California cities by population (for sorting)
+  const TOP_CA_CITIES = [
+    'Los Angeles', 'San Diego', 'San Jose', 'San Francisco', 'Fresno',
+    'Sacramento', 'Long Beach', 'Oakland', 'Bakersfield', 'Anaheim',
+    'Santa Ana', 'Riverside', 'Stockton', 'Irvine', 'Chula Vista',
+    'Fremont', 'San Bernardino', 'Modesto', 'Fontana', 'Moreno Valley',
+    'Santa Clarita', 'Glendale', 'Huntington Beach', 'Garden Grove', 'Oceanside',
+    'Rancho Cucamonga', 'Santa Rosa', 'Ontario', 'Elk Grove', 'Corona',
+    'Lancaster', 'Palmdale', 'Salinas', 'Pomona', 'Hayward',
+    'Escondido', 'Sunnyvale', 'Torrance', 'Pasadena', 'Orange',
+    'Fullerton', 'Thousand Oaks', 'Roseville', 'Concord', 'Simi Valley',
+    'Santa Clara', 'Victorville', 'Vallejo', 'Berkeley', 'El Monte'
+  ]
 
   // ==========================================================================
   // DATA FETCHING
@@ -336,9 +351,27 @@ export default function SimpleDirectoryView({
   // ==========================================================================
 
   if (selectedState && !selectedCounty && !selectedCity) {
-    const filteredCities = allCities.filter(c =>
+    // Sort cities: top cities first, then alphabetically
+    const sortedCities = [...allCities].sort((a, b) => {
+      const aIndex = TOP_CA_CITIES.findIndex(c => c.toLowerCase() === a.city_name?.toLowerCase())
+      const bIndex = TOP_CA_CITIES.findIndex(c => c.toLowerCase() === b.city_name?.toLowerCase())
+      // Both are top cities - sort by rank
+      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
+      // Only a is a top city
+      if (aIndex !== -1) return -1
+      // Only b is a top city
+      if (bIndex !== -1) return 1
+      // Neither is a top city - sort alphabetically
+      return (a.city_name || '').localeCompare(b.city_name || '')
+    })
+
+    const filteredCities = sortedCities.filter(c =>
       c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
     )
+
+    const filteredCounties = counties.filter(c =>
+      c.county_name?.toLowerCase().includes(searchTerm.toLowerCase())
+    ).sort((a, b) => (a.county_name || '').localeCompare(b.county_name || ''))
 
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -523,14 +556,40 @@ export default function SimpleDirectoryView({
           </div>
         )}
 
-        {/* City Search */}
+        {/* View Toggle & Search */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Find Your City</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {viewMode === 'cities' ? 'Find Your City' : 'Browse by County'}
+            </h2>
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => { setViewMode('cities'); setSearchTerm(''); setShowAllCities(false); }}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  viewMode === 'cities'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Cities
+              </button>
+              <button
+                onClick={() => { setViewMode('counties'); setSearchTerm(''); }}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  viewMode === 'counties'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Counties
+              </button>
+            </div>
+          </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search cities..."
+              placeholder={viewMode === 'cities' ? 'Search cities...' : 'Search counties...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -539,40 +598,70 @@ export default function SimpleDirectoryView({
         </div>
 
         {/* Cities List */}
-        <div className="space-y-2">
-          {(showAllCities || searchTerm ? filteredCities : filteredCities.slice(0, INITIAL_CITIES_SHOWN)).map((city, idx) => (
-            <button
-              key={`${city.city_name}-${idx}`}
-              onClick={() => navigateToCity(city)}
-              className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
-            >
-              <div>
-                <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
-                {city.county_name && (
-                  <p className="text-sm text-gray-500">{city.county_name} County</p>
-                )}
+        {viewMode === 'cities' && (
+          <div className="space-y-2">
+            {(showAllCities || searchTerm ? filteredCities : filteredCities.slice(0, INITIAL_CITIES_SHOWN)).map((city, idx) => (
+              <button
+                key={`${city.city_name}-${idx}`}
+                onClick={() => navigateToCity(city)}
+                className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
+              >
+                <div>
+                  <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
+                  {city.county_name && (
+                    <p className="text-sm text-gray-500">{city.county_name} County</p>
+                  )}
+                </div>
+                <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
+              </button>
+            ))}
+            {!showAllCities && !searchTerm && filteredCities.length > INITIAL_CITIES_SHOWN && (
+              <button
+                onClick={() => setShowAllCities(true)}
+                className="w-full py-4 text-center text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+              >
+                Show all {filteredCities.length} cities
+              </button>
+            )}
+            {filteredCities.length === 0 && searchTerm && (
+              <p className="text-center text-gray-500 py-8">No cities found matching "{searchTerm}"</p>
+            )}
+            {filteredCities.length === 0 && !searchTerm && allCities.length === 0 && (
+              <div className="text-center py-8">
+                <div className="animate-spin h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3" />
+                <p className="text-gray-500">Loading cities...</p>
               </div>
-              <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
-            </button>
-          ))}
-          {!showAllCities && !searchTerm && filteredCities.length > INITIAL_CITIES_SHOWN && (
-            <button
-              onClick={() => setShowAllCities(true)}
-              className="w-full py-4 text-center text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
-            >
-              Show all {filteredCities.length} cities
-            </button>
-          )}
-          {filteredCities.length === 0 && searchTerm && (
-            <p className="text-center text-gray-500 py-8">No cities found matching "{searchTerm}"</p>
-          )}
-          {filteredCities.length === 0 && !searchTerm && allCities.length === 0 && (
-            <div className="text-center py-8">
-              <div className="animate-spin h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3" />
-              <p className="text-gray-500">Loading cities...</p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
+
+        {/* Counties List */}
+        {viewMode === 'counties' && (
+          <div className="space-y-2">
+            {filteredCounties.map((county, idx) => (
+              <button
+                key={`${county.county_name}-${idx}`}
+                onClick={() => navigateToCounty(county)}
+                className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
+              >
+                <div>
+                  <p className="font-medium text-gray-900 group-hover:text-emerald-700">{county.county_name} County</p>
+                  <p className="text-sm text-gray-500">{county.city_count} cities</p>
+                </div>
+                <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
+              </button>
+            ))}
+            {filteredCounties.length === 0 && searchTerm && (
+              <p className="text-center text-gray-500 py-8">No counties found matching "{searchTerm}"</p>
+            )}
+            {filteredCounties.length === 0 && !searchTerm && counties.length === 0 && (
+              <div className="text-center py-8">
+                <div className="animate-spin h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3" />
+                <p className="text-gray-500">Loading counties...</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     )
   }
