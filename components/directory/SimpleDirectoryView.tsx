@@ -674,6 +674,8 @@ export default function SimpleDirectoryView({
     const filteredCities = cities.filter(c =>
       c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
     )
+    const countyData = compliance?.county
+    const countyIncentives = countyData?.incentives || []
 
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -692,13 +694,115 @@ export default function SimpleDirectoryView({
 
         {/* County Header */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedCounty.county_name} County</h1>
-          <p className="text-gray-500">{selectedState.state_name} • {selectedCounty.city_count} cities</p>
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedCounty.county_name} County</h1>
+              <p className="text-gray-500">{selectedState.state_name} • {selectedCounty.city_count} cities</p>
+            </div>
+            {countyData && countyData.greywater_allowed !== undefined && (
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                countyData.greywater_allowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+              }`}>
+                {countyData.greywater_allowed !== false ? (
+                  <><Check className="h-4 w-4" /> Greywater Allowed</>
+                ) : (
+                  <><AlertTriangle className="h-4 w-4" /> Restricted</>
+                )}
+              </div>
+            )}
+          </div>
 
-          {compliance?.county?.regulation_summary && compliance.county.regulation_summary !== `${selectedCounty.county_name} County defers to state regulations.` && (
-            <p className="text-gray-600 mt-4">{compliance.county.regulation_summary}</p>
+          {countyData?.regulation_summary && countyData.regulation_summary !== `${selectedCounty.county_name} County defers to state regulations.` && (
+            <p className="text-gray-600">{countyData.regulation_summary}</p>
           )}
         </div>
+
+        {/* County Permit Info - if available */}
+        {countyData && (countyData.permit_required !== null || countyData.permit_fee || countyData.permit_type) && (
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-gray-400" />
+              County Permit Requirements
+            </h2>
+            <div className="space-y-3">
+              {countyData.permit_required !== null && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Permit Required</span>
+                  <span className={`font-medium ${countyData.permit_required ? 'text-amber-600' : 'text-emerald-600'}`}>
+                    {countyData.permit_required ? 'Yes' : 'No'}
+                  </span>
+                </div>
+              )}
+              {countyData.permit_type && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Permit Type</span>
+                  <span className="font-medium">{countyData.permit_type}</span>
+                </div>
+              )}
+              {countyData.permit_fee && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Permit Fee</span>
+                  <span className="font-medium">${countyData.permit_fee}</span>
+                </div>
+              )}
+              {countyData.annual_fee && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Annual Fee</span>
+                  <span className="font-medium">${countyData.annual_fee}/year</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* County Incentives - if available */}
+        {countyIncentives.length > 0 && (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <DollarSign className="h-5 w-5 text-emerald-600" />
+              County Rebates & Incentives
+            </h2>
+            <div className="space-y-4">
+              {countyIncentives.map((incentive: any, idx: number) => (
+                <div key={idx} className="bg-white rounded-lg p-4 border border-emerald-100">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium text-gray-900">{incentive.program_name}</h3>
+                    {(incentive.incentive_amount_max || incentive.max_funding_per_application) && (
+                      <span className="text-emerald-600 font-bold">
+                        Up to ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  {incentive.program_description && (
+                    <p className="text-sm text-gray-600 mb-2">{incentive.program_description}</p>
+                  )}
+                  {incentive.incentive_url && (
+                    <a
+                      href={incentive.incentive_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                    >
+                      <ExternalLink className="h-3 w-3" /> Apply Now
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* State-level info reminder */}
+        {stateStaticData && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+            <p className="text-sm text-blue-800">
+              <span className="font-medium">Note:</span> {selectedCounty.county_name} County follows {selectedState.state_name} state greywater regulations.
+              {stateStaticData.permitThresholdGpd && stateStaticData.permitThresholdGpd > 0 && (
+                <> Systems under {stateStaticData.permitThresholdGpd} GPD may not require a permit.</>
+              )}
+            </p>
+          </div>
+        )}
 
         {/* City Search */}
         <div className="mb-6">
