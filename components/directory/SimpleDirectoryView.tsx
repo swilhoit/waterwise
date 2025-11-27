@@ -707,7 +707,7 @@ export default function SimpleDirectoryView({
 
           <div className="space-y-4">
             {/* Show actual permit info if available */}
-            {effective?.permit_required !== null && (
+            {effective && effective.permit_required !== null && (
               <div className="flex items-start justify-between py-3 border-b border-gray-100">
                 <div>
                   <p className="font-medium text-gray-900">Permit Status</p>
@@ -720,7 +720,7 @@ export default function SimpleDirectoryView({
             )}
 
             {/* Permit Fee */}
-            {(effective?.permit_fee || effective?.annual_fee) && (
+            {effective && (effective.permit_fee || effective.annual_fee) && (
               <div className="flex items-start justify-between py-3 border-b border-gray-100">
                 <div>
                   <p className="font-medium text-gray-900">Permit Fees</p>
@@ -750,7 +750,7 @@ export default function SimpleDirectoryView({
             )}
 
             {/* Inspection Required */}
-            {effective?.inspection_required !== undefined && (
+            {effective && effective.inspection_required !== undefined && (
               <div className="flex items-start justify-between py-3">
                 <div>
                   <p className="font-medium text-gray-900">Inspection Required</p>
