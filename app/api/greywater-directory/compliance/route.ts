@@ -69,6 +69,7 @@ export async function GET(request: NextRequest) {
 
     try {
       // Query for all active programs - match by program_id pattern or notes containing jurisdiction
+      // Now includes proper eligibility fields from database
       const incentiveQuery = `
         SELECT
           program_id,
@@ -83,6 +84,11 @@ export async function GET(request: NextRequest) {
           installation_requirements,
           contact_email,
           contact_phone,
+          applicant_type,
+          residential_eligible,
+          commercial_eligible,
+          municipal_eligible,
+          agricultural_eligible,
           CASE
             WHEN program_id LIKE '%_COUNTY_%' THEN 'county'
             WHEN program_id LIKE '%_CITY_%' THEN 'city'
@@ -101,6 +107,8 @@ export async function GET(request: NextRequest) {
             program_id LIKE 'CA_%'
             OR LOWER(notes) LIKE '%${state.toLowerCase()}%'
           )
+          -- Filter out municipal-only and agricultural-only programs (not relevant for directory users)
+          AND (residential_eligible = TRUE OR commercial_eligible = TRUE OR applicant_type IS NULL)
       `;
 
       const [rows] = await bigquery.query({
@@ -290,23 +298,12 @@ export async function GET(request: NextRequest) {
       return null;
     };
 
-    // Helper to determine residential/commercial eligibility
-    const parseEligibility = (eligibleTypes: string, notes: string) => {
-      const text = `${eligibleTypes || ''} ${notes || ''}`.toLowerCase();
-      const hasResidential = text.includes('residential') || text.includes('homeowner') ||
-        text.includes('single-family') || text.includes('lawn') || text.includes('turf');
-      const hasCommercial = text.includes('commercial') || text.includes('business') ||
-        text.includes('multi-family') || text.includes('municipal') || text.includes('large-scale');
-      // If neither specified, assume both (general programs)
-      if (!hasResidential && !hasCommercial) {
-        return { residential: true, commercial: true };
-      }
-      return { residential: hasResidential, commercial: hasCommercial };
-    };
-
     // Process and assign incentives to appropriate levels
+    // Now uses database eligibility fields instead of text parsing
     Array.from(seenPrograms.values()).forEach(program => {
-      const eligibility = parseEligibility(program.eligible_system_types, program.notes);
+      // Use database values - if null/undefined, fallback to true (legacy data)
+      const residentialEligible = program.residential_eligible ?? true;
+      const commercialEligible = program.commercial_eligible ?? true;
 
       const formattedProgram = {
         program_name: program.program_name,
@@ -321,8 +318,9 @@ export async function GET(request: NextRequest) {
         installation_requirements: program.installation_requirements,
         program_contact_email: program.contact_email,
         program_contact_phone: program.contact_phone,
-        residential_eligible: eligibility.residential,
-        commercial_eligible: eligibility.commercial,
+        residential_eligible: residentialEligible,
+        commercial_eligible: commercialEligible,
+        applicant_type: program.applicant_type,
         tiers: []
       };
 

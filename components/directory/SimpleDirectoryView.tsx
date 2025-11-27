@@ -1124,26 +1124,26 @@ export default function SimpleDirectoryView({
                   )}
 
                   {/* Contact & Apply */}
-                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-emerald-200">
+                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-emerald-200 text-sm">
                     {program.incentive_url && (
                       <a
                         href={program.incentive_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium"
+                        className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
                       >
-                        Apply Now <ExternalLink className="h-3 w-3" />
+                        <ExternalLink className="h-3 w-3" /> Apply
                       </a>
                     )}
                     {program.program_contact_email && (
-                      <a href={`mailto:${program.program_contact_email}`} className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700">
-                        <Mail className="h-4 w-4" />
-                        {program.program_contact_email}
+                      <a href={`mailto:${program.program_contact_email}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
+                        <Mail className="h-3 w-3" />
+                        Email
                       </a>
                     )}
                     {program.program_contact_phone && (
-                      <a href={`tel:${program.program_contact_phone}`} className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700">
-                        <Phone className="h-4 w-4" />
+                      <a href={`tel:${program.program_contact_phone}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
+                        <Phone className="h-3 w-3" />
                         {program.program_contact_phone}
                       </a>
                     )}
