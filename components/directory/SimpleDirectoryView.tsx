@@ -61,6 +61,11 @@ export default function SimpleDirectoryView({
 }: SimpleDirectoryViewProps) {
   const router = useRouter()
 
+  // Find initial selected state from initialData if available
+  const initialSelectedState = initialState && initialData.length > 0
+    ? initialData.find((s: StateItem) => s.state_code === initialState) || null
+    : null
+
   // Data states
   const [states, setStates] = useState<StateItem[]>(initialData)
   const [counties, setCounties] = useState<CountyItem[]>([])
@@ -68,13 +73,13 @@ export default function SimpleDirectoryView({
   const [allCities, setAllCities] = useState<CityItem[]>([])
   const [compliance, setCompliance] = useState<ComplianceData | null>(null)
 
-  // Selection states
-  const [selectedState, setSelectedState] = useState<StateItem | null>(null)
+  // Selection states - initialize from initialData if available
+  const [selectedState, setSelectedState] = useState<StateItem | null>(initialSelectedState)
   const [selectedCounty, setSelectedCounty] = useState<CountyItem | null>(null)
   const [selectedCity, setSelectedCity] = useState<CityItem | null>(null)
 
   // UI states
-  const [loading, setLoading] = useState(!initialData.length)
+  const [loading, setLoading] = useState(!initialData.length && !initialSelectedState)
   const [searchTerm, setSearchTerm] = useState('')
 
   // ==========================================================================
@@ -149,11 +154,27 @@ export default function SimpleDirectoryView({
 
   useEffect(() => {
     const init = async () => {
-      // Fetch states if needed
+      // Use initialData if available, otherwise fetch from API
       let statesData = initialData.length > 0 ? initialData : []
-      if (statesData.length === 0) {
+
+      if (statesData.length === 0 && !initialState) {
+        // Only fetch states if we're on the main directory page with no data
         await fetchStates()
-        statesData = states
+        return // The state update will trigger a re-render
+      }
+
+      if (statesData.length === 0 && initialState) {
+        // Fetch states data if we're on a sub-page but don't have initial data
+        const res = await fetch('/api/greywater-directory/hierarchy?level=states')
+        const data = await res.json()
+        if (data.status === 'success') {
+          statesData = data.data.map((state: StateItem) => ({
+            ...state,
+            legalStatus: state.legalStatus || 'Legal'
+          }))
+          setStates(statesData)
+          setLoading(false)
+        }
       }
 
       if (initialState && statesData.length > 0) {
@@ -194,12 +215,10 @@ export default function SimpleDirectoryView({
             fetchCompliance(initialState)
           }
         }
-      } else if (!initialData.length) {
-        fetchStates()
       }
     }
     init()
-  }, [initialState, initialCounty, initialCity])
+  }, [initialState, initialCounty, initialCity, initialData])
 
   // ==========================================================================
   // NAVIGATION
