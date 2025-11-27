@@ -117,7 +117,7 @@ export default function StateDetailView({
       case 'legal':
         return 'bg-green-100 text-green-800 border-green-200'
       case 'regulated':
-        return 'bg-blue-100 text-blue-800 border-blue-200'
+        return 'bg-gray-100 text-gray-800 border-gray-200'
       case 'highly regulated':
         return 'bg-orange-100 text-orange-800 border-orange-200'
       case 'permitted':
@@ -145,7 +145,7 @@ export default function StateDetailView({
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="min-w-0">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Building className="h-6 w-6 text-blue-600 flex-shrink-0" />
+              <Building className="h-6 w-6 text-gray-600 flex-shrink-0" />
               {stateData.state_name}
             </h2>
             <p className="text-sm text-gray-500 mt-1">
@@ -183,13 +183,13 @@ export default function StateDetailView({
             label="Residential Programs"
             value={stats.residentialCount}
             icon={Home}
-            color="text-blue-600"
+            color="text-gray-600"
           />
           <QuickStat
             label="Commercial Programs"
             value={stats.commercialCount}
             icon={Building}
-            color="text-purple-600"
+            color="text-gray-600"
           />
           <QuickStat
             label="Max Rebate"
@@ -207,7 +207,7 @@ export default function StateDetailView({
 
         {/* Summary */}
         {stateData.summary && (
-          <div className="bg-blue-50/50 rounded-lg p-3 mt-4">
+          <div className="bg-gray-50/50 rounded-lg p-3 mt-4">
             <p className="text-sm text-gray-700 leading-relaxed">{stateData.summary}</p>
           </div>
         )}
@@ -250,7 +250,7 @@ export default function StateDetailView({
         <CollapsibleSection
           title={`${sectorView === 'residential' ? 'Residential' : 'Commercial'} Requirements`}
           icon={sectorView === 'residential' ? Home : Building}
-          iconColor={sectorView === 'residential' ? 'text-blue-600' : 'text-purple-600'}
+          iconColor="text-gray-600"
           summary="Permits, allowed sources, system limits"
           defaultOpen={true}
         >
@@ -281,9 +281,9 @@ export default function StateDetailView({
             </div>
 
             {/* System Regulations Card */}
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                <Droplets className="h-4 w-4 text-blue-600" />
+                <Droplets className="h-4 w-4 text-gray-600" />
                 System Regulations
               </h4>
               <div className="space-y-2 text-sm">
@@ -373,7 +373,7 @@ export default function StateDetailView({
                         href={program.incentive_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-0.5 justify-end mt-1"
+                        className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-0.5 justify-end mt-1"
                       >
                         Apply <ExternalLink className="h-3 w-3" />
                       </a>
@@ -403,7 +403,7 @@ export default function StateDetailView({
         <CollapsibleSection
           title="Approved Uses & Restrictions"
           icon={Scale}
-          iconColor="text-blue-600"
+          iconColor="text-gray-600"
           summary={`${stateData.approvedUses?.length || 0} uses, ${stateData.keyRestrictions?.length || 0} restrictions`}
           defaultOpen={false}
         >
@@ -497,7 +497,7 @@ export default function StateDetailView({
               {stateData.agencyPhone && (
                 <a
                   href={`tel:${stateData.agencyPhone}`}
-                  className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                  className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
                 >
                   <Phone className="h-4 w-4" />
                   {stateData.agencyPhone}
@@ -507,7 +507,7 @@ export default function StateDetailView({
               {stateData.agencyContact && stateData.agencyContact.includes('@') && (
                 <a
                   href={`mailto:${stateData.agencyContact}`}
-                  className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                  className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
                 >
                   <Mail className="h-4 w-4" />
                   Email
@@ -519,7 +519,7 @@ export default function StateDetailView({
                   href={stateData.governmentWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                  className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
                 >
                   <Globe className="h-4 w-4" />
                   Website
@@ -532,12 +532,12 @@ export default function StateDetailView({
 
       {/* Recent Changes */}
       {stateData.recentChanges && (
-        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-          <h3 className="font-medium text-blue-900 flex items-center gap-2 mb-2">
+        <div className="bg-amber-50 border border-amber-100 rounded-lg p-4">
+          <h3 className="font-medium text-amber-900 flex items-center gap-2 mb-2">
             <Calendar className="h-4 w-4" />
             Recent Policy Changes
           </h3>
-          <p className="text-sm text-blue-800 leading-relaxed">{stateData.recentChanges}</p>
+          <p className="text-sm text-amber-800 leading-relaxed">{stateData.recentChanges}</p>
         </div>
       )}
     </div>

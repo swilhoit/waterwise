@@ -1,11 +1,11 @@
-import DirectoryView from '@/components/directory/DirectoryView'
+import SimpleDirectoryView from '@/components/directory/SimpleDirectoryView'
 import { Metadata } from 'next'
 import { getBigQueryClient } from '@/lib/bigquery'
 
 export const metadata: Metadata = {
-  title: 'Water Conservation Programs by State | Greywater & Rainwater Rebates Directory',
-  description: 'Find greywater, rainwater harvesting, and water conservation rebates, grants, and programs across all 50 US states. Search by state, county, or city for local incentives.',
-  keywords: 'greywater rebates, rainwater harvesting grants, water conservation programs, state water rebates, water efficiency incentives'
+  title: 'Greywater Regulations by State | Find Rebates & Requirements',
+  description: 'Find greywater rules and rebates for your location. Search by state and city for local permit requirements and available incentives.',
+  keywords: 'greywater rebates, greywater regulations, water conservation, state greywater laws, greywater permits'
 }
 
 // Enable static generation with revalidation
@@ -15,7 +15,6 @@ async function getStatesData() {
   try {
     const bigquery = getBigQueryClient()
 
-    // Optimized query: JOIN states with counts in a single query
     const stateQuery = `
       SELECT
         s.state_code,
@@ -46,20 +45,17 @@ async function getStatesData() {
       state_jurisdiction_id: row.jurisdiction_id,
       state_name: row.state_name,
       state_code: row.state_code,
-      legal_status: row.legal_status,
+      legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : 'Varies',
       county_count: parseInt(row.county_count) || 0,
-      city_count: parseInt(row.city_count) || 0,
-      has_programs: false
+      city_count: parseInt(row.city_count) || 0
     }))
   } catch (error) {
     console.error('Error fetching states data at build time:', error)
-    return [] // Return empty array on error, component will fetch from API
+    return []
   }
 }
 
 export default async function DirectoryPage() {
-  // Fetch states data at build time
   const initialStatesData = await getStatesData()
-
-  return <DirectoryView level="states" initialData={initialStatesData} />
+  return <SimpleDirectoryView initialData={initialStatesData} />
 }

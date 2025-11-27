@@ -1,4 +1,4 @@
-import DirectoryView from '@/components/directory/DirectoryView'
+import SimpleDirectoryView from '@/components/directory/SimpleDirectoryView'
 import { getStateNameFromCode } from '@/lib/state-utils'
 import { Metadata } from 'next'
 
@@ -6,7 +6,6 @@ interface PageProps {
   params: Promise<{ state: string; county: string; city: string }>
 }
 
-// Helper function to format city name
 function formatCityName(city: string): string {
   return city
     .split('-')
@@ -14,7 +13,6 @@ function formatCityName(city: string): string {
     .join(' ')
 }
 
-// Helper function to format county name
 function formatCountyName(county: string): string {
   return county
     .split('-')
@@ -29,19 +27,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const countyName = formatCountyName(county)
 
   return {
-    title: `${cityName}, ${stateName} Water Rebates & Programs | Greywater & Rainwater Incentives`,
-    description: `Complete guide to water conservation rebates in ${cityName}, ${countyName} County, ${stateName}. Find greywater rebates, rainwater harvesting grants, and local water efficiency programs.`,
-    keywords: `${cityName} ${stateName} water rebates, ${cityName} greywater, ${cityName} rainwater harvesting, ${cityName} water conservation programs, ${cityName} ${state} rebates`
+    title: `${cityName}, ${stateName} Greywater Permits & Rebates`,
+    description: `Greywater rules for ${cityName}, ${countyName} County, ${stateName}. Find permit requirements and available rebates.`,
+    keywords: `${cityName} greywater, ${cityName} ${stateName} greywater permits, ${cityName} water rebates, ${cityName} greywater rebates`
   }
 }
 
 export default async function CityPage({ params }: PageProps) {
   const { state, county, city } = await params
-
   return (
-    <DirectoryView
-      level="cities"
-      initialState={state}
+    <SimpleDirectoryView
+      initialState={state.toUpperCase()}
       initialCounty={county}
       initialCity={city}
     />

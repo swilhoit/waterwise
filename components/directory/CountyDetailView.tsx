@@ -114,7 +114,7 @@ export default function CountyDetailView({
               <span>{stateCode}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Building2 className="h-6 w-6 text-purple-600 flex-shrink-0" />
+              <Building2 className="h-6 w-6 text-gray-600 flex-shrink-0" />
               {countyName} County
             </h2>
             {countyData?.city_count && (
@@ -129,7 +129,7 @@ export default function CountyDetailView({
               Greywater Allowed
             </Badge>
             {stats.hasCountyPolicy && (
-              <Badge variant="outline" className="text-purple-700 border-purple-300">
+              <Badge variant="outline" className="text-gray-700 border-gray-300">
                 County Policy
               </Badge>
             )}
@@ -169,7 +169,7 @@ export default function CountyDetailView({
       <CollapsibleSection
         title="Policy Framework"
         icon={Layers}
-        iconColor="text-purple-600"
+        iconColor="text-gray-600"
         summary={`State + ${stats.hasCountyPolicy ? 'County policy' : 'Follows state'}`}
         defaultOpen={true}
       >
@@ -178,7 +178,6 @@ export default function CountyDetailView({
           <PolicyLevelCard
             level="State"
             name={stateCode}
-            color="blue"
             hasPolicy={true}
             programCount={stats.stateCount}
             summary={localCompliance?.state?.regulation_summary}
@@ -187,8 +186,7 @@ export default function CountyDetailView({
           {/* County Level */}
           <PolicyLevelCard
             level="County"
-            name={countyName}
-            color="purple"
+            name={`${countyName} County`}
             hasPolicy={stats.hasCountyPolicy}
             programCount={stats.countyCount}
             summary={countyCompliance?.regulation_summary}
@@ -200,7 +198,7 @@ export default function CountyDetailView({
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="bg-white border rounded-lg p-4">
           <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
-            <Home className="h-4 w-4 text-blue-600" />
+            <Home className="h-4 w-4 text-gray-600" />
             Residential
           </h3>
           <p className="text-sm text-gray-600">
@@ -216,7 +214,7 @@ export default function CountyDetailView({
         </div>
         <div className="bg-white border rounded-lg p-4">
           <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
-            <Building className="h-4 w-4 text-purple-600" />
+            <Building className="h-4 w-4 text-gray-600" />
             Commercial
           </h3>
           <p className="text-sm text-gray-600">
@@ -250,7 +248,7 @@ export default function CountyDetailView({
                 level="State"
                 programs={localCompliance?.state?.incentives || []}
                 sectorView={sectorView}
-                color="blue"
+                color="emerald"
               />
             )}
 
@@ -260,7 +258,7 @@ export default function CountyDetailView({
                 level="County"
                 programs={localCompliance?.county?.incentives || []}
                 sectorView={sectorView}
-                color="purple"
+                color="emerald"
               />
             )}
           </div>
@@ -284,7 +282,7 @@ export default function CountyDetailView({
         <CollapsibleSection
           title="Compliance Summary"
           icon={FileText}
-          iconColor="text-blue-600"
+          iconColor="text-gray-600"
           defaultOpen={false}
         >
           <p className="text-sm text-gray-600 leading-relaxed pt-3">
@@ -323,25 +321,18 @@ function QuickStat({
 function PolicyLevelCard({
   level,
   name,
-  color,
   hasPolicy,
   programCount,
   summary
 }: {
   level: string
   name: string
-  color: 'blue' | 'purple'
   hasPolicy: boolean
   programCount?: number
   summary?: string
 }) {
-  const colorClasses = {
-    blue: 'border-l-blue-500 bg-blue-50/30',
-    purple: 'border-l-purple-500 bg-purple-50/30'
-  }
-
   return (
-    <div className={`border-l-4 ${colorClasses[color]} rounded-r-lg p-3`}>
+    <div className="border-l-4 border-l-gray-300 bg-gray-50/30 rounded-r-lg p-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <span className="text-xs font-medium text-gray-500 uppercase">{level}</span>
@@ -349,7 +340,7 @@ function PolicyLevelCard({
         </div>
         <div className="flex gap-2 flex-wrap">
           {hasPolicy ? (
-            <Badge variant="outline" className="text-green-700 border-green-300 text-xs">
+            <Badge variant="outline" className="text-emerald-700 border-emerald-300 text-xs">
               Active Policy
             </Badge>
           ) : (
@@ -358,7 +349,7 @@ function PolicyLevelCard({
             </Badge>
           )}
           {programCount && programCount > 0 && (
-            <Badge className="bg-green-100 text-green-800 text-xs">
+            <Badge className="bg-emerald-100 text-emerald-800 text-xs">
               {programCount} Programs
             </Badge>
           )}
@@ -381,7 +372,7 @@ function IncentiveSection({
   level: string
   programs: any[]
   sectorView: string
-  color: 'blue' | 'purple'
+  color: 'emerald'
 }) {
   const filtered = sectorView === 'both' ? programs : programs.filter(p =>
     sectorView === 'residential'
@@ -391,21 +382,16 @@ function IncentiveSection({
 
   if (filtered.length === 0) return null
 
-  const colorClasses = {
-    blue: 'bg-blue-50 text-blue-700 border-blue-200',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200'
-  }
-
   return (
     <div>
       <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-        <Badge variant="outline" className={colorClasses[color]}>
+        <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
           {level} Programs ({filtered.length})
         </Badge>
       </h4>
       <div className="space-y-2">
         {filtered.map((program: any, idx: number) => (
-          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors">
+          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors border-l-4 border-l-emerald-400">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-gray-900 text-sm">
@@ -426,7 +412,7 @@ function IncentiveSection({
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="font-bold text-green-700 text-sm">
+                <p className="font-bold text-emerald-700 text-sm">
                   {program.incentive_amount_max
                     ? `Up to $${program.incentive_amount_max.toLocaleString()}`
                     : program.rebate_percentage
@@ -438,7 +424,7 @@ function IncentiveSection({
                     href={program.incentive_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-0.5 justify-end mt-1"
+                    className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-0.5 justify-end mt-1"
                   >
                     Apply <ExternalLink className="h-3 w-3" />
                   </a>

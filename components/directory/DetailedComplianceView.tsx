@@ -202,52 +202,32 @@ export default function DetailedComplianceView({
   if (selectedCity) {
     return (
       <div className="mb-8 space-y-4">
-        {/* Hero Header with Gradient */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-800 rounded-2xl p-5 sm:p-8 text-white">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
-          <div className="relative">
-            <div className="flex items-center gap-2 text-teal-200 text-sm mb-2">
-              <MapPin className="h-4 w-4" />
-              <span>{selectedCounty?.county_name} County, {selectedState?.state_name}</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-              {selectedCity.city_name}
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              <Badge className="bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 backdrop-blur-sm">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                Greywater Allowed
+        {/* Hero Header */}
+        <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-8">
+          <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
+            <span>{selectedCounty?.county_name} County, {selectedState?.state_name}</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+            {selectedCity.city_name}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              Greywater Allowed
+            </Badge>
+            {stats.hasCityPolicy && (
+              <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
+                City Ordinance
               </Badge>
-              {stats.hasCityPolicy && (
-                <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
-                  City Ordinance
-                </Badge>
-              )}
-            </div>
+            )}
+          </div>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10">
-              <QuickStat
-                label="Incentive Programs"
-                value={stats.programCount}
-                icon={Banknote}
-              />
-              <QuickStat
-                label="Max Single Rebate"
-                value={stats.maxIncentive > 0 ? `$${stats.maxIncentive.toLocaleString()}` : '-'}
-                icon={DollarSign}
-              />
-              <QuickStat
-                label="Total Potential"
-                value={stats.totalPotential > 0 ? `$${stats.totalPotential.toLocaleString()}` : '-'}
-                icon={Sparkles}
-              />
-              <QuickStat
-                label="Policy Source"
-                value={stats.hasCityPolicy ? 'City' : stats.hasCountyPolicy ? 'County' : 'State'}
-                icon={Scale}
-              />
-            </div>
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-100">
+            <QuickStat label="Incentive Programs" value={stats.programCount} />
+            <QuickStat label="Max Single Rebate" value={stats.maxIncentive > 0 ? `$${stats.maxIncentive.toLocaleString()}` : '-'} />
+            <QuickStat label="Total Potential" value={stats.totalPotential > 0 ? `$${stats.totalPotential.toLocaleString()}` : '-'} />
+            <QuickStat label="Policy Source" value={stats.hasCityPolicy ? 'City' : stats.hasCountyPolicy ? 'County' : 'State'} />
           </div>
         </div>
 
@@ -262,7 +242,7 @@ export default function DetailedComplianceView({
           <select
             value={userType}
             onChange={(e) => setUserType(e.target.value)}
-            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white font-medium text-slate-700"
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white font-medium text-gray-700"
           >
             {userTypeOptions.map(option => (
               <option key={option.value} value={option.value}>
@@ -282,23 +262,21 @@ export default function DetailedComplianceView({
         <CollapsibleSection
           title="Policy Hierarchy"
           icon={Layers}
-          accentColor="blue"
-          summary={`${selectedState?.state_name} → ${selectedCounty?.county_name} → ${selectedCity.city_name}`}
+          accentColor="slate"
+          summary={`${selectedState?.state_name} → ${selectedCounty?.county_name} County → ${selectedCity.city_name}`}
           defaultOpen={false}
         >
           <div className="space-y-3 pt-4">
             <PolicyLevelCard
               level="State"
               name={selectedState?.state_name || ''}
-              color="blue"
               hasPolicy={!!selectedState?.has_greywater_policy}
               programCount={complianceData?.state?.incentive_count}
               summary={selectedState?.regulation_summary}
             />
             <PolicyLevelCard
               level="County"
-              name={selectedCounty?.county_name || ''}
-              color="purple"
+              name={`${selectedCounty?.county_name} County` || ''}
               hasPolicy={selectedCounty?.has_greywater_policy === 1}
               programCount={complianceData?.county?.incentive_count}
               summary={selectedCounty?.regulation_summary}
@@ -306,7 +284,6 @@ export default function DetailedComplianceView({
             <PolicyLevelCard
               level="City"
               name={selectedCity.city_name || ''}
-              color="teal"
               hasPolicy={selectedCity.has_greywater_policy === 1}
               programCount={complianceData?.city?.incentive_count}
               summary={selectedCity.regulation_summary}
@@ -337,7 +314,7 @@ export default function DetailedComplianceView({
           <CollapsibleSection
             title={`${sectorView === 'residential' ? 'Residential' : 'Commercial'} Requirements`}
             icon={sectorView === 'residential' ? Home : Building}
-            accentColor={sectorView === 'residential' ? 'teal' : 'purple'}
+            accentColor="slate"
             summary="Allowed sources, treatment, setbacks & more"
             defaultOpen={false}
           >
@@ -409,20 +386,15 @@ export default function DetailedComplianceView({
 // Quick stat component for hero section
 function QuickStat({
   label,
-  value,
-  icon: Icon
+  value
 }: {
   label: string
   value: string | number
-  icon: any
 }) {
   return (
     <div className="text-center">
-      <div className="flex items-center justify-center gap-1.5 text-white mb-0.5">
-        <Icon className="h-4 w-4 text-teal-200" />
-        <span className="font-bold text-xl">{value}</span>
-      </div>
-      <p className="text-xs text-teal-200">{label}</p>
+      <p className="font-bold text-xl text-gray-900">{value}</p>
+      <p className="text-xs text-gray-500">{label}</p>
     </div>
   )
 }
@@ -431,30 +403,22 @@ function QuickStat({
 function PolicyLevelCard({
   level,
   name,
-  color,
   hasPolicy,
   programCount,
   summary
 }: {
   level: string
   name: string
-  color: 'blue' | 'purple' | 'teal'
   hasPolicy: boolean
   programCount?: number
   summary?: string
 }) {
-  const colorClasses = {
-    blue: 'border-l-blue-500 bg-blue-50/50',
-    purple: 'border-l-purple-500 bg-purple-50/50',
-    teal: 'border-l-teal-500 bg-teal-50/50'
-  }
-
   return (
-    <div className={`border-l-4 ${colorClasses[color]} rounded-r-xl p-4`}>
+    <div className="border-l-4 border-l-gray-300 bg-gray-50/50 rounded-r-xl p-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{level}</span>
-          <p className="font-semibold text-slate-800">{name}</p>
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{level}</span>
+          <p className="font-semibold text-gray-800">{name}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           {hasPolicy ? (
@@ -462,19 +426,19 @@ function PolicyLevelCard({
               Active Policy
             </Badge>
           ) : (
-            <Badge variant="outline" className="text-slate-500 border-slate-300 text-xs">
+            <Badge variant="outline" className="text-gray-500 border-gray-300 text-xs">
               Follows {level === 'City' ? 'County/State' : 'State'}
             </Badge>
           )}
           {programCount && programCount > 0 && (
-            <Badge className="bg-teal-100 text-teal-700 border-teal-200 text-xs">
+            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
               {programCount} Programs
             </Badge>
           )}
         </div>
       </div>
       {summary && (
-        <p className="text-sm text-slate-600 mt-2">{summary}</p>
+        <p className="text-sm text-gray-600 mt-2">{summary}</p>
       )}
     </div>
   )
@@ -544,12 +508,12 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
       )}
 
       {laws.recent_changes && (
-        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-          <h4 className="text-sm font-semibold text-blue-800 mb-1 flex items-center gap-1.5">
+        <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+          <h4 className="text-sm font-semibold text-amber-800 mb-1 flex items-center gap-1.5">
             <Info className="h-4 w-4" />
             Recent Changes
           </h4>
-          <p className="text-sm text-blue-700">{laws.recent_changes}</p>
+          <p className="text-sm text-amber-700">{laws.recent_changes}</p>
         </div>
       )}
 
@@ -558,7 +522,7 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
           href={laws.government_website}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-700 font-medium"
+          className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
         >
           <ExternalLink className="h-4 w-4" />
           Visit Official Website
@@ -588,9 +552,9 @@ function RequirementsContent({
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
       <RegulationCard title="Allowed Sources" content={regulations.allowed_sources} icon={Check} color="emerald" />
       <RegulationCard title="Prohibited Sources" content={regulations.prohibited_sources} icon={X} color="red" />
-      <RegulationCard title="Treatment Requirements" content={regulations.treatment_requirements} icon={Droplets} color="blue" />
+      <RegulationCard title="Treatment Requirements" content={regulations.treatment_requirements} icon={Droplets} color="slate" />
       <RegulationCard title="System Size Limits" content={regulations.system_size_limits} icon={Scale} color="slate" />
-      <RegulationCard title="Setback Requirements" content={regulations.setback_requirements} icon={MapPin} color="purple" />
+      <RegulationCard title="Setback Requirements" content={regulations.setback_requirements} icon={MapPin} color="slate" />
       <RegulationCard
         title="Inspection Required"
         content={regulations.inspection_required ? 'Yes' : 'Varies by system size'}
@@ -611,16 +575,14 @@ function RegulationCard({
   title: string
   content?: string | null
   icon: any
-  color: 'emerald' | 'red' | 'blue' | 'slate' | 'purple' | 'amber'
+  color: 'emerald' | 'red' | 'slate' | 'amber'
 }) {
   if (!content) return null
 
   const colorClasses = {
     emerald: 'bg-emerald-50 border-emerald-200 text-emerald-700',
     red: 'bg-red-50 border-red-200 text-red-700',
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    slate: 'bg-slate-50 border-slate-200 text-slate-700',
-    purple: 'bg-purple-50 border-purple-200 text-purple-700',
+    slate: 'bg-gray-50 border-gray-200 text-gray-700',
     amber: 'bg-amber-50 border-amber-200 text-amber-700'
   }
 
@@ -686,33 +648,33 @@ function IncentiveProgramsContent({
   return (
     <div className="space-y-4 pt-4">
       {statePrograms.length > 0 && (
-        <IncentiveLevelSection level="State" programs={statePrograms} color="blue" />
+        <IncentiveLevelSection level="State" programs={statePrograms} />
       )}
       {countyPrograms.length > 0 && (
-        <IncentiveLevelSection level="County" programs={countyPrograms} color="purple" />
+        <IncentiveLevelSection level="County" programs={countyPrograms} />
       )}
       {cityPrograms.length > 0 && (
-        <IncentiveLevelSection level="City" programs={cityPrograms} color="teal" />
+        <IncentiveLevelSection level="City" programs={cityPrograms} />
       )}
 
       {/* Summary Card */}
-      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-5 border border-emerald-200">
-        <h4 className="font-semibold text-slate-800 mb-4">Summary</h4>
+      <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-200">
+        <h4 className="font-semibold text-gray-800 mb-4">Summary</h4>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-2xl font-bold text-slate-800">{stats.programCount}</p>
-            <p className="text-xs text-slate-500">Programs</p>
+            <p className="text-2xl font-bold text-gray-800">{stats.programCount}</p>
+            <p className="text-xs text-gray-500">Programs</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-emerald-600">${stats.maxIncentive.toLocaleString()}</p>
-            <p className="text-xs text-slate-500">Max Single</p>
+            <p className="text-xs text-gray-500">Max Single</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-emerald-600">${stats.totalPotential.toLocaleString()}</p>
-            <p className="text-xs text-slate-500">Combined Total</p>
+            <p className="text-xs text-gray-500">Combined Total</p>
           </div>
         </div>
-        <p className="text-xs text-slate-500 mt-4 text-center">
+        <p className="text-xs text-gray-500 mt-4 text-center">
           Programs may not be combinable. Check eligibility requirements.
         </p>
       </div>
@@ -723,29 +685,21 @@ function IncentiveProgramsContent({
 // Incentive level section
 function IncentiveLevelSection({
   level,
-  programs,
-  color
+  programs
 }: {
   level: string
   programs: IncentiveProgram[]
-  color: 'blue' | 'purple' | 'teal'
 }) {
-  const colorClasses = {
-    blue: { badge: 'bg-blue-100 text-blue-700 border-blue-200', border: 'border-l-blue-400' },
-    purple: { badge: 'bg-purple-100 text-purple-700 border-purple-200', border: 'border-l-purple-400' },
-    teal: { badge: 'bg-teal-100 text-teal-700 border-teal-200', border: 'border-l-teal-400' }
-  }
-
   return (
     <div>
-      <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-        <Badge className={colorClasses[color].badge}>
+      <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+        <Badge className="bg-gray-100 text-gray-700 border-gray-200">
           {level} Programs ({programs.length})
         </Badge>
       </h4>
       <div className="space-y-2">
         {programs.map((program, idx) => (
-          <div key={idx} className={`bg-white border border-slate-200 rounded-xl p-4 hover:border-slate-300 transition-colors border-l-4 ${colorClasses[color].border}`}>
+          <div key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors border-l-4 border-l-emerald-400">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-slate-800">{program.program_name || `${level} Program`}</p>
@@ -762,7 +716,7 @@ function IncentiveLevelSection({
                     href={program.incentive_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700 font-medium mt-1"
+                    className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 font-medium mt-1"
                   >
                     Apply <ExternalLink className="h-3 w-3" />
                   </a>
@@ -793,14 +747,14 @@ function PermitRequirementsContent({ permitFee }: { permitFee?: number }) {
           <p><span className="font-medium">Example:</span> Laundry-to-landscape</p>
         </div>
       </div>
-      <div className="bg-blue-50 rounded-xl p-5 border border-blue-200">
+      <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <FileText className="h-4 w-4 text-blue-600" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <FileText className="h-4 w-4 text-gray-600" />
           </div>
-          <h4 className="font-semibold text-blue-800">Standard Systems</h4>
+          <h4 className="font-semibold text-gray-800">Standard Systems</h4>
         </div>
-        <div className="space-y-1.5 text-sm text-blue-900">
+        <div className="space-y-1.5 text-sm text-gray-700">
           <p><span className="font-medium">Permit:</span> Required</p>
           <p><span className="font-medium">Fee:</span> ${permitFee || '150-500'}</p>
           <p><span className="font-medium">Time:</span> 2-4 weeks</p>
@@ -838,27 +792,23 @@ function CountyLevelView({
   return (
     <div className="mb-8 space-y-4">
       {/* Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 rounded-2xl p-5 sm:p-8 text-white">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
-        <div className="relative">
-          <div className="flex items-center gap-2 text-purple-200 text-sm mb-2">
-            <MapPin className="h-4 w-4" />
-            <span>{selectedState?.state_name}</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-            {selectedCounty.county_name} County
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            <Badge className="bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 backdrop-blur-sm">
-              <CheckCircle className="h-3 w-3 mr-1" />
-              Greywater Allowed
+      <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-8">
+        <div className="text-gray-500 text-sm mb-2">
+          {selectedState?.state_name}
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+          {selectedCounty.county_name} County
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Greywater Allowed
+          </Badge>
+          {selectedCounty.city_count && (
+            <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
+              {selectedCounty.city_count} Cities
             </Badge>
-            {selectedCounty.city_count && (
-              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
-                {selectedCounty.city_count} Cities
-              </Badge>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
@@ -866,22 +816,20 @@ function CountyLevelView({
       <CollapsibleSection
         title="Policy Framework"
         icon={Layers}
-        accentColor="purple"
+        accentColor="slate"
         defaultOpen={true}
       >
         <div className="space-y-3 pt-4">
           <PolicyLevelCard
             level="State"
             name={selectedState?.state_name || ''}
-            color="blue"
             hasPolicy={!!selectedState?.has_greywater_policy}
             programCount={complianceData?.state?.incentive_count}
             summary={selectedState?.regulation_summary}
           />
           <PolicyLevelCard
             level="County"
-            name={selectedCounty.county_name || ''}
-            color="purple"
+            name={`${selectedCounty.county_name} County` || ''}
             hasPolicy={selectedCounty.has_greywater_policy === 1}
             programCount={complianceData?.county?.incentive_count}
             summary={selectedCounty.regulation_summary}
@@ -891,27 +839,17 @@ function CountyLevelView({
 
       {/* Compliance by Sector */}
       <div className="grid sm:grid-cols-2 gap-4">
-        <div className="bg-white border border-slate-200 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-2 bg-teal-50 rounded-lg">
-              <Home className="h-4 w-4 text-teal-600" />
-            </div>
-            <h3 className="font-semibold text-slate-800">Residential</h3>
-          </div>
-          <p className="text-sm text-slate-600">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="font-semibold text-gray-800 mb-2">Residential</h3>
+          <p className="text-sm text-gray-600">
             {selectedCounty.has_greywater_policy === 1
               ? 'County-specific residential requirements apply'
               : 'Follows state residential guidelines'}
           </p>
         </div>
-        <div className="bg-white border border-slate-200 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-2 bg-purple-50 rounded-lg">
-              <Building className="h-4 w-4 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-slate-800">Commercial</h3>
-          </div>
-          <p className="text-sm text-slate-600">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="font-semibold text-gray-800 mb-2">Commercial</h3>
+          <p className="text-sm text-gray-600">
             Commercial systems require county review and approval
           </p>
         </div>
@@ -933,35 +871,31 @@ function StateLevelView({
   return (
     <div className="mb-8 space-y-4">
       {/* Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-5 sm:p-8 text-white">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
-        <div className="relative">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-            {selectedState.state_name}
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {selectedState.has_greywater_policy ? (
-              <Badge className="bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 backdrop-blur-sm">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                State Policy Active
-              </Badge>
-            ) : (
-              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
-                <XCircle className="h-3 w-3 mr-1" />
-                No State Framework
-              </Badge>
-            )}
-            {selectedState.county_count && (
-              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
-                {selectedState.county_count} Counties
-              </Badge>
-            )}
-            {selectedState.city_count && (
-              <Badge className="bg-white/10 text-white border border-white/20 backdrop-blur-sm">
-                {selectedState.city_count} Cities
-              </Badge>
-            )}
-          </div>
+      <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+          {selectedState.state_name}
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {selectedState.has_greywater_policy ? (
+            <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              State Policy Active
+            </Badge>
+          ) : (
+            <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
+              No State Framework
+            </Badge>
+          )}
+          {selectedState.county_count && (
+            <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
+              {selectedState.county_count} Counties
+            </Badge>
+          )}
+          {selectedState.city_count && (
+            <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
+              {selectedState.city_count} Cities
+            </Badge>
+          )}
         </div>
       </div>
 
@@ -969,19 +903,18 @@ function StateLevelView({
       <CollapsibleSection
         title="State Policy Framework"
         icon={Scale}
-        accentColor="blue"
+        accentColor="slate"
         defaultOpen={true}
       >
         <div className="pt-4">
           <PolicyLevelCard
             level="State"
             name={selectedState.state_name || ''}
-            color="blue"
             hasPolicy={!!selectedState.has_greywater_policy}
             programCount={complianceData?.state?.incentive_count}
             summary={selectedState.regulation_summary}
           />
-          <p className="text-xs text-slate-500 mt-4">
+          <p className="text-xs text-gray-500 mt-4">
             Local jurisdictions may have additional or more restrictive requirements
           </p>
         </div>
@@ -989,27 +922,17 @@ function StateLevelView({
 
       {/* Compliance by Sector */}
       <div className="grid sm:grid-cols-2 gap-4">
-        <div className="bg-white border border-slate-200 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-2 bg-teal-50 rounded-lg">
-              <Home className="h-4 w-4 text-teal-600" />
-            </div>
-            <h3 className="font-semibold text-slate-800">Residential Framework</h3>
-          </div>
-          <p className="text-sm text-slate-600">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="font-semibold text-gray-800 mb-2">Residential Framework</h3>
+          <p className="text-sm text-gray-600">
             {selectedState.has_greywater_policy
               ? 'Statewide standards for residential greywater systems'
               : 'No statewide standards - varies by local jurisdiction'}
           </p>
         </div>
-        <div className="bg-white border border-slate-200 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-2 bg-purple-50 rounded-lg">
-              <Building className="h-4 w-4 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-slate-800">Commercial Framework</h3>
-          </div>
-          <p className="text-sm text-slate-600">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="font-semibold text-gray-800 mb-2">Commercial Framework</h3>
+          <p className="text-sm text-gray-600">
             Large commercial systems may require state-level review
           </p>
         </div>
@@ -1024,14 +947,14 @@ function getLegalStatusBadgeClass(status?: string) {
     case 'legal':
       return 'bg-emerald-100 text-emerald-700 border-emerald-200'
     case 'regulated':
-      return 'bg-blue-100 text-blue-700 border-blue-200'
+      return 'bg-gray-100 text-gray-700 border-gray-200'
     case 'highly regulated':
       return 'bg-amber-100 text-amber-700 border-amber-200'
     case 'limited/unclear':
     case 'prohibited':
       return 'bg-red-100 text-red-700 border-red-200'
     default:
-      return 'bg-slate-100 text-slate-700 border-slate-200'
+      return 'bg-gray-100 text-gray-700 border-gray-200'
   }
 }
 

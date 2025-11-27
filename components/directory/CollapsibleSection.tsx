@@ -13,34 +13,16 @@ interface CollapsibleSectionProps {
   children: ReactNode
   defaultOpen?: boolean
   variant?: 'default' | 'card' | 'minimal' | 'elevated'
-  accentColor?: 'teal' | 'emerald' | 'blue' | 'purple' | 'amber' | 'slate'
+  accentColor?: 'emerald' | 'amber' | 'slate'
   className?: string
 }
 
 const accentStyles = {
-  teal: {
-    border: 'border-l-teal-500',
-    iconBg: 'bg-teal-50',
-    iconColor: 'text-teal-600',
-    hoverBg: 'hover:bg-teal-50/50'
-  },
   emerald: {
     border: 'border-l-emerald-500',
     iconBg: 'bg-emerald-50',
     iconColor: 'text-emerald-600',
     hoverBg: 'hover:bg-emerald-50/50'
-  },
-  blue: {
-    border: 'border-l-blue-500',
-    iconBg: 'bg-blue-50',
-    iconColor: 'text-blue-600',
-    hoverBg: 'hover:bg-blue-50/50'
-  },
-  purple: {
-    border: 'border-l-purple-500',
-    iconBg: 'bg-purple-50',
-    iconColor: 'text-purple-600',
-    hoverBg: 'hover:bg-purple-50/50'
   },
   amber: {
     border: 'border-l-amber-500',
@@ -49,10 +31,10 @@ const accentStyles = {
     hoverBg: 'hover:bg-amber-50/50'
   },
   slate: {
-    border: 'border-l-slate-400',
-    iconBg: 'bg-slate-100',
-    iconColor: 'text-slate-600',
-    hoverBg: 'hover:bg-slate-50/50'
+    border: 'border-l-gray-300',
+    iconBg: 'bg-gray-100',
+    iconColor: 'text-gray-600',
+    hoverBg: 'hover:bg-gray-50/50'
   }
 }
 
@@ -65,17 +47,17 @@ export default function CollapsibleSection({
   children,
   defaultOpen = false,
   variant = 'default',
-  accentColor = 'teal',
+  accentColor = 'slate',
   className
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const accent = accentStyles[accentColor]
 
   const baseStyles = {
-    default: 'bg-white border border-slate-200 rounded-xl overflow-hidden',
-    card: 'bg-white border border-slate-200 rounded-xl overflow-hidden',
-    minimal: 'border-b border-slate-200',
-    elevated: 'bg-white border border-slate-200 rounded-xl overflow-hidden'
+    default: 'bg-white border border-gray-200 rounded-xl overflow-hidden',
+    card: 'bg-white border border-gray-200 rounded-xl overflow-hidden',
+    minimal: 'border-b border-gray-200',
+    elevated: 'bg-white border border-gray-200 rounded-xl overflow-hidden'
   }
 
   const headerStyles = {
@@ -110,21 +92,21 @@ export default function CollapsibleSection({
           )}
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-slate-800 text-sm sm:text-base">{title}</h3>
+              <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{title}</h3>
               {badge}
             </div>
             {summary && !isOpen && (
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5 truncate">{summary}</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-0.5 truncate">{summary}</p>
             )}
           </div>
         </div>
         <div className={cn(
           'p-1.5 rounded-full transition-colors ml-2',
-          isOpen ? 'bg-slate-100' : 'bg-transparent'
+          isOpen ? 'bg-gray-100' : 'bg-transparent'
         )}>
           <ChevronDown
             className={cn(
-              'h-4 w-4 sm:h-5 sm:w-5 text-slate-400 transition-transform duration-200',
+              'h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-200',
               isOpen && 'rotate-180'
             )}
           />
@@ -138,7 +120,7 @@ export default function CollapsibleSection({
         )}
       >
         <div className={cn(
-          variant === 'minimal' ? 'pb-4' : 'px-4 pb-5 sm:px-5 sm:pb-6 border-t border-slate-100 bg-slate-50/30'
+          variant === 'minimal' ? 'pb-4' : 'px-4 pb-5 sm:px-5 sm:pb-6 border-t border-gray-100 bg-gray-50/30'
         )}>
           {children}
         </div>
@@ -167,7 +149,7 @@ export function InlineCollapsible({
     <div className={className}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-700 transition-colors font-medium"
+        className="flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium"
       >
         <ChevronDown
           className={cn(
