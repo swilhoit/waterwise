@@ -758,35 +758,53 @@ export default function SimpleDirectoryView({
 
         {/* County Incentives - if available */}
         {countyIncentives.length > 0 && (
-          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 mb-6">
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-emerald-600" />
+              <DollarSign className="h-5 w-5 text-gray-400" />
               County Rebates & Incentives
+              <span className="text-sm font-normal text-gray-500">({countyIncentives.length})</span>
             </h2>
             <div className="space-y-4">
               {countyIncentives.map((incentive: any, idx: number) => (
-                <div key={idx} className="bg-white rounded-lg p-4 border border-emerald-100">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-gray-900">{incentive.program_name}</h3>
+                <div key={idx} className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
+                      <div className="flex gap-2 mt-1">
+                        {incentive.residential_eligible && (
+                          <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
+                        )}
+                        {incentive.commercial_eligible && (
+                          <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
+                        )}
+                        {incentive.applicant_type === 'business' && !incentive.residential_eligible && (
+                          <Badge className="bg-amber-100 text-amber-700 text-xs">Business Only</Badge>
+                        )}
+                      </div>
+                    </div>
                     {(incentive.incentive_amount_max || incentive.max_funding_per_application) && (
-                      <span className="text-emerald-600 font-bold">
-                        Up to ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
-                      </span>
+                      <div className="text-right">
+                        <span className="text-emerald-600 font-bold text-lg">
+                          Up to ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
+                        </span>
+                      </div>
                     )}
                   </div>
                   {incentive.program_description && (
-                    <p className="text-sm text-gray-600 mb-2">{incentive.program_description}</p>
+                    <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
                   )}
-                  {incentive.incentive_url && (
-                    <a
-                      href={incentive.incentive_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
-                    >
-                      <ExternalLink className="h-3 w-3" /> Apply Now
-                    </a>
-                  )}
+                  <div className="flex items-center gap-4 pt-3 border-t border-emerald-200 text-sm">
+                    {incentive.incentive_url && (
+                      <a
+                        href={incentive.incentive_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3 w-3" /> Apply
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -1029,6 +1047,7 @@ export default function SimpleDirectoryView({
               <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-gray-400" />
                 Available Rebates
+                <span className="text-sm font-normal text-gray-500">({allIncentives.length})</span>
               </h2>
               {/* Property Type Filter */}
               <div className="flex bg-gray-100 rounded-lg p-1">
@@ -1069,8 +1088,9 @@ export default function SimpleDirectoryView({
               {allIncentives
                 .filter((program: any) => {
                   if (propertyTypeFilter === 'all') return true;
-                  if (propertyTypeFilter === 'residential') return program.residential_eligible !== false;
-                  if (propertyTypeFilter === 'commercial') return program.commercial_eligible !== false;
+                  // Strict filtering: only show if explicitly eligible
+                  if (propertyTypeFilter === 'residential') return program.residential_eligible === true;
+                  if (propertyTypeFilter === 'commercial') return program.commercial_eligible === true;
                   return true;
                 })
                 .map((program: any, idx: number) => (
@@ -1084,6 +1104,9 @@ export default function SimpleDirectoryView({
                         )}
                         {program.commercial_eligible && (
                           <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
+                        )}
+                        {program.applicant_type === 'business' && !program.residential_eligible && (
+                          <Badge className="bg-amber-100 text-amber-700 text-xs">Business Only</Badge>
                         )}
                       </div>
                     </div>
