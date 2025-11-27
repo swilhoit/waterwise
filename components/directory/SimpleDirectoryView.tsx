@@ -108,6 +108,7 @@ export default function SimpleDirectoryView({
   const [showAllCities, setShowAllCities] = useState(false)
   const [viewMode, setViewMode] = useState<'cities' | 'counties'>('cities')
   const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'residential' | 'commercial'>('all')
+  const [programTypeFilter, setProgramTypeFilter] = useState<'all' | 'rebates' | 'tax' | 'grants'>('all')
   const INITIAL_CITIES_SHOWN = 50
 
   // Top California cities by population (for sorting)
@@ -770,7 +771,18 @@ export default function SimpleDirectoryView({
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
-                      <div className="flex gap-2 mt-1">
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {/* Program Type Badge */}
+                        {incentive.incentive_type === 'rebate' && (
+                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">Rebate</Badge>
+                        )}
+                        {incentive.incentive_type === 'tax_credit' && (
+                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
+                        )}
+                        {incentive.incentive_type === 'grant' && (
+                          <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
+                        )}
+                        {/* Property Type Badges */}
                         {incentive.residential_eligible && (
                           <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
                         )}
@@ -1054,51 +1066,110 @@ export default function SimpleDirectoryView({
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-gray-400" />
-                Available Rebates
+                Incentives & Programs
                 <span className="text-sm font-normal text-gray-500">({allIncentives.length})</span>
               </h2>
+            </div>
+
+            {/* Filters Row */}
+            <div className="flex flex-wrap gap-4 mb-4 pb-4 border-b border-gray-100">
               {/* Property Type Filter */}
-              <div className="flex bg-gray-100 rounded-lg p-1">
-                <button
-                  onClick={() => setPropertyTypeFilter('all')}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                    propertyTypeFilter === 'all'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setPropertyTypeFilter('residential')}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                    propertyTypeFilter === 'residential'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Residential
-                </button>
-                <button
-                  onClick={() => setPropertyTypeFilter('commercial')}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                    propertyTypeFilter === 'commercial'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Commercial
-                </button>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500 uppercase tracking-wide">For:</span>
+                <div className="flex bg-gray-100 rounded-lg p-0.5">
+                  <button
+                    onClick={() => setPropertyTypeFilter('all')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      propertyTypeFilter === 'all'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    onClick={() => setPropertyTypeFilter('residential')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      propertyTypeFilter === 'residential'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Residential
+                  </button>
+                  <button
+                    onClick={() => setPropertyTypeFilter('commercial')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      propertyTypeFilter === 'commercial'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Commercial
+                  </button>
+                </div>
+              </div>
+
+              {/* Program Type Filter */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500 uppercase tracking-wide">Type:</span>
+                <div className="flex bg-gray-100 rounded-lg p-0.5">
+                  <button
+                    onClick={() => setProgramTypeFilter('all')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      programTypeFilter === 'all'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    onClick={() => setProgramTypeFilter('rebates')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      programTypeFilter === 'rebates'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Rebates
+                  </button>
+                  <button
+                    onClick={() => setProgramTypeFilter('tax')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      programTypeFilter === 'tax'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Tax Credits
+                  </button>
+                  <button
+                    onClick={() => setProgramTypeFilter('grants')}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                      programTypeFilter === 'grants'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Grants
+                  </button>
+                </div>
               </div>
             </div>
 
             <div className="space-y-4">
               {allIncentives
                 .filter((program: any) => {
-                  if (propertyTypeFilter === 'all') return true;
-                  // Strict filtering: only show if explicitly eligible
-                  if (propertyTypeFilter === 'residential') return program.residential_eligible === true;
-                  if (propertyTypeFilter === 'commercial') return program.commercial_eligible === true;
+                  // Property type filter
+                  if (propertyTypeFilter === 'residential' && program.residential_eligible !== true) return false;
+                  if (propertyTypeFilter === 'commercial' && program.commercial_eligible !== true) return false;
+
+                  // Program type filter
+                  if (programTypeFilter === 'rebates' && !['rebate', 'subsidy'].includes(program.incentive_type)) return false;
+                  if (programTypeFilter === 'tax' && !['tax_credit', 'tax_exemption'].includes(program.incentive_type)) return false;
+                  if (programTypeFilter === 'grants' && !['grant'].includes(program.incentive_type)) return false;
+
                   return true;
                 })
                 .map((program: any, idx: number) => (
@@ -1106,7 +1177,24 @@ export default function SimpleDirectoryView({
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <p className="font-semibold text-gray-900">{program.program_name || 'Rebate Program'}</p>
-                      <div className="flex gap-2 mt-1">
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {/* Program Type Badge */}
+                        {program.incentive_type === 'rebate' && (
+                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">Rebate</Badge>
+                        )}
+                        {program.incentive_type === 'tax_credit' && (
+                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
+                        )}
+                        {program.incentive_type === 'tax_exemption' && (
+                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
+                        )}
+                        {program.incentive_type === 'grant' && (
+                          <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
+                        )}
+                        {program.incentive_type === 'subsidy' && (
+                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">Subsidy</Badge>
+                        )}
+                        {/* Property Type Badges */}
                         {program.residential_eligible && (
                           <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
                         )}
