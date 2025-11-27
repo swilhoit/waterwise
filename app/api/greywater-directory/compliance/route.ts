@@ -108,27 +108,75 @@ export async function GET(request: NextRequest) {
         location: 'US'
       });
 
+      // City abbreviation mappings for filtering
+      const cityAbbreviations: {[key: string]: string[]} = {
+        'los angeles': ['LADWP', 'LA_'],
+        'san francisco': ['SF_', 'SAN_FRANCISCO'],
+        'san diego': ['SD_', 'SAN_DIEGO'],
+        'santa monica': ['SM_', 'SANTA_MONICA'],
+        'glendale': ['GLENDALE'],
+        'bakersfield': ['BAKERSFIELD'],
+        'corona': ['CORONA'],
+        'fresno': ['FRESNO'],
+        'austin': ['AUSTIN'],
+        'las vegas': ['VEGAS', 'LAS_VEGAS'],
+        'salt lake': ['SLC_', 'SALT_LAKE'],
+        'albuquerque': ['ABQ_', 'ALBUQUERQUE'],
+      };
+
+      // Check if a program is city-specific
+      const isCitySpecificProgram = (pid: string) => {
+        for (const [cityName, abbrevs] of Object.entries(cityAbbreviations)) {
+          for (const abbrev of abbrevs) {
+            if (pid.includes(abbrev)) return cityName;
+          }
+        }
+        // Also check for _CITY_ pattern
+        if (pid.includes('_CITY_')) return 'unknown';
+        return null;
+      };
+
+      // Check if program is for a different state
+      const isOtherState = (pid: string) => {
+        const otherStates = ['TX_', 'NV_', 'UT_', 'NM_', 'AZ_', 'OR_', 'WA_', 'CO_'];
+        return otherStates.some(s => pid.startsWith(s));
+      };
+
       // Filter to relevant jurisdictions
       incentivePrograms = rows.filter((p: any) => {
         const pid = p.program_id?.toUpperCase() || '';
         const notes = p.notes?.toLowerCase() || '';
+        const cityLower = city?.toLowerCase() || '';
+        const countyLower = county?.toLowerCase() || '';
+
+        // Skip programs from other states
+        if (isOtherState(pid)) return false;
+
+        // Check if this is a city-specific program
+        const cityFor = isCitySpecificProgram(pid);
+        if (cityFor) {
+          // Only include if it matches the current city
+          return cityLower === cityFor || cityLower.includes(cityFor) || cityFor.includes(cityLower);
+        }
 
         // Match MWD programs for LA County
-        if (pid.includes('MWD') && county?.toLowerCase() === 'los angeles') return true;
+        if (pid.includes('MWD') && countyLower === 'los angeles') return true;
 
         // Match county-specific programs
         if (county && (
           pid.includes(`_COUNTY_${county.toUpperCase().replace(/\s+/g, '_')}`) ||
-          notes.includes(county.toLowerCase())
+          (notes.includes(countyLower) && !isCitySpecificProgram(pid))
         )) return true;
 
-        // Match city-specific programs
-        if (city && pid.includes(`_CITY_${city.toUpperCase().replace(/\s+/g, '_')}`)) return true;
+        // Match true state-level programs (general California programs)
+        const isGeneralStateProgram = pid.startsWith('CA_') &&
+          !isCitySpecificProgram(pid) &&
+          !pid.includes('_COUNTY_') &&
+          (pid.includes('DWR') || pid.includes('WATER_EFFICIENCY') || pid.includes('TAX_CREDIT') ||
+           pid.includes('DROUGHT') || pid.includes('CALRECYCLE') || pid.includes('CPUC') ||
+           pid.includes('AFFORDABLE_HOUSING') || pid.includes('AGRICULTURAL') || pid.includes('SAVE_OUR_WATER'));
 
-        // Match state-level programs (no county/city in ID)
-        if (!pid.includes('_COUNTY_') && !pid.includes('_CITY_') && !pid.includes('MWD')) return true;
-
-        return false;
+        return isGeneralStateProgram;
       });
 
     } catch (error) {
@@ -219,6 +267,29 @@ export async function GET(request: NextRequest) {
       seenPrograms.set(program.program_name, program);
     });
     
+    // City abbreviation mappings for assignment
+    const cityAbbrevAssign: {[key: string]: string[]} = {
+      'los angeles': ['LADWP', 'LA_'],
+      'san francisco': ['SF_', 'SAN_FRANCISCO'],
+      'san diego': ['SD_', 'SAN_DIEGO'],
+      'santa monica': ['SM_', 'SANTA_MONICA'],
+      'glendale': ['GLENDALE'],
+      'bakersfield': ['BAKERSFIELD'],
+      'corona': ['CORONA'],
+      'fresno': ['FRESNO'],
+    };
+
+    // Check if program is for a specific city
+    const getCityForProgram = (pid: string) => {
+      for (const [cityName, abbrevs] of Object.entries(cityAbbrevAssign)) {
+        for (const abbrev of abbrevs) {
+          if (pid.includes(abbrev)) return cityName;
+        }
+      }
+      if (pid.includes('_CITY_')) return 'city_specific';
+      return null;
+    };
+
     // Process and assign incentives to appropriate levels
     Array.from(seenPrograms.values()).forEach(program => {
       const formattedProgram = {
@@ -240,7 +311,20 @@ export async function GET(request: NextRequest) {
       const pid = program.program_id?.toUpperCase() || '';
       const notes = program.notes?.toLowerCase() || '';
       const countyUpper = county?.toUpperCase().replace(/\s+/g, '_') || '';
-      const cityUpper = city?.toUpperCase().replace(/\s+/g, '_') || '';
+      const cityLower = city?.toLowerCase() || '';
+
+      // Check if this is a city-specific program
+      const programCityFor = getCityForProgram(pid);
+
+      // Assign city-specific programs to city level if city matches
+      if (programCityFor && city && compliance.city) {
+        if (cityLower === programCityFor || cityLower.includes(programCityFor) || programCityFor.includes(cityLower)) {
+          compliance.city.incentives.push(formattedProgram);
+          compliance.city.incentive_count++;
+          compliance.city.max_incentive = Math.max(compliance.city.max_incentive || 0, program.incentive_amount_max || 0);
+          return; // Don't assign elsewhere
+        }
+      }
 
       // Assign MWD programs to county level for LA County
       if (pid.includes('MWD') && county?.toLowerCase() === 'los angeles' && compliance.county) {
@@ -251,20 +335,14 @@ export async function GET(request: NextRequest) {
       // Assign county-specific programs to county level
       else if (county && compliance.county && (
         pid.includes(`_COUNTY_${countyUpper}`) ||
-        (notes.includes(county.toLowerCase()) && !pid.includes('_CITY_'))
+        (notes.includes(county.toLowerCase()) && !programCityFor)
       )) {
         compliance.county.incentives.push(formattedProgram);
         compliance.county.incentive_count++;
         compliance.county.max_incentive = Math.max(compliance.county.max_incentive || 0, program.incentive_amount_max || 0);
       }
-      // Assign city programs to city level
-      else if (city && compliance.city && pid.includes(`_CITY_${cityUpper}`)) {
-        compliance.city.incentives.push(formattedProgram);
-        compliance.city.incentive_count++;
-        compliance.city.max_incentive = Math.max(compliance.city.max_incentive || 0, program.incentive_amount_max || 0);
-      }
-      // Assign state-level programs (no county/city in ID)
-      else if (compliance.state && !pid.includes('_COUNTY_') && !pid.includes('_CITY_') && !pid.includes('MWD')) {
+      // Assign state-level programs (no county/city specificity)
+      else if (compliance.state && !programCityFor && !pid.includes('_COUNTY_') && !pid.includes('MWD')) {
         compliance.state.incentives.push(formattedProgram);
         compliance.state.incentive_count++;
         compliance.state.max_incentive = Math.max(compliance.state.max_incentive || 0, program.incentive_amount_max || 0);
