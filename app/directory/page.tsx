@@ -32,6 +32,7 @@ async function getStatesData() {
         FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
         GROUP BY state_code
       ) c ON s.state_code = c.state_code
+      WHERE s.resource_type = 'greywater'
       ORDER BY s.state_name
     `
 

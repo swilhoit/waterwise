@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
     switch (level) {
       case 'states':
         // Optimized query: JOIN states with counts in a single query
+        // Filter by resource_type='greywater' to avoid duplicates (table has rows for greywater and rainwater)
         const stateQuery = `
           SELECT
             s.state_code,
@@ -79,6 +80,7 @@ export async function GET(request: NextRequest) {
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
             GROUP BY state_code
           ) c ON s.state_code = c.state_code
+          WHERE s.resource_type = 'greywater'
           ORDER BY s.state_name
         `;
 

@@ -4,14 +4,14 @@ import { getBigQueryClient } from '@/lib/bigquery';
 // Valid resource types
 const VALID_RESOURCE_TYPES = ['greywater', 'rainwater', 'conservation', 'all'];
 
-// GET compliance data with real incentives from database
+// GET compliance data with bulletproof jurisdiction-based program matching
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const state = searchParams.get('state');
     const county = searchParams.get('county');
     const city = searchParams.get('city');
-    const resourceType = searchParams.get('resource_type') || 'all'; // Default to all for comprehensive view
+    const resourceType = searchParams.get('resource_type') || 'all';
 
     if (!state) {
       return NextResponse.json({
@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Validate resource_type
     if (!VALID_RESOURCE_TYPES.includes(resourceType)) {
       return NextResponse.json({
         status: 'error',
@@ -30,17 +29,21 @@ export async function GET(request: NextRequest) {
 
     const bigquery = getBigQueryClient();
 
-    const stateJurisdictionId = `STATE_${state}`;
-    const countyJurisdictionId = county ? `COUNTY_${state}_${county.replace(/\s+/g, '_')}` : '';
-    // For cities, check both formats - with and without underscores
-    const cityJurisdictionId = city ? `CITY_${state}_${city}` : '';
-    const cityJurisdictionIdAlt = city ? `CITY_${state}_${city.replace(/\s+/g, '_')}` : '';
+    // Build jurisdiction IDs for hierarchical lookup
+    const stateJurisdictionId = `${state}_STATE`;
+    const countyJurisdictionId = county
+      ? `${state}_COUNTY_${county.toUpperCase().replace(/\s+/g, '_')}`
+      : '';
+    const cityJurisdictionId = city
+      ? `${state}_CITY_${city.toUpperCase().replace(/\s+/g, '_')}`
+      : '';
 
-    // Query for regulations and permits
+    // Query for regulations and permits (unchanged)
     let regulationsData: any[] = [];
     try {
+      const stateJurisdictionIdOld = `STATE_${state}`;
       const regulationsQuery = `
-        SELECT 
+        SELECT
           r.jurisdiction_id,
           r.greywater_allowed,
           r.regulation_summary,
@@ -63,7 +66,7 @@ export async function GET(request: NextRequest) {
       `;
       const [rows] = await bigquery.query({
         query: regulationsQuery,
-        params: [stateJurisdictionId, countyJurisdictionId, cityJurisdictionId, cityJurisdictionIdAlt],
+        params: [stateJurisdictionIdOld, countyJurisdictionId, cityJurisdictionId, `CITY_${state}_${city}`],
         parameterMode: 'POSITIONAL'
       });
       regulationsData = rows;
@@ -71,164 +74,83 @@ export async function GET(request: NextRequest) {
       console.error('Failed to fetch regulations:', error);
     }
 
-    // First, query for any active incentive programs from programs_master
-    let incentivePrograms: any[] = [];
-    let programTiers: any[] = [];
-
-    // Build jurisdiction patterns for matching program_id
-    const countyPattern = county ? `%${state}_COUNTY_${county.toUpperCase().replace(/\s+/g, '_')}%` : '';
-    const cityPattern = city ? `%${state}_CITY_${city.toUpperCase().replace(/\s+/g, '_')}%` : '';
-
-    // Build resource type filter for programs
+    // Build resource type filter
     const resourceTypeFilter = resourceType === 'all'
       ? ''
-      : `AND (resource_type = '${resourceType}' OR resource_type IS NULL)`; // Include NULL for backward compatibility
+      : `AND (p.resource_type = '${resourceType}' OR p.resource_type IS NULL)`;
+
+    // Query programs using the junction table for bulletproof jurisdiction matching
+    let incentivePrograms: any[] = [];
+
+    // Build list of jurisdiction IDs to match (city, county, state)
+    const jurisdictionIds = [stateJurisdictionId];
+    if (countyJurisdictionId) jurisdictionIds.push(countyJurisdictionId);
+    if (cityJurisdictionId) jurisdictionIds.push(cityJurisdictionId);
 
     try {
-      // Query for all active programs - match by program_id pattern or notes containing jurisdiction
-      // Now includes proper eligibility fields and enhanced program details from database
+      // Query programs that are linked to any of the relevant jurisdictions
+      // Uses the program_jurisdiction_link table for explicit mapping
       const incentiveQuery = `
-        SELECT
-          program_id,
-          program_name,
-          program_type as incentive_type,
-          resource_type,
-          program_subtype,
-          incentive_amount_min,
-          incentive_amount_max,
-          eligible_system_types,
-          application_url,
-          program_status,
-          notes,
-          installation_requirements,
-          contact_email,
-          contact_phone,
-          applicant_type,
-          residential_eligible,
-          commercial_eligible,
-          municipal_eligible,
-          agricultural_eligible,
-          program_description,
-          eligibility_details,
-          how_to_apply,
-          documentation_required,
-          coverage_area,
-          deadline_info,
-          water_utility,
-          CASE
-            WHEN program_id LIKE '%_COUNTY_%' THEN 'county'
-            WHEN program_id LIKE '%_CITY_%' THEN 'city'
-            WHEN program_id LIKE '${state}_%' AND program_id NOT LIKE '%_COUNTY_%' AND program_id NOT LIKE '%_CITY_%' THEN 'state'
-            ELSE 'regional'
-          END as jurisdiction_level,
-          CASE
-            WHEN program_id LIKE '%MWD%' THEN 'MWD_SERVICE_AREA'
-            WHEN program_id LIKE '%_COUNTY_%' THEN REGEXP_EXTRACT(program_id, r'(${state}_COUNTY_[A-Z_]+)')
-            WHEN program_id LIKE '%_CITY_%' THEN REGEXP_EXTRACT(program_id, r'(${state}_CITY_[A-Z_]+)')
-            ELSE 'STATE_${state}'
-          END as jurisdiction_id
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\`
-        WHERE LOWER(program_status) = 'active'
-          AND (
-            program_id LIKE '${state}_%'
-            OR LOWER(notes) LIKE '%${state.toLowerCase()}%'
-          )
-          -- Filter out municipal-only and agricultural-only programs (not relevant for directory users)
-          AND (residential_eligible = TRUE OR commercial_eligible = TRUE OR applicant_type IS NULL)
+        SELECT DISTINCT
+          p.program_id,
+          p.program_name,
+          p.program_type as incentive_type,
+          p.resource_type,
+          p.program_subtype,
+          p.incentive_amount_min,
+          p.incentive_amount_max,
+          p.eligible_system_types,
+          p.application_url,
+          p.program_status,
+          p.notes,
+          p.installation_requirements,
+          p.contact_email,
+          p.contact_phone,
+          p.applicant_type,
+          p.residential_eligible,
+          p.commercial_eligible,
+          p.municipal_eligible,
+          p.agricultural_eligible,
+          p.program_description,
+          p.eligibility_details,
+          p.how_to_apply,
+          p.documentation_required,
+          p.coverage_area,
+          p.deadline_info,
+          p.water_utility,
+          pjl.jurisdiction_id as linked_jurisdiction_id,
+          pjl.coverage_type
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\` p
+        JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` pjl
+          ON p.program_id = pjl.program_id
+        WHERE LOWER(p.program_status) = 'active'
+          AND pjl.jurisdiction_id IN UNNEST(@jurisdiction_ids)
+          AND (p.residential_eligible = TRUE OR p.commercial_eligible = TRUE OR p.applicant_type IS NULL)
           ${resourceTypeFilter}
+        ORDER BY p.program_name
       `;
 
       const [rows] = await bigquery.query({
         query: incentiveQuery,
-        location: 'US'
+        params: { jurisdiction_ids: jurisdictionIds },
+        types: { jurisdiction_ids: ['STRING'] }
       });
 
-      // City abbreviation mappings for filtering
-      const cityAbbreviations: {[key: string]: string[]} = {
-        'los angeles': ['LADWP', 'LA_'],
-        'san francisco': ['SF_', 'SAN_FRANCISCO'],
-        'san diego': ['SD_', 'SAN_DIEGO'],
-        'santa monica': ['SM_', 'SANTA_MONICA'],
-        'glendale': ['GLENDALE'],
-        'bakersfield': ['BAKERSFIELD'],
-        'corona': ['CORONA'],
-        'fresno': ['FRESNO'],
-        'austin': ['AUSTIN'],
-        'las vegas': ['VEGAS', 'LAS_VEGAS'],
-        'salt lake': ['SLC_', 'SALT_LAKE'],
-        'albuquerque': ['ABQ_', 'ALBUQUERQUE'],
-      };
-
-      // Check if a program is city-specific
-      const isCitySpecificProgram = (pid: string) => {
-        for (const [cityName, abbrevs] of Object.entries(cityAbbreviations)) {
-          for (const abbrev of abbrevs) {
-            if (pid.includes(abbrev)) return cityName;
-          }
-        }
-        // Also check for _CITY_ pattern
-        if (pid.includes('_CITY_')) return 'unknown';
-        return null;
-      };
-
-      // Check if program is for a different state than the one being queried
-      const isOtherState = (pid: string, currentState: string) => {
-        // Common state prefixes - if the program starts with a different state prefix, skip it
-        const stateMatch = pid.match(/^([A-Z]{2})_/);
-        if (stateMatch && stateMatch[1] !== currentState.toUpperCase()) {
-          return true;
-        }
-        return false;
-      };
-
-      // Filter to relevant jurisdictions
-      incentivePrograms = rows.filter((p: any) => {
-        const pid = p.program_id?.toUpperCase() || '';
-        const notes = p.notes?.toLowerCase() || '';
-        const cityLower = city?.toLowerCase() || '';
-        const countyLower = county?.toLowerCase() || '';
-        const stateUpper = state.toUpperCase();
-
-        // Skip programs from other states
-        if (isOtherState(pid, state)) return false;
-
-        // Check if this is a city-specific program
-        const cityFor = isCitySpecificProgram(pid);
-        if (cityFor) {
-          // Only include if it matches the current city
-          return cityLower === cityFor || cityLower.includes(cityFor) || cityFor.includes(cityLower);
-        }
-
-        // Match MWD programs for LA County (California-specific)
-        if (state.toUpperCase() === 'CA' && pid.includes('MWD') && countyLower === 'los angeles') return true;
-
-        // Match county-specific programs
-        if (county && (
-          pid.includes(`_COUNTY_${county.toUpperCase().replace(/\s+/g, '_')}`) ||
-          (notes.includes(countyLower) && !isCitySpecificProgram(pid))
-        )) return true;
-
-        // Match true state-level programs (general programs for the requested state)
-        const isGeneralStateProgram = pid.startsWith(`${stateUpper}_`) &&
-          !isCitySpecificProgram(pid) &&
-          !pid.includes('_COUNTY_');
-
-        return isGeneralStateProgram;
-      });
-
+      incentivePrograms = rows;
+      console.log(`Found ${incentivePrograms.length} programs for jurisdictions:`, jurisdictionIds);
     } catch (error) {
       console.error('Failed to fetch incentives:', error);
     }
 
-    // Build compliance response with real jurisdiction IDs
+    // Build compliance response
     const compliance: any = {};
-    
+
     const getRegulationFor = (jurisdictionId: string, altId: string = '') => {
       return regulationsData.find(r => r.jurisdiction_id === jurisdictionId || (altId && r.jurisdiction_id === altId)) || {};
     }
 
-    // State level - always include
-    const stateRegs = getRegulationFor(stateJurisdictionId);
+    // State level
+    const stateRegs = getRegulationFor(`STATE_${state}`);
     compliance.state = {
       compliance_level: 'State',
       state_code: state,
@@ -247,8 +169,8 @@ export async function GET(request: NextRequest) {
       incentive_count: 0,
       max_incentive: null
     };
-    
-    // County level if requested
+
+    // County level
     if (county) {
       const countyRegs = getRegulationFor(countyJurisdictionId);
       compliance.county = {
@@ -270,17 +192,17 @@ export async function GET(request: NextRequest) {
         max_incentive: null
       };
     }
-    
-    // City level if requested
+
+    // City level
     if (city) {
-      const cityRegs = getRegulationFor(cityJurisdictionId, cityJurisdictionIdAlt);
+      const cityRegs = getRegulationFor(cityJurisdictionId);
       compliance.city = {
         compliance_level: 'City',
         state_code: state,
         state_name: state,
         county_name: county || '',
         city_name: city,
-        jurisdiction_id: cityRegs.jurisdiction_id || cityJurisdictionId,
+        jurisdiction_id: cityJurisdictionId,
         greywater_allowed: cityRegs.greywater_allowed ?? true,
         permit_required: cityRegs.permit_required ?? null,
         permit_type: cityRegs.permit_type,
@@ -293,51 +215,26 @@ export async function GET(request: NextRequest) {
         max_incentive: null
       };
     }
-    
-    // Deduplicate programs by program_name
+
+    // Deduplicate and assign programs to appropriate compliance levels
     const seenPrograms = new Map<string, any>();
+
     incentivePrograms.forEach(program => {
-      // Skip if we've already seen this program name
-      if (seenPrograms.has(program.program_name)) {
-        return;
+      const existing = seenPrograms.get(program.program_name);
+      if (!existing) {
+        seenPrograms.set(program.program_name, program);
       }
-      seenPrograms.set(program.program_name, program);
     });
-    
-    // City abbreviation mappings for assignment
-    const cityAbbrevAssign: {[key: string]: string[]} = {
-      'los angeles': ['LADWP', 'LA_'],
-      'san francisco': ['SF_', 'SAN_FRANCISCO'],
-      'san diego': ['SD_', 'SAN_DIEGO'],
-      'santa monica': ['SM_', 'SANTA_MONICA'],
-      'glendale': ['GLENDALE'],
-      'bakersfield': ['BAKERSFIELD'],
-      'corona': ['CORONA'],
-      'fresno': ['FRESNO'],
-    };
 
-    // Check if program is for a specific city
-    const getCityForProgram = (pid: string) => {
-      for (const [cityName, abbrevs] of Object.entries(cityAbbrevAssign)) {
-        for (const abbrev of abbrevs) {
-          if (pid.includes(abbrev)) return cityName;
-        }
-      }
-      if (pid.includes('_CITY_')) return 'city_specific';
-      return null;
-    };
-
-    // Process and assign incentives to appropriate levels
-    // Now uses database eligibility fields instead of text parsing
+    // Process and assign incentives based on their linked jurisdiction
     Array.from(seenPrograms.values()).forEach(program => {
-      // Use database values - if null/undefined, fallback to true (legacy data)
       const residentialEligible = program.residential_eligible ?? true;
       const commercialEligible = program.commercial_eligible ?? true;
 
       const formattedProgram = {
         program_name: program.program_name,
         incentive_type: program.incentive_type,
-        resource_type: program.resource_type || 'greywater', // Default to greywater for legacy programs
+        resource_type: program.resource_type || 'greywater',
         program_subtype: program.program_subtype,
         water_utility: program.water_utility,
         incentive_amount_min: program.incentive_amount_min,
@@ -345,7 +242,6 @@ export async function GET(request: NextRequest) {
         eligibility_requirements: program.eligible_system_types,
         incentive_url: program.application_url,
         program_status: program.program_status,
-        // Use enriched program_description if available, fall back to notes
         program_description: program.program_description || program.notes,
         max_funding_per_application: program.incentive_amount_max,
         installation_requirements: program.installation_requirements,
@@ -354,7 +250,6 @@ export async function GET(request: NextRequest) {
         residential_eligible: residentialEligible,
         commercial_eligible: commercialEligible,
         applicant_type: program.applicant_type,
-        // New enriched fields
         eligibility_details: program.eligibility_details,
         how_to_apply: program.how_to_apply,
         documentation_required: program.documentation_required,
@@ -363,50 +258,39 @@ export async function GET(request: NextRequest) {
         tiers: []
       };
 
-      const pid = program.program_id?.toUpperCase() || '';
-      const notes = program.notes?.toLowerCase() || '';
-      const countyUpper = county?.toUpperCase().replace(/\s+/g, '_') || '';
-      const cityLower = city?.toLowerCase() || '';
+      const linkedJurisdiction = program.linked_jurisdiction_id || '';
+      const coverageType = program.coverage_type || '';
 
-      // Check if this is a city-specific program
-      const programCityFor = getCityForProgram(pid);
-
-      // Assign city-specific programs to city level if city matches
-      if (programCityFor && city && compliance.city) {
-        if (cityLower === programCityFor || cityLower.includes(programCityFor) || programCityFor.includes(cityLower)) {
-          compliance.city.incentives.push(formattedProgram);
-          compliance.city.incentive_count++;
-          compliance.city.max_incentive = Math.max(compliance.city.max_incentive || 0, program.incentive_amount_max || 0);
-          return; // Don't assign elsewhere
-        }
+      // Assign to the most specific matching level
+      // City-specific programs (linked to city jurisdiction)
+      if (city && compliance.city && linkedJurisdiction === cityJurisdictionId) {
+        compliance.city.incentives.push(formattedProgram);
+        compliance.city.incentive_count++;
+        compliance.city.max_incentive = Math.max(compliance.city.max_incentive || 0, program.incentive_amount_max || 0);
       }
-
-      // Assign MWD programs to county level for LA County
-      if (pid.includes('MWD') && county?.toLowerCase() === 'los angeles' && compliance.county) {
+      // County-specific programs (linked to county jurisdiction)
+      else if (county && compliance.county && linkedJurisdiction === countyJurisdictionId) {
         compliance.county.incentives.push(formattedProgram);
         compliance.county.incentive_count++;
         compliance.county.max_incentive = Math.max(compliance.county.max_incentive || 0, program.incentive_amount_max || 0);
       }
-      // Assign county-specific programs to county level
-      else if (county && compliance.county && (
-        pid.includes(`_COUNTY_${countyUpper}`) ||
-        (notes.includes(county.toLowerCase()) && !programCityFor)
-      )) {
-        compliance.county.incentives.push(formattedProgram);
-        compliance.county.incentive_count++;
-        compliance.county.max_incentive = Math.max(compliance.county.max_incentive || 0, program.incentive_amount_max || 0);
+      // State-level programs OR utility programs that cover this city
+      else if (coverageType === 'state' || linkedJurisdiction === stateJurisdictionId) {
+        compliance.state.incentives.push(formattedProgram);
+        compliance.state.incentive_count++;
+        compliance.state.max_incentive = Math.max(compliance.state.max_incentive || 0, program.incentive_amount_max || 0);
       }
-      // Assign state-level programs (no county/city specificity)
-      else if (compliance.state && !programCityFor && !pid.includes('_COUNTY_') && !pid.includes('MWD')) {
+      // Utility-based programs - assign to state level for visibility
+      else if (coverageType === 'utility') {
         compliance.state.incentives.push(formattedProgram);
         compliance.state.incentive_count++;
         compliance.state.max_incentive = Math.max(compliance.state.max_incentive || 0, program.incentive_amount_max || 0);
       }
     });
-    
+
     // Set effective compliance (most specific level)
     compliance.effective = compliance.city || compliance.county || compliance.state;
-    
+
     return NextResponse.json({
       status: 'success',
       location: { state, county, city },
