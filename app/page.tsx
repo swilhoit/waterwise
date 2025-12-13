@@ -538,47 +538,35 @@ export default async function Home() {
         <div className="relative">
           <div className="flex animate-marquee gap-6">
             {[
-              { name: "Martin", initials: "M", bgColor: "bg-emerald-100", textColor: "text-emerald-700", review: "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.", product: "Aqua2use GWDD", image: null },
-              { name: "J.G.", initials: "JG", bgColor: "bg-teal-100", textColor: "text-teal-700", review: "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.", product: "Aqua2use GWDD", image: null },
-              { name: "Richard A.", initials: "RA", bgColor: "bg-blue-100", textColor: "text-blue-700", review: "I have had the GWDD for 2 years now to help water my yard in Arizona. Works great in the desert climate.", product: "Arizona Homeowner", image: "/images/customer-stories/arizona-oasis.jpg" },
-              { name: "Jay L.", initials: "JL", bgColor: "bg-purple-100", textColor: "text-purple-700", review: "I permanently live in a travel trailer. The grey water system enabled me to begin watering all my plants and I've been happy with the results.", product: "RV Owner", image: null },
-              { name: "Mike E.", initials: "ME", bgColor: "bg-cyan-100", textColor: "text-cyan-700", review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.", product: "Tiny Home Owner", image: null },
-              { name: "California Family", initials: "CF", bgColor: "bg-orange-100", textColor: "text-orange-700", review: "Our 60-year-old redwoods are thriving thanks to greywater irrigation. We've cut our water bill by 40% while keeping our landscape lush during drought restrictions.", product: "California Homeowner", image: "/images/customer-stories/california-family.jpg" },
-              { name: "Martin", initials: "M", bgColor: "bg-emerald-100", textColor: "text-emerald-700", review: "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.", product: "Aqua2use GWDD", image: null },
-              { name: "J.G.", initials: "JG", bgColor: "bg-teal-100", textColor: "text-teal-700", review: "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.", product: "Aqua2use GWDD", image: null },
-              { name: "Richard A.", initials: "RA", bgColor: "bg-blue-100", textColor: "text-blue-700", review: "I have had the GWDD for 2 years now to help water my yard in Arizona. Works great in the desert climate.", product: "Arizona Homeowner", image: "/images/customer-stories/arizona-oasis.jpg" },
-              { name: "Jay L.", initials: "JL", bgColor: "bg-purple-100", textColor: "text-purple-700", review: "I permanently live in a travel trailer. The grey water system enabled me to begin watering all my plants and I've been happy with the results.", product: "RV Owner", image: null },
-              { name: "Mike E.", initials: "ME", bgColor: "bg-cyan-100", textColor: "text-cyan-700", review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.", product: "Tiny Home Owner", image: null },
-              { name: "California Family", initials: "CF", bgColor: "bg-orange-100", textColor: "text-orange-700", review: "Our 60-year-old redwoods are thriving thanks to greywater irrigation. We've cut our water bill by 40% while keeping our landscape lush during drought restrictions.", product: "California Homeowner", image: "/images/customer-stories/california-family.jpg" },
+              { name: "Martin", initials: "M", bgColor: "bg-emerald-100", textColor: "text-emerald-700", review: "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.", product: "Aqua2use GWDD" },
+              { name: "J.G.", initials: "JG", bgColor: "bg-teal-100", textColor: "text-teal-700", review: "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.", product: "Aqua2use GWDD" },
+              { name: "Richard A.", initials: "RA", bgColor: "bg-blue-100", textColor: "text-blue-700", review: "I have had the GWDD for 2 years now to help water my yard in Arizona. Works great in the desert climate.", product: "Arizona Homeowner" },
+              { name: "Jay L.", initials: "JL", bgColor: "bg-purple-100", textColor: "text-purple-700", review: "I permanently live in a travel trailer. The grey water system enabled me to begin watering all my plants and I've been happy with the results.", product: "RV Owner" },
+              { name: "Mike E.", initials: "ME", bgColor: "bg-cyan-100", textColor: "text-cyan-700", review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.", product: "Tiny Home Owner" },
+              { name: "California Family", initials: "CF", bgColor: "bg-orange-100", textColor: "text-orange-700", review: "Our 60-year-old redwoods are thriving thanks to greywater irrigation. We've cut our water bill by 40% while keeping our landscape lush during drought restrictions.", product: "California Homeowner" },
+              { name: "Martin", initials: "M", bgColor: "bg-emerald-100", textColor: "text-emerald-700", review: "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.", product: "Aqua2use GWDD" },
+              { name: "J.G.", initials: "JG", bgColor: "bg-teal-100", textColor: "text-teal-700", review: "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.", product: "Aqua2use GWDD" },
+              { name: "Richard A.", initials: "RA", bgColor: "bg-blue-100", textColor: "text-blue-700", review: "I have had the GWDD for 2 years now to help water my yard in Arizona. Works great in the desert climate.", product: "Arizona Homeowner" },
+              { name: "Jay L.", initials: "JL", bgColor: "bg-purple-100", textColor: "text-purple-700", review: "I permanently live in a travel trailer. The grey water system enabled me to begin watering all my plants and I've been happy with the results.", product: "RV Owner" },
+              { name: "Mike E.", initials: "ME", bgColor: "bg-cyan-100", textColor: "text-cyan-700", review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.", product: "Tiny Home Owner" },
+              { name: "California Family", initials: "CF", bgColor: "bg-orange-100", textColor: "text-orange-700", review: "Our 60-year-old redwoods are thriving thanks to greywater irrigation. We've cut our water bill by 40% while keeping our landscape lush during drought restrictions.", product: "California Homeowner" },
             ].map((testimonial, index) => (
-              <div key={index} className="flex-shrink-0 w-[350px] bg-white rounded-2xl overflow-hidden">
-                {testimonial.image && (
-                  <div className="relative h-48">
-                    <Image
-                      src={testimonial.image}
-                      alt={`${testimonial.name}'s garden`}
-                      fill
-                      className="object-cover"
-                    />
+              <div key={index} className="flex-shrink-0 w-[350px] bg-white rounded-2xl p-6">
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <blockquote className="text-gray-700 text-sm mb-4 leading-relaxed line-clamp-4">
+                  "{testimonial.review}"
+                </blockquote>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 ${testimonial.bgColor} rounded-full flex items-center justify-center`}>
+                    <span className={`text-xs font-semibold ${testimonial.textColor}`}>{testimonial.initials}</span>
                   </div>
-                )}
-                <div className="p-6">
-                  <div className="flex gap-1 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <blockquote className="text-gray-700 text-sm mb-4 leading-relaxed line-clamp-4">
-                    "{testimonial.review}"
-                  </blockquote>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 ${testimonial.bgColor} rounded-full flex items-center justify-center`}>
-                      <span className={`text-xs font-semibold ${testimonial.textColor}`}>{testimonial.initials}</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">{testimonial.name}</p>
-                      <p className="text-xs text-gray-500">{testimonial.product}</p>
-                    </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{testimonial.name}</p>
+                    <p className="text-xs text-gray-500">{testimonial.product}</p>
                   </div>
                 </div>
               </div>
