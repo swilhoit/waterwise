@@ -126,9 +126,35 @@ export default async function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-4">
+      <section className="relative py-24 lg:py-32 overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50/50 to-cyan-50" />
+
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Large gradient circles */}
+          <div className="absolute -top-40 -left-40 w-80 h-80 bg-emerald-200/30 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-cyan-200/30 rounded-full blur-3xl" />
+
+          {/* Floating water droplets */}
+          <div className="absolute top-20 left-[10%] w-3 h-3 bg-emerald-400/40 rounded-full animate-float" />
+          <div className="absolute top-40 left-[20%] w-2 h-2 bg-teal-400/40 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-32 left-[15%] w-2 h-2 bg-emerald-400/40 rounded-full animate-float" style={{ animationDelay: '0.5s' }} />
+          <div className="absolute top-32 right-[15%] w-3 h-3 bg-cyan-400/40 rounded-full animate-float" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute top-60 right-[10%] w-2 h-2 bg-teal-400/40 rounded-full animate-float" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-40 right-[20%] w-2 h-2 bg-cyan-400/40 rounded-full animate-float" style={{ animationDelay: '0.8s' }} />
+
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm text-emerald-700 rounded-full text-sm font-medium mb-6 border border-emerald-200/50">
+              <Droplets className="h-4 w-4" />
+              Simple Process
+            </div>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               How It Works
             </h2>
@@ -138,26 +164,50 @@ export default async function Home() {
           </div>
 
           <div className="relative max-w-5xl mx-auto">
-            {/* Connecting Line - Desktop */}
-            <div className="hidden md:block absolute top-16 left-[16.67%] right-[16.67%] h-0.5">
-              <div className="h-full bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 rounded-full" />
-              {/* Animated dots */}
-              <div className="absolute top-1/2 -translate-y-1/2 left-0 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-              <div className="absolute top-1/2 -translate-y-1/2 right-0 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+            {/* Animated Flow Line - Desktop */}
+            <div className="hidden md:block absolute top-20 left-[20%] right-[20%] h-1">
+              {/* Base line */}
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-200 via-teal-200 to-cyan-200 rounded-full" />
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 rounded-full blur-sm opacity-50" />
+
+              {/* Flowing droplets */}
+              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-emerald-500 rounded-full shadow-lg shadow-emerald-500/50 animate-flow" />
+              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-teal-500 rounded-full shadow-lg shadow-teal-500/50 animate-flow" style={{ animationDelay: '0.7s' }} />
+              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-cyan-500 rounded-full shadow-lg shadow-cyan-500/50 animate-flow" style={{ animationDelay: '1.4s' }} />
+
+              {/* Arrow indicators */}
+              <div className="absolute top-1/2 left-[30%] -translate-y-1/2 -translate-x-1/2">
+                <svg className="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="absolute top-1/2 left-[70%] -translate-y-1/2 -translate-x-1/2">
+                <svg className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
               {/* Step 1 - Collect */}
               <div className="relative text-center group">
                 <div className="relative z-10">
-                  <div className="w-32 h-32 mx-auto mb-6 relative">
-                    <div className="absolute inset-0 bg-emerald-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform" />
-                    <div className="absolute inset-0 bg-emerald-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform" />
-                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-emerald-200 flex items-center justify-center group-hover:border-emerald-400 transition-colors">
-                      <Droplets className="w-12 h-12 text-emerald-600" />
+                  <div className="w-36 h-36 mx-auto mb-8 relative">
+                    {/* Ripple effect on hover */}
+                    <div className="absolute inset-0 rounded-full bg-emerald-400/20 scale-100 group-hover:animate-ripple" />
+
+                    {/* Layered backgrounds */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 to-emerald-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform duration-300" />
+
+                    {/* Main icon container */}
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-emerald-200 flex items-center justify-center group-hover:border-emerald-400 group-hover:shadow-xl group-hover:shadow-emerald-100 transition-all duration-300">
+                      <Droplets className="w-14 h-14 text-emerald-600 group-hover:scale-110 transition-transform" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+
+                    {/* Step number badge */}
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/30">
                       1
                     </div>
                   </div>
@@ -166,22 +216,34 @@ export default async function Home() {
                     Water from showers and washing machines flows to the system automatically
                   </p>
                 </div>
+
                 {/* Mobile connector */}
-                <div className="md:hidden w-0.5 h-8 bg-gradient-to-b from-emerald-300 to-teal-300 mx-auto mt-6" />
+                <div className="md:hidden relative w-1 h-12 mx-auto mt-8">
+                  <div className="absolute inset-0 bg-gradient-to-b from-emerald-300 to-teal-300 rounded-full" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-emerald-500 rounded-full animate-flow-down" />
+                </div>
               </div>
 
               {/* Step 2 - Filter */}
               <div className="relative text-center group">
                 <div className="relative z-10">
-                  <div className="w-32 h-32 mx-auto mb-6 relative">
-                    <div className="absolute inset-0 bg-teal-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform" />
-                    <div className="absolute inset-0 bg-teal-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform" />
-                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-teal-200 flex items-center justify-center group-hover:border-teal-400 transition-colors">
-                      <svg className="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <div className="w-36 h-36 mx-auto mb-8 relative">
+                    {/* Ripple effect on hover */}
+                    <div className="absolute inset-0 rounded-full bg-teal-400/20 scale-100 group-hover:animate-ripple" />
+
+                    {/* Layered backgrounds */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-200 to-teal-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-100 to-teal-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform duration-300" />
+
+                    {/* Main icon container */}
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-teal-200 flex items-center justify-center group-hover:border-teal-400 group-hover:shadow-xl group-hover:shadow-teal-100 transition-all duration-300">
+                      <svg className="w-14 h-14 text-teal-600 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
                       </svg>
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+
+                    {/* Step number badge */}
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-teal-500/30">
                       2
                     </div>
                   </div>
@@ -190,20 +252,32 @@ export default async function Home() {
                     Progressive 4-stage filtration cleans and prepares water for safe reuse
                   </p>
                 </div>
+
                 {/* Mobile connector */}
-                <div className="md:hidden w-0.5 h-8 bg-gradient-to-b from-teal-300 to-cyan-300 mx-auto mt-6" />
+                <div className="md:hidden relative w-1 h-12 mx-auto mt-8">
+                  <div className="absolute inset-0 bg-gradient-to-b from-teal-300 to-cyan-300 rounded-full" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-teal-500 rounded-full animate-flow-down" style={{ animationDelay: '0.5s' }} />
+                </div>
               </div>
 
               {/* Step 3 - Irrigate */}
               <div className="relative text-center group">
                 <div className="relative z-10">
-                  <div className="w-32 h-32 mx-auto mb-6 relative">
-                    <div className="absolute inset-0 bg-cyan-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform" />
-                    <div className="absolute inset-0 bg-cyan-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform" />
-                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-cyan-200 flex items-center justify-center group-hover:border-cyan-400 transition-colors">
-                      <Leaf className="w-12 h-12 text-cyan-600" />
+                  <div className="w-36 h-36 mx-auto mb-8 relative">
+                    {/* Ripple effect on hover */}
+                    <div className="absolute inset-0 rounded-full bg-cyan-400/20 scale-100 group-hover:animate-ripple" />
+
+                    {/* Layered backgrounds */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-200 to-cyan-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 to-cyan-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform duration-300" />
+
+                    {/* Main icon container */}
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-cyan-200 flex items-center justify-center group-hover:border-cyan-400 group-hover:shadow-xl group-hover:shadow-cyan-100 transition-all duration-300">
+                      <Leaf className="w-14 h-14 text-cyan-600 group-hover:scale-110 transition-transform" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+
+                    {/* Step number badge */}
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/30">
                       3
                     </div>
                   </div>
