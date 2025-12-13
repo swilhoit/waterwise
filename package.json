@@ -9,6 +9,8 @@
     "generate:images": "node scripts/generate-solution-images.mjs"
   },
   "dependencies": {
+    "@builder.io/react": "^3.2.6",
+    "@builder.io/sdk": "^2.2.9",
     "@google-cloud/bigquery": "^8.1.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
