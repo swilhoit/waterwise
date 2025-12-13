@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, Droplets, Leaf, ArrowRight, Play, Star, CloudRain } from "lucide-react"
+import { CheckCircle, Droplets, Leaf, ArrowRight, Star, CloudRain } from "lucide-react"
 import { getProducts } from "@/lib/shopify"
 import { formatPriceDisplay } from "@/lib/price-utils"
 import { OrganizationSchema, WebSiteSchema } from "@/components/schema-markup"
@@ -126,64 +126,111 @@ export default async function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 lg:py-32">
+      <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-12 lg:gap-16 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl font-bold text-emerald-600">1</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Collect</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Water from showers and washing machines flows to the system automatically
-              </p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Simple, automatic water recycling in three steps
+            </p>
+          </div>
+
+          <div className="relative max-w-5xl mx-auto">
+            {/* Connecting Line - Desktop */}
+            <div className="hidden md:block absolute top-16 left-[16.67%] right-[16.67%] h-0.5">
+              <div className="h-full bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 rounded-full" />
+              {/* Animated dots */}
+              <div className="absolute top-1/2 -translate-y-1/2 left-0 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <div className="absolute top-1/2 -translate-y-1/2 right-0 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
             </div>
 
-            <div className="text-center">
-              <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl font-bold text-teal-600">2</span>
+            <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+              {/* Step 1 - Collect */}
+              <div className="relative text-center group">
+                <div className="relative z-10">
+                  <div className="w-32 h-32 mx-auto mb-6 relative">
+                    <div className="absolute inset-0 bg-emerald-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform" />
+                    <div className="absolute inset-0 bg-emerald-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform" />
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-emerald-200 flex items-center justify-center group-hover:border-emerald-400 transition-colors">
+                      <Droplets className="w-12 h-12 text-emerald-600" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      1
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Collect</h3>
+                  <p className="text-gray-600 leading-relaxed max-w-xs mx-auto">
+                    Water from showers and washing machines flows to the system automatically
+                  </p>
+                </div>
+                {/* Mobile connector */}
+                <div className="md:hidden w-0.5 h-8 bg-gradient-to-b from-emerald-300 to-teal-300 mx-auto mt-6" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Filter</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Progressive 4-stage filtration cleans and prepares water for safe reuse
-              </p>
-            </div>
 
-            <div className="text-center">
-              <div className="w-20 h-20 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl font-bold text-cyan-600">3</span>
+              {/* Step 2 - Filter */}
+              <div className="relative text-center group">
+                <div className="relative z-10">
+                  <div className="w-32 h-32 mx-auto mb-6 relative">
+                    <div className="absolute inset-0 bg-teal-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform" />
+                    <div className="absolute inset-0 bg-teal-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform" />
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-teal-200 flex items-center justify-center group-hover:border-teal-400 transition-colors">
+                      <svg className="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+                      </svg>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      2
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Filter</h3>
+                  <p className="text-gray-600 leading-relaxed max-w-xs mx-auto">
+                    Progressive 4-stage filtration cleans and prepares water for safe reuse
+                  </p>
+                </div>
+                {/* Mobile connector */}
+                <div className="md:hidden w-0.5 h-8 bg-gradient-to-b from-teal-300 to-cyan-300 mx-auto mt-6" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Irrigate</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Clean greywater automatically waters your garden via drip irrigation
-              </p>
+
+              {/* Step 3 - Irrigate */}
+              <div className="relative text-center group">
+                <div className="relative z-10">
+                  <div className="w-32 h-32 mx-auto mb-6 relative">
+                    <div className="absolute inset-0 bg-cyan-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform" />
+                    <div className="absolute inset-0 bg-cyan-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform" />
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-cyan-200 flex items-center justify-center group-hover:border-cyan-400 transition-colors">
+                      <Leaf className="w-12 h-12 text-cyan-600" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      3
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Irrigate</h3>
+                  <p className="text-gray-600 leading-relaxed max-w-xs mx-auto">
+                    Clean greywater automatically waters your garden via drip irrigation
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Video Preview */}
+          {/* Video Embed */}
           <div className="max-w-4xl mx-auto mt-20">
-            <a 
-              href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="block relative aspect-video rounded-2xl overflow-hidden group"
-            >
-              <Image
-                src="/images/maxresdefault.jpg"
-                alt="How Greywater Works"
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+            <div className="text-center mb-6">
+              <p className="text-lg font-medium text-gray-900">Watch how it works</p>
+              <p className="text-sm text-gray-500">2 minute overview</p>
+            </div>
+            <div className="relative aspect-video rounded-2xl overflow-hidden border border-gray-200">
+              <iframe
+                src="https://www.youtube.com/embed/XN6yyuSg5Kw?rel=0&modestbranding=1"
+                title="How Greywater Works"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
               />
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Play className="h-8 w-8 text-emerald-600 fill-emerald-600 ml-1" />
-                </div>
-              </div>
-              <div className="absolute bottom-6 left-6 text-white">
-                <p className="text-lg font-medium">Watch how it works</p>
-                <p className="text-sm text-white/80">2 minute overview</p>
-              </div>
-            </a>
+            </div>
           </div>
         </div>
       </section>
