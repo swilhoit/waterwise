@@ -138,12 +138,12 @@ export default async function Home() {
           <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-cyan-200/30 rounded-full blur-3xl" />
 
           {/* Floating water droplets */}
-          <div className="absolute top-20 left-[10%] w-3 h-3 bg-emerald-400/40 rounded-full animate-float" />
-          <div className="absolute top-40 left-[20%] w-2 h-2 bg-teal-400/40 rounded-full animate-float" style={{ animationDelay: '1s' }} />
-          <div className="absolute bottom-32 left-[15%] w-2 h-2 bg-emerald-400/40 rounded-full animate-float" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute top-32 right-[15%] w-3 h-3 bg-cyan-400/40 rounded-full animate-float" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute top-60 right-[10%] w-2 h-2 bg-teal-400/40 rounded-full animate-float" style={{ animationDelay: '2s' }} />
-          <div className="absolute bottom-40 right-[20%] w-2 h-2 bg-cyan-400/40 rounded-full animate-float" style={{ animationDelay: '0.8s' }} />
+          <div className="absolute top-20 left-[10%] w-2 h-2 bg-emerald-400/20 rounded-full animate-float" />
+          <div className="absolute top-40 left-[20%] w-1.5 h-1.5 bg-teal-400/15 rounded-full animate-float" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-32 left-[15%] w-1.5 h-1.5 bg-emerald-400/15 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-32 right-[15%] w-2 h-2 bg-cyan-400/20 rounded-full animate-float" style={{ animationDelay: '3s' }} />
+          <div className="absolute top-60 right-[10%] w-1.5 h-1.5 bg-teal-400/15 rounded-full animate-float" style={{ animationDelay: '4s' }} />
+          <div className="absolute bottom-40 right-[20%] w-1.5 h-1.5 bg-cyan-400/15 rounded-full animate-float" style={{ animationDelay: '1.5s' }} />
 
           {/* Grid pattern overlay */}
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
@@ -172,9 +172,8 @@ export default async function Home() {
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 rounded-full blur-sm opacity-50" />
 
               {/* Flowing droplets */}
-              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-emerald-500 rounded-full shadow-lg shadow-emerald-500/50 animate-flow" />
-              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-teal-500 rounded-full shadow-lg shadow-teal-500/50 animate-flow" style={{ animationDelay: '0.7s' }} />
-              <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-cyan-500 rounded-full shadow-lg shadow-cyan-500/50 animate-flow" style={{ animationDelay: '1.4s' }} />
+              <div className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-emerald-400/70 rounded-full animate-flow" />
+              <div className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-teal-400/70 rounded-full animate-flow" style={{ animationDelay: '2s' }} />
 
               {/* Arrow indicators */}
               <div className="absolute top-1/2 left-[30%] -translate-y-1/2 -translate-x-1/2">
@@ -195,19 +194,19 @@ export default async function Home() {
                 <div className="relative z-10">
                   <div className="w-36 h-36 mx-auto mb-8 relative">
                     {/* Ripple effect on hover */}
-                    <div className="absolute inset-0 rounded-full bg-emerald-400/20 scale-100 group-hover:animate-ripple" />
+                    <div className="absolute inset-0 rounded-full bg-emerald-400/10 scale-100 group-hover:animate-ripple" />
 
                     {/* Layered backgrounds */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 to-emerald-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform duration-300" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 to-emerald-100 rounded-3xl rotate-6 group-hover:rotate-9 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-3xl -rotate-3 group-hover:-rotate-4 transition-transform duration-500" />
 
                     {/* Main icon container */}
-                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-emerald-200 flex items-center justify-center group-hover:border-emerald-400 group-hover:shadow-xl group-hover:shadow-emerald-100 transition-all duration-300">
-                      <Droplets className="w-14 h-14 text-emerald-600 group-hover:scale-110 transition-transform" />
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-emerald-200 flex items-center justify-center group-hover:border-emerald-300 group-hover:shadow-lg group-hover:shadow-emerald-100/50 transition-all duration-500">
+                      <Droplets className="w-14 h-14 text-emerald-600 group-hover:scale-105 transition-transform duration-500" />
                     </div>
 
                     {/* Step number badge */}
-                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/30">
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-md shadow-emerald-500/20">
                       1
                     </div>
                   </div>
@@ -218,9 +217,9 @@ export default async function Home() {
                 </div>
 
                 {/* Mobile connector */}
-                <div className="md:hidden relative w-1 h-12 mx-auto mt-8">
-                  <div className="absolute inset-0 bg-gradient-to-b from-emerald-300 to-teal-300 rounded-full" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-emerald-500 rounded-full animate-flow-down" />
+                <div className="md:hidden relative w-0.5 h-10 mx-auto mt-8">
+                  <div className="absolute inset-0 bg-gradient-to-b from-emerald-200 to-teal-200 rounded-full" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-emerald-400/60 rounded-full animate-flow-down" />
                 </div>
               </div>
 
@@ -229,21 +228,21 @@ export default async function Home() {
                 <div className="relative z-10">
                   <div className="w-36 h-36 mx-auto mb-8 relative">
                     {/* Ripple effect on hover */}
-                    <div className="absolute inset-0 rounded-full bg-teal-400/20 scale-100 group-hover:animate-ripple" />
+                    <div className="absolute inset-0 rounded-full bg-teal-400/10 scale-100 group-hover:animate-ripple" />
 
                     {/* Layered backgrounds */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-teal-200 to-teal-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform duration-300" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-teal-100 to-teal-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-200 to-teal-100 rounded-3xl rotate-6 group-hover:rotate-9 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-100 to-teal-50 rounded-3xl -rotate-3 group-hover:-rotate-4 transition-transform duration-500" />
 
                     {/* Main icon container */}
-                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-teal-200 flex items-center justify-center group-hover:border-teal-400 group-hover:shadow-xl group-hover:shadow-teal-100 transition-all duration-300">
-                      <svg className="w-14 h-14 text-teal-600 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-teal-200 flex items-center justify-center group-hover:border-teal-300 group-hover:shadow-lg group-hover:shadow-teal-100/50 transition-all duration-500">
+                      <svg className="w-14 h-14 text-teal-600 group-hover:scale-105 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
                       </svg>
                     </div>
 
                     {/* Step number badge */}
-                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-teal-500/30">
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold shadow-md shadow-teal-500/20">
                       2
                     </div>
                   </div>
@@ -254,9 +253,9 @@ export default async function Home() {
                 </div>
 
                 {/* Mobile connector */}
-                <div className="md:hidden relative w-1 h-12 mx-auto mt-8">
-                  <div className="absolute inset-0 bg-gradient-to-b from-teal-300 to-cyan-300 rounded-full" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-teal-500 rounded-full animate-flow-down" style={{ animationDelay: '0.5s' }} />
+                <div className="md:hidden relative w-0.5 h-10 mx-auto mt-8">
+                  <div className="absolute inset-0 bg-gradient-to-b from-teal-200 to-cyan-200 rounded-full" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-teal-400/60 rounded-full animate-flow-down" style={{ animationDelay: '2s' }} />
                 </div>
               </div>
 
@@ -265,19 +264,19 @@ export default async function Home() {
                 <div className="relative z-10">
                   <div className="w-36 h-36 mx-auto mb-8 relative">
                     {/* Ripple effect on hover */}
-                    <div className="absolute inset-0 rounded-full bg-cyan-400/20 scale-100 group-hover:animate-ripple" />
+                    <div className="absolute inset-0 rounded-full bg-cyan-400/10 scale-100 group-hover:animate-ripple" />
 
                     {/* Layered backgrounds */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-200 to-cyan-100 rounded-3xl rotate-6 group-hover:rotate-12 transition-transform duration-300" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 to-cyan-50 rounded-3xl -rotate-3 group-hover:-rotate-6 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-200 to-cyan-100 rounded-3xl rotate-6 group-hover:rotate-9 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 to-cyan-50 rounded-3xl -rotate-3 group-hover:-rotate-4 transition-transform duration-500" />
 
                     {/* Main icon container */}
-                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-cyan-200 flex items-center justify-center group-hover:border-cyan-400 group-hover:shadow-xl group-hover:shadow-cyan-100 transition-all duration-300">
-                      <Leaf className="w-14 h-14 text-cyan-600 group-hover:scale-110 transition-transform" />
+                    <div className="relative w-full h-full bg-white rounded-3xl border-2 border-cyan-200 flex items-center justify-center group-hover:border-cyan-300 group-hover:shadow-lg group-hover:shadow-cyan-100/50 transition-all duration-500">
+                      <Leaf className="w-14 h-14 text-cyan-600 group-hover:scale-105 transition-transform duration-500" />
                     </div>
 
                     {/* Step number badge */}
-                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/30">
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-md shadow-cyan-500/20">
                       3
                     </div>
                   </div>
