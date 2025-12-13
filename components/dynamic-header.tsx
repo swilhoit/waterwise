@@ -206,15 +206,15 @@ export function DynamicHeader() {
       dropdown: [
         {
           title: "California Homeowner",
-          description: "How the Johnson family reduced their water bill by 45% in drought-stricken California",
+          description: "How Jay protects his 60-year-old redwoods during California droughts",
           href: "/customer-stories/california-homeowner",
-          image: "/images/customer-stories/california-family.jpg"
+          image: "/images/tiny-home-customer.jpg"
         },
         {
-          title: "Arizona Desert Oasis",
-          description: "Maintaining a desert oasis with 60% less water in Phoenix",
-          href: "/customer-stories/arizona-desert-oasis",
-          image: "/images/customer-stories/arizona-oasis.jpg"
+          title: "RV Owner Success",
+          description: "Jay Linden transforms RV waste into a thriving garden",
+          href: "/customer-stories/rv-owner",
+          image: "/images/rv-customer.jpg"
         }
       ]
     },

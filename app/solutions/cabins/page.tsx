@@ -129,11 +129,11 @@ export default function CabinSolutions() {
         </div>
 
         {/* Customer Story */}
-        <div className="bg-blue-50 border-l-4 border-blue-600 p-8 mb-16">
+        <div className="bg-emerald-50 border-l-4 border-emerald-600 p-8 mb-16">
           <p className="text-lg italic text-gray-700 mb-4">
-            "Our mountain cabin with challenging terrain needed a solution. The pump system overcame elevation challenges perfectly. Now we save $75/month during growing season while supporting our native plant restoration project."
+            "If you're even a little handy and care about saving water, Aqua2use is an affordable way to make a big impact. We can replant flowers. We can't replace those redwoods."
           </p>
-          <p className="text-sm font-semibold text-gray-600">— Robert & Linda Miller, Oregon Cabin Owners</p>
+          <p className="text-sm font-semibold text-gray-600">— Jay, California Property Owner</p>
         </div>
 
         {/* CTA Section */}

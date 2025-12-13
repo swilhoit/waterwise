@@ -1,15 +1,42 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, Droplets, Leaf, ArrowRight, Play, Star, Quote } from "lucide-react"
+import { CheckCircle, Droplets, Leaf, ArrowRight, Play, Star, CloudRain } from "lucide-react"
 import { getProducts } from "@/lib/shopify"
 import { formatPriceDisplay } from "@/lib/price-utils"
+import { OrganizationSchema, WebSiteSchema } from "@/components/schema-markup"
+import { WaterSourceSelector } from "@/components/water-source-selector"
+
+export const metadata: Metadata = {
+  title: 'Greywater System | Greywater Filtration Systems – Water Wise Group',
+  description: 'Reuse water from your home for irrigation. Save water, lower utility costs, and create a thriving landscape with Aqua2use greywater recycling systems. Buy water once, use it twice.',
+  keywords: ['greywater system', 'greywater filtration', 'water recycling', 'Aqua2use', 'irrigation system', 'water conservation'],
+  openGraph: {
+    title: 'Greywater System | Greywater Filtration Systems – Water Wise Group',
+    description: 'Reuse water from your home for irrigation. Save water, lower utility costs, and create a thriving landscape with Aqua2use greywater recycling systems.',
+    url: 'https://waterwisegroup.com',
+    siteName: 'Water Wise Group',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Greywater System | Greywater Filtration Systems – Water Wise Group',
+    description: 'Reuse water from your home for irrigation. Save water, lower utility costs, and create a thriving landscape.',
+  },
+  alternates: {
+    canonical: 'https://waterwisegroup.com',
+  },
+}
 
 export default async function Home() {
   const products = await getProducts()
 
   return (
     <div className="bg-white">
+      <OrganizationSchema />
+      <WebSiteSchema />
+
       {/* Hero Section */}
       <section className="relative py-24 lg:py-36 overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50">
         <div className="container mx-auto px-4">
@@ -20,12 +47,16 @@ export default async function Home() {
                 Sustainable Water Solutions
               </div>
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-[1.1] tracking-tight">
-                Turn Every Drop Into A{" "}
-                <span className="text-emerald-600">Sustainable Solution</span>
+                Reuse Water From Your Home{" "}
+                <span className="text-emerald-600">For Irrigation</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-                Save water, lower your bills, and grow healthier landscapes with our simple greywater recycling systems.
+              <p className="text-xl text-gray-600 mb-6 leading-relaxed">
+                Save water, lower utility costs, and create a thriving landscape in any climate. Buy water once, use it twice. That's living Water Wise.
               </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-sm mb-8">
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                <span className="text-gray-600"><span className="font-bold text-gray-900">5,000+</span> Systems Sold Since 2010</span>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg" asChild>
                   <Link href="/products">
@@ -34,61 +65,69 @@ export default async function Home() {
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 px-8 py-6 text-lg" asChild>
-                  <Link href="/how-it-works">How It Works</Link>
+                  <Link href="/blog/how-can-i-use-greywater">How It Works</Link>
                 </Button>
               </div>
             </div>
             <div className="relative">
               <div className="relative z-10">
                 <Image
-                  src="/images/Gemini_Generated_Image_hwzac2hwzac2hwza 1.png"
-                  alt="Aqua2use Greywater System"
+                  src="/images/family-garden.jpg"
+                  alt="Lush California garden thriving with greywater irrigation"
                   width={600}
-                  height={500}
-                  className="rounded-3xl"
+                  height={600}
+                  className="rounded-3xl object-cover"
                   priority
                 />
               </div>
               {/* Decorative elements */}
               <div className="absolute -top-8 -right-8 w-72 h-72 bg-emerald-200 rounded-full opacity-20 blur-3xl" />
-              <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-teal-200 rounded-full opacity-30 blur-2xl" />
+              <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-orange-200 rounded-full opacity-30 blur-2xl" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Indicators */}
+      {/* Trust Indicators - As Seen In */}
       <section className="py-12 border-b border-gray-100">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-6 text-gray-400">
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-              <span className="text-gray-600 font-medium">5,000+ Happy Customers</span>
-            </div>
-            <div className="h-8 w-px bg-gray-200 hidden md:block" />
-            <span className="text-gray-500">As seen in Washington Post</span>
-            <div className="h-8 w-px bg-gray-200 hidden md:block" />
-            <span className="text-gray-500">Family Handyman Approved</span>
+          <p className="text-center text-sm text-gray-500 mb-6">As Seen In</p>
+          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6">
+            <Image
+              src="/images/featured-on/bg-logo_web-large.avif"
+              alt="Building Green"
+              width={120}
+              height={40}
+              className="h-8 w-auto opacity-70 hover:opacity-100 transition-opacity"
+            />
+            <Image
+              src="/images/featured-on/architect.avif"
+              alt="Architect Magazine"
+              width={120}
+              height={40}
+              className="h-8 w-auto opacity-70 hover:opacity-100 transition-opacity"
+            />
+            <Image
+              src="/images/featured-on/family-handyman.svg"
+              alt="Family Handyman"
+              width={120}
+              height={40}
+              className="h-8 w-auto opacity-70 hover:opacity-100 transition-opacity"
+            />
+            <Image
+              src="/images/featured-on/The_Washington_Post_Newspaper.svg"
+              alt="The Washington Post"
+              width={160}
+              height={40}
+              className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+            />
           </div>
         </div>
       </section>
 
-      {/* How It Works - Simple */}
+      {/* How It Works */}
       <section className="py-24 lg:py-32">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
-              Simple as 1, 2, 3
-            </h2>
-            <p className="text-xl text-gray-600">
-              Our systems work automatically to recycle your household water
-            </p>
-          </div>
-
           <div className="grid md:grid-cols-3 gap-12 lg:gap-16 max-w-5xl mx-auto">
             <div className="text-center">
               <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -149,66 +188,144 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Products Section - Minimal */}
+      {/* Products Section - Aqua2use Filtration System */}
       <section className="py-24 lg:py-32 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
-              Our Systems
+              Aqua2Use Filtration System
             </h2>
-            <p className="text-xl text-gray-600">
-              Professional-grade greywater recycling for any property
+            <p className="text-xl text-gray-600 leading-relaxed">
+              4-stage filtration for greywater or rainwater — reclaim clean water for reliable irrigation
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {(products.length > 0 ? products.slice(0, 2) : [
-              { id: '1', title: 'Aqua2use GWDD', handle: 'aqua2use-gwdd', description: 'Perfect for homes and cabins. Processes up to 150 gallons per day.', priceRange: { minVariantPrice: { amount: '625' } }, images: { edges: [{ node: { url: '/images/gwdd-gravity.jpg', altText: 'Aqua2use GWDD' } }] } },
-              { id: '2', title: 'Aqua2use Pro', handle: 'aqua2use-pro', description: 'High-capacity system for larger properties. Up to 500 gallons per day.', priceRange: { minVariantPrice: { amount: '2695' } }, images: { edges: [{ node: { url: '/images/gwdd-ug.jpg', altText: 'Aqua2use Pro' } }] } }
-            ]).map((product: any) => (
-              <Link 
-                key={product.id} 
-                href={`/products/${product.handle}`}
-                className="group bg-white rounded-2xl overflow-hidden transition-all duration-300 border border-gray-200 hover:border-gray-300"
-              >
-                <div className="aspect-[4/3] relative bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-                  <Image
-                    src={product.images?.edges?.[0]?.node?.url || '/images/gwdd-gravity.jpg'}
-                    alt={product.title}
-                    fill
-                    className="object-contain group-hover:scale-105 transition-transform duration-500"
-                  />
+          {/* Comparison Table */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* GWDD Gravity */}
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
+              <div className="aspect-square relative bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+                <div className="absolute top-4 left-4 bg-gray-700 text-white text-xs font-medium px-3 py-1 rounded-full z-10">
+                  No Power Needed
                 </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                    {product.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {product.description?.substring(0, 100)}...
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-emerald-600">
-                      {formatPriceDisplay(product.priceRange?.minVariantPrice?.amount || '625', 'From ')}
-                    </span>
-                    <span className="text-emerald-600 font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
-                      View Details <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                <Image
+                  src="/images/gwdd-gravity.jpg"
+                  alt="Aqua2use GWDD Gravity"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">GWDD Gravity</h3>
+                <p className="text-3xl font-bold text-emerald-600 mb-4">$625</p>
+                <ul className="space-y-3 text-sm text-gray-600 mb-6 flex-grow">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Up to 150 gallons/day</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Gravity-fed (no pump)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>4-stage Matala filtration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Ideal for downhill landscapes</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
+                  <Link href="/products/aqua2use-gwdd">View Details</Link>
+                </Button>
+              </div>
+            </div>
 
-          <div className="text-center mt-12">
-            <Button variant="outline" size="lg" className="border-gray-300" asChild>
-              <Link href="/products">
-                View All Products
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            {/* GWDD with Pump */}
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
+              <div className="aspect-square relative bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+                <div className="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-medium px-3 py-1 rounded-full z-10">
+                  Most Versatile
+                </div>
+                <Image
+                  src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pump.jpg?v=1719253734"
+                  alt="Aqua2use GWDD with Pump"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">GWDD with Pump</h3>
+                <p className="text-3xl font-bold text-emerald-600 mb-4">$775</p>
+                <ul className="space-y-3 text-sm text-gray-600 mb-6 flex-grow">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Up to 150 gallons/day</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Includes submersible pump</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>4-stage Matala filtration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Works on flat or uphill terrain</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
+                  <Link href="/products/aqua2use-gwdd-pump">View Details</Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Aqua2use Pro */}
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
+              <div className="aspect-square relative bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+                <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full z-10">
+                  High Volume
+                </div>
+                <Image
+                  src="/images/gwdd-ug.jpg"
+                  alt="Aqua2use Pro"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Aqua2use Pro</h3>
+                <p className="text-3xl font-bold text-emerald-600 mb-4">$2,695</p>
+                <ul className="space-y-3 text-sm text-gray-600 mb-6 flex-grow">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Up to 500 gallons/day</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>High-capacity pump included</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>4-stage Matala filtration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>Commercial & large properties</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
+                  <Link href="/products/aqua2use-pro">View Details</Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      <WaterSourceSelector />
 
       {/* Benefits Section - Clean Grid */}
       <section className="py-24 lg:py-32">
@@ -216,7 +333,7 @@ export default async function Home() {
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <div>
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8 tracking-tight">
-                Why homeowners choose greywater
+                Why homeowners choose water recycling
               </h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
@@ -225,20 +342,20 @@ export default async function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">Save 40% on Water Bills</h3>
-                    <p className="text-gray-600">Recycle up to 40,000 gallons per year from showers and laundry</p>
+                    <p className="text-gray-600">Recycle greywater from showers and laundry, or harvest rainwater for irrigation</p>
                   </div>
                 </div>
-                
+
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
                     <Leaf className="h-6 w-6 text-teal-600" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">Healthier Landscapes</h3>
-                    <p className="text-gray-600">Plants thrive with nutrient-rich greywater irrigation</p>
+                    <p className="text-gray-600">Plants thrive with greywater nutrients or pure rainwater</p>
                   </div>
                 </div>
-                
+
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center">
                     <CheckCircle className="h-6 w-6 text-cyan-600" />
@@ -253,7 +370,7 @@ export default async function Home() {
               <div className="mt-10">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
                   <Link href="/what-is-greywater">
-                    Learn More About Greywater
+                    Learn More
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -284,29 +401,77 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Testimonial - Single Featured */}
-      <section className="py-24 lg:py-32 bg-emerald-50">
+      {/* Testimonials - Marquee Carousel */}
+      <section className="py-24 lg:py-32 bg-emerald-50 overflow-hidden">
+        <div className="container mx-auto px-4 mb-12">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+              What Our Customers Say
+            </h2>
+            <p className="text-xl text-gray-600">
+              Real reviews from Aqua2use owners
+            </p>
+          </div>
+        </div>
+
+        {/* Marquee Container */}
+        <div className="relative">
+          <div className="flex animate-marquee gap-6">
+            {[
+              { name: "Martin", initials: "M", bgColor: "bg-emerald-100", textColor: "text-emerald-700", review: "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.", product: "Aqua2use GWDD", image: null },
+              { name: "J.G.", initials: "JG", bgColor: "bg-teal-100", textColor: "text-teal-700", review: "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.", product: "Aqua2use GWDD", image: null },
+              { name: "Richard A.", initials: "RA", bgColor: "bg-blue-100", textColor: "text-blue-700", review: "I have had the GWDD for 2 years now to help water my yard in Arizona. Works great in the desert climate.", product: "Arizona Homeowner", image: "/images/customer-stories/arizona-oasis.jpg" },
+              { name: "Jay L.", initials: "JL", bgColor: "bg-purple-100", textColor: "text-purple-700", review: "I permanently live in a travel trailer. The grey water system enabled me to begin watering all my plants and I've been happy with the results.", product: "RV Owner", image: null },
+              { name: "Mike E.", initials: "ME", bgColor: "bg-cyan-100", textColor: "text-cyan-700", review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.", product: "Tiny Home Owner", image: null },
+              { name: "California Family", initials: "CF", bgColor: "bg-orange-100", textColor: "text-orange-700", review: "Our 60-year-old redwoods are thriving thanks to greywater irrigation. We've cut our water bill by 40% while keeping our landscape lush during drought restrictions.", product: "California Homeowner", image: "/images/customer-stories/california-family.jpg" },
+              { name: "Martin", initials: "M", bgColor: "bg-emerald-100", textColor: "text-emerald-700", review: "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.", product: "Aqua2use GWDD", image: null },
+              { name: "J.G.", initials: "JG", bgColor: "bg-teal-100", textColor: "text-teal-700", review: "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.", product: "Aqua2use GWDD", image: null },
+              { name: "Richard A.", initials: "RA", bgColor: "bg-blue-100", textColor: "text-blue-700", review: "I have had the GWDD for 2 years now to help water my yard in Arizona. Works great in the desert climate.", product: "Arizona Homeowner", image: "/images/customer-stories/arizona-oasis.jpg" },
+              { name: "Jay L.", initials: "JL", bgColor: "bg-purple-100", textColor: "text-purple-700", review: "I permanently live in a travel trailer. The grey water system enabled me to begin watering all my plants and I've been happy with the results.", product: "RV Owner", image: null },
+              { name: "Mike E.", initials: "ME", bgColor: "bg-cyan-100", textColor: "text-cyan-700", review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.", product: "Tiny Home Owner", image: null },
+              { name: "California Family", initials: "CF", bgColor: "bg-orange-100", textColor: "text-orange-700", review: "Our 60-year-old redwoods are thriving thanks to greywater irrigation. We've cut our water bill by 40% while keeping our landscape lush during drought restrictions.", product: "California Homeowner", image: "/images/customer-stories/california-family.jpg" },
+            ].map((testimonial, index) => (
+              <div key={index} className="flex-shrink-0 w-[350px] bg-white rounded-2xl overflow-hidden">
+                {testimonial.image && (
+                  <div className="relative h-48">
+                    <Image
+                      src={testimonial.image}
+                      alt={`${testimonial.name}'s garden`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-6">
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <blockquote className="text-gray-700 text-sm mb-4 leading-relaxed line-clamp-4">
+                    "{testimonial.review}"
+                  </blockquote>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 h-9 ${testimonial.bgColor} rounded-full flex items-center justify-center`}>
+                      <span className={`text-xs font-semibold ${testimonial.textColor}`}>{testimonial.initials}</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">{testimonial.name}</p>
+                      <p className="text-xs text-gray-500">{testimonial.product}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Quote className="h-12 w-12 text-emerald-300 mx-auto mb-8" />
-            <blockquote className="text-2xl lg:text-3xl font-medium text-gray-900 mb-8 leading-relaxed">
-              "We've cut our water bill by 60% since installing the Aqua2use system. 
-              Our garden has never looked better, and the installation was straightforward."
-            </blockquote>
-            <div className="flex items-center justify-center gap-4">
-              <div className="w-14 h-14 bg-emerald-200 rounded-full flex items-center justify-center">
-                <span className="text-lg font-semibold text-emerald-700">SJ</span>
-              </div>
-              <div className="text-left">
-                <p className="font-semibold text-gray-900">Sarah Johnson</p>
-                <p className="text-gray-600">Homeowner, California</p>
-              </div>
-            </div>
-            <div className="flex justify-center gap-1 mt-6">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
+          <div className="text-center mt-12">
+            <Link href="/customer-stories" className="text-emerald-600 font-medium hover:text-emerald-700 inline-flex items-center gap-2">
+              Read More Customer Stories
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

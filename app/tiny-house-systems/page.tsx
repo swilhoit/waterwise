@@ -298,19 +298,19 @@ export default function TinyHouseSystems() {
             <Card>
               <CardContent className="pt-6">
                 <blockquote className="text-gray-700 italic mb-4">
-                  "Our greywater system has been a game-changer for off-grid living. We can stay in remote locations 
-                  for weeks without worrying about water. The system takes up less space than a small closet."
+                  "While planning the design of our tiny house, I explored various grey water filtering systems.
+                  This particular design seamlessly integrated into our wastewater management plan."
                 </blockquote>
-                <footer className="text-sm text-gray-600">— Maria & Josh, Full-time Tiny House Dwellers</footer>
+                <footer className="text-sm text-gray-600">— Mike E., Tiny Home Owner</footer>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <blockquote className="text-gray-700 italic mb-4">
-                  "Installation was easier than expected, and the daily maintenance is minimal. Our plants love the 
-                  nutrient-rich greywater, and we've cut our water costs by 60%."
+                  "I have had my Aqua2Use for about 5 years. It has performed flawlessly.
+                  I use grey water to water my flower beds."
                 </blockquote>
-                <footer className="text-sm text-gray-600">— Alex, Tiny House Builder</footer>
+                <footer className="text-sm text-gray-600">— Martin, Aqua2use GWDD Owner</footer>
               </CardContent>
             </Card>
           </div>

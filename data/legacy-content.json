@@ -1,0 +1,881 @@
+{
+  "metadata": {
+    "source": "waterwisegroup.com",
+    "extractedDate": "2025-12-12",
+    "purpose": "SEO migration content preservation"
+  },
+  "homepage": {
+    "metaTitle": "Greywater System | Greywater Filtration Systems – Water Wise Group",
+    "hero": {
+      "heading": "Reuse Water From Your Home For Irrigation",
+      "subheading": "Save water, lower utility costs, and create a thriving landscape in any climate. Buy water once, use it twice. That's living Water Wise.",
+      "ctas": ["Shop Now", "Contact Us"]
+    },
+    "trustIndicators": {
+      "asSeenIn": ["Building Green", "Architect Magazine", "Family Handyman", "The Washington Post"]
+    },
+    "productSection": {
+      "heading": "Aqua2use Greywater Systems",
+      "description": "The Aqua2use Greywater Diversion Device (GWDD) collects household greywater and filters it through a progressive 4-stage Matala® system. The media's open structure supports a thin biofilm that biologically purifies the water after solids are removed — lowering organics and protecting soil and emitters — so you can reclaim clean greywater for reliable irrigation."
+    },
+    "testimonials": [
+      {
+        "customer": "John E.",
+        "quote": "The ordering process is easy and straightforward. The product arrives quickly and in perfect condition.",
+        "date": "10/16/2025"
+      },
+      {
+        "customer": "Mike E.",
+        "quote": "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan.",
+        "product": "Aqua2use GWDD",
+        "date": "04/06/2025"
+      },
+      {
+        "customer": "J.G.",
+        "quote": "GWDD System 5 years STILL working perfectly! Received a GWDD pump unit in 2020 and has been performing top notch ever since.",
+        "product": "Aqua2use GWDD",
+        "date": "04/01/2025"
+      },
+      {
+        "customer": "Jay L.",
+        "quote": "I permanently live in a travel trailer...The grey water system enabled me to begin watering all my plants and I've been happy with the results.",
+        "product": "Aqua2use GWDD",
+        "date": "03/29/2025"
+      },
+      {
+        "customer": "Martin",
+        "quote": "I have had my Aqua2Use for about 5 years. It has performed flawlessly. I use grey water to water my flower beds.",
+        "product": "Aqua2use GWDD",
+        "date": "03/29/2025"
+      },
+      {
+        "customer": "Richard A.",
+        "quote": "I have had the GWDD for 2 years now to help water my yard in Arizona.",
+        "product": "Aqua2use GWDD",
+        "date": "03/29/2025"
+      }
+    ],
+    "reviewCount": 17
+  },
+  "pages": {
+    "aboutUs": {
+      "url": "/pages/about-us",
+      "newUrl": "/about",
+      "metaTitle": "About Us - Water Wise Group",
+      "content": {
+        "heading": "Water Wise Group – Greywater Systems Distributor",
+        "intro": "Water Wise Group has been the exclusive U.S. distributor of Aqua2use Greywater Systems since 2010. We're headquartered in Atlanta, Georgia and ship nationwide from our California warehouse.",
+        "ownerSection": {
+          "name": "Sam Wilhoit",
+          "title": "Owner",
+          "quote": "My mission is simple: help conserve our most precious resource — clean water. We make greywater reuse accessible, affordable, and sustainable for every home. Pay once, use twice. That's living Water Wise."
+        },
+        "companyDescription": "Water Wise Group, Inc. is a wholesale distributor of Greywater Systems, headquartered in Atlanta, Georgia. In March 2010, we signed our first distribution agreement with Matala Water Technology Co., Ltd. to represent and distribute the Aqua2use Greywater Diversion Device in the United States."
+      },
+      "contact": {
+        "location": "Atlanta, GA 30068",
+        "phone": "(678) 809-3008",
+        "email": "sales@waterwisegroup.com"
+      },
+      "social": {
+        "facebook": "facebook.com/waterwisegroup",
+        "instagram": "instagram.com/waterwisegreywater/",
+        "youtube": "youtube.com/user/WaterWiseGroup"
+      }
+    },
+    "contactUs": {
+      "url": "/pages/contact-us",
+      "newUrl": "/contact",
+      "metaTitle": "Contact Us | Water Wise Group",
+      "content": {
+        "heading": "Contact Us",
+        "intro": "Have a question or need help choosing the right system? Give us a call at (678) 809-3008 or fill out the form below — we'll get back to you as soon as possible.",
+        "guidance": "To make sure we share the right information for your area, please include your city, county, and state. That helps us check the local greywater code and send you the most accurate guidance.",
+        "closing": "We look forward to hearing from you!"
+      },
+      "formFields": ["Name", "Email (required)", "Phone number", "Comment"],
+      "contact": {
+        "phone": "(678) 809-3008",
+        "email": "sales@waterwisegroup.com",
+        "address": "Water Wise Group, Atlanta, GA 30068"
+      }
+    },
+    "shippingPolicy": {
+      "url": "/policies/shipping-policy",
+      "newUrl": "/shipping",
+      "content": "We currently only ship to the USA. All orders are processed within 2 business days and are typically shipped Fedex Home Delivery which takes 2-6 days for delivery. If we are experiencing a high volume of orders, shipments may be delayed by a few days. Please allow additional days in transit for delivery. If there will be a significant delay in shipment of your order, we will contact you via email or telephone.",
+      "details": {
+        "coverage": "USA only",
+        "processingTime": "2 business days",
+        "carrier": "FedEx Home Delivery",
+        "deliveryWindow": "2-6 days"
+      }
+    },
+    "refundPolicy": {
+      "url": "/policies/refund-policy",
+      "newUrl": "/returns",
+      "content": {
+        "eligibility": "We have a 30-day return policy, which means you have 30 days after receiving your item to request a return.",
+        "conditions": [
+          "Same condition as received",
+          "Unworn or unused",
+          "Tags attached",
+          "Original packaging intact",
+          "Receipt or proof of purchase required"
+        ],
+        "process": "Contact the company at sales@waterwisegroup.com to initiate returns.",
+        "returnAddress": "1725 Rosecrans Ave, Gardena, CA 90249",
+        "shippingCost": "Customers are responsible for all return shipping costs.",
+        "refundTimeline": "Once the company receives and inspects the return, customers will be notified of approval or denial. If approved, refunds process to the original payment method within 10 business days."
+      }
+    },
+    "privacyPolicy": {
+      "url": "/policies/privacy-policy",
+      "newUrl": "/privacy",
+      "summary": {
+        "dataCollection": "The types of personal information we obtain about you depends on how you interact with our Site and use our Services.",
+        "directCollection": "Contact details, order information, account credentials, and customer support communications",
+        "automaticCollection": "Usage Data may include information about how you access and use our Site and your account, including device information, browser information.",
+        "thirdPartySources": "Information comes from vendors, payment processors, and Shopify's ecosystem.",
+        "cookiePolicy": "You can choose to set your browser to remove or reject Cookies through your browser controls.",
+        "childrenPolicy": "The Services are not intended to be used by children, and we do not knowingly collect any personal information about children."
+      }
+    },
+    "termsOfService": {
+      "url": "/policies/terms-of-service",
+      "newUrl": "/terms",
+      "summary": {
+        "agreement": "By visiting our site and/or purchasing something from us, you engage in our Service and agree to be bound by the following terms and conditions.",
+        "ageRequirement": "Users must be of legal age in their jurisdiction or have parental consent for minors to use the platform.",
+        "prohibitedActivities": "The terms forbid illegal use, transmitting malware, and unauthorized reproduction of content.",
+        "modifications": "Water Wise Group reserves authority to alter prices, modify services, or discontinue products without advance notice.",
+        "disclaimer": "We are not responsible if information made available on this site is not accurate, complete or current."
+      }
+    }
+  },
+  "solutionPages": {
+    "tinyHomes": {
+      "url": "/pages/greywater-systems-for-tiny-homes",
+      "newUrl": "/solutions/tiny-homes",
+      "metaTitle": "Greywater Systems for Tiny Homes – Water Wise Group",
+      "content": {
+        "heroHeading": "Live Small. Save Big. Go Green.",
+        "valueProposition": "Tiny homes need to save water. Use less, protect nature, and follow the rules—all while living a green life.",
+        "problemStatement": "Untreated greywater from showers, sinks, and washing machines represents wasted potential. Turn every drop of your shower and laundry into a lush garden that cuts your bills and fuels your off-grid life.",
+        "benefits": [
+          {
+            "title": "Save Money Instantly",
+            "description": "Cut your water bill by 40% and enjoy lower monthly bills"
+          },
+          {
+            "title": "Conserve Water",
+            "description": "Reuse non-sewage waste water to significantly reduce water consumption"
+          },
+          {
+            "title": "Environmental Impact",
+            "description": "Recycle your grey water to create a sustainable lifestyle"
+          }
+        ],
+        "productDetails": {
+          "name": "Aqua2use Grey Water Diversion System",
+          "priceFrom": "$625.00",
+          "dimensions": "24\" length × 15\" width × 20\" height",
+          "installationTime": "2-4 hours",
+          "annualSavings": "40,000 gallons of water each year",
+          "filterMaintenance": "Recommended cycle every 4-6 months",
+          "warranty": "12 month replacement warranty"
+        },
+        "howItWorks": [
+          "Collect water from laundry, sinks, bath, and shower",
+          "Filter using advanced filter mats",
+          "Automatically pump filtered water via subsurface drip irrigation to plants"
+        ],
+        "safetyNote": "It is absolutely safe to use greywater to water your plants and your trees when using drip irrigation and low-phosphate detergent."
+      },
+      "tagline": "Collect. Filter. Flourish."
+    },
+    "rvs": {
+      "url": "/pages/greywater-systems-for-rvs",
+      "newUrl": "/solutions/rvs",
+      "metaTitle": "Greywater Systems for RVs – Water Wise Group",
+      "content": {
+        "heroHeading": "Greywater Systems for RVs",
+        "valueProposition": "Embrace sustainable RV living and maximize water conservation through Aqua2use, enabling travelers to dramatically reduce water consumption, optimize wastewater management, and ensure environmental compliance.",
+        "subheading": "RV Water Recycling Made Simple",
+        "description": "The system transforms water management challenges by reclaiming greywater for irrigation, reducing environmental strain and operational costs.",
+        "benefits": [
+          {
+            "title": "Instant Savings",
+            "description": "Reduces campground dumping fees and freshwater purchases"
+          },
+          {
+            "title": "Conserve Up to 40,000 Gallons Annually",
+            "description": "Extends RV water tank usage and reduces refill frequency"
+          },
+          {
+            "title": "Environmental Responsibility",
+            "description": "Minimizes ecological footprint through water reuse"
+          }
+        ],
+        "productFeatures": {
+          "dimensions": "24\" L x 15\" W x 20\" H",
+          "characteristics": [
+            "Lightweight and portable for tight RV compartments",
+            "UV-resistant material",
+            "Quiet operation"
+          ]
+        },
+        "recommendedProduct": {
+          "name": "Aqua2use Pro Greywater Diversion System",
+          "price": "$2,695.00"
+        },
+        "maintenance": "Minimal upkeep—simply rinse the filters every 4-6 months using a hose.",
+        "warranty": "All parts and the pump are covered by a 12 month replacement warranty."
+      }
+    },
+    "laundryToLandscape": {
+      "url": "/pages/laundry-to-landscape-greywater-system",
+      "newUrl": "/solutions/laundry-to-landscape",
+      "metaTitle": "Buy Your Laundry-to-Landscape Greywater System – Water Wise Group",
+      "content": {
+        "heading": "Buy Your Laundry-to-Landscape Greywater System",
+        "intro": "Join thousands of homeowners turning rinse cycles into real savings. The Aqua2use GWDD is the easiest way to start reusing greywater—no plumbing overhaul, no guesswork, just smart water use.",
+        "features": [
+          "Easy installation (no plumbing overhaul required)",
+          "Simple operation (no guesswork)",
+          "Greywater reuse from laundry cycles",
+          "Water savings for landscaping/irrigation"
+        ]
+      }
+    },
+    "greywaterPumps": {
+      "url": "/pages/greywater-pumps",
+      "metaTitle": "Greywater Pumps – Water Wise Group",
+      "content": {
+        "headings": [
+          "Greywater Pumps – Eco-Friendly Water Recycling Solutions",
+          "Efficient Greywater Pumps for Sustainable Living",
+          "Why Use Greywater Pumps?",
+          "Aqua2use Greywater System – The Superior Choice",
+          "Types of Greywater Pumps We Offer",
+          "Hassle-Free Installation and Maintenance",
+          "Why Partner with Water Wise Group?",
+          "Customer Success Stories",
+          "Take Action Towards Sustainable Living Today"
+        ],
+        "valuePropositions": [
+          "Save up to 40,000 gallons of water annually with our systems",
+          "Reduce water bills by reusing water from showers, sinks, and washing machines",
+          "Over 5,000 systems sold since 2010"
+        ],
+        "systemFeatures": [
+          "Six-layer progressive filtration system",
+          "Built-in 3-way diverter valve",
+          "Maintenance every 4–6 months",
+          "Works with existing plumbing"
+        ],
+        "pumpTypes": [
+          "Submersible Pumps",
+          "External Pumps",
+          "Centrifugal Pumps",
+          "Multistage Pumps"
+        ]
+      }
+    }
+  },
+  "customerStories": {
+    "californiaHomeowner": {
+      "url": "/pages/california-homeowner-uses-aqua2use-to-save-water-and-his-trees",
+      "newUrl": "/customer-stories/california-homeowner",
+      "metaTitle": "How One California Homeowner Uses Aqua2use to Save Water—and His Trees",
+      "content": {
+        "title": "How One California Homeowner Uses Aqua2use to Save Water—and His Trees",
+        "customerName": "Jay",
+        "location": "California",
+        "situation": "Jay faced drought concerns threatening his landscape, particularly his 60-year-old redwoods and camellias. He sought an affordable method to conserve water while protecting his valuable trees during California's recurring drought cycles.",
+        "solution": "Jay installed an Aqua2use system with professional plumbing support. A two-way valve redirects greywater from washing machines, sinks, tubs, and showers to either the system or municipal sewer. He added an indexing valve to distribute filtered water across multiple trees. The setup cost under $1,000.",
+        "results": [
+          "System now reuses approximately 90% of household greywater for landscape irrigation",
+          "Maintenance requires only 10-15 minutes every 3-4 months",
+          "Trees receive consistent water supply during drought periods"
+        ],
+        "quotes": [
+          "If you're even a little handy and care about saving water, Aqua2use is an affordable way to make a big impact.",
+          "We can replant flowers. We can't replace those redwoods.",
+          "This works best when people understand the system and get help."
+        ]
+      }
+    },
+    "rvOwner": {
+      "url": "/pages/rv-owner-transformed-greywater-into-greenery",
+      "newUrl": "/customer-stories/rv-owner",
+      "metaTitle": "From Muddy Mess to Thriving Garden: How One RV Owner Transformed Greywater into Greenery",
+      "content": {
+        "title": "From Muddy Mess to Thriving Garden: How One RV Owner Transformed Greywater into Greenery",
+        "customerName": "Jay Linden",
+        "situation": "Jay lived permanently in a travel trailer and initially discharged greywater directly onto the property. This created persistent puddles, foul odors, and excess moisture pooling around the trailer, making the surrounding area unpleasant and unsanitary.",
+        "solution": "Jay installed the Aqua2use Grey Water Diversion Device (GWDD), connecting it directly to the RV's greywater hose. The filtered water redirects through a standard garden hose to irrigate surrounding plants. Jay rotates the hose every few days to distribute water evenly.",
+        "results": [
+          "Plants around the trailer thrive on nutrient-rich greywater",
+          "Eliminated standing water problems around the trailer",
+          "Easy connection to standard RV fittings with minimal maintenance required"
+        ],
+        "quote": "I've been happy with the results. The plants are healthy and around my trailer is dry."
+      }
+    }
+  },
+  "compliancePages": {
+    "california": {
+      "url": "/pages/greywater-compliance-ca",
+      "newUrl": "/greywater-laws/california",
+      "metaTitle": "California Greywater Compliance Guide – Water Wise Group",
+      "content": {
+        "stateRegulations": "California follows standard plumbing codes. Check with local jurisdictions for specific requirements.",
+        "noPermitRequired": "No permit required for washing machine-only systems in single/two-family dwellings.",
+        "essentialRules": [
+          "Flow direction must be clearly labeled and accessible",
+          "Greywater shall be contained on the site where it is generated",
+          "Ponding and runoff prohibited",
+          "Minimum 2-inch mulch coverage required at release points",
+          "Operation manuals must accompany the property through ownership changes"
+        ],
+        "countiesCovered": [
+          "Los Angeles County",
+          "San Diego County",
+          "Orange County",
+          "Santa Clara County",
+          "Riverside County",
+          "San Bernardino County",
+          "Alameda County"
+        ]
+      }
+    },
+    "arizona": {
+      "url": "/pages/greywater-compliance-az",
+      "newUrl": "/greywater-laws/arizona",
+      "metaTitle": "Arizona Greywater Compliance Guide – Water Wise Group",
+      "content": {
+        "stateRegulations": "This state follows standard plumbing codes. Check with local jurisdictions for specific requirements.",
+        "noPermitRequired": "No permit needed for systems under 400 gallons daily flow.",
+        "taxIncentive": "Residents receive 25% of the cost of installing a water conservation system not to exceed $1000.",
+        "type1Requirements": [
+          "Human contact must be avoided",
+          "Greywater stays within property boundaries for gardening and landscape use",
+          "Surface irrigation excluded for food plants except citrus and nuts",
+          "No hazardous chemicals allowed",
+          "Minimum 5-foot vertical separation from groundwater",
+          "No spray irrigation permitted"
+        ],
+        "countiesCovered": ["Maricopa County", "Pima County"],
+        "incentivePrograms": [
+          "Tempe Water Greywater System Rebate",
+          "Tucson Water Greywater System Rebate"
+        ]
+      }
+    },
+    "texas": {
+      "url": "/pages/greywater-compliance-tx",
+      "newUrl": "/greywater-laws/texas",
+      "metaTitle": "Texas Greywater Compliance Guide – Water Wise Group",
+      "content": {
+        "stateRegulations": "This state follows standard plumbing codes. Check with local jurisdictions for specific requirements.",
+        "noPermitRequired": "No permit for residential use under 400 gallons daily.",
+        "operationalStandards": [
+          "Originates from a private residence for personal gardening and landscaping",
+          "Tanks must be clearly labeled nonpotable",
+          "Purple piping required to identify non-potable lines",
+          "No ponding, runoff, or spray distribution allowed",
+          "Excludes kitchen sink wastewater and materials soiled with human waste"
+        ],
+        "countiesCovered": [
+          "Harris County",
+          "Dallas County",
+          "Bexar County",
+          "Tarrant County",
+          "Travis County",
+          "Collin County",
+          "Denton County"
+        ],
+        "incentivePrograms": [
+          "Dallas Water Utilities ICI Commercial Rebate Program",
+          "SAWS RainSaver Cistern Rebate",
+          "SAWS Commercial Custom Rebate",
+          "Austin Water Laundry to Landscape Rebate"
+        ]
+      }
+    },
+    "oregon": {
+      "url": "/pages/greywater-compliance-or",
+      "newUrl": "/greywater-laws/oregon",
+      "metaTitle": "Oregon Greywater Compliance Guide – Water Wise Group",
+      "content": {
+        "governingCode": "Oregon Plumbing Specialty Code (OPSC) - Chapter 15",
+        "allowance": "Greywater systems are permitted for residential use",
+        "scope": "Applies to residential properties only",
+        "coreRestriction": "Systems must meet specific design and installation requirements",
+        "installationRequirement": "Professional installation and plumbing permit required",
+        "keyRequirements": [
+          "Licensed plumbers must install systems",
+          "Building department permits required",
+          "Design must prevent ponding and runoff",
+          "Subsurface irrigation only (no surface application)",
+          "Cannot treat vegetables or root crops intended for consumption"
+        ],
+        "countiesCovered": ["Multnomah County", "Washington County", "Lane County"],
+        "disclaimer": "This information is current as of 2024 but regulations may change. Always verify current requirements with your local building department before installing a greywater system."
+      }
+    },
+    "washington": {
+      "url": "/pages/greywater-compliance-wa",
+      "newUrl": "/greywater-laws/washington",
+      "metaTitle": "Washington Greywater Compliance Guide – Water Wise Group",
+      "content": {
+        "governingCode": "Washington Administrative Code (WAC) 246-274-200",
+        "allowance": "Greywater systems are permitted with proper permitting",
+        "applicability": "Residential and some commercial properties",
+        "restrictions": "Must meet design standards, no pooling, subsurface irrigation",
+        "tieredApproach": {
+          "tier1": "Up to 60 gallons/day, simplified installation",
+          "tier2": "60-300 gallons/day, requires detailed plans"
+        },
+        "coreRequirements": [
+          "Permit required from local health department",
+          "Designed and installed per WAC standards",
+          "Mulch basins or subsurface irrigation required",
+          "Cannot be used on root vegetables or vegetables that touch the soil"
+        ],
+        "countyContacts": [
+          {"county": "King County", "phone": "(206) 263-9566"},
+          {"county": "Pierce County", "department": "Tacoma-Pierce County Health Department"},
+          {"county": "Snohomish County", "department": "Snohomish Health District"},
+          {"county": "Spokane County", "department": "Spokane Regional Health District"}
+        ],
+        "disclaimer": "This information is current as of 2024 but regulations may change. Always verify current requirements with your local health department before installing a greywater system."
+      }
+    },
+    "colorado": {
+      "url": "/pages/greywater-compliance-co",
+      "newUrl": "/greywater-laws/colorado",
+      "metaTitle": "Colorado Greywater Compliance Guide – Water Wise Group",
+      "content": {
+        "governingAuthority": "Colorado Department of Public Health and Environment (CDPHE)",
+        "regulation": "Regulation 86 - Individual Sewage Disposal Systems",
+        "permitting": "Permit required from local health department before installation",
+        "applicability": "Permitted in Colorado with proper design and permitting for residential properties",
+        "keyRequirements": [
+          "Systems must be designed by qualified professionals",
+          "Subsurface irrigation required (no surface discharge)",
+          "Cannot be used on edible root vegetables",
+          "Must maintain setbacks from wells, property lines, and structures",
+          "System capacity determination based on bedroom count and water usage"
+        ],
+        "countyContacts": [
+          {"county": "Denver", "department": "Denver Department of Public Health & Environment", "phone": "(303) 602-3500"},
+          {"county": "Boulder", "department": "Boulder County Public Health", "phone": "(303) 441-1100"},
+          {"county": "El Paso", "department": "El Paso County Public Health", "website": "elpasocountyhealth.org"},
+          {"county": "Jefferson", "department": "Jefferson County Public Health"}
+        ],
+        "disclaimer": "This information is current as of 2024 but regulations may change."
+      }
+    }
+  },
+  "landingPages": {
+    "l2lTucson": {
+      "url": "/pages/l2l-tucson",
+      "metaTitle": "Laundry to Landscape Systems in Tucson – Water Wise Group",
+      "content": {
+        "heading": "Laundry to Landscape Greywater Systems",
+        "subheading": "Save water, save money, and help your garden thrive with a simple greywater recycling system.",
+        "impactStats": {
+          "galllonsSaved": "10000+ Gallons Saved Yearly",
+          "annualSavings": "$300 Annual Savings",
+          "waterReduction": "40% Less Outdoor Water Use",
+          "installationTime": "2 days Installation Time"
+        }
+      }
+    },
+    "l2lAustin": {
+      "url": "/pages/l2l-austin",
+      "metaTitle": "Laundry to Landscape Greywater Systems – Water Wise Group (Austin)",
+      "content": {
+        "heading": "Laundry to Landscape Greywater Systems",
+        "subheading": "Save water, save money, and help your garden thrive with a simple greywater recycling system",
+        "rebateHighlight": "$600 Rebate Is Available in Austin for installing a greywater system!",
+        "impactStats": {
+          "gallonsSaved": "10,000+ Gallons saved yearly",
+          "annualSavings": "$300 average annual savings",
+          "waterReduction": "40% reduction in outdoor irrigation",
+          "installationTime": "2 days typical DIY installation"
+        }
+      }
+    },
+    "l2lLosAngeles": {
+      "url": "/pages/l2l-los-angeles",
+      "metaTitle": "Laundry to Landscape Greywater Systems in Los Angeles – Water Wise Group",
+      "content": {
+        "heading": "Laundry to Landscape Greywater Systems",
+        "subheading": "Save water, save money, and help your garden thrive with a simple greywater recycling system.",
+        "impactStats": {
+          "gallonsSaved": "10,000+ gallons saved yearly per household",
+          "annualSavings": "$300 average annual savings",
+          "waterReduction": "40% reduction in outdoor water irrigation needs",
+          "installationTime": "2 days typical installation timeframe"
+        }
+      }
+    },
+    "tucsonRebate": {
+      "url": "/pages/tucson-laundry-to-landscape-rebate",
+      "metaTitle": "Tucson Laundry to Landscape Rebate – Water Wise Group",
+      "content": {
+        "heading": "Tucson Greywater Rebate: Get Up to $1,000 Back On Your Greywater System",
+        "rebateDetails": {
+          "coverage": "50% of eligible project costs, up to $1,000",
+          "provider": "Tucson Water"
+        },
+        "eligibilityRequirements": [
+          "Attend a free Tucson Water greywater workshop before installation",
+          "System must be permanent and code-compliant",
+          "Rebate applies to materials, design, tanks, pumps, and parts (not hoses or non-permanent components)",
+          "Only one rebate per property",
+          "System must meet Tucson's plumbing/backflow requirements"
+        ],
+        "applicationProcess": "Attend approved workshop, submit project plan, official rebate application, and itemized receipts.",
+        "waterSavings": "Systems typically save 30–50% of a home's total indoor water use, often equaling 15,000–40,000+ gallons per year.",
+        "productPricing": {
+          "regularPrice": "$945",
+          "afterRebate": "approximately $428"
+        }
+      }
+    },
+    "greywaterDirectory": {
+      "url": "/pages/greywater-directory",
+      "newUrl": "/greywater-laws",
+      "metaTitle": "Greywater Regulations Directory – Water Wise Group",
+      "content": {
+        "heading": "Greywater Regulations by State",
+        "subheading": "Explore greywater regulations, rebates, and compliance information for your state",
+        "instruction": "Select a state below to learn about local requirements and available programs.",
+        "availableStates": ["Arizona", "California", "Colorado", "Oregon", "Texas", "Washington"],
+        "infoCategories": ["Regulations", "Rebate Info", "Permit Guide"],
+        "regions": ["West", "Midwest", "Southeast", "Northeast"]
+      }
+    }
+  },
+  "products": {
+    "aqua2useGwdd": {
+      "url": "/products/aqua2use-gwdd",
+      "metaTitle": "Greywater System Aqua2use GWDD - Water Wise Group",
+      "name": "Aqua2use Grey Water Diversion System",
+      "description": "The system captures water from your laundry, showers, and bathroom sinks, allowing you to reuse up to 40,000 gallons each year. It features advanced 4-stage progressive filtration that removes lint, hair, and soap residues to produce filtered greywater suitable for outdoor irrigation.",
+      "features": [
+        "Captures greywater from laundry, showers, and bathroom sinks",
+        "4-stage progressive filtration system",
+        "Removes lint, hair, and soap residues",
+        "Produces up to 40,000 gallons annually for reuse",
+        "Safe for outdoor irrigation purposes",
+        "Quiet pump performance",
+        "Available with or without pump"
+      ],
+      "variants": [
+        {"name": "GWDD - Includes Pump", "price": "$945.00", "sku": "42716695462094"},
+        {"name": "Gravity - No Pump Included", "price": "$625.00", "sku": "42716695429326"}
+      ],
+      "reviewCount": 11
+    },
+    "aqua2usePro": {
+      "url": "/products/aqua2use-pro",
+      "metaTitle": "Greywater System Aqua2use Pro - Water Wise Group",
+      "name": "Aqua2use Pro Greywater Diversion System",
+      "description": "The Aqua2use Pro represents a high-capacity solution designed for larger residential properties, multi-unit buildings, and light commercial applications. This system processes water at up to 25 gallons per minute and captures water from laundry, showers, and bathroom sinks for outdoor irrigation purposes.",
+      "features": [
+        "Processes up to 25 gallons per minute",
+        "Recycles over 40,000 gallons annually",
+        "4-stage progressive filtration core with 140% more filter surface area compared to standard models",
+        "33% higher-output pump than standard versions",
+        "Delivers cleaner, more consistent greywater"
+      ],
+      "price": "$2,695.00",
+      "reviewCount": 1
+    }
+  },
+  "blogArticles": {
+    "whatIsGreywater": {
+      "url": "/blogs/greywater-education/what-is-greywater",
+      "newUrl": "/blog/what-is-greywater",
+      "metaTitle": "Greywater: What is it? - Water Wise Group",
+      "content": {
+        "heading": "Greywater Meaning",
+        "definition": "Greywater (or graywater) encompasses relatively clean wastewater generated from household activities including bathing, hand washing, and laundry. This water can be recycled and reused for purposes like irrigation and flushing toilets.",
+        "primaryUse": "Irrigation as the primary application. Greywater provides a continuous supply unlike seasonal rainwater. The system connects to home irrigation networks to deliver filtered water to gardens and landscaping.",
+        "guidelines": [
+          "Storage should not exceed 24 hours to prevent nutrient degradation and odors",
+          "Human and animal contact must be minimized; vegetables should never be irrigated",
+          "Water must soak into ground rather than pool or run off",
+          "Systems should remain simple and low-maintenance"
+        ],
+        "vsBlackwater": "The distinction centers on contamination: blackwater contacts urine and fecal matter from toilets and kitchen sources, making it difficult to filter. Greywater from washing machines, showers, and bathroom sinks avoids fecal contamination, allowing safe filtering and garden reuse."
+      },
+      "author": "Sam Wilhoit"
+    },
+    "greywaterBenefits": {
+      "url": "/blogs/greywater-education/greywater-benefits",
+      "newUrl": "/blog/greywater-benefits",
+      "metaTitle": "Greywater System Benefits – Water Wise Group",
+      "content": {
+        "mainHeading": "Greywater System Benefits",
+        "subheading": "Greywater Systems Help the Earth, Your Wallet and Your Home",
+        "keyStat": "A homeowner who installs a greywater system saves up to 40,000 gallons of water per year",
+        "sections": [
+          "Greywater and Irrigation",
+          "Greywater is Beneficial and Safe for Plants",
+          "Greywater Systems Help Turn Your Home into an Eco-Friendly Home",
+          "Greywater Systems Help Manage Dry Soil Problems",
+          "Greywater Systems and Watering Plants"
+        ],
+        "plantSafety": "The systems retain minimal soap content that encourages growth and adds nutrients to your garden's soil. Important restriction: do not use greywater on vegetables. Users should employ low or no-phosphorus detergents when sourcing from washing machines.",
+        "droughtBenefit": "During drought restrictions, gardens can continue to thrive using greywater systems, ensuring consistent nutrient delivery to plant roots."
+      },
+      "author": "Sam Wilhoit"
+    },
+    "howCanIUseGreywater": {
+      "url": "/blogs/greywater-education/how-can-i-use-greywater",
+      "newUrl": "/blog/how-can-i-use-greywater",
+      "metaTitle": "Greywater Systems & How You Can Use Them - Water Wise Group",
+      "content": {
+        "heading": "Greywater Systems & How You Can Use Them (+Diagram)",
+        "sections": [
+          "Why Consider a Greywater System",
+          "What Is Greywater?",
+          "How Greywater Systems Work",
+          "Is Greywater Safe for Plants?",
+          "Safe Soaps and Detergents to Use",
+          "How Much Water Can You Reuse?",
+          "Environmental and Financial Benefits",
+          "What to Consider Before Installing",
+          "Simple Maintenance & Long-Term Reliability"
+        ],
+        "waterGenerationTable": {
+          "2bedrooms": {"laundry": "30 gpd", "bathroom": "50 gpd", "total": "80 gpd", "irrigatedArea": "564 sqft"},
+          "3bedrooms": {"laundry": "45 gpd", "bathroom": "75 gpd", "total": "120 gpd", "irrigatedArea": "846 sqft"},
+          "4bedrooms": {"laundry": "60 gpd", "bathroom": "100 gpd", "total": "160 gpd", "irrigatedArea": "1129 sqft"},
+          "5bedrooms": {"laundry": "75 gpd", "bathroom": "125 gpd", "total": "200 gpd", "irrigatedArea": "1411 sqft"}
+        },
+        "recommendedProducts": {
+          "laundryDetergents": ["Oasis Laundry Liquid", "Bio Pac Laundry Liquid", "Soap Nuts", "Hydrogen Peroxide / Oxygen Bleach", "Everspring", "Seventh Generation", "Puretergent"],
+          "bodySoaps": ["Dr. Bronner's Castile Soaps", "Alaffia Everyday Shampoo", "Desert Essence Organics", "EO (Everyone) Shampoo", "Aubrey Organics", "Biokleen Citrus Shampoo"],
+          "cleaners": ["Oasis Dishwash / All-Purpose Cleaner", "Dr. Bronner's Liquid Castile Soap", "Ecos products"],
+          "brandsToAvoid": ["Tide", "Downy", "OxiClean", "Any antibacterial soaps/cleaners", "Products containing bleach, boron/borax, or synthetic fragrance"]
+        },
+        "benefits": [
+          "Save up to 40,000 gallons annually",
+          "Cut water bills by 30–40%",
+          "Reduce municipal wastewater treatment and septic tank demand",
+          "Maintain landscape greenery while conserving fresh water"
+        ],
+        "maintenance": "Rinse filters every 4–6 months"
+      },
+      "author": "Sam Wilhoit",
+      "publishDate": "September 8, 2025"
+    },
+    "tinyHousesGreywaterSystems": {
+      "url": "/blogs/greywater-education/tiny-houses-greywater-systems",
+      "newUrl": "/blog/tiny-houses-greywater-systems",
+      "metaTitle": "Tiny Houses & Greywater Systems",
+      "content": {
+        "heading": "Tiny Houses & Greywater Systems: A Sustainable Match",
+        "sections": [
+          "Why Tiny Houses Appeal to Modern House Dwellers",
+          "Greywater: A Key to a Sustainable Lifestyle",
+          "Greywater Recycling for Tiny Homes",
+          "Aqua2use: The Smart Greywater Solution for Tiny Houses",
+          "Long-Term Savings, Big Impact",
+          "Inspired by the Tiny House Movement?"
+        ],
+        "statistics": {
+          "tinyHouseGrowth": "200% growth over the past decade",
+          "averageHomeSize": "2,600 square feet",
+          "averageHomePrice": "$254,000",
+          "tinyHouseSize": "100-400 square feet",
+          "tinyHouseStartingPrice": "$5,000",
+          "mortgageFreeOwners": "68%",
+          "tinyHouseEnergy": "774 kilowatts annually",
+          "standardHomeEnergy": "12,744 kilowatts annually"
+        },
+        "aqua2useFeatures": [
+          "Compact configurations suited for tiny homes and mobile living",
+          "Sophisticated filtration enabling secure water reuse",
+          "Fully mechanized operation requiring minimal setup",
+          "Functionality with gravity-fed and pumped approaches",
+          "Management of greywater from showers, sinks, and washing equipment"
+        ],
+        "considerations": [
+          "Greywater requires filtration and outdoor routing within 24 hours",
+          "Standard water tanks need surge tank or grease trap design",
+          "Exclusively employ biodegradable products like natural soaps",
+          "Greywater must never contact potable water supplies or living organisms"
+        ]
+      },
+      "author": "Sam Wilhoit",
+      "publishDate": "January 21, 2025"
+    },
+    "lawsInYourState": {
+      "url": "/blogs/greywater-education/laws-in-your-state",
+      "newUrl": "/blog/laws-in-your-state",
+      "metaTitle": "Greywater Laws in Your State - Water Wise Group",
+      "content": {
+        "intro": "More and more states in the Southern part of the United States are putting in place greywater friendly legislation.",
+        "states": {
+          "arizona": {
+            "permitThreshold": "No permit needed for systems under 400 gallons daily flow",
+            "taxIncentive": "25% of the cost of installing a water conservation system not to exceed $1000",
+            "requirements": [
+              "Human contact must be avoided",
+              "Greywater stays within property boundaries",
+              "Surface irrigation excluded for food plants except citrus and nuts",
+              "No hazardous chemicals allowed",
+              "Minimum 5-foot vertical separation from groundwater",
+              "No spray irrigation permitted"
+            ]
+          },
+          "california": {
+            "permitThreshold": "No permit required for washing machine-only systems in single/two-family dwellings",
+            "requirements": [
+              "Flow direction must be clearly labeled and accessible",
+              "Greywater shall be contained on the site where it is generated",
+              "Ponding and runoff prohibited",
+              "Minimum 2-inch mulch coverage required at release points",
+              "Operation manuals must accompany the property through ownership changes"
+            ]
+          },
+          "newMexico": {
+            "permitThreshold": "Systems under 250 gallons daily require no permit",
+            "requirements": [
+              "Overflow capability into sewer or wastewater systems",
+              "Covered storage tanks to prevent mosquito breeding",
+              "5-foot vertical groundwater separation",
+              "No spray application",
+              "No discharge to watercourses",
+              "Compliance with local municipal ordinances"
+            ]
+          },
+          "texas": {
+            "permitThreshold": "No permit for residential use under 400 gallons daily",
+            "requirements": [
+              "Originates from a private residence for personal gardening and landscaping",
+              "Tanks must be clearly labeled nonpotable",
+              "Purple piping required to identify non-potable lines",
+              "No ponding, runoff, or spray distribution allowed",
+              "Excludes kitchen sink wastewater and materials soiled with human waste"
+            ]
+          }
+        }
+      }
+    },
+    "bestGreywaterSystem": {
+      "url": "/blogs/greywater-education/best-greywater-system",
+      "newUrl": "/blog/best-greywater-system",
+      "metaTitle": "The Best Greywater System for Your Home in 2025: Why Aqua2use Outperforms the Rest",
+      "content": {
+        "heading": "The Best Greywater System for Your Home in 2025: Why Aqua2use Outperforms the Rest",
+        "sections": [
+          "Understanding Greywater and Its Role in Water Conservation",
+          "Why Aqua2use Is the Leading Grey Water Diversion Device",
+          "How Aqua2use Compares to Other Greywater Systems",
+          "Application, Installation, and Performance",
+          "Final Recommendation"
+        ],
+        "aqua2useFeatures": "Progressive four-stage filtration system that includes Matala Green and Matala Blue filter mats. Filter mats capture hair, lint, detergent residue, and soap. System includes overflow protection, a surge tank, and a submersible pump with dry-run safety features. Maintenance requires only rinsing filters every 4–6 months.",
+        "competitors": {
+          "hydraloop": "Targets indoor reuse (toilet flushing, washing machines) using advanced treatment like UV disinfection. Higher cost, lower capacity, unsuitable for subsurface irrigation.",
+          "flotender": "Designed for larger properties and commercial use with pressurized irrigation and backwash controls. Greater complexity and expense.",
+          "greyterHome": "Converts shower water for toilet flushing in new construction. Not compatible with garden irrigation.",
+          "diy": "Cost-effective but lack filtration, dry-run protection, and surge tanks, resulting in soil clogging and poor long-term performance."
+        },
+        "recommendation": "Aqua2use strikes the right balance: an affordable greywater treatment system that supports drip irrigation, subsurface irrigation, and direct reuse with safety features built in."
+      },
+      "author": "Mason Logue",
+      "publishDate": "April 30, 2025"
+    },
+    "howMuchDoesGreywaterSystemCost": {
+      "url": "/blogs/greywater-education/how-much-does-a-greywater-system-cost",
+      "newUrl": "/blog/how-much-does-a-greywater-system-cost",
+      "metaTitle": "How Much Does a Greywater System Cost?",
+      "content": {
+        "heading": "How Much Does a Greywater System Cost?",
+        "sections": [
+          "What Is a Greywater System?",
+          "What Impacts the Cost of a Greywater System?",
+          "Aqua2use GWDD: Premium Performance Without the Premium Price",
+          "Why Aqua2use Outperforms DIY or Basic Systems",
+          "Real Users, Real Results",
+          "FAQs: Greywater System Costs",
+          "Invest in the Right Greywater System"
+        ],
+        "pricingInfo": {
+          "overview": "Greywater systems can cost anywhere from a few hundred to several thousand dollars depending on design, components, and installation.",
+          "aqua2useGravity": "$625",
+          "aqua2usePumped": "$945",
+          "costComparison": {
+            "diySetup": "$100–$350",
+            "branchedDrain": "$800–$3,000",
+            "aqua2useGravity": "$625",
+            "aqua2usePumped": "$945"
+          }
+        },
+        "waterSavings": "Up to 40,000 gallons per year, depending on your household size and garden usage. That could mean a 30–40% reduction in water bills."
+      }
+    }
+  },
+  "urlMappings": {
+    "redirects": [
+      {"from": "/pages/about-us", "to": "/about", "type": "301"},
+      {"from": "/pages/contact-us", "to": "/contact", "type": "301"},
+      {"from": "/pages/privacy-policy", "to": "/privacy", "type": "301"},
+      {"from": "/pages/terms-of-service", "to": "/terms", "type": "301"},
+      {"from": "/policies/shipping-policy", "to": "/shipping", "type": "301"},
+      {"from": "/policies/refund-policy", "to": "/returns", "type": "301"},
+      {"from": "/policies/privacy-policy", "to": "/privacy", "type": "301"},
+      {"from": "/policies/terms-of-service", "to": "/terms", "type": "301"},
+      {"from": "/pages/greywater-directory", "to": "/greywater-laws", "type": "301"},
+      {"from": "/pages/greywater-systems-for-tiny-homes", "to": "/solutions/tiny-homes", "type": "301"},
+      {"from": "/pages/greywater-systems-for-rvs", "to": "/solutions/rvs", "type": "301"},
+      {"from": "/pages/laundry-to-landscape-greywater-system", "to": "/solutions/laundry-to-landscape", "type": "301"},
+      {"from": "/pages/greywater-pumps", "to": "/products", "type": "301"},
+      {"from": "/pages/california-homeowner-uses-aqua2use-to-save-water-and-his-trees", "to": "/customer-stories/california-homeowner", "type": "301"},
+      {"from": "/pages/rv-owner-transformed-greywater-into-greenery", "to": "/customer-stories/rv-owner", "type": "301"},
+      {"from": "/pages/greywater-compliance-ca", "to": "/greywater-laws/california", "type": "301"},
+      {"from": "/pages/greywater-compliance-az", "to": "/greywater-laws/arizona", "type": "301"},
+      {"from": "/pages/greywater-compliance-tx", "to": "/greywater-laws/texas", "type": "301"},
+      {"from": "/pages/greywater-compliance-or", "to": "/greywater-laws/oregon", "type": "301"},
+      {"from": "/pages/greywater-compliance-wa", "to": "/greywater-laws/washington", "type": "301"},
+      {"from": "/pages/greywater-compliance-co", "to": "/greywater-laws/colorado", "type": "301"},
+      {"from": "/blogs/greywater-education", "to": "/blog", "type": "301"},
+      {"from": "/blogs/greywater-education/:slug", "to": "/blog/:slug", "type": "301"},
+      {"from": "/collections/all", "to": "/products", "type": "301"}
+    ]
+  },
+  "companyInfo": {
+    "name": "Water Wise Group",
+    "tagline": "Collect. Filter. Flourish.",
+    "slogan": "Pay once, use twice. That's living Water Wise.",
+    "founded": "2010",
+    "headquarters": "Atlanta, Georgia",
+    "warehouse": "Southern California (Gardena, CA)",
+    "contact": {
+      "phone": "(678) 809-3008",
+      "email": "sales@waterwisegroup.com",
+      "address": "Atlanta, GA 30068",
+      "returnAddress": "1725 Rosecrans Ave, Gardena, CA 90249"
+    },
+    "social": {
+      "facebook": "https://facebook.com/waterwisegroup",
+      "instagram": "https://instagram.com/waterwisegreywater/",
+      "youtube": "https://youtube.com/user/WaterWiseGroup"
+    },
+    "stats": {
+      "systemsSold": "5,000+",
+      "since": "2010",
+      "waterSavedPerSystem": "40,000 gallons/year"
+    }
+  }
+}

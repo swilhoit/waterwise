@@ -17,22 +17,22 @@ export function Header() {
 
   const navItems = [
     {
-      label: "How it Works",
+      label: "Learn",
       dropdown: [
-        { title: "What is Greywater?", href: "/what-is-greywater", description: "Learn the basics of greywater recycling" },
-        { title: "How Systems Work", href: "/how-it-works", description: "Understanding greywater system mechanics" },
-        { title: "Tiny House Systems", href: "/tiny-house-systems", description: "Specialized solutions for tiny homes" },
-        { title: "State Laws", href: "/greywater-laws", description: "Legal requirements by state" },
+        { title: "What is Greywater?", href: "/blog/what-is-greywater", description: "The basics of greywater recycling" },
+        { title: "Greywater Benefits", href: "/blog/greywater-benefits", description: "How greywater helps the environment" },
+        { title: "How Greywater Systems Work", href: "/blog/how-can-i-use-greywater", description: "System mechanics and usage" },
+        { title: "Laws in Your State", href: "/blog/laws-in-your-state", description: "State-by-state regulations" },
         { title: "Compliance Directory", href: "/directory", description: "Browse regulations by location" }
       ]
     },
     {
       label: "Products",
       dropdown: [
-        { title: "Aqua2use GWDD", href: "/products/aqua2use-gwdd", description: "Gravity-fed system for most homes" },
-        { title: "GWDD with Pump", href: "/products/aqua2use-gwdd-pump", description: "Pump system for uphill irrigation" },
-        { title: "Replacement Filters", href: "/products/replacement-filters", description: "Keep your system running smoothly" },
-        { title: "Replacement Pumps", href: "/products/replacement-pumps", description: "Pumps and parts for repairs" },
+        { title: "Aqua2use GWDD", href: "/products/aqua2use-gwdd", description: "Our standard greywater system" },
+        { title: "Aqua2use Pro", href: "/products/aqua2use-pro", description: "High-capacity solution" },
+        { title: "Replacement Filters", href: "/products/replacement-filters", description: "Keep your system running" },
+        { title: "Replacement Pumps", href: "/products/replacement-pumps", description: "Pumps and parts" },
         { title: "View All Products", href: "/products" }
       ]
     },
@@ -40,10 +40,10 @@ export function Header() {
       label: "Solutions",
       dropdown: [
         { title: "Residential Homes", href: "/solutions/residential", description: "Complete home greywater systems" },
-        { title: "RVs & Trailers", href: "/solutions/rvs", description: "Mobile greywater solutions" },
         { title: "Tiny Homes", href: "/solutions/tiny-homes", description: "Compact, efficient systems" },
-        { title: "Cabins & Cottages", href: "/solutions/cabins", description: "Off-grid greywater solutions" },
-        { title: "Sustainable Developments", href: "/solutions/developments", description: "Community-scale systems" }
+        { title: "RVs & Trailers", href: "/solutions/rvs", description: "Mobile greywater solutions" },
+        { title: "Laundry-to-Landscape", href: "/solutions/laundry-to-landscape", description: "Start with laundry water" },
+        { title: "Cabins & Cottages", href: "/solutions/cabins", description: "Off-grid greywater solutions" }
       ]
     },
     { label: "Customer Stories", href: "/customer-stories" },
@@ -82,8 +82,8 @@ export function Header() {
                 )}
               </button>
             </CartSheet>
-            
-            <Link 
+
+            <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
             >
@@ -111,7 +111,7 @@ export function Header() {
                     className="h-8 w-auto"
                   />
                 </div>
-                
+
                 {/* Mobile Nav */}
                 <nav className="flex-1 overflow-y-auto py-4">
                   {navItems.map((item) => (
@@ -123,7 +123,7 @@ export function Header() {
                             className="flex items-center justify-between w-full text-left px-3 py-3 text-[15px] font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                           >
                             {item.label}
-                            <ChevronDown 
+                            <ChevronDown
                               className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
                                 expandedSection === item.label ? 'rotate-180' : ''
                               }`}
@@ -156,7 +156,7 @@ export function Header() {
                     </div>
                   ))}
                 </nav>
-                
+
                 {/* Mobile Footer Actions */}
                 <div className="p-4 border-t border-gray-100 space-y-3">
                   <CartSheet>
@@ -172,8 +172,8 @@ export function Header() {
                       )}
                     </button>
                   </CartSheet>
-                  
-                  <Link 
+
+                  <Link
                     href="/contact"
                     className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-[14px] font-medium rounded-lg transition-colors"
                     onClick={() => setIsOpen(false)}

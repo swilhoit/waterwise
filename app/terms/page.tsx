@@ -1,6 +1,16 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Terms of Service – Water Wise Group',
+  description: 'Water Wise Group terms of service. Read our terms and conditions for using our website and purchasing our products.',
+  alternates: {
+    canonical: 'https://waterwisegroup.com/terms'
+  }
+}
+
 export default function Terms() {
   return (
-    <div className="container mx-auto px-4 py-20">
+    <div className="container mx-auto px-4 py-20 pt-32">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
           Terms of Service
@@ -73,9 +83,9 @@ export default function Terms() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <p className="text-gray-700">
               <strong>Water Wise Group</strong><br />
-              Email: info@waterwisegroup.com<br />
-              Phone: 1-800-XXX-XXXX<br />
-              Address: California, USA
+              Email: <a href="mailto:sales@waterwisegroup.com" className="text-emerald-600 hover:underline">sales@waterwisegroup.com</a><br />
+              Phone: <a href="tel:+16788093008" className="text-emerald-600 hover:underline">(678) 809-3008</a><br />
+              Address: Atlanta, GA 30068
             </p>
           </div>
 

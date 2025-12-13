@@ -62,7 +62,7 @@ const defaultBlogPosts: { [key: string]: any } = {
   },
   "understanding-greywater-basics": {
     title: "Understanding Greywater: What It Is and Why It Matters",
-    author: "Sarah Johnson",
+    author: "Sam Wilhoit",
     publishedAt: "2024-03-10",
     readTime: 7,
     mainImage: "/images/aqua2use-greywater-recycling-sytem.png",
@@ -84,7 +84,7 @@ const defaultBlogPosts: { [key: string]: any } = {
   },
   "diy-vs-professional-installation": {
     title: "DIY vs Professional Installation: Which is Right for You?",
-    author: "Mike Chen",
+    author: "Water Wise Team",
     publishedAt: "2024-03-05",
     readTime: 4,
     mainImage: "/images/gwdd-ug.jpg",

@@ -169,7 +169,7 @@ function ContactFormContent() {
           <p className="text-lg text-gray-600 mb-8">
             We've received your quote request. Our team will review your information and get back to you within 24 hours with personalized recommendations.
           </p>
-          <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+          <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
             <a href="/">Return to Home</a>
           </Button>
         </div>

@@ -565,7 +565,7 @@ export default function SantaMonicaResidential() {
                     <MapPin className="h-5 w-5 text-blue-600" />
                     <span className="text-sm text-gray-600">Ocean Park - 90405</span>
                   </div>
-                  <CardTitle>Johnson Family - 3BR Home</CardTitle>
+                  <CardTitle>Ocean Park Homeowner - 3BR Home</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -886,9 +886,9 @@ export default function SantaMonicaResidential() {
                 </Link>
               </Button>
               <Button size="lg" className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-6 text-lg" asChild>
-                <Link href="/contact">
+                <Link href="tel:+16788093008">
                   <Phone className="mr-2 h-5 w-5" />
-                  (310) 555-0123
+                  (678) 809-3008
                 </Link>
               </Button>
             </div>

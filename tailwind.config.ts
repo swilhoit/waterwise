@@ -22,10 +22,15 @@ const config: Config = {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(100%)" },
         },
+        "marquee": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "slide-in-from-right": "slide-in-from-right 0.3s ease-in-out",
         "slide-out-to-right": "slide-out-to-right 0.3s ease-in-out",
+        "marquee": "marquee 30s linear infinite",
       },
     },
   },
