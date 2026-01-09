@@ -40,7 +40,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function(d,t) {
-                var BASE_URL="http://34.53.43.15:3000";
+                var BASE_URL="https://34-53-43-15.nip.io";
                 var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
                 g.src=BASE_URL+"/packs/js/sdk.js";
                 g.defer=true;
