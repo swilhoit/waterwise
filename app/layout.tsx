@@ -48,7 +48,7 @@ export default function RootLayout({
                 s.parentNode.insertBefore(g,s);
                 g.onload=function(){
                   window.chatwootSDK.run({
-                    websiteToken: 'dbs2VnN4mNJSPpgFxnHGmZrC',
+                    websiteToken: 'dbs2VnN4mNJSPpgFxmHGmZrC',
                     baseUrl: BASE_URL
                   })
                 }
