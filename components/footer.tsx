@@ -1,10 +1,24 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react"
+import { NewsletterSignup } from "@/components/newsletter-signup"
 
 export function Footer() {
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-black text-white">
+      {/* Newsletter Section */}
+      <div className="border-b border-gray-800">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-2xl mx-auto text-center">
+            <h3 className="text-2xl font-semibold mb-2">Stay Water Wise</h3>
+            <p className="text-gray-400 mb-6">
+              Get greywater tips, conservation news, and exclusive offers delivered to your inbox.
+            </p>
+            <NewsletterSignup />
+          </div>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Column */}

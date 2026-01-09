@@ -19,44 +19,23 @@ export default async function ProductsPage() {
   const defaultProducts = [
     {
       id: "1",
-      title: "Aqua2use Grey Water Diversion System",
-      description: "The most advanced greywater treatment system available. Processes 17 GPM with patented 4-stage Matala filtration. Available in gravity or pump configurations.",
+      title: "Aqua2use Greywater Recycling System",
+      description: "The most advanced greywater treatment system available. Choose from GWDD Gravity, GWDD Pump, or Pro configurations to match your needs. All feature patented 4-stage Matala filtration.",
       image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
       price: "From $599",
-      handle: "aqua2use-gwdd",
+      handle: "aqua2use",
       badge: "Best Seller",
       badgeColor: "emerald",
       features: [
-        "17 gallons per minute processing",
-        "4-stage Matala filtration (90% solid removal)",
-        "Gravity or pump configurations",
-        "Perfect for homes, cabins, tiny houses"
+        "3 configurations: GWDD Gravity, Pump, or Pro",
+        "Up to 90% solid removal efficiency",
+        "17-25 GPM processing capacity",
+        "Residential to commercial applications"
       ],
       specs: {
-        capacity: "21 gal",
-        flow: "17 GPM",
-        power: "Optional"
-      }
-    },
-    {
-      id: "2",
-      title: "Aqua2use Pro Commercial System",
-      description: "High-capacity commercial-grade system for multi-family and commercial applications. Handles up to 25 GPM with 50-gallon capacity and NSF/ANSI 350 compliance.",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-ug.jpg?v=1719241821",
-      price: "From $2,699",
-      handle: "aqua2use-pro",
-      badge: "Commercial Grade",
-      badgeColor: "blue",
-      features: [
-        "25 gallons per minute processing",
-        "50-gallon tank capacity",
-        "Over 108 sq ft filter surface area",
-        "Ideal for apartments, hotels, developments"
-      ],
-      specs: {
-        capacity: "50 gal",
-        flow: "25 GPM",
-        power: "110V"
+        capacity: "21-50 gal",
+        flow: "17-25 GPM",
+        configs: "3 options"
       }
     },
     {
@@ -446,17 +425,17 @@ export default async function ProductsPage() {
                     <td className="py-5 px-6"></td>
                     <td className="py-5 px-6 text-center">
                       <Button variant="outline" className="border-gray-300" asChild>
-                        <Link href="/products/aqua2use-gwdd">Learn More</Link>
+                        <Link href="/products/aqua2use">Learn More</Link>
                       </Button>
                     </td>
                     <td className="py-5 px-6 text-center bg-blue-50 border-x border-blue-100">
                       <Button className="bg-blue-600 hover:bg-blue-700" asChild>
-                        <Link href="/products/aqua2use-gwdd">View Details</Link>
+                        <Link href="/products/aqua2use">View Details</Link>
                       </Button>
                     </td>
                     <td className="py-5 px-6 text-center">
                       <Button variant="outline" className="border-gray-300" asChild>
-                        <Link href="/products/aqua2use-pro">Learn More</Link>
+                        <Link href="/products/aqua2use">Learn More</Link>
                       </Button>
                     </td>
                   </tr>
@@ -493,7 +472,7 @@ export default async function ProductsPage() {
                     </div>
                   </div>
                   <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700" asChild>
-                    <Link href="/products/aqua2use-gwdd">View Details</Link>
+                    <Link href="/products/aqua2use">View Details</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -525,7 +504,7 @@ export default async function ProductsPage() {
                     </div>
                   </div>
                   <Button className="w-full mt-6 bg-gray-900 hover:bg-gray-800" asChild>
-                    <Link href="/products/aqua2use-pro">View Details</Link>
+                    <Link href="/products/aqua2use">View Details</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -564,7 +543,7 @@ export default async function ProductsPage() {
                   <p className="text-emerald-900 font-bold">Aqua2use GWDD</p>
                 </div>
                 <Button variant="outline" className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50" asChild>
-                  <Link href="/products/aqua2use-gwdd">
+                  <Link href="/products/aqua2use">
                     View System
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -589,7 +568,7 @@ export default async function ProductsPage() {
                   <p className="text-blue-900 font-bold">Aqua2use GWDD Pump</p>
                 </div>
                 <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50" asChild>
-                  <Link href="/products/aqua2use-gwdd">
+                  <Link href="/products/aqua2use">
                     View System
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -614,7 +593,7 @@ export default async function ProductsPage() {
                   <p className="text-purple-900 font-bold">Aqua2use Pro</p>
                 </div>
                 <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50" asChild>
-                  <Link href="/products/aqua2use-pro">
+                  <Link href="/products/aqua2use">
                     View System
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

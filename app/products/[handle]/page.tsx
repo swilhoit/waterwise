@@ -4,18 +4,18 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 // Removed tabs import - using open layout instead
 import { Badge } from '@/components/ui/badge'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
 import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText, Ruler, ArrowRight } from 'lucide-react'
 import { formatPriceDisplay } from '@/lib/price-utils'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
-  "aqua2use-gwdd": {
+  "aqua2use": {
     id: "gid://shopify/Product/7459820208334",
-    title: "Aqua2use Grey Water Diversion System", 
-    description: "The Aqua2use greywater diversion system is an advanced, affordable greywater treatment system. Available as gravity filtration or pump assisted unit, this grey water filter is the perfect choice for turning your waste greywater into usable irrigation water. Process up to 17 gallons per minute with our patented 4-stage Matala filtration system.",
-    handle: "aqua2use-gwdd",
+    title: "Aqua2use Greywater Recycling System",
+    description: "The Aqua2use greywater system is the most advanced, affordable greywater treatment solution available. Choose from three configurations: GWDD Gravity for homes with natural slope, GWDD Pump for flexible installations, or Pro for commercial and high-capacity applications. All systems feature our patented 4-stage Matala filtration for superior water quality.",
+    handle: "aqua2use",
     priceRange: {
       minVariantPrice: {
         amount: "599.99",
@@ -27,25 +27,31 @@ const fallbackProducts: { [key: string]: any } = {
         {
           node: {
             url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
-            altText: "Greywater System Aqua2use"
+            altText: "Aqua2use GWDD Greywater System"
           }
         },
         {
           node: {
             url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pump.jpg?v=1719253734",
-            altText: "Greywater System Aqua2use with pump"
+            altText: "Aqua2use GWDD with Pump"
+          }
+        },
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-ug.jpg?v=1719241821",
+            altText: "Aqua2use Pro Commercial System"
           }
         },
         {
           node: {
             url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
-            altText: "Aqua2use GWDD Detailed View"
+            altText: "Aqua2use System Components"
           }
         },
         {
           node: {
             url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-how-it-works.jpg?v=1719253036",
-            altText: "Aqua2use GWDD Installation View"
+            altText: "How Aqua2use Works"
           }
         }
       ]
@@ -55,66 +61,129 @@ const fallbackProducts: { [key: string]: any } = {
         {
           node: {
             id: "gid://shopify/ProductVariant/42716695429326",
-            title: "Gravity - No Pump Included",
+            title: "GWDD Gravity",
             priceV2: {
               amount: "599.99",
               currencyCode: "USD"
             },
-            availableForSale: false
+            availableForSale: true,
+            variantType: "gwdd-gravity",
+            subtitle: "For homes with natural slope",
+            specs: {
+              capacity: "21 gal",
+              flow: "17 GPM",
+              solidRemoval: "90%",
+              power: "None required"
+            },
+            bestFor: "Homes, cabins, tiny houses with gravity flow"
           }
         },
         {
           node: {
             id: "gid://shopify/ProductVariant/42716695462094",
-            title: "GWDD - Includes Pump",
+            title: "GWDD with Pump",
             priceV2: {
               amount: "899.99",
               currencyCode: "USD"
             },
-            availableForSale: false
+            availableForSale: true,
+            variantType: "gwdd-pump",
+            subtitle: "Flexible installation options",
+            specs: {
+              capacity: "21 gal",
+              flow: "17 GPM",
+              solidRemoval: "75%",
+              power: "110V required"
+            },
+            bestFor: "Properties needing uphill pumping or flexible placement"
+          }
+        },
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/42713618972878",
+            title: "Aqua2use Pro",
+            priceV2: {
+              amount: "2699.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true,
+            variantType: "pro",
+            subtitle: "Commercial & high-capacity",
+            specs: {
+              capacity: "50 gal",
+              flow: "25 GPM",
+              solidRemoval: "90%",
+              power: "110V required"
+            },
+            bestFor: "Hotels, apartments, multi-family, commercial"
           }
         }
       ]
     },
     features: [
       "Fully automated greywater treatment system",
-      "Processes 17 gallons per minute of greywater",
-      "Compact dimensions: 23.2\" L x 14.6\" W x 19.7\" H",
-      "State of the Art Progressive 4-Stage Filtration by Matala",
-      "Built-in overflow safety system prevents flooding",
-      "UV resistant high-grade polyethylene construction",
+      "Patented 4-Stage Matala filtration technology",
+      "Up to 90% suspended solid removal",
       "WaterMark approved certification",
-      "Cross-Flow depth filtration with 3-dimensional filter structure",
-      "Solid removal: 75% (pump unit), 90% (gravity unit)",
-      "Two magnetic micro floats with Electronic Pump Controller (pump version)",
-      "No external timers required - fully automated operation",
+      "Built-in overflow safety system",
+      "UV resistant high-grade polyethylene construction",
+      "No external timers required",
       "Can be installed above ground, half-submerged, or underground",
       "Suitable for laundry, shower, and bathroom sink water",
-      "Integrated diverter valve for easy system bypass"
+      "Integrated diverter valve for easy system bypass",
+      "Cross-Flow depth filtration with 3-dimensional filter structure",
+      "12-month warranty on all parts"
     ],
     specifications: {
-      tankCapacity: "21 gallons total capacity",
-      dimensions: "23.2\" L x 14.6\" W x 19.7\" H",
-      weight: "13.6 kg (30 lbs) pump version",
-      processingCapacity: "17 gallons per minute",
       filtrationStages: "4-stage progressive by Matala",
-      solidRemoval: "90% (gravity), 75% (pump)",
       installation: "Above ground, half-submerged, or underground",
-      powerRequirement: "110V outlet (pump version only)",
       certification: "WaterMark approved",
       filterCapacity: "Up to 15,850 gallons before cleaning",
       filterMaintenance: "Clean every 4-6 months",
       inletConnection: "2\"-4\" diameter",
-      outletConnection: "1.25\" diameter"
+      warranty: "12 months on all parts"
+    },
+    variantSpecs: {
+      "gwdd-gravity": {
+        tankCapacity: "21 gallons",
+        dimensions: "23.2\" L x 14.6\" W x 19.7\" H",
+        weight: "25 lbs",
+        processingCapacity: "17 gallons per minute",
+        solidRemoval: "90%",
+        powerRequirement: "None - gravity fed"
+      },
+      "gwdd-pump": {
+        tankCapacity: "21 gallons",
+        dimensions: "23.2\" L x 14.6\" W x 19.7\" H",
+        weight: "30 lbs",
+        processingCapacity: "17 gallons per minute",
+        solidRemoval: "75%",
+        powerRequirement: "110V outlet required",
+        pumpType: "Submersible with Electronic Controller"
+      },
+      "pro": {
+        tankCapacity: "50 gallons",
+        dimensions: "31.5\" L x 23.6\" W x 26\" H",
+        processingCapacity: "25 gallons per minute",
+        solidRemoval: "90%",
+        powerRequirement: "110V outlet required",
+        pumpType: "Submersible with Electronic Controller",
+        filterSurfaceArea: "Over 108 sq ft",
+        certification: "NSF/ANSI 350 compliant"
+      }
     },
     faq: [
       {
-        question: "What is an Aqua2use GWDD?",
-        answer: "The Aqua2use GWDD (Grey Water Diversion Device) is the most advanced greywater treatment system available. It's designed to automatically filter and reuse water from your laundry, bath, and shower for irrigation, saving up to 40% on your water bills."
+        question: "What is an Aqua2use system?",
+        answer: "The Aqua2use is the most advanced Grey Water Diversion Device on the market. It's designed to automatically filter and reuse water from your laundry, bath, and shower for irrigation, saving up to 40% on your water bills."
       },
       {
-        question: "What's the difference between the Gravity and Pump versions?",
-        answer: "The Gravity version ($599.99) relies on natural water flow and achieves 90% solid removal. The Pump version ($899.99) includes a submersible pump with electronic controller for situations where gravity flow isn't possible, achieving 75% solid removal but offering more installation flexibility."
+        question: "Which system should I choose?",
+        answer: "Choose GWDD Gravity ($599) if you have natural slope for gravity flow - it offers 90% solid removal. Choose GWDD Pump ($899) if you need flexible installation or uphill pumping. Choose Pro ($2,699) for commercial properties or high-volume residential needs with 50-gallon capacity."
+      },
+      {
+        question: "What's the difference between GWDD and Pro?",
+        answer: "The GWDD systems have 21-gallon capacity and process 17 GPM - ideal for single-family homes. The Pro has 50-gallon capacity, processes 25 GPM, and is designed for commercial, multi-family, or high-usage residential applications."
       },
       {
         question: "How does it work?",
@@ -122,9 +191,28 @@ const fallbackProducts: { [key: string]: any } = {
       },
       {
         question: "How often do I have to clean or replace the filters?",
-        answer: "Testing in the field has shown that up to 15,850 gallons can pass through the unit before they need cleaning. Recommended cleaning cycle depending on how many people are using the system is every 4-6 months."
+        answer: "Testing in the field has shown that up to 15,850 gallons can pass through the unit before they need cleaning. Recommended cleaning cycle is every 4-6 months depending on usage."
+      },
+      {
+        question: "Is it safe to use for garden irrigation?",
+        answer: "Absolutely! When connected to a drip irrigation system with low phosphate detergent, the filtered water is perfectly safe for plants and trees. You'll be surprised how clear the water looks after filtration."
+      },
+      {
+        question: "What water sources can I connect?",
+        answer: "You can connect water from your laundry, bath, and shower. This EXCLUDES water from the kitchen sink, dishwashers, and toilets, which is classified as black water."
+      },
+      {
+        question: "What is the warranty?",
+        answer: "All parts and the pump are covered by a 12-month replacement warranty."
       }
     ]
+  },
+  // Legacy routes redirect to aqua2use
+  "aqua2use-gwdd": {
+    redirect: "aqua2use"
+  },
+  "aqua2use-pro": {
+    redirect: "aqua2use"
   },
   "aqua2use-gwdd-pump": {
     id: "gid://shopify/Product/2",
@@ -609,6 +697,91 @@ const fallbackProducts: { [key: string]: any } = {
 // Product-specific content data with exact content from original site
 function getProductContent(handle: string) {
   const productContent: { [key: string]: any } = {
+    "aqua2use": {
+      features: [
+        "Fully automated greywater treatment system",
+        "Patented 4-Stage Matala filtration technology",
+        "Up to 90% suspended solid removal",
+        "WaterMark approved certification",
+        "Built-in overflow safety system prevents flooding",
+        "UV resistant high-grade polyethylene construction",
+        "No external timers required - fully automated operation",
+        "Can be installed above ground, half-submerged, or underground",
+        "Suitable for laundry, shower, and bathroom sink water",
+        "Integrated diverter valve for easy system bypass",
+        "Cross-Flow depth filtration with 3-dimensional filter structure",
+        "12-month warranty on all parts"
+      ],
+      specifications: {
+        filtrationStages: "4-stage progressive by Matala",
+        installation: "Above ground, half-submerged, or underground",
+        certification: "WaterMark approved",
+        filterCapacity: "Up to 15,850 gallons before cleaning",
+        filterMaintenance: "Clean every 4-6 months",
+        warranty: "12 months on all parts"
+      },
+      reviews: [
+        {
+          name: "Raul Chavez",
+          rating: 5,
+          review: "Planning to install one for my personal house. Love the people that work there. The owner answered the question that I had."
+        },
+        {
+          name: "Mike Ellsworth",
+          rating: 5,
+          review: "While planning the design of our tiny house, I explored various grey water filtering systems. This particular design seamlessly integrated into our wastewater management plan."
+        },
+        {
+          name: "Dave in Baja",
+          rating: 5,
+          review: "We live in the desert, and water is scarce. When we built our house, we put in two sewer lines - one for black water into the septic, and one for gray water into the garden."
+        },
+        {
+          name: "Commercial Property Manager",
+          rating: 5,
+          review: "Upgraded to the Pro system for our small commercial building. Handles the capacity we need and maintenance is straightforward."
+        },
+        {
+          name: "MrsT",
+          rating: 5,
+          review: "I used this system for my tiny house and love it! Best purchase I could have made."
+        }
+      ],
+      faq: [
+        {
+          question: "What is an Aqua2use system?",
+          answer: "The Aqua2use is the most advanced Grey Water Diversion Device on the market. It's designed to automatically filter and reuse water from your laundry, bath, and shower for irrigation, saving up to 40% on your water bills."
+        },
+        {
+          question: "Which system should I choose?",
+          answer: "Choose GWDD Gravity ($599) if you have natural slope for gravity flow - it offers 90% solid removal. Choose GWDD Pump ($899) if you need flexible installation or uphill pumping. Choose Pro ($2,699) for commercial properties or high-volume residential needs with 50-gallon capacity."
+        },
+        {
+          question: "What's the difference between GWDD and Pro?",
+          answer: "The GWDD systems have 21-gallon capacity and process 17 GPM - ideal for single-family homes. The Pro has 50-gallon capacity, processes 25 GPM, and is designed for commercial, multi-family, or high-usage residential applications."
+        },
+        {
+          question: "How does it work?",
+          answer: "The system automatically diverts greywater from your waste pipe through Matala's patented 4-stage progressive filtration. For pump units, magnetic micro floats activate the pump when water reaches optimal levels, sending filtered water to your irrigation system - all without external timers."
+        },
+        {
+          question: "How often do I have to clean or replace the filters?",
+          answer: "Testing in the field has shown that up to 15,850 gallons can pass through the unit before they need cleaning. Recommended cleaning cycle is every 4-6 months depending on usage."
+        },
+        {
+          question: "Is it safe to use for garden irrigation?",
+          answer: "Absolutely! When connected to a drip irrigation system with low phosphate detergent, the filtered water is perfectly safe for plants and trees. You'll be surprised how clear the water looks after filtration."
+        },
+        {
+          question: "What water sources can I connect?",
+          answer: "You can connect water from your laundry, bath, and shower. This EXCLUDES water from the kitchen sink, dishwashers, and toilets, which is classified as black water."
+        },
+        {
+          question: "What is the warranty?",
+          answer: "All parts and the pump are covered by a 12-month replacement warranty."
+        }
+      ]
+    },
     "aqua2use-gwdd": {
       features: [
         "Fully automated greywater treatment system",
@@ -1160,6 +1333,11 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const { handle } = await params
   let product = null
   let shopifyProduct = null
+
+  // Check for redirects (legacy URLs)
+  if (fallbackProducts[handle]?.redirect) {
+    redirect(`/products/${fallbackProducts[handle].redirect}`)
+  }
 
   // Try to get enhanced product from Shopify first
   try {

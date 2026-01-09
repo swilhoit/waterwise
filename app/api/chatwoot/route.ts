@@ -101,12 +101,19 @@ async function sendChatwootMessage(
   const chatwootUrl = process.env.CHATWOOT_URL;
   const apiToken = process.env.CHATWOOT_BOT_TOKEN;
 
+  console.log('Chatwoot config:', {
+    chatwootUrl,
+    apiTokenLength: apiToken?.length,
+    apiTokenFirst5: apiToken?.substring(0, 5)
+  });
+
   if (!chatwootUrl || !apiToken) {
-    console.error('Chatwoot configuration missing');
+    console.error('Chatwoot configuration missing:', { chatwootUrl: !!chatwootUrl, apiToken: !!apiToken });
     return;
   }
 
   const url = `${chatwootUrl}/api/v1/accounts/${accountId}/conversations/${conversationId}/messages`;
+  console.log('Sending to URL:', url);
 
   const response = await fetch(url, {
     method: 'POST',
@@ -121,9 +128,14 @@ async function sendChatwootMessage(
     }),
   });
 
+  console.log('Chatwoot response status:', response.status);
+
   if (!response.ok) {
     const errorText = await response.text();
     console.error('Failed to send Chatwoot message:', errorText);
+  } else {
+    const successData = await response.json();
+    console.log('Message sent successfully:', successData);
   }
 }
 
