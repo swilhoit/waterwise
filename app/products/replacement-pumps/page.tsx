@@ -409,7 +409,7 @@ export default function ReplacementPumps() {
                 </ul>
                 <div className="mt-4">
                   <Button className="w-full" size="sm" asChild>
-                    <Link href="/products/aqua2use-gwdd">View System</Link>
+                    <Link href="/products/aqua2use">View System</Link>
                   </Button>
                 </div>
               </CardContent>
@@ -428,7 +428,7 @@ export default function ReplacementPumps() {
                 </ul>
                 <div className="mt-4">
                   <Button className="w-full" size="sm" asChild>
-                    <Link href="/products/aqua2use-pro">View System</Link>
+                    <Link href="/products/aqua2use">View System</Link>
                   </Button>
                 </div>
               </CardContent>
