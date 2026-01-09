@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -32,6 +33,29 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
         </CartProvider>
+        {/* Chatwoot Live Chat Widget */}
+        <Script
+          id="chatwoot-widget"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(d,t) {
+                var BASE_URL="http://34.53.43.15:3000";
+                var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+                g.src=BASE_URL+"/packs/js/sdk.js";
+                g.defer=true;
+                g.async=true;
+                s.parentNode.insertBefore(g,s);
+                g.onload=function(){
+                  window.chatwootSDK.run({
+                    websiteToken: 'dbs2VnN4mNJSPpgFxnHGmZrC',
+                    baseUrl: BASE_URL
+                  })
+                }
+              })(document,"script");
+            `,
+          }}
+        />
       </body>
     </html>
   );
