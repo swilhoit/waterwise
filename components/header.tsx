@@ -29,8 +29,7 @@ export function Header() {
     {
       label: "Products",
       dropdown: [
-        { title: "Aqua2use GWDD", href: "/products/aqua2use-gwdd", description: "Our standard greywater system" },
-        { title: "Aqua2use Pro", href: "/products/aqua2use-pro", description: "High-capacity solution" },
+        { title: "Aqua2use Systems", href: "/products/aqua2use", description: "Residential to commercial solutions" },
         { title: "Replacement Filters", href: "/products/replacement-filters", description: "Keep your system running" },
         { title: "Replacement Pumps", href: "/products/replacement-pumps", description: "Pumps and parts" },
         { title: "View All Products", href: "/products" }

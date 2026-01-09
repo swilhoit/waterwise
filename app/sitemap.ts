@@ -19,13 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/products/aqua2use-gwdd`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/products/aqua2use-pro`,
+      url: `${baseUrl}/products/aqua2use`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,

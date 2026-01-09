@@ -357,7 +357,7 @@ export default async function Home() {
                   </li>
                 </ul>
                 <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                  <Link href="/products/aqua2use-gwdd">View Details</Link>
+                  <Link href="/products/aqua2use">View Details</Link>
                 </Button>
               </div>
             </div>
@@ -397,7 +397,7 @@ export default async function Home() {
                   </li>
                 </ul>
                 <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                  <Link href="/products/aqua2use-gwdd-pump">View Details</Link>
+                  <Link href="/products/aqua2use">View Details</Link>
                 </Button>
               </div>
             </div>
@@ -437,7 +437,7 @@ export default async function Home() {
                   </li>
                 </ul>
                 <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                  <Link href="/products/aqua2use-pro">View Details</Link>
+                  <Link href="/products/aqua2use">View Details</Link>
                 </Button>
               </div>
             </div>

@@ -13,6 +13,7 @@ import {
 import { BuilderFeatureGrid } from './BuilderFeatureGrid'
 import { BuilderTestimonials } from './BuilderTestimonials'
 import { BuilderProductShowcase } from './BuilderProductShowcase'
+import { BuilderNewsletterSection } from './BuilderNewsletterSection'
 
 // ============================================
 // Register PageHero Component
@@ -402,7 +403,7 @@ Builder.registerComponent(BuilderProductShowcase, {
         { name: 'handle', type: 'string', required: true },
       ],
       defaultValue: [
-        { handle: 'aqua2use-gwdd' },
+        { handle: 'aqua2use' },
       ],
     },
     {
@@ -410,6 +411,55 @@ Builder.registerComponent(BuilderProductShowcase, {
       type: 'string',
       enum: ['2', '3', '4'],
       defaultValue: '3',
+    },
+  ],
+})
+
+// ============================================
+// Register Newsletter Section Component
+// ============================================
+Builder.registerComponent(BuilderNewsletterSection, {
+  name: 'NewsletterSection',
+  friendlyName: 'Newsletter Signup',
+  description: 'Email newsletter signup section with customizable styling',
+  image: 'https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F6bd4c8a2eda14d249ac0e33b13f39cd6',
+  inputs: [
+    {
+      name: 'title',
+      type: 'string',
+      defaultValue: 'Stay Water Wise',
+      helperText: 'Main heading for the newsletter section',
+    },
+    {
+      name: 'subtitle',
+      type: 'longText',
+      defaultValue: 'Get greywater tips, conservation news, and exclusive offers delivered to your inbox.',
+      helperText: 'Supporting text below the heading',
+    },
+    {
+      name: 'buttonText',
+      type: 'string',
+      defaultValue: 'Subscribe',
+      helperText: 'Text for the submit button',
+    },
+    {
+      name: 'successMessage',
+      type: 'string',
+      defaultValue: 'Thanks for subscribing!',
+      helperText: 'Message shown after successful signup',
+    },
+    {
+      name: 'variant',
+      type: 'string',
+      enum: ['default', 'gradient', 'blue', 'white'],
+      defaultValue: 'gradient',
+      helperText: 'Background style for the section',
+    },
+    {
+      name: 'showIcon',
+      type: 'boolean',
+      defaultValue: true,
+      helperText: 'Show water droplet icon above title',
     },
   ],
 })

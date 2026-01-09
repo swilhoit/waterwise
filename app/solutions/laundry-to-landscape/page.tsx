@@ -32,7 +32,7 @@ export default function LaundryToLandscape() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                  <Link href="/products/aqua2use-gwdd">Buy Aqua2Use GWDD</Link>
+                  <Link href="/products/aqua2use">Buy Aqua2Use GWDD</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <Link href="/contact">Get a Consultation</Link>
@@ -251,7 +251,7 @@ export default function LaundryToLandscape() {
                   </div>
 
                   <Button size="lg" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                    <Link href="/products/aqua2use-gwdd">Buy Aqua2Use GWDD</Link>
+                    <Link href="/products/aqua2use">Buy Aqua2Use GWDD</Link>
                   </Button>
                 </div>
                 <div className="bg-gray-100 flex items-center justify-center p-8">
@@ -319,7 +319,7 @@ export default function LaundryToLandscape() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600 text-white" asChild>
-                <Link href="/products/aqua2use-gwdd">Buy Aqua2Use GWDD</Link>
+                <Link href="/products/aqua2use">Buy Aqua2Use GWDD</Link>
               </Button>
               <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800" asChild>
                 <Link href="/contact">Contact Us</Link>

@@ -115,25 +115,18 @@ export function DynamicHeader() {
       label: "Products",
       dropdown: products.length > 0 ? products : [
         {
-          title: "Aqua2use GWDD",
-          description: "Gravity-fed system for most homes",
-          href: "/products/aqua2use-gwdd",
+          title: "Aqua2use Systems",
+          description: "Residential to commercial greywater solutions",
+          href: "/products/aqua2use",
           image: "/images/gwdd-gravity.jpg",
-          price: "From $1,295"
-        },
-        {
-          title: "GWDD with Pump",
-          description: "Pump system for uphill irrigation",
-          href: "/products/aqua2use-gwdd-pump",
-          image: "/images/gwdd-ug.jpg",
-          price: "From $1,695"
+          price: "From $599"
         },
         {
           title: "Replacement Filters",
           description: "Keep your system running smoothly",
           href: "/products/replacement-filters",
           image: "/images/aqua2use-greywater-recycling-sytem.png",
-          price: "From $89"
+          price: "From $249"
         }
       ]
     },
