@@ -6,7 +6,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart-context";
 import { TopBanner } from "@/components/top-banner";
-import { BuilderNewsletterSection } from "@/components/builder/BuilderNewsletterSection";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +31,6 @@ export default function RootLayout({
           <TopBanner />
           <Header />
           <main className="min-h-screen">{children}</main>
-          <BuilderNewsletterSection />
           <Footer />
         </CartProvider>
         {/* Chatwoot Live Chat Widget */}

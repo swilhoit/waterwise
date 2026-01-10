@@ -7,6 +7,7 @@ import { getProducts } from "@/lib/shopify"
 import { formatPriceDisplay } from "@/lib/price-utils"
 import { OrganizationSchema, WebSiteSchema } from "@/components/schema-markup"
 import { WaterSourceSelector } from "@/components/water-source-selector"
+import { BuilderNewsletterSection } from "@/components/builder/BuilderNewsletterSection"
 
 export const metadata: Metadata = {
   title: 'Greywater System | Greywater Filtration Systems – Water Wise Group',
@@ -520,6 +521,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Newsletter Section */}
+      <BuilderNewsletterSection />
 
       {/* Testimonials - Marquee Carousel */}
       <section className="py-24 lg:py-32 bg-emerald-50 overflow-hidden">
