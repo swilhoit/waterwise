@@ -3,6 +3,9 @@
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://greywater-website.vercel.app';
 
+// Use Shopify CDN for reliable product images
+const SHOPIFY_CDN = 'https://cdn.shopify.com/s/files/1/0637/5561/6462/files';
+
 export interface ProductCard {
   id: string;
   name: string;
@@ -38,54 +41,54 @@ export const products: ProductCard[] = [
     name: 'Aqua2use GWDD (Gravity)',
     description: 'Entry-level greywater system for single-story homes. No pump needed, 4-stage filtration.',
     price: '$625',
-    image: `${BASE_URL}/images/gwdd-gravity.jpg`,
+    image: `${SHOPIFY_CDN}/gwdd-gravity.jpg`,
     url: `${BASE_URL}/products/aqua2use`,
-    keywords: ['gravity', 'basic', 'affordable', 'entry', 'no pump', 'single story', 'basement', 'gwdd', '625']
+    keywords: ['gravity', 'basic', 'affordable', 'entry', 'no pump', 'single story', 'basement', '625', 'cheapest', 'budget']
   },
   {
     id: 'gwdd-pump',
     name: 'Aqua2use GWDD (Pump)',
     description: 'Greywater system with integrated pump for multi-story homes or uphill installations.',
     price: '$945',
-    image: `${BASE_URL}/images/gwdd-ug.jpg`,
+    image: `${SHOPIFY_CDN}/gwdd-pump.jpg`,
     url: `${BASE_URL}/products/aqua2use`,
-    keywords: ['pump', 'uphill', 'multi-story', 'two story', 'gwdd', '945', 'powered']
+    keywords: ['with pump', 'uphill', 'multi-story', 'two story', '945', 'powered', 'pump model']
   },
   {
     id: 'pro',
     name: 'Aqua2use Pro',
     description: 'Premium high-capacity system for 3+ fixtures. Ideal for large families or commercial use.',
     price: '$2,695',
-    image: `${BASE_URL}/images/aqua2use.png`,
+    image: `${SHOPIFY_CDN}/gwdd-ug.jpg`,
     url: `${BASE_URL}/products/aqua2use`,
-    keywords: ['pro', 'premium', 'large', 'commercial', 'multiple fixtures', 'whole house', '2695', 'big family']
+    keywords: ['pro', 'premium', 'large', 'commercial', 'multiple fixtures', 'whole house', '2695', 'big family', 'high capacity']
   },
   {
     id: 'filters',
     name: 'Replacement Filters',
     description: '4-stage progressive filtration filters. Tool-free replacement, reusable up to 3 years.',
     price: 'From $249',
-    image: `${BASE_URL}/images/technical/Aqua2use-GWDD-components.jpg`,
+    image: `${SHOPIFY_CDN}/Aqua2use-GWDD-components.jpg`,
     url: `${BASE_URL}/products/replacement-filters`,
-    keywords: ['filter', 'replacement', 'maintenance', 'parts', 'spare']
+    keywords: ['filter', 'replacement filter', 'maintenance', 'parts', 'spare', 'new filter']
   },
   {
     id: 'pump-kit',
     name: 'Replacement Pump Kit',
     description: 'OEM replacement pump with electronic controller and dry run protection.',
     price: 'From $399',
-    image: `${BASE_URL}/images/technical/Product-ug-gwdd-4inch.jpg`,
-    url: `${BASE_URL}/products/replacement-greywater-pump`,
-    keywords: ['pump', 'replacement', 'motor', 'not working', 'repair']
+    image: `${SHOPIFY_CDN}/Product-ug-gwdd-4inch.jpg`,
+    url: `${BASE_URL}/products/replacement-pumps`,
+    keywords: ['replacement pump', 'new pump', 'motor', 'not working', 'repair', 'broken pump']
   },
   {
-    id: 'drip-kit',
-    name: 'Drip Irrigation Kit',
-    description: 'Complete kit for distributing greywater to your garden. Includes emitters and tubing.',
-    price: '$199.95',
-    image: `${BASE_URL}/images/family-garden.jpg`,
+    id: 'aqua2use-main',
+    name: 'Aqua2use Greywater Systems',
+    description: 'Complete greywater recycling systems starting at $599. Save up to 40,000 gallons/year.',
+    price: 'From $599',
+    image: `${SHOPIFY_CDN}/gwdd-gravity.jpg`,
     url: `${BASE_URL}/products/aqua2use`,
-    keywords: ['drip', 'irrigation', 'garden', 'watering', 'plants', 'landscape']
+    keywords: ['aqua2use', 'greywater system', 'greywater', 'grey water', 'system', 'product', 'buy', 'price', 'cost', 'how much']
   }
 ];
 
@@ -93,59 +96,43 @@ export const products: ProductCard[] = [
 export const solutions: SolutionCard[] = [
   {
     id: 'homes',
-    name: 'Residential Homes',
+    name: 'Greywater for Homes',
     description: 'Save up to 40,000 gallons annually with a home greywater system.',
-    image: `${BASE_URL}/images/solutions/homes-ai.jpg`,
+    image: `${BASE_URL}/images/solutions/homes.jpg`,
     url: `${BASE_URL}/solutions/homes`,
-    keywords: ['home', 'house', 'residential', 'family', 'single family']
+    keywords: ['home', 'house', 'residential', 'family', 'single family', 'homeowner']
   },
   {
     id: 'tiny-homes',
-    name: 'Tiny Homes',
+    name: 'Tiny Home Solutions',
     description: 'Compact greywater solutions designed for tiny living and minimal footprints.',
-    image: `${BASE_URL}/images/solutions/tiny-homes-ai.jpg`,
+    image: `${BASE_URL}/images/solutions/tiny-homes.jpg`,
     url: `${BASE_URL}/solutions/tiny-homes`,
-    keywords: ['tiny', 'small', 'tiny house', 'compact', 'small space']
+    keywords: ['tiny home', 'tiny house', 'small home', 'compact', 'small space', 'adu']
   },
   {
     id: 'rvs',
-    name: 'RVs & Campers',
+    name: 'RV & Camper Systems',
     description: 'Mobile greywater solutions for RV owners and full-time travelers.',
-    image: `${BASE_URL}/images/solutions/rvs-ai.jpg`,
+    image: `${BASE_URL}/images/solutions/rvs.jpg`,
     url: `${BASE_URL}/solutions/rvs`,
-    keywords: ['rv', 'camper', 'trailer', 'mobile', 'travel', 'motorhome', 'van']
+    keywords: ['rv', 'camper', 'trailer', 'motorhome', 'van', 'mobile home', 'travel trailer']
   },
   {
     id: 'cabins',
-    name: 'Cabins & Off-Grid',
+    name: 'Cabin & Off-Grid',
     description: 'Water independence for remote cabins and off-grid properties.',
-    image: `${BASE_URL}/images/solutions/cabins-ai.jpg`,
+    image: `${BASE_URL}/images/solutions/cabins.jpg`,
     url: `${BASE_URL}/solutions/cabins`,
-    keywords: ['cabin', 'off-grid', 'remote', 'mountain', 'vacation', 'well water']
+    keywords: ['cabin', 'off-grid', 'off grid', 'remote', 'mountain', 'vacation home', 'well water']
   },
   {
     id: 'commercial',
-    name: 'Commercial Properties',
+    name: 'Commercial Systems',
     description: 'High-capacity greywater solutions for businesses and commercial buildings.',
-    image: `${BASE_URL}/images/solutions/commercial-ai.jpg`,
+    image: `${BASE_URL}/images/solutions/commercial.jpg`,
     url: `${BASE_URL}/solutions/commercial`,
-    keywords: ['commercial', 'business', 'building', 'office', 'restaurant', 'hotel']
-  },
-  {
-    id: 'multifamily',
-    name: 'Multi-Family Homes',
-    description: 'Greywater systems for apartments, condos, and multi-unit buildings.',
-    image: `${BASE_URL}/images/solutions/homes-ai.jpg`,
-    url: `${BASE_URL}/solutions/multifamily-homes`,
-    keywords: ['apartment', 'condo', 'multi-family', 'duplex', 'townhouse', 'hoa']
-  },
-  {
-    id: 'laundry',
-    name: 'Laundry to Landscape',
-    description: 'Simple laundry-based greywater systems for easy garden irrigation.',
-    image: `${BASE_URL}/images/line-art/laundry.png`,
-    url: `${BASE_URL}/solutions/laundry-to-landscape`,
-    keywords: ['laundry', 'washing machine', 'washer', 'landscape', 'simple']
+    keywords: ['commercial', 'business', 'building', 'office', 'restaurant', 'hotel', 'gym']
   }
 ];
 
