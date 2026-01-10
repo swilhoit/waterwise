@@ -9,11 +9,11 @@ import { nameToSlug, findBySlug } from '@/lib/url-utils'
 // Resource type configuration
 type ResourceType = 'all' | 'greywater' | 'rainwater' | 'conservation'
 
-const RESOURCE_TYPES: { id: ResourceType; label: string; icon: any; color: string; bgColor: string }[] = [
-  { id: 'all', label: 'All Programs', icon: Droplets, color: 'text-gray-700', bgColor: 'bg-gray-100' },
-  { id: 'greywater', label: 'Greywater', icon: Droplets, color: 'text-blue-700', bgColor: 'bg-blue-100' },
-  { id: 'rainwater', label: 'Rainwater', icon: CloudRain, color: 'text-cyan-700', bgColor: 'bg-cyan-100' },
-  { id: 'conservation', label: 'Conservation', icon: Leaf, color: 'text-emerald-700', bgColor: 'bg-emerald-100' },
+const RESOURCE_TYPES: { id: ResourceType; label: string; icon: any; bgColor: string; color: string }[] = [
+  { id: 'all', label: 'All', icon: Droplets, bgColor: 'bg-gray-100', color: 'text-gray-700' },
+  { id: 'greywater', label: 'Greywater', icon: Droplets, bgColor: 'bg-gray-100', color: 'text-gray-700' },
+  { id: 'rainwater', label: 'Rainwater', icon: CloudRain, bgColor: 'bg-gray-100', color: 'text-gray-700' },
+  { id: 'conservation', label: 'Conservation', icon: Leaf, bgColor: 'bg-gray-100', color: 'text-gray-700' },
 ]
 
 // =============================================================================
@@ -189,29 +189,29 @@ export default function SimpleDirectoryView({
     })
   }
 
-  // Get resource type badge styling
+  // Get resource type badge styling - minimal design
   const getResourceTypeBadge = (resourceType: string) => {
     switch (resourceType) {
       case 'rainwater':
-        return { className: 'bg-cyan-100 text-cyan-700', label: 'Rainwater', icon: CloudRain }
+        return { className: 'bg-gray-100 text-gray-600 border border-gray-200', label: 'Rainwater', icon: CloudRain }
       case 'conservation':
-        return { className: 'bg-emerald-100 text-emerald-700', label: 'Conservation', icon: Leaf }
+        return { className: 'bg-gray-100 text-gray-600 border border-gray-200', label: 'Conservation', icon: Leaf }
       case 'greywater':
       default:
-        return { className: 'bg-blue-100 text-blue-700', label: 'Greywater', icon: Droplets }
+        return { className: 'bg-gray-100 text-gray-600 border border-gray-200', label: 'Greywater', icon: Droplets }
     }
   }
 
-  // Get program subtype badge for conservation programs
+  // Get program subtype badge for conservation programs - minimal
   const getSubtypeBadge = (subtype: string) => {
     const subtypes: Record<string, { label: string; className: string }> = {
-      'turf_removal': { label: 'Turf Removal', className: 'bg-green-100 text-green-700' },
-      'smart_irrigation': { label: 'Smart Irrigation', className: 'bg-sky-100 text-sky-700' },
-      'efficient_fixtures': { label: 'Efficient Fixtures', className: 'bg-violet-100 text-violet-700' },
-      'pool_covers': { label: 'Pool Covers', className: 'bg-indigo-100 text-indigo-700' },
-      'leak_detection': { label: 'Leak Detection', className: 'bg-orange-100 text-orange-700' },
-      'water_audit': { label: 'Water Audit', className: 'bg-pink-100 text-pink-700' },
-      'appliance_rebate': { label: 'Appliance', className: 'bg-rose-100 text-rose-700' },
+      'turf_removal': { label: 'Turf Removal', className: 'border border-gray-200 text-gray-600' },
+      'smart_irrigation': { label: 'Smart Irrigation', className: 'border border-gray-200 text-gray-600' },
+      'efficient_fixtures': { label: 'Efficient Fixtures', className: 'border border-gray-200 text-gray-600' },
+      'pool_covers': { label: 'Pool Covers', className: 'border border-gray-200 text-gray-600' },
+      'leak_detection': { label: 'Leak Detection', className: 'border border-gray-200 text-gray-600' },
+      'water_audit': { label: 'Water Audit', className: 'border border-gray-200 text-gray-600' },
+      'appliance_rebate': { label: 'Appliance', className: 'border border-gray-200 text-gray-600' },
     }
     return subtypes[subtype] || null
   }
@@ -415,69 +415,44 @@ export default function SimpleDirectoryView({
     )
 
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Water Sustainability Directory</h1>
-          <p className="text-gray-600">Find water regulations, rebates, and incentive programs by state</p>
-        </div>
-
-        {/* Resource Type Filter */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {RESOURCE_TYPES.map((type) => {
-            const Icon = type.icon
-            return (
-              <button
-                key={type.id}
-                onClick={() => setResourceTypeFilter(type.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  resourceTypeFilter === type.id
-                    ? `${type.bgColor} ${type.color} ring-2 ring-offset-1 ring-current`
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {type.label}
-              </button>
-            )
-          })}
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        {/* Minimal Header */}
+        <div className="mb-10">
+          <h1 className="text-2xl font-medium text-gray-900 mb-2">Regulations Directory</h1>
+          <p className="text-gray-500 text-sm">Find greywater and rainwater regulations by state</p>
         </div>
 
         {/* Search */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <div className="relative mb-8">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search states..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-400 transition-colors text-sm"
           />
         </div>
 
-        {/* States Grid */}
+        {/* States List */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin h-8 w-8 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-4" />
-            <p className="text-gray-600">Loading states...</p>
+            <div className="animate-spin h-5 w-5 border border-gray-300 border-t-gray-600 rounded-full mx-auto mb-3" />
+            <p className="text-gray-400 text-sm">Loading...</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="divide-y divide-gray-100">
             {filteredStates.map((state) => (
               <button
                 key={state.state_jurisdiction_id}
                 onClick={() => navigateToState(state)}
-                className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
+                className="w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left group -mx-3 px-3 rounded"
               >
                 <div>
-                  <p className="font-semibold text-gray-900 group-hover:text-emerald-700">{state.state_name}</p>
-                  <p className="text-sm text-gray-500">{state.city_count || 0} cities</p>
+                  <p className="font-medium text-gray-900">{state.state_name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{state.city_count || 0} cities</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  {state.legalStatus === 'Legal' && (
-                    <span className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">Legal</span>
-                  )}
-                  <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
-                </div>
+                <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
               </button>
             ))}
           </div>
@@ -509,81 +484,35 @@ export default function SimpleDirectoryView({
       c.county_name?.toLowerCase().includes(searchTerm.toLowerCase())
     ).sort((a, b) => (a.county_name || '').localeCompare(b.county_name || ''))
 
-    // Helper to get status badge color
-    const getStatusBadgeClass = (status?: string) => {
-      if (!status) return 'bg-gray-100 text-gray-700'
-      const s = status.toLowerCase()
-      if (s.includes('legal')) return 'bg-emerald-100 text-emerald-700'
-      if (s.includes('regulated')) return 'bg-blue-100 text-blue-700'
-      if (s.includes('limited') || s.includes('unclear')) return 'bg-amber-100 text-amber-700'
-      return 'bg-gray-100 text-gray-700'
+    // Helper to get status badge color - minimal
+    const getStatusBadgeClass = () => {
+      return 'bg-gray-100 text-gray-600 border border-gray-200'
     }
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6">
-          <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
+        <nav className="flex items-center gap-2 text-sm mb-8">
+          <button onClick={() => router.push(basePath)} className="text-gray-400 hover:text-gray-600">
             All States
           </button>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-          <span className="font-medium text-gray-900">{selectedState.state_name}</span>
+          <ChevronRight className="h-3 w-3 text-gray-300" />
+          <span className="text-gray-900">{selectedState.state_name}</span>
         </nav>
 
-        {/* State Header with Status Badges */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-3">{selectedState.state_name}</h1>
-              <p className="text-gray-500 mb-4">Water Sustainability Regulations & Incentives</p>
-              {/* Status badges for each resource type */}
-              <div className="flex flex-wrap gap-3">
-                {stateData?.greywater && (
-                  <div className="flex items-center gap-2">
-                    <Droplets className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-gray-600">Greywater:</span>
-                    <Badge className={getStatusBadgeClass(stateData.greywater.legalStatus)}>
-                      {stateData.greywater.legalStatus || 'Legal'}
-                    </Badge>
-                  </div>
-                )}
-                {stateData?.rainwater && (
-                  <div className="flex items-center gap-2">
-                    <CloudRain className="h-4 w-4 text-cyan-600" />
-                    <span className="text-sm text-gray-600">Rainwater:</span>
-                    <Badge className={getStatusBadgeClass(stateData.rainwater.legalStatus)}>
-                      {stateData.rainwater.legalStatus || 'Legal'}
-                    </Badge>
-                  </div>
-                )}
-                {stateData?.incentives && stateData.incentives.total > 0 && (
-                  <div className="flex items-center gap-2">
-                    <Leaf className="h-4 w-4 text-emerald-600" />
-                    <span className="text-sm text-gray-600">Programs:</span>
-                    <Badge className="bg-emerald-100 text-emerald-700">
-                      {stateData.incentives.total} Available
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-2xl font-bold text-gray-900">{selectedState.city_count}</span>
-              <p className="text-sm text-gray-500">cities</p>
-            </div>
-          </div>
+        {/* Minimal State Header */}
+        <div className="mb-10">
+          <h1 className="text-2xl font-medium text-gray-900 mb-2">{selectedState.state_name}</h1>
+          <p className="text-sm text-gray-500">{selectedState.city_count} cities</p>
         </div>
 
-        {/* Recent Changes Banner */}
+        {/* Recent Changes */}
         {(stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges) && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium text-amber-800">Recent Regulatory Update</p>
-              <p className="text-sm text-amber-700">
-                {stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges}
-              </p>
-            </div>
+          <div className="border-l-2 border-gray-300 pl-4 mb-8">
+            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Recent Update</p>
+            <p className="text-sm text-gray-600">
+              {stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges}
+            </p>
           </div>
         )}
 

@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { findRelevantSections, getAllKnowledge } from '@/lib/knowledge-base';
+import {
+  detectRelevantContent,
+  getProductRecommendations,
+  formatAsCards,
+  products,
+  solutions,
+  articles,
+  type ProductCard,
+  type SolutionCard,
+  type ArticleCard
+} from '@/lib/chat-content-catalog';
 
 // Lazy initialize OpenAI client to avoid build-time errors
 let openai: OpenAI | null = null;
@@ -99,10 +110,25 @@ const SYSTEM_PROMPT = `You are a helpful customer service assistant for Water Wi
 
 Guidelines:
 - Be friendly, professional, and concise
+- Keep responses under 3-4 sentences when possible - the system will automatically show relevant product cards and links
 - If you don't know something specific, offer to connect them with our support team at (678) 809-3008 or sales@waterwisegroup.com
 - For complex technical issues or order status inquiries, recommend they contact support directly
 - Never make up product specifications or prices - use only the information provided
 - If asked about topics unrelated to greywater or Water Wise Group, politely redirect to water conservation topics
+
+IMPORTANT: After your response, add a line with content suggestions in this format:
+[SUGGEST: product|solution|article:keyword]
+
+Examples:
+- If discussing the gravity system, add: [SUGGEST: product:gravity]
+- If someone mentions RV or camper, add: [SUGGEST: solution:rv]
+- If explaining what greywater is, add: [SUGGEST: article:what is]
+- If discussing installation for homes, add: [SUGGEST: solution:home]
+- If discussing pricing, add: [SUGGEST: product:affordable]
+
+You can suggest multiple items: [SUGGEST: product:gravity, solution:home]
+
+If no specific content is relevant, don't add the SUGGEST line.
 
 Here is the knowledge base you should use to answer questions:
 
@@ -207,6 +233,107 @@ async function sendChatwootMessage(
   if (options?.handoff) {
     await handoffToHuman(accountId, conversationId);
   }
+}
+
+// Send cards with images to Chatwoot
+async function sendChatwootCards(
+  accountId: number,
+  conversationId: number,
+  cards: Array<{
+    title: string;
+    description: string;
+    media_url?: string;
+    actions: Array<{ type: string; text: string; uri: string }>;
+  }>
+): Promise<void> {
+  const chatwootUrl = process.env.CHATWOOT_URL;
+  const apiToken = process.env.CHATWOOT_BOT_TOKEN;
+
+  if (!chatwootUrl || !apiToken || cards.length === 0) {
+    return;
+  }
+
+  const url = `${chatwootUrl}/api/v1/accounts/${accountId}/conversations/${conversationId}/messages`;
+
+  const payload = {
+    content: 'Here are some helpful resources:',
+    message_type: 'outgoing',
+    private: false,
+    content_type: 'cards',
+    content_attributes: {
+      items: cards
+    }
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api_access_token': apiToken,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Failed to send Chatwoot cards:', errorText);
+  }
+}
+
+// Parse AI response for content suggestions
+function parseContentSuggestions(response: string): {
+  cleanResponse: string;
+  suggestedProducts: ProductCard[];
+  suggestedSolutions: SolutionCard[];
+  suggestedArticles: ArticleCard[];
+} {
+  const suggestPattern = /\[SUGGEST:\s*([^\]]+)\]/gi;
+  const matches = response.matchAll(suggestPattern);
+
+  const suggestedProducts: ProductCard[] = [];
+  const suggestedSolutions: SolutionCard[] = [];
+  const suggestedArticles: ArticleCard[] = [];
+
+  for (const match of matches) {
+    const suggestions = match[1].split(',').map(s => s.trim());
+
+    for (const suggestion of suggestions) {
+      const [type, keyword] = suggestion.split(':').map(s => s.trim().toLowerCase());
+
+      if (type === 'product' && keyword) {
+        const product = products.find(p =>
+          p.keywords.some(k => k.includes(keyword) || keyword.includes(k))
+        );
+        if (product && !suggestedProducts.find(p => p.id === product.id)) {
+          suggestedProducts.push(product);
+        }
+      } else if (type === 'solution' && keyword) {
+        const solution = solutions.find(s =>
+          s.keywords.some(k => k.includes(keyword) || keyword.includes(k))
+        );
+        if (solution && !suggestedSolutions.find(s => s.id === solution.id)) {
+          suggestedSolutions.push(solution);
+        }
+      } else if (type === 'article' && keyword) {
+        const article = articles.find(a =>
+          a.keywords.some(k => k.includes(keyword) || keyword.includes(k))
+        );
+        if (article && !suggestedArticles.find(a => a.id === article.id)) {
+          suggestedArticles.push(article);
+        }
+      }
+    }
+  }
+
+  // Remove the SUGGEST tags from the response
+  const cleanResponse = response.replace(suggestPattern, '').trim();
+
+  return {
+    cleanResponse,
+    suggestedProducts: suggestedProducts.slice(0, 2),
+    suggestedSolutions: suggestedSolutions.slice(0, 1),
+    suggestedArticles: suggestedArticles.slice(0, 1)
+  };
 }
 
 async function handoffToHuman(
@@ -497,6 +624,14 @@ Thank you for your patience!`;
     // Generate AI response
     const aiResponse = await generateResponse(payload.content);
 
+    // Parse AI response for content suggestions
+    const {
+      cleanResponse,
+      suggestedProducts,
+      suggestedSolutions,
+      suggestedArticles
+    } = parseContentSuggestions(aiResponse);
+
     // Check if this is the first real message (after welcome) to add helpful follow-up
     const isFirstMessage = payload.current_conversation?.messages?.length === 1;
 
@@ -504,8 +639,42 @@ Thank you for your patience!`;
     await sendChatwootMessage(
       payload.account.id,
       payload.conversation.id,
-      aiResponse
+      cleanResponse
     );
+
+    // Build cards from AI suggestions
+    const allSuggested = [
+      ...suggestedProducts,
+      ...suggestedSolutions,
+      ...suggestedArticles
+    ];
+
+    // If AI didn't suggest anything, try automatic detection from user message
+    let cardsToSend = formatAsCards(allSuggested);
+
+    if (cardsToSend.length === 0) {
+      // Fallback: detect relevant content from user's message
+      const detected = detectRelevantContent(payload.content);
+      const detectedItems = [
+        ...detected.products,
+        ...detected.solutions,
+        ...detected.articles
+      ];
+      if (detectedItems.length > 0) {
+        cardsToSend = formatAsCards(detectedItems.slice(0, 2));
+      }
+    }
+
+    // Send cards if we have any (with slight delay for better UX)
+    if (cardsToSend.length > 0) {
+      setTimeout(async () => {
+        await sendChatwootCards(
+          payload.account.id,
+          payload.conversation.id,
+          cardsToSend
+        );
+      }, 800);
+    }
 
     // After the first response, ask for contact info and show follow-up options
     if (isFirstMessage) {
@@ -516,7 +685,7 @@ Thank you for your patience!`;
           "If you'd like us to follow up with more details, feel free to share your name and email. Otherwise, what else can I help you with?",
           { withFollowupOptions: true }
         );
-      }, 1500);
+      }, cardsToSend.length > 0 ? 2500 : 1500);
     }
 
     return NextResponse.json({ status: 'success' });
