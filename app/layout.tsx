@@ -17,6 +17,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Water Wise Group - Greywater Recycling Systems",
   description: "Leading provider of greywater recycling systems for homes, RVs, tiny homes, and sustainable developments. Save water, lower bills, grow healthier landscapes.",
+  icons: {
+    icon: '/waterwise-logo-icon.png',
+    shortcut: '/waterwise-logo-icon.png',
+    apple: '/waterwise-logo-icon.png',
+  },
 };
 
 export default function RootLayout({
