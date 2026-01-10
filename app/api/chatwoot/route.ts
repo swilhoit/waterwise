@@ -665,27 +665,23 @@ Thank you for your patience!`;
       }
     }
 
-    // Send cards if we have any (with slight delay for better UX)
+    // Send cards if we have any (immediately after message)
     if (cardsToSend.length > 0) {
-      setTimeout(async () => {
-        await sendChatwootCards(
-          payload.account.id,
-          payload.conversation.id,
-          cardsToSend
-        );
-      }, 800);
+      await sendChatwootCards(
+        payload.account.id,
+        payload.conversation.id,
+        cardsToSend
+      );
     }
 
     // After the first response, ask for contact info and show follow-up options
     if (isFirstMessage) {
-      setTimeout(async () => {
-        await sendChatwootMessage(
-          payload.account.id,
-          payload.conversation.id,
-          "If you'd like us to follow up with more details, feel free to share your name and email. Otherwise, what else can I help you with?",
-          { withFollowupOptions: true }
-        );
-      }, cardsToSend.length > 0 ? 2500 : 1500);
+      await sendChatwootMessage(
+        payload.account.id,
+        payload.conversation.id,
+        "If you'd like us to follow up with more details, feel free to share your name and email. Otherwise, what else can I help you with?",
+        { withFollowupOptions: true }
+      );
     }
 
     return NextResponse.json({ status: 'success' });
