@@ -8,7 +8,7 @@ import { Menu, ShoppingCart, ChevronDown, ArrowRight, Droplets, Home, Building2,
 import { useState } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
-import { MegaMenu } from "./mega-menu"
+import { SimpleNav } from "./simple-nav"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -66,8 +66,8 @@ export function Header() {
             />
           </Link>
 
-          {/* Desktop Navigation - Mega Menu */}
-          <MegaMenu items={navItems} />
+          {/* Desktop Navigation */}
+          <SimpleNav items={navItems} />
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-2">
@@ -91,13 +91,26 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Mobile Menu */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <button className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                <Menu className="h-5 w-5" />
+          {/* Mobile Actions */}
+          <div className="flex lg:hidden items-center gap-1">
+            <CartSheet>
+              <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
               </button>
-            </SheetTrigger>
+            </CartSheet>
+
+            {/* Mobile Menu */}
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                  <Menu className="h-5 w-5" />
+                </button>
+              </SheetTrigger>
             <SheetContent side="right" className="w-[340px] p-0 overflow-hidden">
               <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50">
                 {/* Mobile Header */}
@@ -220,7 +233,8 @@ export function Header() {
                 </div>
               </div>
             </SheetContent>
-          </Sheet>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>
