@@ -4,11 +4,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, ShoppingCart, ChevronDown, ArrowRight } from "lucide-react"
+import { Menu, ShoppingCart, ChevronDown, ArrowRight, Droplets, Home, Building2, Caravan, TreePine, Shirt, BookOpen, Scale, Sparkles, Play } from "lucide-react"
 import { useState } from "react"
 import { useCart } from "./cart-context"
 import { CartSheet } from "./cart-sheet"
-import { SimpleNav } from "./simple-nav"
+import { MegaMenu } from "./mega-menu"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -66,8 +66,8 @@ export function Header() {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <SimpleNav items={navItems} />
+          {/* Desktop Navigation - Mega Menu */}
+          <MegaMenu items={navItems} />
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-2">
@@ -98,74 +98,99 @@ export function Header() {
                 <Menu className="h-5 w-5" />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[320px] p-0">
-              <div className="flex flex-col h-full">
+            <SheetContent side="right" className="w-[340px] p-0 overflow-hidden">
+              <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50">
                 {/* Mobile Header */}
-                <div className="p-4 border-b border-gray-100">
+                <div className="p-5 border-b border-gray-100 bg-white">
                   <Image
                     src="/images/logo-water-wise-group.png"
                     alt="Water Wise Group"
-                    width={120}
-                    height={32}
-                    className="h-8 w-auto"
+                    width={130}
+                    height={34}
+                    className="h-9 w-auto"
                   />
                 </div>
 
                 {/* Mobile Nav */}
-                <nav className="flex-1 overflow-y-auto py-4">
-                  {navItems.map((item) => (
-                    <div key={item.label} className="px-2">
-                      {item.dropdown ? (
-                        <div>
-                          <button
-                            onClick={() => setExpandedSection(expandedSection === item.label ? null : item.label)}
-                            className="flex items-center justify-between w-full text-left px-3 py-3 text-[15px] font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                          >
-                            {item.label}
-                            <ChevronDown
-                              className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
-                                expandedSection === item.label ? 'rotate-180' : ''
-                              }`}
-                            />
-                          </button>
-                          {expandedSection === item.label && (
-                            <div className="ml-3 mt-1 mb-2 border-l-2 border-gray-100 pl-3 space-y-1">
-                              {item.dropdown.map((subItem) => (
-                                <Link
-                                  key={subItem.href}
-                                  href={subItem.href}
-                                  className="block py-2 px-3 text-[14px] text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  {subItem.title}
-                                </Link>
-                              ))}
+                <nav className="flex-1 overflow-y-auto py-3">
+                  {navItems.map((item) => {
+                    const iconMap: Record<string, React.ElementType> = {
+                      "Learn": BookOpen,
+                      "Products": Droplets,
+                      "Solutions": Home,
+                      "Customer Stories": Sparkles,
+                      "Blog": BookOpen,
+                      "About": Building2
+                    }
+                    const Icon = iconMap[item.label] || Droplets
+
+                    return (
+                      <div key={item.label} className="px-3">
+                        {item.dropdown ? (
+                          <div>
+                            <button
+                              onClick={() => setExpandedSection(expandedSection === item.label ? null : item.label)}
+                              className="flex items-center justify-between w-full text-left px-4 py-3.5 text-[15px] font-semibold text-gray-900 hover:bg-white rounded-xl transition-all"
+                            >
+                              <span className="flex items-center gap-3">
+                                <span className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+                                  <Icon className="h-4 w-4" />
+                                </span>
+                                {item.label}
+                              </span>
+                              <ChevronDown
+                                className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${
+                                  expandedSection === item.label ? 'rotate-180 text-emerald-600' : ''
+                                }`}
+                              />
+                            </button>
+                            <div className={`overflow-hidden transition-all duration-300 ${
+                              expandedSection === item.label ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            }`}>
+                              <div className="ml-4 mt-1 mb-3 pl-4 border-l-2 border-emerald-100 space-y-0.5">
+                                {item.dropdown.map((subItem) => (
+                                  <Link
+                                    key={subItem.href}
+                                    href={subItem.href}
+                                    className="flex flex-col py-2.5 px-3 text-gray-600 hover:text-emerald-700 hover:bg-white rounded-lg transition-all"
+                                    onClick={() => setIsOpen(false)}
+                                  >
+                                    <span className="text-[14px] font-medium">{subItem.title}</span>
+                                    {subItem.description && (
+                                      <span className="text-[12px] text-gray-400 mt-0.5">{subItem.description}</span>
+                                    )}
+                                  </Link>
+                                ))}
+                              </div>
                             </div>
-                          )}
-                        </div>
-                      ) : (
-                        <Link
-                          href={item.href!}
-                          className="block px-3 py-3 text-[15px] font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
-                      )}
-                    </div>
-                  ))}
+                          </div>
+                        ) : (
+                          <Link
+                            href={item.href!}
+                            className="flex items-center gap-3 px-4 py-3.5 text-[15px] font-semibold text-gray-900 hover:bg-white rounded-xl transition-all"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <span className="p-2 rounded-lg bg-gray-100 text-gray-600">
+                              <Icon className="h-4 w-4" />
+                            </span>
+                            {item.label}
+                          </Link>
+                        )}
+                      </div>
+                    )
+                  })}
                 </nav>
 
                 {/* Mobile Footer Actions */}
-                <div className="p-4 border-t border-gray-100 space-y-3">
+                <div className="p-4 border-t border-gray-100 bg-white space-y-3">
                   <CartSheet>
-                    <button className="flex items-center justify-between w-full px-4 py-3 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                      <span className="flex items-center gap-2 text-[14px] font-medium">
-                        <ShoppingCart className="h-4 w-4" />
+                    <button className="flex items-center justify-between w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors">
+                      <span className="flex items-center gap-3 text-[14px] font-semibold">
+                        <ShoppingCart className="h-5 w-5 text-gray-500" />
                         Shopping Cart
                       </span>
                       {totalItems > 0 && (
-                        <span className="bg-emerald-600 text-white text-[11px] font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        <span className="bg-emerald-600 text-white text-[11px] font-bold rounded-full h-6 w-6 flex items-center justify-center shadow-sm">
                           {totalItems}
                         </span>
                       )}
@@ -174,12 +199,24 @@ export function Header() {
 
                   <Link
                     href="/contact"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-[14px] font-medium rounded-lg transition-colors"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-[15px] font-semibold rounded-xl transition-all shadow-lg shadow-emerald-500/25"
                     onClick={() => setIsOpen(false)}
                   >
-                    Get a Quote
+                    Get a Free Quote
                     <ArrowRight className="h-4 w-4" />
                   </Link>
+
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-2 gap-2 pt-2">
+                    <div className="text-center p-3 rounded-xl bg-emerald-50">
+                      <div className="text-lg font-bold text-emerald-700">40%</div>
+                      <div className="text-[10px] text-emerald-600 font-medium">Water Savings</div>
+                    </div>
+                    <div className="text-center p-3 rounded-xl bg-blue-50">
+                      <div className="text-lg font-bold text-blue-700">50+ gal</div>
+                      <div className="text-[10px] text-blue-600 font-medium">Saved Daily</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </SheetContent>

@@ -87,7 +87,7 @@ export function BuilderNewsletterSection({
 
       {/* Wave decoration at bottom */}
       <div className="absolute bottom-0 left-0 right-0">
-        <svg className="w-full h-16 text-gray-900" viewBox="0 0 1440 64" fill="currentColor" preserveAspectRatio="none">
+        <svg className="w-full h-16 text-emerald-50" viewBox="0 0 1440 64" fill="currentColor" preserveAspectRatio="none">
           <path d="M0,32 C320,0 420,64 720,32 C1020,0 1120,64 1440,32 L1440,64 L0,64 Z" />
         </svg>
       </div>
