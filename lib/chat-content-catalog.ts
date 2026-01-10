@@ -67,7 +67,7 @@ export const products: ProductCard[] = [
     id: 'filters',
     name: 'Replacement Filters',
     description: '4-stage progressive filtration filters. Tool-free replacement, reusable up to 3 years.',
-    price: 'From $249',
+    price: '$219.95',
     image: `${SHOPIFY_CDN}/Aqua2use-GWDD-components.jpg`,
     url: `${BASE_URL}/products/replacement-filters`,
     keywords: ['filter', 'replacement filter', 'maintenance', 'parts', 'spare', 'new filter']
@@ -76,7 +76,7 @@ export const products: ProductCard[] = [
     id: 'pump-kit',
     name: 'Replacement Pump Kit',
     description: 'OEM replacement pump with electronic controller and dry run protection.',
-    price: 'From $399',
+    price: '$389',
     image: `${SHOPIFY_CDN}/Product-ug-gwdd-4inch.jpg`,
     url: `${BASE_URL}/products/replacement-pumps`,
     keywords: ['replacement pump', 'new pump', 'motor', 'not working', 'repair', 'broken pump']
