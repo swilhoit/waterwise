@@ -64,5 +64,50 @@ The Chatwoot widget is configured in `app/layout.tsx`. Key settings:
 - Locale: en
 - Type: standard
 
+## AI Chatbot Architecture
+
+### Overview
+The chatbot uses a webhook-based architecture:
+1. User sends message via Chatwoot widget
+2. Chatwoot sends webhook to `/api/chatwoot`
+3. Bot queries knowledge base and generates AI response
+4. Bot sends response + product cards back to Chatwoot
+
+### Key Files
+- `app/api/chatwoot/route.ts` - Main webhook handler
+- `lib/knowledge-base.ts` - Product info, pricing, FAQs
+- `lib/chat-content-catalog.ts` - Product cards with images/links
+
+### Environment Variables (Vercel)
+```
+CHATWOOT_URL=https://34-53-43-15.nip.io
+CHATWOOT_BOT_TOKEN=<bot API token from Chatwoot>
+CHATWOOT_WEBHOOK_SECRET=<optional, for signature verification>
+OPENAI_API_KEY=<OpenAI API key>
+```
+
+### Product Pricing (keep in sync)
+Update prices in THREE places if they change:
+1. `lib/knowledge-base.ts` - Detailed product sections
+2. `lib/chat-content-catalog.ts` - Card display prices
+3. `app/api/chatwoot/route.ts` - System prompt pricing
+
+Current prices:
+- GWDD Gravity: $625
+- GWDD with Pump: $945
+- Aqua2use Pro: $2,695
+- Replacement Filters: $219.95
+- Replacement Pump: $389
+- Drip Irrigation Kit: $199.95
+
+### Debugging
+```bash
+# Check Vercel function logs
+npx vercel logs greywater-website.vercel.app
+
+# Test webhook endpoint
+curl https://greywater-website.vercel.app/api/chatwoot
+```
+
 ## GCloud Configuration
 The gcloud CLI is configured at `~/.config/gcloud` and has access to manage the Chatwoot server.
