@@ -21,9 +21,18 @@ export function Header() {
       dropdown: [
         { title: "What is Greywater?", href: "/blog/what-is-greywater", description: "The basics of greywater recycling" },
         { title: "Greywater Benefits", href: "/blog/greywater-benefits", description: "How greywater helps the environment" },
-        { title: "How Greywater Systems Work", href: "/blog/how-can-i-use-greywater", description: "System mechanics and usage" },
-        { title: "Laws in Your State", href: "/blog/laws-in-your-state", description: "State-by-state regulations" },
-        { title: "Compliance Directory", href: "/directory", description: "Browse regulations by location" }
+        { title: "How Greywater Systems Work", href: "/blog/how-can-i-use-greywater", description: "System mechanics and usage" }
+      ]
+    },
+    {
+      label: "Laws & Rebates",
+      dropdown: [
+        { title: "California", href: "/ca", description: "CA greywater & rainwater laws" },
+        { title: "Texas", href: "/tx", description: "TX water regulations & rebates" },
+        { title: "Arizona", href: "/az", description: "AZ water conservation laws" },
+        { title: "Colorado", href: "/co", description: "CO rainwater & greywater rules" },
+        { title: "Oregon", href: "/or", description: "OR water recycling regulations" },
+        { title: "All States", href: "/ca", description: "Browse all 50 states" }
       ]
     },
     {
@@ -129,6 +138,7 @@ export function Header() {
                   {navItems.map((item) => {
                     const iconMap: Record<string, React.ElementType> = {
                       "Learn": BookOpen,
+                      "Laws & Rebates": Scale,
                       "Products": Droplets,
                       "Solutions": Home,
                       "Customer Stories": Sparkles,

@@ -38,40 +38,46 @@ export async function GET(request: NextRequest) {
       ? `${state}_CITY_${city.toUpperCase().replace(/\s+/g, '_')}`
       : '';
 
-    // Query for regulations and permits (unchanged)
+    // Query for regulations from local_regulations table
     let regulationsData: any[] = [];
+    let regulationsQueryFailed = false;
     try {
-      const stateJurisdictionIdOld = `STATE_${state}`;
       const regulationsQuery = `
         SELECT
-          r.jurisdiction_id,
-          r.greywater_allowed,
-          r.regulation_summary,
-          r.allowed_sources,
-          r.prohibited_sources,
-          r.treatment_requirements,
-          r.system_size_limits,
-          r.setback_requirements,
-          r.inspection_required,
-          r.documentation_url,
-          p.permit_required,
-          p.permit_type,
-          p.permit_fee,
-          p.annual_fee,
-          p.processing_time_days
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.regulations_master\` r
-        LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.permits_master\` p
-          ON r.jurisdiction_id = p.jurisdiction_id
-        WHERE r.jurisdiction_id IN (?, ?, ?, ?)
+          jurisdiction_id,
+          jurisdiction_name,
+          jurisdiction_type,
+          CASE WHEN legal_status IS NOT NULL THEN TRUE ELSE TRUE END as greywater_allowed,
+          COALESCE(notes, permit_details) as regulation_summary,
+          allowed_uses as allowed_sources,
+          restrictions as prohibited_sources,
+          NULL as treatment_requirements,
+          NULL as system_size_limits,
+          NULL as setback_requirements,
+          NULL as inspection_required,
+          website as documentation_url,
+          permit_required,
+          NULL as permit_type,
+          NULL as permit_fee,
+          NULL as annual_fee,
+          NULL as processing_time_days,
+          has_preplumbing_mandate,
+          preplumbing_threshold_sqft,
+          preplumbing_building_types,
+          preplumbing_details,
+          preplumbing_code_reference
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.local_regulations\`
+        WHERE jurisdiction_id IN (?, ?, ?)
       `;
       const [rows] = await bigquery.query({
         query: regulationsQuery,
-        params: [stateJurisdictionIdOld, countyJurisdictionId, cityJurisdictionId, `CITY_${state}_${city}`],
+        params: [stateJurisdictionId, countyJurisdictionId, cityJurisdictionId],
         parameterMode: 'POSITIONAL'
       });
       regulationsData = rows;
     } catch (error) {
       console.error('Failed to fetch regulations:', error);
+      regulationsQueryFailed = true;
     }
 
     // Build resource type filter
@@ -81,6 +87,7 @@ export async function GET(request: NextRequest) {
 
     // Query programs using the junction table for bulletproof jurisdiction matching
     let incentivePrograms: any[] = [];
+    let incentivesQueryFailed = false;
 
     // Build list of jurisdiction IDs to match (city, county, state)
     const jurisdictionIds = [stateJurisdictionId];
@@ -140,6 +147,7 @@ export async function GET(request: NextRequest) {
       console.log(`Found ${incentivePrograms.length} programs for jurisdictions:`, jurisdictionIds);
     } catch (error) {
       console.error('Failed to fetch incentives:', error);
+      incentivesQueryFailed = true;
     }
 
     // Build compliance response
@@ -150,7 +158,7 @@ export async function GET(request: NextRequest) {
     }
 
     // State level
-    const stateRegs = getRegulationFor(`STATE_${state}`);
+    const stateRegs = getRegulationFor(stateJurisdictionId);
     compliance.state = {
       compliance_level: 'State',
       state_code: state,
@@ -165,6 +173,12 @@ export async function GET(request: NextRequest) {
       annual_fee: stateRegs.annual_fee,
       regulation_summary: stateRegs.regulation_summary || 'State greywater regulations apply. Check local jurisdictions for additional requirements.',
       ...stateRegs,
+      // Pre-plumbing data
+      has_preplumbing_mandate: stateRegs.has_preplumbing_mandate || false,
+      preplumbing_threshold_sqft: stateRegs.preplumbing_threshold_sqft,
+      preplumbing_building_types: stateRegs.preplumbing_building_types,
+      preplumbing_details: stateRegs.preplumbing_details,
+      preplumbing_code_reference: stateRegs.preplumbing_code_reference,
       incentives: [],
       incentive_count: 0,
       max_incentive: null
@@ -187,6 +201,12 @@ export async function GET(request: NextRequest) {
         annual_fee: countyRegs.annual_fee,
         regulation_summary: countyRegs.regulation_summary || `${county} County defers to state regulations.`,
         ...countyRegs,
+        // Pre-plumbing data
+        has_preplumbing_mandate: countyRegs.has_preplumbing_mandate || false,
+        preplumbing_threshold_sqft: countyRegs.preplumbing_threshold_sqft,
+        preplumbing_building_types: countyRegs.preplumbing_building_types,
+        preplumbing_details: countyRegs.preplumbing_details,
+        preplumbing_code_reference: countyRegs.preplumbing_code_reference,
         incentives: [],
         incentive_count: 0,
         max_incentive: null
@@ -210,6 +230,12 @@ export async function GET(request: NextRequest) {
         annual_fee: cityRegs.annual_fee,
         regulation_summary: cityRegs.regulation_summary || `${city} defers to county and state regulations.`,
         ...cityRegs,
+        // Pre-plumbing data
+        has_preplumbing_mandate: cityRegs.has_preplumbing_mandate || false,
+        preplumbing_threshold_sqft: cityRegs.preplumbing_threshold_sqft,
+        preplumbing_building_types: cityRegs.preplumbing_building_types,
+        preplumbing_details: cityRegs.preplumbing_details,
+        preplumbing_code_reference: cityRegs.preplumbing_code_reference,
         incentives: [],
         incentive_count: 0,
         max_incentive: null
@@ -296,6 +322,11 @@ export async function GET(request: NextRequest) {
       location: { state, county, city },
       resource_type: resourceType,
       compliance,
+      partial_data: regulationsQueryFailed || incentivesQueryFailed,
+      data_warnings: [
+        ...(regulationsQueryFailed ? ['Regulations data may be incomplete'] : []),
+        ...(incentivesQueryFailed ? ['Incentives data may be incomplete'] : [])
+      ],
       timestamp: new Date().toISOString()
     });
   } catch (error) {

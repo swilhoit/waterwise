@@ -211,7 +211,7 @@ export default function DetailedComplianceView({
             {selectedCity.city_name}
           </h2>
           <div className="flex flex-wrap gap-2">
-            <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200">
+            <Badge className="bg-teal-50 text-teal-700 border border-teal-200">
               <CheckCircle className="h-3 w-3 mr-1" />
               Greywater Allowed
             </Badge>
@@ -242,7 +242,7 @@ export default function DetailedComplianceView({
           <select
             value={userType}
             onChange={(e) => setUserType(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white font-medium text-gray-700"
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 bg-white font-medium text-gray-700"
           >
             {userTypeOptions.map(option => (
               <option key={option.value} value={option.value}>
@@ -330,9 +330,9 @@ export default function DetailedComplianceView({
           <CollapsibleSection
             title="Incentive Programs"
             icon={DollarSign}
-            accentColor="emerald"
+            accentColor="slate"
             badge={
-              <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
+              <Badge className="bg-teal-50 text-teal-700 border-teal-200">
                 {stats.programCount} Available
               </Badge>
             }
@@ -351,7 +351,7 @@ export default function DetailedComplianceView({
         <CollapsibleSection
           title="Permit Requirements"
           icon={ClipboardList}
-          accentColor="amber"
+          accentColor="slate"
           summary="Simple, Standard & Complex system permits"
           defaultOpen={false}
         >
@@ -422,7 +422,7 @@ function PolicyLevelCard({
         </div>
         <div className="flex gap-2 flex-wrap">
           {hasPolicy ? (
-            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+            <Badge className="bg-teal-50 text-teal-700 border-teal-200 text-xs">
               Active Policy
             </Badge>
           ) : (
@@ -431,7 +431,7 @@ function PolicyLevelCard({
             </Badge>
           )}
           {programCount && programCount > 0 && (
-            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+            <Badge className="bg-teal-50 text-teal-700 border-teal-200 text-xs">
               {programCount} Programs
             </Badge>
           )}
@@ -457,10 +457,10 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
           <h4 className="text-sm font-semibold text-slate-700 mb-2">Use Permissions</h4>
           <div className="flex gap-4 text-sm">
             <span className="flex items-center gap-1.5">
-              Indoor: {laws.indoor_use_allowed ? <Check className="h-4 w-4 text-emerald-500" /> : <X className="h-4 w-4 text-red-500" />}
+              Indoor: {laws.indoor_use_allowed ? <Check className="h-4 w-4 text-gray-600" /> : <X className="h-4 w-4 text-gray-400" />}
             </span>
             <span className="flex items-center gap-1.5">
-              Outdoor: {laws.outdoor_use_allowed ? <Check className="h-4 w-4 text-emerald-500" /> : <X className="h-4 w-4 text-red-500" />}
+              Outdoor: {laws.outdoor_use_allowed ? <Check className="h-4 w-4 text-gray-600" /> : <X className="h-4 w-4 text-gray-400" />}
             </span>
           </div>
         </div>
@@ -469,13 +469,13 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
       {laws.approved_uses && laws.approved_uses.length > 0 && (
         <div className="bg-white rounded-xl p-4 border border-slate-200">
           <h4 className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
-            <Check className="h-4 w-4 text-emerald-500" />
+            <Check className="h-4 w-4 text-gray-500" />
             Approved Uses
           </h4>
           <ul className="text-sm text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             {laws.approved_uses.map((use, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
+                <span className="text-gray-400 mt-0.5">•</span>
                 {use}
               </li>
             ))}
@@ -484,15 +484,15 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
       )}
 
       {laws.key_restrictions && laws.key_restrictions.length > 0 && (
-        <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-200">
-          <h4 className="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
+            <AlertTriangle className="h-4 w-4 text-gray-500" />
             Key Restrictions
           </h4>
-          <ul className="text-sm text-amber-900 space-y-1.5">
+          <ul className="text-sm text-gray-600 space-y-1.5">
             {laws.key_restrictions.map((restriction, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-amber-600 mt-0.5">•</span>
+                <span className="text-gray-400 mt-0.5">•</span>
                 {restriction}
               </li>
             ))}
@@ -508,12 +508,12 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
       )}
 
       {laws.recent_changes && (
-        <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-          <h4 className="text-sm font-semibold text-amber-800 mb-1 flex items-center gap-1.5">
-            <Info className="h-4 w-4" />
+        <div className="border-l-2 border-gray-300 pl-4">
+          <h4 className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1.5">
+            <Info className="h-4 w-4 text-gray-400" />
             Recent Changes
           </h4>
-          <p className="text-sm text-amber-700">{laws.recent_changes}</p>
+          <p className="text-sm text-gray-600">{laws.recent_changes}</p>
         </div>
       )}
 
@@ -522,7 +522,7 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
           href={laws.government_website}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+          className="inline-flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-700 font-medium"
         >
           <ExternalLink className="h-4 w-4" />
           Visit Official Website
@@ -580,10 +580,10 @@ function RegulationCard({
   if (!content) return null
 
   const colorClasses = {
-    emerald: 'bg-emerald-50 border-emerald-200 text-emerald-700',
-    red: 'bg-red-50 border-red-200 text-red-700',
+    emerald: 'bg-gray-50 border-gray-200 text-gray-700',
+    red: 'bg-gray-50 border-gray-200 text-gray-700',
     slate: 'bg-gray-50 border-gray-200 text-gray-700',
-    amber: 'bg-amber-50 border-amber-200 text-amber-700'
+    amber: 'bg-gray-50 border-gray-200 text-gray-700'
   }
 
   const items = content.split(/;|,|\|/).map(item => item.trim()).filter(Boolean)
@@ -658,7 +658,7 @@ function IncentiveProgramsContent({
       )}
 
       {/* Summary Card */}
-      <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-200">
+      <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
         <h4 className="font-semibold text-gray-800 mb-4">Summary</h4>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
@@ -666,11 +666,11 @@ function IncentiveProgramsContent({
             <p className="text-xs text-gray-500">Programs</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-emerald-600">${stats.maxIncentive.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-gray-700">${stats.maxIncentive.toLocaleString()}</p>
             <p className="text-xs text-gray-500">Max Single</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-emerald-600">${stats.totalPotential.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-gray-700">${stats.totalPotential.toLocaleString()}</p>
             <p className="text-xs text-gray-500">Combined Total</p>
           </div>
         </div>
@@ -699,7 +699,7 @@ function IncentiveLevelSection({
       </h4>
       <div className="space-y-2">
         {programs.map((program, idx) => (
-          <div key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors border-l-4 border-l-emerald-400">
+          <div key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors border-l-4 border-l-teal-400">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-slate-800">{program.program_name || `${level} Program`}</p>
@@ -708,7 +708,7 @@ function IncentiveLevelSection({
                 )}
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="font-bold text-emerald-600 text-lg">
+                <p className="font-bold text-gray-700 text-lg">
                   {renderIncentiveAmount(program)}
                 </p>
                 {program.incentive_url && (
@@ -716,7 +716,7 @@ function IncentiveLevelSection({
                     href={program.incentive_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 font-medium mt-1"
+                    className="inline-flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700 font-medium mt-1"
                   >
                     Apply <ExternalLink className="h-3 w-3" />
                   </a>
@@ -734,20 +734,20 @@ function IncentiveLevelSection({
 function PermitRequirementsContent({ permitFee }: { permitFee?: number }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-      <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-200">
+      <div className="bg-white rounded-xl p-5 border border-gray-200">
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-2 bg-emerald-100 rounded-lg">
-            <Check className="h-4 w-4 text-emerald-600" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <Check className="h-4 w-4 text-gray-600" />
           </div>
-          <h4 className="font-semibold text-emerald-800">Simple Systems</h4>
+          <h4 className="font-semibold text-gray-800">Simple Systems</h4>
         </div>
-        <div className="space-y-1.5 text-sm text-emerald-900">
+        <div className="space-y-1.5 text-sm text-gray-700">
           <p><span className="font-medium">Permit:</span> Usually not required</p>
           <p><span className="font-medium">Limit:</span> Under 250 gal/day</p>
           <p><span className="font-medium">Example:</span> Laundry-to-landscape</p>
         </div>
       </div>
-      <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+      <div className="bg-white rounded-xl p-5 border border-gray-200">
         <div className="flex items-center gap-2 mb-3">
           <div className="p-2 bg-gray-100 rounded-lg">
             <FileText className="h-4 w-4 text-gray-600" />
@@ -760,14 +760,14 @@ function PermitRequirementsContent({ permitFee }: { permitFee?: number }) {
           <p><span className="font-medium">Time:</span> 2-4 weeks</p>
         </div>
       </div>
-      <div className="bg-amber-50 rounded-xl p-5 border border-amber-200">
+      <div className="bg-white rounded-xl p-5 border border-gray-200">
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-2 bg-amber-100 rounded-lg">
-            <ClipboardList className="h-4 w-4 text-amber-600" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <ClipboardList className="h-4 w-4 text-gray-600" />
           </div>
-          <h4 className="font-semibold text-amber-800">Complex Systems</h4>
+          <h4 className="font-semibold text-gray-800">Complex Systems</h4>
         </div>
-        <div className="space-y-1.5 text-sm text-amber-900">
+        <div className="space-y-1.5 text-sm text-gray-700">
           <p><span className="font-medium">Permit:</span> Required + Plans</p>
           <p><span className="font-medium">Fee:</span> $500-2000+</p>
           <p><span className="font-medium">Time:</span> 4-8 weeks</p>
@@ -800,7 +800,7 @@ function CountyLevelView({
           {selectedCounty.county_name} County
         </h2>
         <div className="flex flex-wrap gap-2">
-          <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200">
+          <Badge className="bg-teal-50 text-teal-700 border border-teal-200">
             <CheckCircle className="h-3 w-3 mr-1" />
             Greywater Allowed
           </Badge>
@@ -877,7 +877,7 @@ function StateLevelView({
         </h2>
         <div className="flex flex-wrap gap-2">
           {selectedState.has_greywater_policy ? (
-            <Badge className="bg-emerald-100 text-emerald-700 border border-emerald-200">
+            <Badge className="bg-teal-50 text-teal-700 border border-teal-200">
               <CheckCircle className="h-3 w-3 mr-1" />
               State Policy Active
             </Badge>
@@ -943,19 +943,8 @@ function StateLevelView({
 
 // Helper functions
 function getLegalStatusBadgeClass(status?: string) {
-  switch (status?.toLowerCase()) {
-    case 'legal':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200'
-    case 'regulated':
-      return 'bg-gray-100 text-gray-700 border-gray-200'
-    case 'highly regulated':
-      return 'bg-amber-100 text-amber-700 border-amber-200'
-    case 'limited/unclear':
-    case 'prohibited':
-      return 'bg-red-100 text-red-700 border-red-200'
-    default:
-      return 'bg-gray-100 text-gray-700 border-gray-200'
-  }
+  // Using teal accent for status badges
+  return 'bg-teal-50 text-teal-700 border-teal-200'
 }
 
 function renderIncentiveAmount(program: IncentiveProgram) {

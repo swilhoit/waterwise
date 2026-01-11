@@ -19,16 +19,16 @@ interface CollapsibleSectionProps {
 
 const accentStyles = {
   emerald: {
-    border: 'border-l-emerald-500',
-    iconBg: 'bg-emerald-50',
-    iconColor: 'text-emerald-600',
-    hoverBg: 'hover:bg-emerald-50/50'
+    border: 'border-l-teal-400',
+    iconBg: 'bg-teal-50',
+    iconColor: 'text-teal-600',
+    hoverBg: 'hover:bg-teal-50/30'
   },
   amber: {
-    border: 'border-l-amber-500',
-    iconBg: 'bg-amber-50',
-    iconColor: 'text-amber-600',
-    hoverBg: 'hover:bg-amber-50/50'
+    border: 'border-l-teal-400',
+    iconBg: 'bg-teal-50',
+    iconColor: 'text-teal-600',
+    hoverBg: 'hover:bg-teal-50/30'
   },
   slate: {
     border: 'border-l-gray-300',
@@ -149,7 +149,7 @@ export function InlineCollapsible({
     <div className={className}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium"
+        className="flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-700 transition-colors font-medium"
       >
         <ChevronDown
           className={cn(

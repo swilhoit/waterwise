@@ -1,0 +1,189 @@
+{
+  "metadata": {
+    "description": "Authoritative URLs for state greywater and rainwater regulations",
+    "last_updated": "2026-01-10",
+    "notes": "This file tracks source URLs for regulation data. Use scrape-regulations.ts to fetch and parse content for human review."
+  },
+  "sources": [
+    {
+      "state_code": "CA",
+      "state_name": "California",
+      "agency": "California State Water Resources Control Board",
+      "greywater_url": "https://www.waterboards.ca.gov/water_issues/programs/greywater/",
+      "rainwater_url": "https://www.waterboards.ca.gov/water_issues/programs/rainwater_harvesting/",
+      "plumbing_code_url": "https://codes.iccsafe.org/content/CAPC2022P1",
+      "last_scraped": null,
+      "data_quality": "high",
+      "completeness": "complete",
+      "notes": "California has comprehensive greywater regulations. CPC Appendix G covers greywater systems. Under 250 GPD subsurface irrigation is permit-exempt."
+    },
+    {
+      "state_code": "AZ",
+      "state_name": "Arizona",
+      "agency": "Arizona Department of Environmental Quality",
+      "greywater_url": "https://azdeq.gov/Graywater",
+      "rainwater_url": "https://waterinfo.az.gov/rainwater-harvesting",
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "high",
+      "completeness": "complete",
+      "notes": "Arizona has one of the most permissive greywater policies. Type 1 systems under 400 GPD are permit-exempt."
+    },
+    {
+      "state_code": "TX",
+      "state_name": "Texas",
+      "agency": "Texas Commission on Environmental Quality",
+      "greywater_url": "https://www.tceq.texas.gov/permitting/wastewater/graywater",
+      "rainwater_url": "https://www.twdb.texas.gov/conservation/rainwater/",
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "medium",
+      "completeness": "partial",
+      "notes": "Texas allows greywater for landscape irrigation. Rainwater harvesting is encouraged with tax exemptions."
+    },
+    {
+      "state_code": "NM",
+      "state_name": "New Mexico",
+      "agency": "New Mexico Environment Department",
+      "greywater_url": "https://www.env.nm.gov/liquid_waste/gray-water/",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "medium",
+      "completeness": "partial",
+      "notes": "New Mexico allows private residential graywater systems without permit for under 250 GPD."
+    },
+    {
+      "state_code": "NV",
+      "state_name": "Nevada",
+      "agency": "Nevada Division of Environmental Protection",
+      "greywater_url": "https://ndep.nv.gov/water/water-pollution-control/permitting/graywater",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "low",
+      "completeness": "partial",
+      "notes": "Nevada regulations vary by county. Clark County has specific graywater provisions."
+    },
+    {
+      "state_code": "OR",
+      "state_name": "Oregon",
+      "agency": "Oregon Department of Environmental Quality",
+      "greywater_url": "https://www.oregon.gov/deq/wq/pages/graywater.aspx",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "medium",
+      "completeness": "partial",
+      "notes": "Oregon allows graywater for subsurface irrigation. Permit required for systems over 300 GPD."
+    },
+    {
+      "state_code": "WA",
+      "state_name": "Washington",
+      "agency": "Washington State Department of Health",
+      "greywater_url": "https://doh.wa.gov/community-and-environment/wastewater-management/greywater-reuse",
+      "rainwater_url": "https://www.rain-barrel.net/washington-state-rain-barrel.html",
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "medium",
+      "completeness": "partial",
+      "notes": "Washington allows greywater systems with local approval. Regulations vary significantly by county."
+    },
+    {
+      "state_code": "CO",
+      "state_name": "Colorado",
+      "agency": "Colorado Department of Public Health and Environment",
+      "greywater_url": "https://cdphe.colorado.gov/graywater-systems",
+      "rainwater_url": "https://dnr.colorado.gov/rainwater-collection",
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "medium",
+      "completeness": "partial",
+      "notes": "Colorado recently updated rainwater collection laws. Greywater regulations require local permits."
+    },
+    {
+      "state_code": "UT",
+      "state_name": "Utah",
+      "agency": "Utah Department of Environmental Quality",
+      "greywater_url": "https://deq.utah.gov/water-quality/graywater",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "low",
+      "completeness": "partial",
+      "notes": "Utah allows greywater reuse with permit. Rainwater harvesting allowed with restrictions."
+    },
+    {
+      "state_code": "FL",
+      "state_name": "Florida",
+      "agency": "Florida Department of Environmental Protection",
+      "greywater_url": "https://floridadep.gov/water/domestic-wastewater/content/graywater-reuse",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "low",
+      "completeness": "needs_verification",
+      "notes": "Florida regulations are complex and vary by county. Most greywater systems require permits."
+    },
+    {
+      "state_code": "MT",
+      "state_name": "Montana",
+      "agency": "Montana Department of Environmental Quality",
+      "greywater_url": "https://deq.mt.gov/water/Programs/sub/graywater",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "low",
+      "completeness": "needs_verification",
+      "notes": "Montana allows greywater disposal on owner's property with restrictions."
+    },
+    {
+      "state_code": "WY",
+      "state_name": "Wyoming",
+      "agency": "Wyoming Department of Environmental Quality",
+      "greywater_url": "https://deq.wyoming.gov/water-quality/wastewater/",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "low",
+      "completeness": "needs_verification",
+      "notes": "Wyoming regulations vary by municipality. Limited state-level guidance."
+    },
+    {
+      "state_code": "HI",
+      "state_name": "Hawaii",
+      "agency": "Hawaii Department of Health",
+      "greywater_url": "https://health.hawaii.gov/wastewater/home/graywater/",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "medium",
+      "completeness": "partial",
+      "notes": "Hawaii allows greywater for irrigation. Systems under 400 GPD may be exempt from permit."
+    },
+    {
+      "state_code": "ID",
+      "state_name": "Idaho",
+      "agency": "Idaho Department of Environmental Quality",
+      "greywater_url": "https://www.deq.idaho.gov/water-quality/wastewater/",
+      "rainwater_url": null,
+      "plumbing_code_url": null,
+      "last_scraped": null,
+      "data_quality": "low",
+      "completeness": "needs_verification",
+      "notes": "Idaho greywater regulations are administered at the local level."
+    }
+  ],
+  "quality_definitions": {
+    "high": "Official state agency page with clear, comprehensive information",
+    "medium": "Official source but may be outdated or incomplete",
+    "low": "Limited official information, may require verification",
+    "unknown": "Source not yet evaluated"
+  },
+  "completeness_definitions": {
+    "complete": "All key regulation data available and verified",
+    "partial": "Some key information available, gaps remain",
+    "needs_verification": "Data requires verification from authoritative sources",
+    "not_started": "No data collection attempted yet"
+  }
+}

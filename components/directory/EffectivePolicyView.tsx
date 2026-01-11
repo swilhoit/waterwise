@@ -35,7 +35,7 @@ export default function EffectivePolicyView({ complianceData, jurisdictionName }
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden border-l-4 border-l-gray-300">
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden border-l-4 border-l-teal-400">
       <div className="p-5 bg-gray-50/50">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex items-start gap-3">
@@ -51,7 +51,7 @@ export default function EffectivePolicyView({ complianceData, jurisdictionName }
               </p>
             </div>
           </div>
-          <Badge className="bg-gray-100 text-gray-700 border-gray-200">
+          <Badge className="bg-teal-50 text-teal-700 border-teal-200">
             {policySource} Policy
           </Badge>
         </div>
@@ -72,7 +72,7 @@ export default function EffectivePolicyView({ complianceData, jurisdictionName }
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="bg-white rounded-lg p-4 border border-gray-200">
             <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Permit Status</h4>
-            <p className={`text-base font-semibold ${effectivePolicy.permit_required ? 'text-amber-600' : 'text-emerald-600'}`}>
+            <p className={`text-base font-semibold ${effectivePolicy.permit_required ? 'text-gray-700' : 'text-gray-600'}`}>
               {effectivePolicy.permit_required ? 'Required' : 'Not Required'}
             </p>
             {effectivePolicy.permit_required && effectivePolicy.permit_type && (
@@ -93,7 +93,7 @@ export default function EffectivePolicyView({ complianceData, jurisdictionName }
                 href={effectivePolicy.documentation_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold text-sm"
+                className="flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold text-sm"
               >
                 <FileText className="h-4 w-4" />
                 View Official Documents

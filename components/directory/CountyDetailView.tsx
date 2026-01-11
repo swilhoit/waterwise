@@ -124,12 +124,11 @@ export default function CountyDetailView({
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge className="bg-green-100 text-green-800 border-green-200">
-              <CheckCircle className="h-3 w-3 mr-1" />
+            <Badge className="bg-teal-50 text-teal-700 border border-teal-200">
               Greywater Allowed
             </Badge>
             {stats.hasCountyPolicy && (
-              <Badge variant="outline" className="text-gray-700 border-gray-300">
+              <Badge variant="outline" className="text-gray-600 border-gray-200">
                 County Policy
               </Badge>
             )}
@@ -142,19 +141,19 @@ export default function CountyDetailView({
             label="Cities"
             value={countyData?.city_count || 0}
             icon={Home}
-            color="text-green-600"
+            color="text-gray-600"
           />
           <QuickStat
             label="Incentive Programs"
             value={stats.totalCount}
             icon={DollarSign}
-            color="text-green-600"
+            color="text-gray-600"
           />
           <QuickStat
             label="Max Rebate"
             value={stats.maxAmount > 0 ? `$${stats.maxAmount.toLocaleString()}` : '-'}
             icon={DollarSign}
-            color="text-green-600"
+            color="text-gray-600"
           />
         </div>
       </div>
@@ -207,7 +206,7 @@ export default function CountyDetailView({
               : 'Follows state residential guidelines'}
           </p>
           {countyData?.max_rebate_amount && countyData.max_rebate_amount > 0 && (
-            <p className="text-sm text-green-700 font-semibold mt-2">
+            <p className="text-sm text-gray-700 font-semibold mt-2">
               Up to ${countyData.max_rebate_amount.toLocaleString()} in county rebates
             </p>
           )}
@@ -232,9 +231,9 @@ export default function CountyDetailView({
         <CollapsibleSection
           title="Available Incentives"
           icon={DollarSign}
-          iconColor="text-green-600"
+          iconColor="text-gray-500"
           badge={
-            <Badge className="bg-green-100 text-green-800">
+            <Badge className="bg-teal-50 text-teal-700 border border-teal-200">
               {stats.totalCount} Programs
             </Badge>
           }
@@ -332,7 +331,7 @@ function PolicyLevelCard({
   summary?: string
 }) {
   return (
-    <div className="border-l-4 border-l-gray-300 bg-gray-50/30 rounded-r-lg p-3">
+    <div className="border-l-4 border-l-teal-400 bg-gray-50/30 rounded-r-lg p-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <span className="text-xs font-medium text-gray-500 uppercase">{level}</span>
@@ -340,7 +339,7 @@ function PolicyLevelCard({
         </div>
         <div className="flex gap-2 flex-wrap">
           {hasPolicy ? (
-            <Badge variant="outline" className="text-emerald-700 border-emerald-300 text-xs">
+            <Badge variant="outline" className="text-teal-700 border-teal-300 text-xs">
               Active Policy
             </Badge>
           ) : (
@@ -349,7 +348,7 @@ function PolicyLevelCard({
             </Badge>
           )}
           {programCount && programCount > 0 && (
-            <Badge className="bg-emerald-100 text-emerald-800 text-xs">
+            <Badge className="bg-teal-50 text-teal-700 text-xs">
               {programCount} Programs
             </Badge>
           )}
@@ -391,7 +390,7 @@ function IncentiveSection({
       </h4>
       <div className="space-y-2">
         {filtered.map((program: any, idx: number) => (
-          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors border-l-4 border-l-emerald-400">
+          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors border-l-4 border-l-teal-400">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-gray-900 text-sm">
@@ -412,7 +411,7 @@ function IncentiveSection({
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="font-bold text-emerald-700 text-sm">
+                <p className="font-bold text-gray-700 text-sm">
                   {program.incentive_amount_max
                     ? `Up to $${program.incentive_amount_max.toLocaleString()}`
                     : program.rebate_percentage
@@ -424,7 +423,7 @@ function IncentiveSection({
                     href={program.incentive_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-0.5 justify-end mt-1"
+                    className="text-xs text-teal-600 hover:text-teal-700 flex items-center gap-0.5 justify-end mt-1"
                   >
                     Apply <ExternalLink className="h-3 w-3" />
                   </a>

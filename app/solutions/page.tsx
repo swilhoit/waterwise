@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Home as HomeIcon, TreePine, Truck, Building, Mountain, Car } from "lucide-react"
 import { StatsSection, CTASection } from "@/components/sections"
+import { LocationBanner } from "@/components/location-cta"
 
 export default function Solutions() {
   const solutions = [
@@ -165,6 +166,11 @@ export default function Solutions() {
                 </Card>
               )
             })}
+          </div>
+
+          {/* Location-based rebates CTA */}
+          <div className="max-w-4xl mx-auto mt-12">
+            <LocationBanner />
           </div>
         </div>
       </section>

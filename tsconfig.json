@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "sanity/sanity.cli.ts",
-    "sanity/sanity.config.ts"
+    "sanity/sanity.config.ts",
+    "scripts/**/*"
   ]
 }

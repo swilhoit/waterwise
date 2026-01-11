@@ -1,0 +1,221 @@
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import GreywaterSpokeView from '@/components/directory/GreywaterSpokeView'
+import { getBigQueryClient } from '@/lib/bigquery'
+import { STATE_NAMES, STATE_CODES } from '@/lib/state-utils'
+
+interface PageProps {
+  params: Promise<{ state: string; city: string }>
+}
+
+function getStateCodeFromSlug(slug: string): string | null {
+  const normalized = slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+
+  if (STATE_CODES[normalized]) return STATE_CODES[normalized]
+  const upperSlug = slug.toUpperCase()
+  if (STATE_NAMES[upperSlug]) return upperSlug
+  return null
+}
+
+function formatCityName(slug: string): string {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
+async function getCityInfo(stateCode: string, citySlug: string) {
+  try {
+    const bigquery = getBigQueryClient()
+    const cityName = formatCityName(citySlug)
+
+    const query = `
+      SELECT city_name, county_name
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
+      WHERE state_code = @stateCode
+        AND (LOWER(REPLACE(city_name, ' ', '-')) = @citySlug OR LOWER(city_name) = @cityNameLower)
+      LIMIT 1
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: {
+        stateCode: stateCode.toUpperCase(),
+        citySlug: citySlug.toLowerCase(),
+        cityNameLower: cityName.toLowerCase()
+      }
+    }) as any
+
+    return rows && rows.length > 0 ? rows[0] : { city_name: cityName, county_name: null }
+  } catch {
+    return { city_name: formatCityName(citySlug), county_name: null }
+  }
+}
+
+async function getGreywaterData(stateCode: string) {
+  try {
+    const bigquery = getBigQueryClient()
+
+    const query = `
+      SELECT
+        legal_status,
+        permit_required,
+        permit_threshold_gpd,
+        indoor_use_allowed,
+        outdoor_use_allowed,
+        governing_code,
+        approved_uses,
+        key_restrictions,
+        recent_changes,
+        primary_agency,
+        agency_phone,
+        government_website
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
+      WHERE state_code = @stateCode
+      LIMIT 1
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: { stateCode: stateCode.toUpperCase() }
+    }) as any
+
+    if (!rows || rows.length === 0) return null
+
+    const row = rows[0]
+    return {
+      greywater: {
+        legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : row.legal_status || 'Varies',
+        permitRequired: row.permit_required,
+        permitThresholdGpd: row.permit_threshold_gpd,
+        indoorUseAllowed: row.indoor_use_allowed,
+        outdoorUseAllowed: row.outdoor_use_allowed,
+        governingCode: row.governing_code,
+        approvedUses: row.approved_uses ? row.approved_uses.split(',').map((s: string) => s.trim()) : [],
+        keyRestrictions: row.key_restrictions ? row.key_restrictions.split(',').map((s: string) => s.trim()) : [],
+        recentChanges: row.recent_changes
+      },
+      agency: {
+        name: row.primary_agency,
+        phone: row.agency_phone,
+        website: row.government_website
+      }
+    }
+  } catch {
+    return null
+  }
+}
+
+async function getGreywaterIncentives(stateCode: string, cityName: string, countyName: string | null) {
+  try {
+    const bigquery = getBigQueryClient()
+
+    const stateJurisdictionId = `${stateCode.toUpperCase()}_STATE`
+    const countyJurisdictionId = countyName
+      ? `${stateCode.toUpperCase()}_COUNTY_${countyName.toUpperCase().replace(/\s+/g, '_')}`
+      : ''
+    const cityJurisdictionId = `${stateCode.toUpperCase()}_CITY_${cityName.toUpperCase().replace(/\s+/g, '_')}`
+
+    const jurisdictionIds = [stateJurisdictionId]
+    if (countyJurisdictionId) jurisdictionIds.push(countyJurisdictionId)
+    jurisdictionIds.push(cityJurisdictionId)
+
+    const query = `
+      SELECT DISTINCT
+        p.program_name,
+        p.program_type as incentive_type,
+        p.resource_type,
+        p.incentive_amount_min,
+        p.incentive_amount_max,
+        p.application_url as incentive_url,
+        p.program_description,
+        p.water_utility
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\` p
+      JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` pjl
+        ON p.program_id = pjl.program_id
+      WHERE LOWER(p.program_status) = 'active'
+        AND pjl.jurisdiction_id IN UNNEST(@jurisdictionIds)
+        AND (p.resource_type = 'greywater' OR p.resource_type IS NULL)
+      ORDER BY p.incentive_amount_max DESC NULLS LAST
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: { jurisdictionIds },
+      types: { jurisdictionIds: ['STRING'] }
+    }) as any
+
+    return rows || []
+  } catch {
+    return []
+  }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { state, city } = await params
+  const stateCode = getStateCodeFromSlug(state)
+
+  if (!stateCode) return { title: 'Location Not Found' }
+
+  const stateName = STATE_NAMES[stateCode]
+  const cityInfo = await getCityInfo(stateCode, city)
+  const cityName = cityInfo.city_name
+
+  const data = await getGreywaterData(stateCode)
+  const incentives = await getGreywaterIncentives(stateCode, cityName, cityInfo.county_name)
+
+  const status = data?.greywater?.legalStatus || 'varies'
+  const permitInfo = data?.greywater?.permitRequired || 'varies'
+  const threshold = data?.greywater?.permitThresholdGpd
+
+  return {
+    title: `${cityName}, ${stateCode} Greywater Laws & Permits | Is Greywater Legal?`,
+    description: `Greywater is ${status.toLowerCase()} in ${cityName}, ${stateName}. Permit: ${permitInfo}${threshold ? `. No permit under ${threshold} GPD` : ''}. ${incentives.length} rebate programs. Complete local regulations guide.`,
+    keywords: [
+      `${cityName} greywater`,
+      `${cityName} greywater laws`,
+      `${cityName} greywater permit`,
+      `is greywater legal in ${cityName}`,
+      `${cityName} laundry to landscape`,
+      `${cityName} greywater rebates`
+    ].join(', '),
+    openGraph: {
+      title: `${cityName} Greywater Laws & Permits`,
+      description: `Greywater regulations and ${incentives.length} rebate programs in ${cityName}, ${stateName}.`
+    }
+  }
+}
+
+export const revalidate = 3600
+
+export default async function CityGreywaterPage({ params }: PageProps) {
+  const { state, city } = await params
+  const stateCode = getStateCodeFromSlug(state)
+
+  if (!stateCode) notFound()
+
+  const stateName = STATE_NAMES[stateCode]
+  const cityInfo = await getCityInfo(stateCode, city)
+  const cityName = cityInfo.city_name
+
+  const [data, incentives] = await Promise.all([
+    getGreywaterData(stateCode),
+    getGreywaterIncentives(stateCode, cityName, cityInfo.county_name)
+  ])
+
+  return (
+    <GreywaterSpokeView
+      level="city"
+      stateName={stateName}
+      stateCode={stateCode}
+      cityName={cityName}
+      countyName={cityInfo.county_name}
+      greywater={data?.greywater || null}
+      agency={data?.agency || null}
+      incentives={incentives}
+    />
+  )
+}

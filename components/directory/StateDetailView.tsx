@@ -112,22 +112,8 @@ export default function StateDetailView({
   const commercialIncentives = stateData.incentives?.filter(i => i.commercial_eligibility) || []
   const currentIncentives = sectorView === 'residential' ? residentialIncentives : commercialIncentives
 
-  const getLegalStatusColor = (status?: string) => {
-    switch (status?.toLowerCase()) {
-      case 'legal':
-        return 'bg-green-100 text-green-800 border-green-200'
-      case 'regulated':
-        return 'bg-gray-100 text-gray-800 border-gray-200'
-      case 'highly regulated':
-        return 'bg-orange-100 text-orange-800 border-orange-200'
-      case 'permitted':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'limited/unclear':
-      case 'prohibited':
-        return 'bg-red-100 text-red-800 border-red-200'
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
-    }
+  const getLegalStatusColor = () => {
+    return 'bg-teal-50 text-teal-700 border-teal-200'
   }
 
   const getClassificationIcon = (classification?: string) => {
@@ -164,7 +150,7 @@ export default function StateDetailView({
           </div>
           <div className="flex flex-wrap gap-2">
             {stateData.legalStatus && (
-              <Badge className={`${getLegalStatusColor(stateData.legalStatus)}`}>
+              <Badge className={`${getLegalStatusColor()}`}>
                 {stateData.legalStatus}
               </Badge>
             )}
@@ -195,13 +181,13 @@ export default function StateDetailView({
             label="Max Rebate"
             value={stateData.max_rebate_amount ? `$${stateData.max_rebate_amount.toLocaleString()}` : '-'}
             icon={DollarSign}
-            color="text-green-600"
+            color="text-gray-600"
           />
           <QuickStat
             label="Permit Threshold"
             value={stateData.permitThresholdGpd ? `${stateData.permitThresholdGpd} GPD` : 'Varies'}
             icon={FileText}
-            color="text-orange-600"
+            color="text-gray-600"
           />
         </div>
 
@@ -256,9 +242,9 @@ export default function StateDetailView({
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-3">
             {/* Permit Card */}
-            <div className="bg-orange-50 rounded-lg p-4">
+            <div className="border border-gray-100 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                <FileText className="h-4 w-4 text-orange-600" />
+                <FileText className="h-4 w-4 text-gray-500" />
                 Permits
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
@@ -274,16 +260,16 @@ export default function StateDetailView({
                 )}
               </div>
               {sectorView === 'residential' && (
-                <p className="text-xs text-gray-500 italic mt-2">
+                <p className="text-xs text-gray-400 italic mt-2">
                   Simple laundry-to-landscape often exempt
                 </p>
               )}
             </div>
 
             {/* System Regulations Card */}
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="border border-gray-100 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                <Droplets className="h-4 w-4 text-gray-600" />
+                <Droplets className="h-4 w-4 text-gray-500" />
                 System Regulations
               </h4>
               <div className="space-y-2 text-sm">
@@ -303,27 +289,19 @@ export default function StateDetailView({
 
             {/* Use Permissions Card */}
             {(stateData.indoorUseAllowed !== undefined || stateData.outdoorUseAllowed !== undefined) && (
-              <div className="bg-green-50 rounded-lg p-4">
+              <div className="border border-gray-100 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                  <Check className="h-4 w-4 text-green-600" />
+                  <Check className="h-4 w-4 text-gray-500" />
                   Use Permissions
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Indoor Use:</span>
-                    {stateData.indoorUseAllowed ? (
-                      <Badge className="bg-green-100 text-green-800 text-xs">Allowed</Badge>
-                    ) : (
-                      <Badge variant="secondary" className="text-xs">Not Allowed</Badge>
-                    )}
+                    <span className="text-gray-900">{stateData.indoorUseAllowed ? 'Allowed' : 'Not Allowed'}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Outdoor Use:</span>
-                    {stateData.outdoorUseAllowed ? (
-                      <Badge className="bg-green-100 text-green-800 text-xs">Allowed</Badge>
-                    ) : (
-                      <Badge variant="secondary" className="text-xs">Not Allowed</Badge>
-                    )}
+                    <span className="text-gray-900">{stateData.outdoorUseAllowed ? 'Allowed' : 'Not Allowed'}</span>
                   </div>
                 </div>
               </div>
@@ -337,9 +315,9 @@ export default function StateDetailView({
         <CollapsibleSection
           title={`${sectorView === 'residential' ? 'Residential' : 'Commercial'} Incentives`}
           icon={DollarSign}
-          iconColor="text-green-600"
+          iconColor="text-gray-500"
           badge={
-            <Badge className="bg-green-100 text-green-800">
+            <Badge className="bg-gray-100 text-gray-700 border border-gray-200">
               {currentIncentives.length} Available
             </Badge>
           }
@@ -348,7 +326,7 @@ export default function StateDetailView({
         >
           <div className="space-y-2 pt-3">
             {currentIncentives.map((program, idx) => (
-              <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors">
+              <div key={idx} className="border border-gray-100 rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <p className="font-medium text-gray-900 text-sm">
@@ -361,7 +339,7 @@ export default function StateDetailView({
                     )}
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="font-bold text-green-700 text-sm">
+                    <p className="font-medium text-gray-900 text-sm">
                       {program.incentive_amount_max
                         ? `Up to $${program.incentive_amount_max.toLocaleString()}`
                         : program.rebate_percentage
@@ -373,9 +351,9 @@ export default function StateDetailView({
                         href={program.incentive_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-0.5 justify-end mt-1"
+                        className="text-xs text-teal-600 hover:text-teal-700 flex items-center gap-0.5 justify-end mt-1"
                       >
-                        Apply <ExternalLink className="h-3 w-3" />
+                        Apply
                       </a>
                     )}
                   </div>
@@ -411,13 +389,13 @@ export default function StateDetailView({
             {stateData.approvedUses && stateData.approvedUses.length > 0 && (
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                  <Check className="h-4 w-4 text-green-500" />
+                  <Check className="h-4 w-4 text-gray-500" />
                   Approved Uses
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1">
                   {stateData.approvedUses.slice(0, 5).map((use, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-green-500 mt-0.5">•</span>
+                      <span className="text-gray-400 mt-0.5">•</span>
                       {use}
                     </li>
                   ))}
@@ -426,7 +404,7 @@ export default function StateDetailView({
                       <ul className="text-sm text-gray-600 space-y-1 mt-1">
                         {stateData.approvedUses.slice(5).map((use, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            <span className="text-green-500 mt-0.5">•</span>
+                            <span className="text-gray-400 mt-0.5">•</span>
                             {use}
                           </li>
                         ))}
@@ -440,13 +418,13 @@ export default function StateDetailView({
             {stateData.keyRestrictions && stateData.keyRestrictions.length > 0 && (
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                  <AlertTriangle className="h-4 w-4 text-orange-500" />
+                  <AlertTriangle className="h-4 w-4 text-gray-500" />
                   Key Restrictions
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1">
                   {stateData.keyRestrictions.slice(0, 5).map((restriction, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-orange-500 mt-0.5">•</span>
+                      <span className="text-gray-400 mt-0.5">•</span>
                       {restriction}
                     </li>
                   ))}
@@ -455,7 +433,7 @@ export default function StateDetailView({
                       <ul className="text-sm text-gray-600 space-y-1 mt-1">
                         {stateData.keyRestrictions.slice(5).map((restriction, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            <span className="text-orange-500 mt-0.5">•</span>
+                            <span className="text-gray-400 mt-0.5">•</span>
                             {restriction}
                           </li>
                         ))}
@@ -497,7 +475,7 @@ export default function StateDetailView({
               {stateData.agencyPhone && (
                 <a
                   href={`tel:${stateData.agencyPhone}`}
-                  className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
+                  className="flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700"
                 >
                   <Phone className="h-4 w-4" />
                   {stateData.agencyPhone}
@@ -507,7 +485,7 @@ export default function StateDetailView({
               {stateData.agencyContact && stateData.agencyContact.includes('@') && (
                 <a
                   href={`mailto:${stateData.agencyContact}`}
-                  className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
+                  className="flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700"
                 >
                   <Mail className="h-4 w-4" />
                   Email
@@ -519,7 +497,7 @@ export default function StateDetailView({
                   href={stateData.governmentWebsite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
+                  className="flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700"
                 >
                   <Globe className="h-4 w-4" />
                   Website
@@ -532,12 +510,12 @@ export default function StateDetailView({
 
       {/* Recent Changes */}
       {stateData.recentChanges && (
-        <div className="bg-amber-50 border border-amber-100 rounded-lg p-4">
-          <h3 className="font-medium text-amber-900 flex items-center gap-2 mb-2">
-            <Calendar className="h-4 w-4" />
+        <div className="border-l-2 border-teal-400 pl-4">
+          <h3 className="font-medium text-gray-700 flex items-center gap-2 mb-2">
+            <Calendar className="h-4 w-4 text-gray-400" />
             Recent Policy Changes
           </h3>
-          <p className="text-sm text-amber-800 leading-relaxed">{stateData.recentChanges}</p>
+          <p className="text-sm text-gray-600 leading-relaxed">{stateData.recentChanges}</p>
         </div>
       )}
     </div>

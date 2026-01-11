@@ -70,7 +70,8 @@ export async function GET(request: NextRequest) {
             s.jurisdiction_id,
             s.legal_status,
             COALESCE(c.county_count, 0) as county_count,
-            COALESCE(c.city_count, 0) as city_count
+            COALESCE(c.city_count, 0) as city_count,
+            COALESCE(p.program_count, 0) as program_count
           FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` s
           LEFT JOIN (
             SELECT
@@ -80,6 +81,13 @@ export async function GET(request: NextRequest) {
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
             GROUP BY state_code
           ) c ON s.state_code = c.state_code
+          LEFT JOIN (
+            SELECT
+              SUBSTR(jurisdiction_id, 1, 2) as state_code,
+              COUNT(DISTINCT program_id) as program_count
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\`
+            GROUP BY SUBSTR(jurisdiction_id, 1, 2)
+          ) p ON s.state_code = p.state_code
           WHERE s.resource_type = 'greywater'
           ORDER BY s.state_name
         `;
@@ -100,7 +108,8 @@ export async function GET(request: NextRequest) {
             legal_status: row.legal_status,
             county_count: parseInt(row.county_count) || 0,
             city_count: parseInt(row.city_count) || 0,
-            has_programs: false // Will be updated when program_jurisdiction_link table exists
+            has_programs: (parseInt(row.program_count) || 0) > 0,
+            program_count: parseInt(row.program_count) || 0
           }));
 
           console.log('Returning all', data.length, 'states from directory');
@@ -122,14 +131,23 @@ export async function GET(request: NextRequest) {
         const stateCode = parentId.replace('_STATE', '');
 
         // Query for ALL counties in a state from the city_county_mapping table
+        // Also join with program_jurisdiction_link to get program counts
         const countyQuery = `
-          SELECT DISTINCT
+          SELECT
             m.county_jurisdiction_id,
             m.county_name,
-            COUNT(DISTINCT m.city_jurisdiction_id) as city_count
+            COUNT(DISTINCT m.city_jurisdiction_id) as city_count,
+            COALESCE(p.program_count, 0) as program_count
           FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
+          LEFT JOIN (
+            SELECT
+              jurisdiction_id,
+              COUNT(DISTINCT program_id) as program_count
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\`
+            GROUP BY jurisdiction_id
+          ) p ON m.county_jurisdiction_id = p.jurisdiction_id
           WHERE m.state_code = '${stateCode}'
-          GROUP BY m.county_jurisdiction_id, m.county_name
+          GROUP BY m.county_jurisdiction_id, m.county_name, p.program_count
           ORDER BY m.county_name
         `;
 
@@ -150,7 +168,8 @@ export async function GET(request: NextRequest) {
               state_code: stateCode,
               state_name: stateNames[stateCode] || stateCode,
               city_count: parseInt(row.city_count) || 0,
-              cities_with_programs: 0 // Will be populated when program_jurisdiction_link table exists
+              has_programs: (parseInt(row.program_count) || 0) > 0,
+              program_count: parseInt(row.program_count) || 0
             }));
         } catch (error) {
           console.error('Error executing county query:', error);
@@ -275,7 +294,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       status: 'error',
       message: errorMessage,
-      error: error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : 'Unknown error'
+      error: process.env.NODE_ENV === 'development'
+        ? (error instanceof Error ? { name: error.name, message: error.message } : 'Unknown error')
+        : 'An internal error occurred'
     }, { status: 500 });
   }
 }

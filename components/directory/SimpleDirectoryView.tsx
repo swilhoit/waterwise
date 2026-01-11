@@ -2,18 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronRight, ChevronDown, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge, MapPin, ListChecks, ClipboardList, CloudRain, Leaf } from 'lucide-react'
+import { ChevronRight, ChevronDown, Search, Check, ExternalLink, Phone, Mail, Building2, FileText, Droplets, AlertTriangle, Clock, DollarSign, ShieldCheck, Gauge, MapPin, ListChecks, ClipboardList, CloudRain, Leaf, HelpCircle, CheckCircle2, AlertCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { nameToSlug, findBySlug } from '@/lib/url-utils'
+import DirectoryCTA from './DirectoryCTA'
 
 // Resource type configuration
 type ResourceType = 'all' | 'greywater' | 'rainwater' | 'conservation'
 
 const RESOURCE_TYPES: { id: ResourceType; label: string; icon: any; bgColor: string; color: string }[] = [
   { id: 'all', label: 'All', icon: Droplets, bgColor: 'bg-gray-100', color: 'text-gray-700' },
-  { id: 'greywater', label: 'Greywater', icon: Droplets, bgColor: 'bg-gray-100', color: 'text-gray-700' },
-  { id: 'rainwater', label: 'Rainwater', icon: CloudRain, bgColor: 'bg-gray-100', color: 'text-gray-700' },
-  { id: 'conservation', label: 'Conservation', icon: Leaf, bgColor: 'bg-gray-100', color: 'text-gray-700' },
+  { id: 'greywater', label: 'Greywater', icon: Droplets, bgColor: 'bg-teal-50', color: 'text-teal-700' },
+  { id: 'rainwater', label: 'Rainwater', icon: CloudRain, bgColor: 'bg-teal-50', color: 'text-teal-700' },
+  { id: 'conservation', label: 'Conservation', icon: Leaf, bgColor: 'bg-teal-50', color: 'text-teal-700' },
 ]
 
 // =============================================================================
@@ -114,6 +115,166 @@ interface UnifiedStateData {
   }
   agency: AgencyData | null
   incentives: IncentiveSummary
+  lastUpdated?: string
+}
+
+// =============================================================================
+// DATA COMPLETENESS HELPERS
+// =============================================================================
+
+type DataConfidence = 'verified' | 'partial' | 'unknown'
+
+interface DataCompletenessResult {
+  confidence: DataConfidence
+  label: string
+  description: string
+}
+
+// Determine data completeness for greywater regulations
+const getGreywaterDataCompleteness = (data: GreywaterData | null | undefined): DataCompletenessResult => {
+  if (!data) {
+    return {
+      confidence: 'unknown',
+      label: 'Regulations Unknown',
+      description: 'We have not yet verified greywater regulations for this jurisdiction.'
+    }
+  }
+
+  // Check for key fields that indicate verified data
+  const hasLegalStatus = !!data.legalStatus
+  const hasPermitInfo = data.permitRequired !== undefined && data.permitRequired !== null
+  const hasGoverningCode = !!data.governingCode
+  const hasUseInfo = data.indoorUseAllowed !== undefined || data.outdoorUseAllowed !== undefined
+
+  const completenessScore = [hasLegalStatus, hasPermitInfo, hasGoverningCode, hasUseInfo].filter(Boolean).length
+
+  if (completenessScore >= 3) {
+    return {
+      confidence: 'verified',
+      label: 'Verified',
+      description: 'This information has been verified against official sources.'
+    }
+  } else if (completenessScore >= 1) {
+    return {
+      confidence: 'partial',
+      label: 'Partial Data',
+      description: 'Some information may be incomplete. Contact local authorities to confirm.'
+    }
+  }
+
+  return {
+    confidence: 'unknown',
+    label: 'Regulations Unknown',
+    description: 'We have not yet verified greywater regulations for this jurisdiction.'
+  }
+}
+
+// Determine data completeness for rainwater regulations
+const getRainwaterDataCompleteness = (data: RainwaterData | null | undefined): DataCompletenessResult => {
+  if (!data) {
+    return {
+      confidence: 'unknown',
+      label: 'Regulations Unknown',
+      description: 'We have not yet verified rainwater regulations for this jurisdiction.'
+    }
+  }
+
+  const hasLegalStatus = !!data.legalStatus
+  const hasPermitInfo = data.permitRequired !== undefined && data.permitRequired !== null
+  const hasGoverningCode = !!data.governingCode
+  const hasCollectionLimit = data.collectionLimitGallons !== undefined
+
+  const completenessScore = [hasLegalStatus, hasPermitInfo, hasGoverningCode, hasCollectionLimit].filter(Boolean).length
+
+  if (completenessScore >= 3) {
+    return {
+      confidence: 'verified',
+      label: 'Verified',
+      description: 'This information has been verified against official sources.'
+    }
+  } else if (completenessScore >= 1) {
+    return {
+      confidence: 'partial',
+      label: 'Partial Data',
+      description: 'Some information may be incomplete. Contact local authorities to confirm.'
+    }
+  }
+
+  return {
+    confidence: 'unknown',
+    label: 'Regulations Unknown',
+    description: 'We have not yet verified rainwater regulations for this jurisdiction.'
+  }
+}
+
+// Data Confidence Badge Component
+const DataConfidenceBadge = ({ completeness, showDescription = false }: { completeness: DataCompletenessResult, showDescription?: boolean }) => {
+  const config = {
+    verified: {
+      icon: CheckCircle2,
+      className: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    },
+    partial: {
+      icon: AlertCircle,
+      className: 'bg-amber-50 text-amber-700 border-amber-200'
+    },
+    unknown: {
+      icon: HelpCircle,
+      className: 'bg-gray-100 text-gray-600 border-gray-200'
+    }
+  }
+
+  const { icon: Icon, className } = config[completeness.confidence]
+
+  return (
+    <div className="inline-flex flex-col">
+      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${className}`}>
+        <Icon className="h-3 w-3" />
+        {completeness.label}
+      </span>
+      {showDescription && (
+        <span className="text-xs text-gray-500 mt-1">{completeness.description}</span>
+      )}
+    </div>
+  )
+}
+
+// Format last updated date
+const formatLastUpdated = (dateString?: string): string => {
+  if (!dateString) return ''
+  try {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+  } catch {
+    return ''
+  }
+}
+
+// Get regulation status badge based on data completeness
+const getRegulationStatusBadge = (greywaterData: GreywaterData | null | undefined) => {
+  const completeness = getGreywaterDataCompleteness(greywaterData)
+
+  if (completeness.confidence === 'unknown') {
+    return {
+      icon: HelpCircle,
+      className: 'bg-gray-100 text-gray-600',
+      label: 'Contact Local Authority'
+    }
+  }
+
+  if (greywaterData?.legalStatus) {
+    return {
+      icon: Droplets,
+      className: 'bg-emerald-100 text-emerald-700',
+      label: `Greywater ${greywaterData.legalStatus}`
+    }
+  }
+
+  return {
+    icon: HelpCircle,
+    className: 'bg-gray-100 text-gray-600',
+    label: 'Contact Local Authority'
+  }
 }
 
 interface SimpleDirectoryViewProps {
@@ -168,6 +329,8 @@ export default function SimpleDirectoryView({
   // UI states
   const [loading, setLoading] = useState(!initialData.length && !initialSelectedState)
   const [searchTerm, setSearchTerm] = useState('')
+  const [citiesSearchTerm, setCitiesSearchTerm] = useState('')
+  const [countiesSearchTerm, setCountiesSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
   const [viewMode, setViewMode] = useState<'cities' | 'counties'>('cities')
   const [resourceTypeFilter, setResourceTypeFilter] = useState<ResourceType>('all')
@@ -189,16 +352,16 @@ export default function SimpleDirectoryView({
     })
   }
 
-  // Get resource type badge styling - minimal design
+  // Get resource type badge styling - teal accent
   const getResourceTypeBadge = (resourceType: string) => {
     switch (resourceType) {
       case 'rainwater':
-        return { className: 'bg-gray-100 text-gray-600 border border-gray-200', label: 'Rainwater', icon: CloudRain }
+        return { className: 'bg-teal-50 text-teal-700 border border-teal-200', label: 'Rainwater', icon: CloudRain }
       case 'conservation':
-        return { className: 'bg-gray-100 text-gray-600 border border-gray-200', label: 'Conservation', icon: Leaf }
+        return { className: 'bg-teal-50 text-teal-700 border border-teal-200', label: 'Conservation', icon: Leaf }
       case 'greywater':
       default:
-        return { className: 'bg-gray-100 text-gray-600 border border-gray-200', label: 'Greywater', icon: Droplets }
+        return { className: 'bg-teal-50 text-teal-700 border border-teal-200', label: 'Greywater', icon: Droplets }
     }
   }
 
@@ -415,44 +578,41 @@ export default function SimpleDirectoryView({
     )
 
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        {/* Minimal Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl font-medium text-gray-900 mb-2">Regulations Directory</h1>
-          <p className="text-gray-500 text-sm">Find greywater and rainwater regulations by state</p>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Regulations Directory</h1>
+          <p className="text-gray-500">Find greywater and rainwater regulations by state</p>
         </div>
 
         {/* Search */}
-        <div className="relative mb-8">
+        <div className="relative mb-8 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search states..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-400 transition-colors text-sm"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-colors text-sm"
           />
         </div>
 
-        {/* States List */}
+        {/* States Grid */}
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin h-5 w-5 border border-gray-300 border-t-gray-600 rounded-full mx-auto mb-3" />
             <p className="text-gray-400 text-sm">Loading...</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {filteredStates.map((state) => (
               <button
                 key={state.state_jurisdiction_id}
                 onClick={() => navigateToState(state)}
-                className="w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left group -mx-3 px-3 rounded"
+                className="bg-white border border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:shadow-sm transition-all text-left group"
               >
-                <div>
-                  <p className="font-medium text-gray-900">{state.state_name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{state.city_count || 0} cities</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
+                <p className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">{state.state_name}</p>
+                <p className="text-xs text-gray-400 mt-1">{state.city_count || 0} cities</p>
               </button>
             ))}
           </div>
@@ -477,429 +637,361 @@ export default function SimpleDirectoryView({
     })
 
     const filteredCities = sortedCities.filter(c =>
-      c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
+      c.city_name?.toLowerCase().includes(citiesSearchTerm.toLowerCase())
     )
 
     const filteredCounties = counties.filter(c =>
-      c.county_name?.toLowerCase().includes(searchTerm.toLowerCase())
+      c.county_name?.toLowerCase().includes(countiesSearchTerm.toLowerCase())
     ).sort((a, b) => (a.county_name || '').localeCompare(b.county_name || ''))
 
-    // Helper to get status badge color - minimal
+    // Helper to get status badge color - teal accent
     const getStatusBadgeClass = () => {
-      return 'bg-gray-100 text-gray-600 border border-gray-200'
+      return 'bg-teal-50 text-teal-700 border border-teal-200'
     }
 
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-8">
-          <button onClick={() => router.push(basePath)} className="text-gray-400 hover:text-gray-600">
-            All States
-          </button>
-          <ChevronRight className="h-3 w-3 text-gray-300" />
-          <span className="text-gray-900">{selectedState.state_name}</span>
-        </nav>
+      <div className="bg-white min-h-screen">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm mb-6">
+            <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
+              All States
+            </button>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-gray-900 font-medium">{selectedState.state_name}</span>
+          </nav>
 
-        {/* Minimal State Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl font-medium text-gray-900 mb-2">{selectedState.state_name}</h1>
-          <p className="text-sm text-gray-500">{selectedState.city_count} cities</p>
-        </div>
-
-        {/* Recent Changes */}
-        {(stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges) && (
-          <div className="border-l-2 border-gray-300 pl-4 mb-8">
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Recent Update</p>
-            <p className="text-sm text-gray-600">
-              {stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges}
-            </p>
-          </div>
-        )}
-
-        {/* Side-by-Side Regulations Comparison */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Greywater Column */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-blue-900 mb-4 flex items-center gap-2">
-              <Droplets className="h-5 w-5 text-blue-600" />
-              Greywater Reuse
-            </h2>
-
-            {stateData?.greywater ? (
-              <div className="space-y-4">
-                {/* Status & Classification */}
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-700">Status</span>
-                  <Badge className={getStatusBadgeClass(stateData.greywater.legalStatus)}>
-                    {stateData.greywater.legalStatus || 'Legal'}
-                  </Badge>
-                </div>
-
-                {stateData.greywater.regulatoryClassification && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-700">Classification</span>
-                    <span className="text-sm font-medium text-blue-900">{stateData.greywater.regulatoryClassification}</span>
-                  </div>
-                )}
-
-                {/* Use Allowances */}
-                <div className="flex gap-4 py-2">
-                  <div className={`flex items-center gap-1.5 ${stateData.greywater.outdoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
-                    {stateData.greywater.outdoorUseAllowed ? <Check className="h-4 w-4" /> : <span className="h-4 w-4 text-center">✗</span>}
-                    <span className="text-sm">Outdoor</span>
-                  </div>
-                  <div className={`flex items-center gap-1.5 ${stateData.greywater.indoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
-                    {stateData.greywater.indoorUseAllowed ? <Check className="h-4 w-4" /> : <span className="h-4 w-4 text-center">✗</span>}
-                    <span className="text-sm">Indoor</span>
-                  </div>
-                </div>
-
-                {/* Permit Info */}
-                <div className="pt-3 border-t border-blue-200">
-                  <p className="text-xs font-semibold text-blue-700 uppercase mb-2">Permits</p>
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-blue-600">Required</span>
-                      <span className="font-medium text-blue-900">{stateData.greywater.permitRequired || 'Varies'}</span>
-                    </div>
-                    {stateData.greywater.permitThresholdGpd !== null && stateData.greywater.permitThresholdGpd !== undefined && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-blue-600">No-Permit Threshold</span>
-                        <span className="font-medium text-blue-900">
-                          {stateData.greywater.permitThresholdGpd > 0 ? `< ${stateData.greywater.permitThresholdGpd} GPD` : 'All need permit'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Governing Code */}
-                {stateData.greywater.governingCode && (
-                  <div className="pt-3 border-t border-blue-200">
-                    <p className="text-xs font-semibold text-blue-700 uppercase mb-1">Governing Code</p>
-                    <p className="text-sm text-blue-800">{stateData.greywater.governingCode}</p>
-                  </div>
-                )}
-
-                {/* Approved Uses */}
-                {stateData.greywater.approvedUses && stateData.greywater.approvedUses.length > 0 && (
-                  <div className="pt-3 border-t border-blue-200">
-                    <p className="text-xs font-semibold text-blue-700 uppercase mb-2">Approved Uses</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {stateData.greywater.approvedUses.slice(0, 4).map((use, idx) => (
-                        <Badge key={idx} className="bg-blue-100 text-blue-700 text-xs">{use}</Badge>
-                      ))}
-                      {stateData.greywater.approvedUses.length > 4 && (
-                        <Badge className="bg-blue-100 text-blue-700 text-xs">+{stateData.greywater.approvedUses.length - 4} more</Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-blue-600 text-sm">No greywater data available for this state.</p>
-            )}
-          </div>
-
-          {/* Rainwater Column */}
-          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-cyan-900 mb-4 flex items-center gap-2">
-              <CloudRain className="h-5 w-5 text-cyan-600" />
-              Rainwater Harvesting
-            </h2>
-
-            {stateData?.rainwater ? (
-              <div className="space-y-4">
-                {/* Status */}
-                <div className="flex justify-between items-center">
-                  <span className="text-cyan-700">Status</span>
-                  <Badge className={getStatusBadgeClass(stateData.rainwater.legalStatus)}>
-                    {stateData.rainwater.legalStatus || 'Legal'}
-                  </Badge>
-                </div>
-
-                {/* Collection Limit */}
-                <div className="flex justify-between items-center">
-                  <span className="text-cyan-700">Collection Limit</span>
-                  <span className="font-medium text-cyan-900">
-                    {stateData.rainwater.collectionLimitGallons && stateData.rainwater.collectionLimitGallons > 0
-                      ? `${stateData.rainwater.collectionLimitGallons.toLocaleString()} gal`
-                      : 'Unlimited'}
-                  </span>
-                </div>
-
-                {/* Potable Use */}
-                <div className="flex justify-between items-center">
-                  <span className="text-cyan-700">Potable Use</span>
-                  <span className={`font-medium ${stateData.rainwater.potableUseAllowed ? 'text-emerald-600' : 'text-gray-500'}`}>
-                    {stateData.rainwater.potableUseAllowed ? 'Allowed (w/ treatment)' : 'Non-potable only'}
-                  </span>
-                </div>
-
-                {/* Permit Info */}
-                <div className="pt-3 border-t border-cyan-200">
-                  <p className="text-xs font-semibold text-cyan-700 uppercase mb-2">Permits</p>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-cyan-600">Required</span>
-                    <span className="font-medium text-cyan-900">{stateData.rainwater.permitRequired || 'No'}</span>
-                  </div>
-                </div>
-
-                {/* Tax Incentives */}
-                {stateData.rainwater.taxIncentives && (
-                  <div className="pt-3 border-t border-cyan-200">
-                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-1 flex items-center gap-1">
-                      <DollarSign className="h-3 w-3" />
-                      Tax Incentives
-                    </p>
-                    <p className="text-sm text-cyan-800">{stateData.rainwater.taxIncentives}</p>
-                  </div>
-                )}
-
-                {/* Governing Code */}
-                {stateData.rainwater.governingCode && (
-                  <div className="pt-3 border-t border-cyan-200">
-                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-1">Governing Code</p>
-                    <p className="text-sm text-cyan-800">{stateData.rainwater.governingCode}</p>
-                  </div>
-                )}
-
-                {/* Approved Uses */}
-                {stateData.rainwater.approvedUses && stateData.rainwater.approvedUses.length > 0 && (
-                  <div className="pt-3 border-t border-cyan-200">
-                    <p className="text-xs font-semibold text-cyan-700 uppercase mb-2">Approved Uses</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {stateData.rainwater.approvedUses.slice(0, 4).map((use, idx) => (
-                        <Badge key={idx} className="bg-cyan-100 text-cyan-700 text-xs">{use}</Badge>
-                      ))}
-                      {stateData.rainwater.approvedUses.length > 4 && (
-                        <Badge className="bg-cyan-100 text-cyan-700 text-xs">+{stateData.rainwater.approvedUses.length - 4} more</Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-cyan-600 text-sm">No rainwater data available for this state.</p>
-            )}
-          </div>
-        </div>
-
-        {/* Conservation Note */}
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
-          <div className="flex items-center gap-3">
-            <Leaf className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-            <div>
-              <p className="font-medium text-emerald-900">Water Conservation</p>
-              <p className="text-sm text-emerald-700">
-                {stateData?.conservation?.message || 'Conservation programs are incentive-based. See available rebates below.'}
-                {stateData?.incentives?.conservation ? ` (${stateData.incentives.conservation} programs available)` : ''}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Regulatory Agency */}
-        {stateData?.agency?.name && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-gray-400" />
-              Regulatory Agency
-            </h2>
-            <div className="space-y-3">
-              <p className="font-medium text-gray-900">{stateData.agency.name}</p>
-              {stateData.agency.phone && (
-                <a href={`tel:${stateData.agency.phone}`} className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
-                  <Phone className="h-4 w-4" />
-                  {stateData.agency.phone}
-                </a>
-              )}
-              {stateData.agency.website && (
-                <a href={stateData.agency.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700">
-                  <ExternalLink className="h-4 w-4" />
-                  Official Website
-                </a>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* State Incentives */}
-        {compliance?.state?.incentives && compliance.state.incentives.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
-                Available Incentives & Rebates
-                <span className="text-sm font-normal text-gray-500">({filterIncentivesByResourceType(compliance.state.incentives).length})</span>
-              </h2>
-              {stateData?.incentives?.maxRebate && stateData.incentives.maxRebate > 0 && (
-                <div className="text-right">
-                  <p className="text-xs text-gray-500">Up to</p>
-                  <p className="text-xl font-bold text-emerald-600">${stateData.incentives.maxRebate.toLocaleString()}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Resource Type Filter */}
-            <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
-              {RESOURCE_TYPES.map((type) => {
-                const Icon = type.icon
-                const count = type.id === 'all'
-                  ? compliance.state.incentives.length
-                  : compliance.state.incentives.filter((p: any) => (p.resource_type || 'greywater') === type.id).length
-                if (count === 0 && type.id !== 'all') return null
-                return (
-                  <button
-                    key={type.id}
-                    onClick={() => setResourceTypeFilter(type.id)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      resourceTypeFilter === type.id
-                        ? `${type.bgColor} ${type.color}`
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    {type.label}
-                    <span className="opacity-70">({count})</span>
-                  </button>
-                )
-              })}
-            </div>
-
-            <div className="space-y-4">
-              {filterIncentivesByResourceType(compliance.state.incentives).map((incentive: any, idx: number) => {
-                const resourceBadge = getResourceTypeBadge(incentive.resource_type || 'greywater')
-                const subtypeBadge = incentive.program_subtype ? getSubtypeBadge(incentive.program_subtype) : null
-                const ResourceIcon = resourceBadge.icon
-
-                return (
-                <div key={idx} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
-                        <Badge className={`${resourceBadge.className} text-xs flex items-center gap-1`}>
-                          <ResourceIcon className="h-3 w-3" />
-                          {resourceBadge.label}
-                        </Badge>
-                        {subtypeBadge && (
-                          <Badge className={`${subtypeBadge.className} text-xs`}>{subtypeBadge.label}</Badge>
-                        )}
-                        {incentive.incentive_type === 'rebate' && (
-                          <Badge className="bg-gray-200 text-gray-700 text-xs">Rebate</Badge>
-                        )}
-                        {incentive.incentive_type === 'tax_credit' && (
-                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
-                        )}
-                        {incentive.incentive_type === 'tax_exemption' && (
-                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
-                        )}
-                        {incentive.residential_eligible && (
-                          <Badge className="bg-slate-100 text-slate-700 text-xs">Residential</Badge>
-                        )}
-                        {incentive.commercial_eligible && (
-                          <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
-                        )}
-                      </div>
-                    </div>
-                    {incentive.incentive_amount_max && (
-                      <div className="text-right">
-                        <p className="text-xs text-gray-500">Up to</p>
-                        <p className="text-lg font-bold text-emerald-600">
-                          ${incentive.incentive_amount_max.toLocaleString()}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  {incentive.program_description && (
-                    <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
+          {/* Header Card */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900">{selectedState.state_name}</h1>
+                  {stateData && (
+                    <DataConfidenceBadge completeness={getGreywaterDataCompleteness(stateData.greywater)} />
                   )}
-                  {incentive.incentive_url && (
-                    <a
-                      href={incentive.incentive_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
-                    >
-                      Apply Now <ExternalLink className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                    const badge = getRegulationStatusBadge(stateData?.greywater)
+                    const Icon = badge.icon
+                    return (
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 ${badge.className} rounded-full text-sm font-medium`}>
+                        <Icon className="h-3.5 w-3.5" />
+                        {badge.label}
+                      </span>
+                    )
+                  })()}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                    {selectedState.city_count} cities
+                  </span>
+                </div>
+                {stateData?.lastUpdated && (
+                  <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Last verified: {formatLastUpdated(stateData.lastUpdated)}
+                  </p>
+                )}
+              </div>
+              {(stateData?.incentives?.total ?? 0) > 0 && (
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-emerald-600">{stateData?.incentives?.total}</p>
+                  <p className="text-sm text-gray-500">Incentive Programs</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Recent Changes Alert */}
+          {(stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges) && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-amber-800 text-sm">Recent Update</p>
+                  <p className="text-sm text-amber-700">
+                    {stateData?.greywater?.recentChanges || stateData?.rainwater?.recentChanges}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+            {/* Greywater Regulations Card */}
+            {stateData?.greywater && (
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-emerald-50 px-5 py-3 border-b border-gray-200">
+                  <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <Droplets className="h-4 w-4 text-emerald-600" />
+                    Greywater Regulations
+                  </h2>
+                </div>
+                <div className="p-0">
+                  <table className="w-full text-sm">
+                    <tbody className="divide-y divide-gray-200">
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50 w-2/5">Status</td>
+                        <td className="px-5 py-3 font-medium text-gray-900">{stateData.greywater.legalStatus || 'Legal'}</td>
+                      </tr>
+                      {stateData.greywater.regulatoryClassification && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">Classification</td>
+                          <td className="px-5 py-3 text-gray-900">{stateData.greywater.regulatoryClassification}</td>
+                        </tr>
+                      )}
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50">Allowed Uses</td>
+                        <td className="px-5 py-3 text-gray-900">
+                          {[
+                            stateData.greywater.outdoorUseAllowed && 'Outdoor',
+                            stateData.greywater.indoorUseAllowed && 'Indoor'
+                          ].filter(Boolean).join(', ') || 'Varies'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50">Permit</td>
+                        <td className="px-5 py-3 text-gray-900">{stateData.greywater.permitRequired || 'Varies'}</td>
+                      </tr>
+                      {stateData.greywater.permitThresholdGpd !== null && stateData.greywater.permitThresholdGpd !== undefined && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">No-Permit Limit</td>
+                          <td className="px-5 py-3 text-gray-900">
+                            {stateData.greywater.permitThresholdGpd > 0 ? `Under ${stateData.greywater.permitThresholdGpd} GPD` : 'All need permit'}
+                          </td>
+                        </tr>
+                      )}
+                      {stateData.greywater.governingCode && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">Code</td>
+                          <td className="px-5 py-3 text-gray-900 text-xs">{stateData.greywater.governingCode}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Rainwater Regulations Card */}
+            {stateData?.rainwater && (
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-cyan-50 px-5 py-3 border-b border-gray-200">
+                  <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <CloudRain className="h-4 w-4 text-cyan-600" />
+                    Rainwater Regulations
+                  </h2>
+                </div>
+                <div className="p-0">
+                  <table className="w-full text-sm">
+                    <tbody className="divide-y divide-gray-200">
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50 w-2/5">Status</td>
+                        <td className="px-5 py-3 font-medium text-gray-900">{stateData.rainwater.legalStatus || 'Legal'}</td>
+                      </tr>
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50">Collection Limit</td>
+                        <td className="px-5 py-3 text-gray-900">
+                          {stateData.rainwater.collectionLimitGallons && stateData.rainwater.collectionLimitGallons > 0
+                            ? `${stateData.rainwater.collectionLimitGallons.toLocaleString()} gal`
+                            : 'Unlimited'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50">Potable Use</td>
+                        <td className="px-5 py-3 text-gray-900">
+                          {stateData.rainwater.potableUseAllowed ? 'Allowed (with treatment)' : 'Non-potable only'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50">Permit</td>
+                        <td className="px-5 py-3 text-gray-900">{stateData.rainwater.permitRequired || 'No'}</td>
+                      </tr>
+                      {stateData.rainwater.taxIncentives && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">Tax Incentives</td>
+                          <td className="px-5 py-3 text-gray-900 text-xs">{stateData.rainwater.taxIncentives}</td>
+                        </tr>
+                      )}
+                      {stateData.rainwater.governingCode && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">Code</td>
+                          <td className="px-5 py-3 text-gray-900 text-xs">{stateData.rainwater.governingCode}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Agency & Incentives Row */}
+          <div className="grid lg:grid-cols-3 gap-6 mb-6">
+            {/* Regulatory Agency Card */}
+            {stateData?.agency?.name && (
+              <div className="bg-white rounded-2xl border border-gray-200 p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Building2 className="h-5 w-5 text-gray-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-sm">Regulatory Agency</h3>
+                    <p className="text-xs text-gray-500">{stateData.agency.name}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {stateData.agency.phone && (
+                    <a href={`tel:${stateData.agency.phone}`} className="flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700">
+                      <Phone className="h-3.5 w-3.5" />
+                      {stateData.agency.phone}
+                    </a>
+                  )}
+                  {stateData.agency.website && (
+                    <a href={stateData.agency.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700">
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Official Website
                     </a>
                   )}
                 </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
-        {/* View Toggle & Search for Cities/Counties */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">
-              {viewMode === 'cities' ? 'Find Your City' : 'Browse by County'}
+            {/* Incentives Card */}
+            {compliance?.state?.incentives && compliance.state.incentives.length > 0 ? (
+              <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-emerald-50 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
+                  <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-emerald-600" />
+                    Available Incentives
+                  </h2>
+                  <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-medium">
+                    {filterIncentivesByResourceType(compliance.state.incentives).length} programs
+                  </span>
+                </div>
+                <div className="divide-y divide-gray-200">
+                  {filterIncentivesByResourceType(compliance.state.incentives).slice(0, 3).map((incentive: any, idx: number) => (
+                    <div key={idx} className="px-5 py-3 flex items-center justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 text-sm truncate">{incentive.program_name}</p>
+                        {incentive.program_description && (
+                          <p className="text-xs text-gray-500 truncate">{incentive.program_description}</p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        {incentive.incentive_amount_max && (
+                          <span className="text-sm font-semibold text-emerald-600">
+                            Up to ${incentive.incentive_amount_max.toLocaleString()}
+                          </span>
+                        )}
+                        {incentive.incentive_url && (
+                          <a
+                            href={incentive.incentive_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                          >
+                            Apply <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                  <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-gray-400" />
+                    Incentives
+                  </h2>
+                </div>
+                <div className="p-5 text-center">
+                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <HelpCircle className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="text-sm text-gray-600 font-medium mb-1">No rebates found for this area</p>
+                  <p className="text-xs text-gray-500">Check with your local water utility for potential rebate programs.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* View Toggle & Search for Cities/Counties */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-medium text-gray-400 uppercase tracking-wide">
+              Browse by {viewMode === 'cities' ? 'City' : 'County'}
             </h2>
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
-                onClick={() => { setViewMode('cities'); setSearchTerm(''); setShowAllCities(false); }}
-                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                  viewMode === 'cities' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                onClick={() => { setViewMode('cities'); setShowAllCities(false); }}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+                  viewMode === 'cities'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 Cities
               </button>
               <button
-                onClick={() => { setViewMode('counties'); setSearchTerm(''); }}
-                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                  viewMode === 'counties' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                onClick={() => { setViewMode('counties'); }}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+                  viewMode === 'counties'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 Counties
               </button>
             </div>
           </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder={viewMode === 'cities' ? 'Search cities...' : 'Search counties...'}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              value={viewMode === 'cities' ? citiesSearchTerm : countiesSearchTerm}
+              onChange={(e) => viewMode === 'cities' ? setCitiesSearchTerm(e.target.value) : setCountiesSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border-b border-gray-200 bg-transparent focus:outline-none focus:border-gray-400 transition-colors text-sm"
             />
           </div>
-        </div>
 
         {/* Cities List */}
         {viewMode === 'cities' && (
-          <div className="space-y-2">
-            {(showAllCities || searchTerm ? filteredCities : filteredCities.slice(0, INITIAL_CITIES_SHOWN)).map((city, idx) => (
+          <div className="divide-y divide-gray-100">
+            {(showAllCities || citiesSearchTerm ? filteredCities : filteredCities.slice(0, INITIAL_CITIES_SHOWN)).map((city, idx) => (
               <button
                 key={`${city.city_name}-${idx}`}
                 onClick={() => navigateToCity(city)}
-                className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
+                className="w-full flex items-center justify-between py-3 hover:bg-gray-50 transition-colors text-left group -mx-3 px-3 rounded"
               >
                 <div>
-                  <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
-                  {city.county_name && <p className="text-sm text-gray-500">{city.county_name} County</p>}
+                  <p className="font-medium text-gray-900">{city.city_name}</p>
+                  {city.county_name && <p className="text-xs text-gray-400 mt-0.5">{city.county_name} County</p>}
                 </div>
-                <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
+                <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
               </button>
             ))}
-            {!showAllCities && !searchTerm && filteredCities.length > INITIAL_CITIES_SHOWN && (
+            {!showAllCities && !citiesSearchTerm && filteredCities.length > INITIAL_CITIES_SHOWN && (
               <button
                 onClick={() => setShowAllCities(true)}
-                className="w-full py-4 text-center text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+                className="w-full py-4 text-center text-gray-500 hover:text-gray-700 text-sm"
               >
                 Show all {filteredCities.length} cities
               </button>
             )}
-            {filteredCities.length === 0 && searchTerm && (
-              <p className="text-center text-gray-500 py-8">No cities found matching "{searchTerm}"</p>
+            {filteredCities.length === 0 && citiesSearchTerm && (
+              <p className="text-center text-gray-400 py-8 text-sm">No cities found matching "{citiesSearchTerm}"</p>
             )}
-            {filteredCities.length === 0 && !searchTerm && allCities.length === 0 && (
+            {filteredCities.length === 0 && !citiesSearchTerm && allCities.length === 0 && (
               <div className="text-center py-8">
-                <div className="animate-spin h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3" />
-                <p className="text-gray-500">Loading cities...</p>
+                <div className="animate-spin h-5 w-5 border border-gray-300 border-t-gray-600 rounded-full mx-auto mb-3" />
+                <p className="text-gray-400 text-sm">Loading cities...</p>
               </div>
             )}
           </div>
@@ -907,31 +999,36 @@ export default function SimpleDirectoryView({
 
         {/* Counties List */}
         {viewMode === 'counties' && (
-          <div className="space-y-2">
+          <div className="divide-y divide-gray-100">
             {filteredCounties.map((county, idx) => (
               <button
                 key={`${county.county_name}-${idx}`}
                 onClick={() => navigateToCounty(county)}
-                className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
+                className="w-full flex items-center justify-between py-3 hover:bg-gray-50 transition-colors text-left group -mx-3 px-3 rounded"
               >
                 <div>
-                  <p className="font-medium text-gray-900 group-hover:text-emerald-700">{county.county_name} County</p>
-                  <p className="text-sm text-gray-500">{county.city_count} cities</p>
+                  <p className="font-medium text-gray-900">{county.county_name} County</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{county.city_count} cities</p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
+                <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
               </button>
             ))}
-            {filteredCounties.length === 0 && searchTerm && (
-              <p className="text-center text-gray-500 py-8">No counties found matching "{searchTerm}"</p>
+            {filteredCounties.length === 0 && countiesSearchTerm && (
+              <p className="text-center text-gray-500 py-8">No counties found matching "{countiesSearchTerm}"</p>
             )}
-            {filteredCounties.length === 0 && !searchTerm && counties.length === 0 && (
+            {filteredCounties.length === 0 && !countiesSearchTerm && counties.length === 0 && (
               <div className="text-center py-8">
-                <div className="animate-spin h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3" />
-                <p className="text-gray-500">Loading counties...</p>
+                <div className="animate-spin h-5 w-5 border border-gray-300 border-t-gray-600 rounded-full mx-auto mb-3" />
+                <p className="text-gray-400 text-sm">Loading counties...</p>
               </div>
             )}
           </div>
         )}
+          </div>
+
+          {/* CTA Section */}
+          <DirectoryCTA stateName={selectedState.state_name} />
+        </div>
       </div>
     )
   }
@@ -947,229 +1044,368 @@ export default function SimpleDirectoryView({
     const countyData = compliance?.county
     const countyIncentives = countyData?.incentives || []
 
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6 flex-wrap">
-          <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
-            All States
-          </button>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-          <button onClick={() => router.push(`${basePath}/${selectedState.state_code}`)} className="text-gray-500 hover:text-emerald-600">
-            {selectedState.state_name}
-          </button>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-          <span className="font-medium text-gray-900">{selectedCounty.county_name} County</span>
-        </nav>
+    // Get state data for displaying applicable regulations
+    const allowedSources = stateStaticData?.approvedUses || []
+    const keyRestrictions = stateStaticData?.keyRestrictions || []
 
-        {/* County Header */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{selectedCounty.county_name} County</h1>
-              <p className="text-gray-500">{selectedState.state_name} • {selectedCounty.city_count} cities</p>
-            </div>
-            {countyData && countyData.greywater_allowed !== undefined && (
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
-                countyData.greywater_allowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-              }`}>
-                {countyData.greywater_allowed !== false ? (
-                  <><Check className="h-4 w-4" /> Greywater Allowed</>
-                ) : (
-                  <><AlertTriangle className="h-4 w-4" /> Restricted</>
+    return (
+      <div className="bg-white min-h-screen">
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm mb-6">
+            <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
+              All States
+            </button>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <button onClick={() => router.push(`${basePath}/${selectedState.state_code}`)} className="text-gray-500 hover:text-emerald-600">
+              {selectedState.state_name}
+            </button>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-gray-900 font-medium">{selectedCounty.county_name} County</span>
+          </nav>
+
+          {/* Header Card */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900">{selectedCounty.county_name} County, {selectedState.state_name}</h1>
+                  {stateData && (
+                    <DataConfidenceBadge completeness={getGreywaterDataCompleteness(stateData.greywater)} />
+                  )}
+                </div>
+                <p className="text-gray-600 mb-3">Greywater regulations and rebate programs</p>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                    const badge = getRegulationStatusBadge(stateData?.greywater)
+                    const Icon = badge.icon
+                    return (
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 ${badge.className} rounded-full text-sm font-medium`}>
+                        <Icon className="h-3.5 w-3.5" />
+                        {badge.label}
+                      </span>
+                    )
+                  })()}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                    {selectedCounty.city_count} cities
+                  </span>
+                  {countyIncentives.length > 0 && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm">
+                      <DollarSign className="h-3.5 w-3.5" />
+                      {countyIncentives.length} rebate{countyIncentives.length !== 1 ? 's' : ''} available
+                    </span>
+                  )}
+                </div>
+                {stateData?.lastUpdated && (
+                  <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Last verified: {formatLastUpdated(stateData.lastUpdated)}
+                  </p>
                 )}
               </div>
-            )}
-          </div>
-
-          {countyData?.regulation_summary && countyData.regulation_summary !== `${selectedCounty.county_name} County defers to state regulations.` && (
-            <p className="text-gray-600">{countyData.regulation_summary}</p>
-          )}
-        </div>
-
-        {/* State Permit Explanation - What This Means For You */}
-        {stateStaticData?.permitExplanation && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
-              {selectedState.state_name} Permit Requirements
-            </h2>
-            <p className="text-blue-800 leading-relaxed">{stateStaticData.permitExplanation}</p>
-            {stateStaticData?.permitProcess && (
-              <div className="mt-4 pt-4 border-t border-blue-200">
-                <h3 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                  <ClipboardList className="h-4 w-4 text-blue-600" />
-                  How to Get Started
-                </h3>
-                <p className="text-sm text-blue-700">{stateStaticData.permitProcess}</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* County Permit Info - if available */}
-        {countyData && (countyData.permit_required !== null || countyData.permit_fee || countyData.permit_type) && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-gray-400" />
-              County Permit Requirements
-            </h2>
-            <div className="space-y-3">
-              {countyData.permit_required !== null && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Permit Required</span>
-                  <span className={`font-medium ${countyData.permit_required ? 'text-amber-600' : 'text-emerald-600'}`}>
-                    {countyData.permit_required ? 'Yes' : 'No'}
-                  </span>
-                </div>
-              )}
-              {countyData.permit_type && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Permit Type</span>
-                  <span className="font-medium">{countyData.permit_type}</span>
-                </div>
-              )}
-              {countyData.permit_fee && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Permit Fee</span>
-                  <span className="font-medium">${countyData.permit_fee}</span>
-                </div>
-              )}
-              {countyData.annual_fee && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Annual Fee</span>
-                  <span className="font-medium">${countyData.annual_fee}/year</span>
-                </div>
-              )}
             </div>
           </div>
-        )}
 
-        {/* County Incentives - if available */}
-        {countyIncentives.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-gray-400" />
-              County Rebates & Incentives
-              <span className="text-sm font-normal text-gray-500">({countyIncentives.length})</span>
-            </h2>
-            <div className="space-y-4">
-              {countyIncentives.map((incentive: any, idx: number) => (
-                <div key={idx} className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{incentive.program_name}</h3>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
-                        {/* Program Type Badge */}
-                        {incentive.incentive_type === 'rebate' && (
-                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">Rebate</Badge>
-                        )}
-                        {incentive.incentive_type === 'tax_credit' && (
-                          <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
-                        )}
-                        {incentive.incentive_type === 'grant' && (
-                          <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
-                        )}
-                        {/* Property Type Badges */}
-                        {incentive.residential_eligible && (
-                          <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
-                        )}
-                        {incentive.commercial_eligible && (
-                          <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
-                        )}
-                        {incentive.applicant_type === 'business' && !incentive.residential_eligible && (
-                          <Badge className="bg-amber-100 text-amber-700 text-xs">Business Only</Badge>
-                        )}
-                      </div>
+          {/* County-Specific Regulations Alert (if they exist) */}
+          {countyData?.regulation_summary && countyData.regulation_summary !== `${selectedCounty.county_name} County defers to state regulations.` && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-amber-800 text-sm">County-Specific Rules</p>
+                  <p className="text-sm text-amber-700">{countyData.regulation_summary}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Content - Two Column Layout */}
+          <div className="grid lg:grid-cols-3 gap-6 mb-6">
+            {/* Left Column - Regulations */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Greywater Rules Card */}
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-emerald-50 px-5 py-3 border-b border-gray-200">
+                  <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <Droplets className="h-4 w-4 text-emerald-600" />
+                    Greywater Rules in {selectedCounty.county_name} County
+                  </h2>
+                </div>
+                <div className="p-5">
+                  <p className="text-sm text-gray-600 mb-4">
+                    {selectedCounty.county_name} County follows {selectedState.state_name} state greywater regulations.
+                    {stateStaticData?.permitThresholdGpd && stateStaticData.permitThresholdGpd > 0 && (
+                      <span className="font-medium text-gray-800"> Simple systems under {stateStaticData.permitThresholdGpd} gallons per day typically don't require a permit.</span>
+                    )}
+                  </p>
+
+                  {/* Quick Facts Grid */}
+                  <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Status</p>
+                      <p className="font-semibold text-gray-900">
+                        {stateStaticData?.permitRequired === 'conditional' ? 'Conditional' :
+                         stateStaticData?.permitRequired === 'yes' ? 'Required' : 'Not Required for Simple Systems'}
+                      </p>
                     </div>
-                    {(incentive.incentive_amount_max || incentive.max_funding_per_application) && (
-                      <div className="text-right">
-                        <span className="text-emerald-600 font-bold text-lg">
-                          Up to ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
-                        </span>
+                    {stateStaticData?.permitThresholdGpd && (
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">No-Permit Threshold</p>
+                        <p className="font-semibold text-gray-900">{stateStaticData.permitThresholdGpd} GPD</p>
                       </div>
                     )}
                   </div>
-                  {incentive.program_description && (
-                    <p className="text-sm text-gray-600 mb-3">{incentive.program_description}</p>
-                  )}
-                  {incentive.eligibility_details && (
-                    <div className="mb-3">
-                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Eligibility</p>
-                      <p className="text-sm text-gray-700">{incentive.eligibility_details}</p>
+
+                  {/* Allowed Uses */}
+                  {allowedSources.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-sm font-medium text-gray-800 mb-2">Allowed Uses</p>
+                      <div className="flex flex-wrap gap-2">
+                        {allowedSources.slice(0, 6).map((use: string, idx: number) => (
+                          <span key={idx} className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded text-xs">
+                            <Check className="h-3 w-3" />
+                            {use}
+                          </span>
+                        ))}
+                        {allowedSources.length > 6 && (
+                          <span className="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">
+                            +{allowedSources.length - 6} more
+                          </span>
+                        )}
+                      </div>
                     </div>
                   )}
-                  {incentive.how_to_apply && (
-                    <div className="mb-3">
-                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">How to Apply</p>
-                      <p className="text-sm text-gray-700">{incentive.how_to_apply}</p>
+
+                  {/* Key Restrictions */}
+                  {keyRestrictions.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-800 mb-2">Key Requirements</p>
+                      <ul className="space-y-1.5">
+                        {keyRestrictions.slice(0, 4).map((restriction: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+                            <span className="text-amber-500 mt-0.5">•</span>
+                            {restriction}
+                          </li>
+                        ))}
+                        {keyRestrictions.length > 4 && (
+                          <li className="text-sm text-gray-500 font-medium pl-4">
+                            +{keyRestrictions.length - 4} more requirements
+                          </li>
+                        )}
+                      </ul>
                     </div>
                   )}
-                  <div className="flex items-center gap-4 pt-3 border-t border-gray-100 text-sm">
-                    {incentive.incentive_url && (
+
+                  {/* State Agency Link */}
+                  {stateStaticData?.governmentWebsite && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
                       <a
-                        href={incentive.incentive_url}
+                        href={stateStaticData.governmentWebsite}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                        className="inline-flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700"
                       >
+                        <FileText className="h-4 w-4" />
+                        View {selectedState.state_name} State Regulations
                         <ExternalLink className="h-3 w-3" />
-                        {(() => {
-                          try {
-                            const domain = new URL(incentive.incentive_url).hostname.replace('www.', '');
-                            return domain;
-                          } catch {
-                            return 'Apply';
-                          }
-                        })()}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Getting Started Card */}
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                  <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <ListChecks className="h-4 w-4 text-gray-600" />
+                    Getting Started with Greywater
+                  </h2>
+                </div>
+                <div className="p-5">
+                  <ol className="space-y-4">
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-sm font-semibold">1</span>
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">Check Your City's Rules</p>
+                        <p className="text-sm text-gray-500">Select your city below to see any additional local requirements.</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-sm font-semibold">2</span>
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">Determine System Size</p>
+                        <p className="text-sm text-gray-500">
+                          {stateStaticData?.permitThresholdGpd
+                            ? `Systems under ${stateStaticData.permitThresholdGpd} GPD are typically simpler to install.`
+                            : 'Simple laundry-to-landscape systems are usually the easiest to start with.'}
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-sm font-semibold">3</span>
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">Apply for Rebates</p>
+                        <p className="text-sm text-gray-500">
+                          {countyIncentives.length > 0
+                            ? `${countyIncentives.length} rebate program${countyIncentives.length !== 1 ? 's' : ''} may be available to offset costs.`
+                            : 'Check if your water utility offers rebates for greywater systems.'}
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Incentives & Quick Links */}
+            <div className="space-y-6">
+              {/* Incentives Card */}
+              {countyIncentives.length > 0 && (
+                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                  <div className="bg-teal-50 px-5 py-3 border-b border-gray-200">
+                    <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <DollarSign className="h-4 w-4 text-teal-600" />
+                      Available Rebates
+                    </h2>
+                  </div>
+                  <div className="divide-y divide-gray-100">
+                    {countyIncentives.map((incentive: any, idx: number) => (
+                      <div key={idx} className="p-4">
+                        <p className="font-medium text-gray-900 text-sm mb-1">{incentive.program_name}</p>
+                        {(incentive.incentive_amount_max || incentive.max_funding_per_application) && (
+                          <p className="text-lg font-semibold text-teal-600 mb-2">
+                            Up to ${(incentive.incentive_amount_max || incentive.max_funding_per_application).toLocaleString()}
+                          </p>
+                        )}
+                        {incentive.program_description && (
+                          <p className="text-xs text-gray-500 mb-2 line-clamp-2">{incentive.program_description}</p>
+                        )}
+                        {incentive.application_url && (
+                          <a
+                            href={incentive.application_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-teal-600 hover:text-teal-700 font-medium"
+                          >
+                            Learn More <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* County Permits (if they have specific requirements) */}
+              {countyData && (countyData.permit_required !== null || countyData.permit_fee || countyData.permit_type) && (
+                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                  <div className="bg-amber-50 px-5 py-3 border-b border-gray-200">
+                    <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-amber-600" />
+                      County Permits
+                    </h2>
+                  </div>
+                  <table className="w-full text-sm">
+                    <tbody className="divide-y divide-gray-100">
+                      {countyData.permit_required !== null && (
+                        <tr>
+                          <td className="px-4 py-2.5 text-gray-600">Required</td>
+                          <td className="px-4 py-2.5 font-medium text-gray-900 text-right">{countyData.permit_required ? 'Yes' : 'No'}</td>
+                        </tr>
+                      )}
+                      {countyData.permit_type && (
+                        <tr>
+                          <td className="px-4 py-2.5 text-gray-600">Type</td>
+                          <td className="px-4 py-2.5 text-gray-900 text-right">{countyData.permit_type}</td>
+                        </tr>
+                      )}
+                      {countyData.permit_fee && (
+                        <tr>
+                          <td className="px-4 py-2.5 text-gray-600">Fee</td>
+                          <td className="px-4 py-2.5 font-medium text-gray-900 text-right">${countyData.permit_fee}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Contact Info Card */}
+              {stateStaticData?.primaryAgency && (
+                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                  <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                    <h2 className="font-semibold text-gray-900 text-sm">State Agency</h2>
+                  </div>
+                  <div className="p-4">
+                    <p className="font-medium text-gray-900 text-sm mb-2">{stateStaticData.primaryAgency}</p>
+                    {stateStaticData.agencyPhone && (
+                      <a href={`tel:${stateStaticData.agencyPhone}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 mb-1">
+                        <Phone className="h-3.5 w-3.5" />
+                        {stateStaticData.agencyPhone}
+                      </a>
+                    )}
+                    {stateStaticData.governmentWebsite && (
+                      <a
+                        href={stateStaticData.governmentWebsite}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Official Website
                       </a>
                     )}
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
-        )}
 
-        {/* State-level info reminder */}
-        {stateStaticData && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-            <p className="text-sm text-blue-800">
-              <span className="font-medium">Note:</span> {selectedCounty.county_name} County follows {selectedState.state_name} state greywater regulations.
-              {stateStaticData.permitThresholdGpd && stateStaticData.permitThresholdGpd > 0 && (
-                <> Systems under {stateStaticData.permitThresholdGpd} GPD may not require a permit.</>
+          {/* Cities Card */}
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-semibold text-gray-900">Cities in {selectedCounty.county_name} County</h2>
+                <span className="text-sm text-gray-500">{filteredCities.length} cities</span>
+              </div>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search cities..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-colors text-sm"
+                />
+              </div>
+            </div>
+            <div className="p-4">
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
+                {filteredCities.map((city, idx) => (
+                  <button
+                    key={`${city.city_name}-${idx}`}
+                    onClick={() => navigateToCity(city)}
+                    className="flex items-center justify-between p-3 bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-300 rounded-lg transition-colors text-left group"
+                  >
+                    <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
+                    <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-emerald-500" />
+                  </button>
+                ))}
+              </div>
+              {filteredCities.length === 0 && searchTerm && (
+                <p className="text-center text-gray-400 py-8 text-sm">No cities found matching "{searchTerm}"</p>
               )}
-            </p>
+            </div>
           </div>
-        )}
 
-        {/* City Search */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Select Your City</h2>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search cities..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
-        </div>
-
-        {/* Cities List */}
-        <div className="space-y-2">
-          {filteredCities.map((city, idx) => (
-            <button
-              key={`${city.city_name}-${idx}`}
-              onClick={() => navigateToCity(city)}
-              className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors text-left group"
-            >
-              <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
-              <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600" />
-            </button>
-          ))}
+          {/* CTA Section */}
+          <DirectoryCTA
+            stateName={selectedState.state_name}
+            countyName={selectedCounty.county_name}
+          />
         </div>
       </div>
     )
@@ -1195,540 +1431,418 @@ export default function SimpleDirectoryView({
     const keyRestrictions = stateStaticData?.keyRestrictions || []
 
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6 flex-wrap">
-          <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
-            All States
-          </button>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-          <button onClick={() => router.push(`${basePath}/${selectedState.state_code}`)} className="text-gray-500 hover:text-emerald-600">
-            {selectedState.state_name}
-          </button>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-          <span className="font-medium text-gray-900">{selectedCity.city_name}</span>
-        </nav>
+      <div className="bg-white min-h-screen">
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm mb-6">
+            <button onClick={() => router.push(basePath)} className="text-gray-500 hover:text-emerald-600">
+              All States
+            </button>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <button onClick={() => router.push(`${basePath}/${selectedState.state_code}`)} className="text-gray-500 hover:text-emerald-600">
+              {selectedState.state_name}
+            </button>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <button onClick={() => router.push(`${basePath}/${selectedState.state_code}/${nameToSlug(selectedCounty.county_name || '')}`)} className="text-gray-500 hover:text-emerald-600">
+              {selectedCounty.county_name} County
+            </button>
+            <ChevronRight className="h-3 w-3 text-gray-300" />
+            <span className="text-gray-900 font-medium">{selectedCity.city_name}</span>
+          </nav>
 
-        {/* City Header with Status */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{selectedCity.city_name}</h1>
-              <p className="text-gray-500">{selectedCounty.county_name} County, {selectedState.state_name}</p>
-            </div>
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
-              effective?.greywater_allowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-            }`}>
-              {effective?.greywater_allowed !== false ? <Check className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
-              <span className="font-medium text-sm">
-                {effective?.greywater_allowed !== false ? 'Greywater Legal' : 'Greywater Restricted'}
-              </span>
-            </div>
-          </div>
-
-          {effective?.regulation_summary && (
-            <p className="text-gray-600">{effective.regulation_summary}</p>
-          )}
-        </div>
-
-        {/* Permit Requirements - Using State Data since most cities defer to state */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <FileText className="h-5 w-5 text-gray-400" />
-            Permit Requirements
-          </h2>
-
-          <div className="space-y-4">
-            {/* Permit Status - use stateStaticData as most cities defer to state */}
-            {(stateStaticData?.permitRequired || effective?.permit_required !== null) && (
-              <div className="flex items-start justify-between py-3 border-b border-gray-100">
-                <div>
-                  <p className="font-medium text-gray-900">Permit Status</p>
-                  <p className="text-sm text-gray-500">{selectedState.state_name} state regulations</p>
-                </div>
-                <span className="font-medium text-gray-900">
-                  {stateStaticData?.permitRequired || (effective?.permit_required ? 'Required' : 'Not required')}
-                </span>
-              </div>
-            )}
-
-            {/* No-Permit Threshold */}
-            {stateStaticData?.permitThresholdGpd !== null && stateStaticData?.permitThresholdGpd !== undefined && (
-              <div className="flex items-start justify-between py-3 border-b border-gray-100">
-                <div>
-                  <p className="font-medium text-gray-900">No-Permit Threshold</p>
-                  <p className="text-sm text-gray-500">Simple systems under this limit</p>
-                </div>
-                <span className="font-medium text-emerald-600">
-                  {stateStaticData.permitThresholdGpd > 0 ? `Under ${stateStaticData.permitThresholdGpd} GPD` : 'All systems need permit'}
-                </span>
-              </div>
-            )}
-
-            {/* Governing Code */}
-            {stateStaticData?.governingCode && (
-              <div className="flex items-start justify-between py-3 border-b border-gray-100">
-                <div>
-                  <p className="font-medium text-gray-900">Governing Code</p>
-                </div>
-                <span className="text-gray-700 text-sm text-right max-w-xs">{stateStaticData.governingCode}</span>
-              </div>
-            )}
-
-            {/* Indoor/Outdoor Use */}
-            <div className="flex items-start justify-between py-3 border-b border-gray-100">
+          {/* Header Card */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <p className="font-medium text-gray-900">Allowed Uses</p>
-              </div>
-              <div className="flex gap-3">
-                <span className={`text-sm font-medium ${stateStaticData?.outdoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
-                  {stateStaticData?.outdoorUseAllowed ? '✓ Outdoor' : '✗ Outdoor'}
-                </span>
-                <span className={`text-sm font-medium ${stateStaticData?.indoorUseAllowed ? 'text-emerald-600' : 'text-gray-400'}`}>
-                  {stateStaticData?.indoorUseAllowed ? '✓ Indoor' : '✗ Indoor'}
-                </span>
-              </div>
-            </div>
-
-            {/* Regulatory Agency */}
-            {stateStaticData?.primaryAgency && (
-              <div className="flex items-start justify-between py-3">
-                <div>
-                  <p className="font-medium text-gray-900">Regulatory Agency</p>
-                  {stateStaticData.agencyPhone && (
-                    <a href={`tel:${stateStaticData.agencyPhone}`} className="text-sm text-emerald-600 hover:text-emerald-700">
-                      {stateStaticData.agencyPhone}
-                    </a>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900">{selectedCity.city_name}</h1>
+                  {stateStaticData && (
+                    <DataConfidenceBadge completeness={getGreywaterDataCompleteness(stateStaticData)} />
                   )}
                 </div>
-                <span className="text-gray-700 text-sm text-right max-w-xs">{stateStaticData.primaryAgency}</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Approved Uses & Key Restrictions */}
-        {(allowedSources.length > 0 || keyRestrictions.length > 0) && (
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Approved Uses */}
-            {allowedSources.length > 0 && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-emerald-900 mb-4 flex items-center gap-2">
-                  <Check className="h-5 w-5 text-emerald-600" />
-                  Approved Uses
-                </h2>
-                <ul className="space-y-2">
-                  {allowedSources.map((source: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-emerald-800">
-                      <Droplets className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">{source}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Key Restrictions */}
-            {keyRestrictions.length > 0 && (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  Key Restrictions
-                </h2>
-                <ul className="space-y-2">
-                  {keyRestrictions.map((restriction: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-amber-800">
-                      <span className="text-amber-500 mt-1">•</span>
-                      <span className="text-sm">{restriction}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Treatment & Setback Requirements */}
-        {(effective?.treatment_requirements || effective?.setback_requirements) && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-gray-400" />
-              System Requirements
-            </h2>
-            <div className="space-y-4">
-              {effective.treatment_requirements && (
-                <div>
-                  <p className="font-medium text-gray-900 mb-1">Treatment Requirements</p>
-                  <p className="text-sm text-gray-600">{effective.treatment_requirements}</p>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                    const badge = getRegulationStatusBadge(stateStaticData)
+                    const Icon = badge.icon
+                    return (
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 ${badge.className} rounded-full text-sm font-medium`}>
+                        <Icon className="h-3.5 w-3.5" />
+                        {badge.label}
+                      </span>
+                    )
+                  })()}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                    {selectedCounty.county_name} County
+                  </span>
                 </div>
-              )}
-              {effective.setback_requirements && (
-                <div>
-                  <p className="font-medium text-gray-900 mb-1">Setback Requirements</p>
-                  <p className="text-sm text-gray-600">{effective.setback_requirements}</p>
+              </div>
+              {allIncentives.length > 0 && (
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-emerald-600">{allIncentives.length}</p>
+                  <p className="text-sm text-gray-500">Incentive Programs</p>
                 </div>
               )}
             </div>
           </div>
-        )}
 
-        {/* Rebates & Incentives - Show ALL */}
-        {allIncentives.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-gray-400" />
-                Incentives & Programs
-                <span className="text-sm font-normal text-gray-500">({allIncentives.length})</span>
-              </h2>
-            </div>
-
-            {/* Filters Row */}
-            <div className="flex flex-wrap gap-4 mb-4 pb-4 border-b border-gray-100">
-              {/* Property Type Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500 uppercase tracking-wide">For:</span>
-                <div className="flex bg-gray-100 rounded-lg p-0.5">
-                  <button
-                    onClick={() => setPropertyTypeFilter('all')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      propertyTypeFilter === 'all'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button
-                    onClick={() => setPropertyTypeFilter('residential')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      propertyTypeFilter === 'residential'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    Residential
-                  </button>
-                  <button
-                    onClick={() => setPropertyTypeFilter('commercial')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      propertyTypeFilter === 'commercial'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    Commercial
-                  </button>
+          {/* Regulation Summary Alert */}
+          {effective?.regulation_summary && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <FileText className="h-4 w-4 text-emerald-600" />
                 </div>
-              </div>
-
-              {/* Program Type Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500 uppercase tracking-wide">Type:</span>
-                <div className="flex bg-gray-100 rounded-lg p-0.5">
-                  <button
-                    onClick={() => setProgramTypeFilter('all')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      programTypeFilter === 'all'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button
-                    onClick={() => setProgramTypeFilter('rebates')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      programTypeFilter === 'rebates'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    Rebates
-                  </button>
-                  <button
-                    onClick={() => setProgramTypeFilter('tax')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      programTypeFilter === 'tax'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    Tax Credits
-                  </button>
-                  <button
-                    onClick={() => setProgramTypeFilter('grants')}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                      programTypeFilter === 'grants'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    Grants
-                  </button>
+                <div>
+                  <p className="font-medium text-emerald-800 text-sm">Local Regulations</p>
+                  <p className="text-sm text-emerald-700">{effective.regulation_summary}</p>
                 </div>
               </div>
             </div>
+          )}
 
-            <div className="space-y-4">
-              {allIncentives
-                .filter((program: any) => {
-                  // Property type filter
-                  if (propertyTypeFilter === 'residential' && program.residential_eligible !== true) return false;
-                  if (propertyTypeFilter === 'commercial' && program.commercial_eligible !== true) return false;
-
-                  // Program type filter
-                  if (programTypeFilter === 'rebates' && !['rebate', 'subsidy'].includes(program.incentive_type)) return false;
-                  if (programTypeFilter === 'tax' && !['tax_credit', 'tax_exemption'].includes(program.incentive_type)) return false;
-                  if (programTypeFilter === 'grants' && !['grant'].includes(program.incentive_type)) return false;
-
-                  return true;
-                })
-                .map((program: any, idx: number) => {
-                  const isExpanded = expandedPrograms.has(program.program_name)
-                  const hasDetails = program.eligibility_details || program.how_to_apply || program.documentation_required || program.coverage_area || program.deadline_info
-
-                  return (
-                <div key={idx} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  {/* Main Card Content */}
-                  <div className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <p className="font-semibold text-gray-900">{program.program_name || 'Rebate Program'}</p>
-                        <div className="flex flex-wrap gap-1.5 mt-1">
-                          {/* Program Type Badge */}
-                          {program.incentive_type === 'rebate' && (
-                            <Badge className="bg-emerald-100 text-emerald-700 text-xs">Rebate</Badge>
-                          )}
-                          {program.incentive_type === 'tax_credit' && (
-                            <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Credit</Badge>
-                          )}
-                          {program.incentive_type === 'tax_exemption' && (
-                            <Badge className="bg-indigo-100 text-indigo-700 text-xs">Tax Exemption</Badge>
-                          )}
-                          {program.incentive_type === 'grant' && (
-                            <Badge className="bg-teal-100 text-teal-700 text-xs">Grant</Badge>
-                          )}
-                          {program.incentive_type === 'subsidy' && (
-                            <Badge className="bg-emerald-100 text-emerald-700 text-xs">Subsidy</Badge>
-                          )}
-                          {/* Property Type Badges */}
-                          {program.residential_eligible && (
-                            <Badge className="bg-blue-100 text-blue-700 text-xs">Residential</Badge>
-                          )}
-                          {program.commercial_eligible && (
-                            <Badge className="bg-purple-100 text-purple-700 text-xs">Commercial</Badge>
-                          )}
-                          {program.applicant_type === 'business' && !program.residential_eligible && (
-                            <Badge className="bg-amber-100 text-amber-700 text-xs">Business Only</Badge>
-                          )}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-emerald-700 text-lg">
-                          {program.incentive_amount_max
-                            ? `Up to $${program.incentive_amount_max.toLocaleString()}`
-                            : 'Varies'}
+          {/* Pre-Plumbing Mandate Alert */}
+          {(effective?.has_preplumbing_mandate || compliance?.state?.has_preplumbing_mandate) && (
+            <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Building2 className="h-4 w-4 text-purple-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-purple-800 text-sm mb-1">Pre-Plumbing Mandate</p>
+                  {effective?.has_preplumbing_mandate ? (
+                    <div>
+                      <p className="text-sm text-purple-700 mb-2">
+                        {effective.preplumbing_details || 'New construction must include greywater-ready plumbing.'}
+                      </p>
+                      {effective.preplumbing_building_types && (
+                        <p className="text-xs text-purple-600">
+                          <strong>Applies to:</strong> {effective.preplumbing_building_types}
                         </p>
-                        {program.incentive_amount_min && program.incentive_amount_min !== program.incentive_amount_max && (
-                          <p className="text-xs text-gray-500">Min: ${program.incentive_amount_min.toLocaleString()}</p>
-                        )}
+                      )}
+                      {effective.preplumbing_threshold_sqft && (
+                        <p className="text-xs text-purple-600">
+                          <strong>Threshold:</strong> Buildings {effective.preplumbing_threshold_sqft.toLocaleString()}+ sqft
+                        </p>
+                      )}
+                      {effective.preplumbing_code_reference && (
+                        <p className="text-xs text-purple-500 mt-1">
+                          {effective.preplumbing_code_reference}
+                        </p>
+                      )}
+                    </div>
+                  ) : compliance?.state?.has_preplumbing_mandate ? (
+                    <div>
+                      <p className="text-sm text-purple-700 mb-2">
+                        {compliance.state.preplumbing_details || 'California requires new construction to be greywater-ready under CALGreen.'}
+                      </p>
+                      {compliance.state.preplumbing_building_types && (
+                        <p className="text-xs text-purple-600">
+                          <strong>Applies to:</strong> {compliance.state.preplumbing_building_types}
+                        </p>
+                      )}
+                      <p className="text-xs text-purple-500 mt-1">
+                        State-level requirement (CALGreen Code)
+                      </p>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+            {/* Permit Requirements Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+              <div className={`${stateStaticData?.permitRequired ? 'bg-emerald-50' : 'bg-gray-50'} px-5 py-3 border-b border-gray-200`}>
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <FileText className={`h-4 w-4 ${stateStaticData?.permitRequired ? 'text-emerald-600' : 'text-gray-400'}`} />
+                  Permit Requirements
+                </h2>
+              </div>
+              {stateStaticData?.permitRequired || effective?.permit_required !== undefined ? (
+                <>
+                  {/* Desktop table view */}
+                  <table className="hidden sm:table w-full text-sm">
+                    <tbody className="divide-y divide-gray-200">
+                      {(stateStaticData?.permitRequired || effective?.permit_required !== null) && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50 w-2/5">Status</td>
+                          <td className="px-5 py-3 font-medium text-gray-900">
+                            {stateStaticData?.permitRequired || (effective?.permit_required ? 'Required' : 'Not required')}
+                          </td>
+                        </tr>
+                      )}
+                      {stateStaticData?.permitThresholdGpd !== null && stateStaticData?.permitThresholdGpd !== undefined && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">No-Permit Threshold</td>
+                          <td className="px-5 py-3 text-gray-900">
+                            {stateStaticData.permitThresholdGpd > 0 ? `Under ${stateStaticData.permitThresholdGpd} GPD` : 'All need permit'}
+                          </td>
+                        </tr>
+                      )}
+                      <tr>
+                        <td className="px-5 py-3 text-gray-600 bg-gray-50">Allowed Uses</td>
+                        <td className="px-5 py-3 text-gray-900">
+                          {[
+                            stateStaticData?.outdoorUseAllowed && 'Outdoor',
+                            stateStaticData?.indoorUseAllowed && 'Indoor'
+                          ].filter(Boolean).join(', ') || 'Varies'}
+                        </td>
+                      </tr>
+                      {stateStaticData?.governingCode && (
+                        <tr>
+                          <td className="px-5 py-3 text-gray-600 bg-gray-50">Code</td>
+                          <td className="px-5 py-3 text-gray-900 text-xs">{stateStaticData.governingCode}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                  {/* Mobile stacked view */}
+                  <div className="sm:hidden divide-y divide-gray-200">
+                    {(stateStaticData?.permitRequired || effective?.permit_required !== null) && (
+                      <div className="px-5 py-3">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Status</p>
+                        <p className="font-medium text-gray-900">
+                          {stateStaticData?.permitRequired || (effective?.permit_required ? 'Required' : 'Not required')}
+                        </p>
+                      </div>
+                    )}
+                    {stateStaticData?.permitThresholdGpd !== null && stateStaticData?.permitThresholdGpd !== undefined && (
+                      <div className="px-5 py-3">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">No-Permit Threshold</p>
+                        <p className="text-gray-900">
+                          {stateStaticData.permitThresholdGpd > 0 ? `Under ${stateStaticData.permitThresholdGpd} GPD` : 'All need permit'}
+                        </p>
+                      </div>
+                    )}
+                    <div className="px-5 py-3">
+                      <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Allowed Uses</p>
+                      <p className="text-gray-900">
+                        {[
+                          stateStaticData?.outdoorUseAllowed && 'Outdoor',
+                          stateStaticData?.indoorUseAllowed && 'Indoor'
+                        ].filter(Boolean).join(', ') || 'Varies'}
+                      </p>
+                    </div>
+                    {stateStaticData?.governingCode && (
+                      <div className="px-5 py-3">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Code</p>
+                        <p className="text-gray-900 text-xs">{stateStaticData.governingCode}</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="p-5 text-center">
+                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <HelpCircle className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="text-sm text-gray-600 font-medium mb-1">Permit requirements not yet verified</p>
+                  <p className="text-xs text-gray-500">Contact your local building department or water utility for permit information.</p>
+                </div>
+              )}
+            </div>
+
+            {/* System Requirements Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+              <div className="bg-cyan-50 px-5 py-3 border-b border-gray-200">
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <ListChecks className="h-4 w-4 text-cyan-600" />
+                  System Requirements
+                </h2>
+              </div>
+              <div className="p-5 space-y-4">
+                {effective?.treatment_requirements && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">Treatment</p>
+                    <p className="text-sm text-gray-700">{effective.treatment_requirements}</p>
+                  </div>
+                )}
+                {effective?.setback_requirements && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">Setbacks</p>
+                    <p className="text-sm text-gray-700">{effective.setback_requirements}</p>
+                  </div>
+                )}
+                {allowedSources.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">Approved Uses</p>
+                    <ul className="space-y-1">
+                      {allowedSources.slice(0, 4).map((source: string, idx: number) => (
+                        <li key={idx} className="text-sm text-gray-700 flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-500" />
+                          {source}
+                        </li>
+                      ))}
+                      {allowedSources.length > 4 && (
+                        <li className="text-sm text-gray-500 font-medium pl-5">
+                          +{allowedSources.length - 4} more uses
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+                {keyRestrictions.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">Restrictions</p>
+                    <ul className="space-y-1">
+                      {keyRestrictions.slice(0, 3).map((restriction: string, idx: number) => (
+                        <li key={idx} className="text-sm text-gray-600">• {restriction}</li>
+                      ))}
+                      {keyRestrictions.length > 3 && (
+                        <li className="text-sm text-gray-500 font-medium pl-3">
+                          +{keyRestrictions.length - 3} more restrictions
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+                {!effective?.treatment_requirements && !effective?.setback_requirements && allowedSources.length === 0 && keyRestrictions.length === 0 && stateStaticData && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <MapPin className="h-4 w-4 text-teal-500" />
+                      <span>This city follows <strong>{selectedState.state_name}</strong> state greywater code</span>
+                    </div>
+                    {stateStaticData.governingCode && (
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Governing Code</p>
+                        <p className="text-sm text-gray-800 font-medium">{stateStaticData.governingCode}</p>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-emerald-50 rounded-lg p-2.5 text-center">
+                        <p className="text-xs text-emerald-600 font-medium">Outdoor Use</p>
+                        <p className="text-sm font-semibold text-emerald-700">{stateStaticData.outdoorUseAllowed ? 'Allowed' : 'Check Local'}</p>
+                      </div>
+                      <div className="bg-blue-50 rounded-lg p-2.5 text-center">
+                        <p className="text-xs text-blue-600 font-medium">Indoor Use</p>
+                        <p className="text-sm font-semibold text-blue-700">{stateStaticData.indoorUseAllowed ? 'Allowed' : 'Not Allowed'}</p>
                       </div>
                     </div>
-
-                    {program.program_description && (
-                      <p className="text-sm text-gray-600 mb-3">{program.program_description}</p>
+                    {stateStaticData.permitThresholdGpd && stateStaticData.permitThresholdGpd > 0 && (
+                      <p className="text-xs text-gray-500 bg-amber-50 rounded-lg p-2">
+                        <strong>No permit needed</strong> for simple "laundry-to-landscape" systems under {stateStaticData.permitThresholdGpd} gallons/day
+                      </p>
                     )}
+                  </div>
+                )}
+                {!effective?.treatment_requirements && !effective?.setback_requirements && allowedSources.length === 0 && keyRestrictions.length === 0 && !stateStaticData && (
+                  <p className="text-sm text-gray-500">Contact local building department for requirements</p>
+                )}
+              </div>
+            </div>
+          </div>
 
-                    {/* Program Tiers */}
-                    {program.tiers && program.tiers.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-gray-100">
-                        <p className="text-sm font-medium text-gray-700 mb-2">Tier Structure:</p>
-                        <div className="space-y-2">
-                          {program.tiers.map((tier: any, tierIdx: number) => (
-                            <div key={tierIdx} className="flex justify-between text-sm bg-white/50 rounded px-3 py-2">
-                              <div>
-                                <span className="font-medium">{tier.tier_name || `Tier ${tier.tier_number}`}</span>
-                                {tier.requirements && <span className="text-gray-500 ml-2">- {tier.requirements}</span>}
-                              </div>
-                              <span className="font-medium text-emerald-700">
-                                ${tier.min_amount?.toLocaleString()} - ${tier.max_amount?.toLocaleString()}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Contact & Apply Row */}
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 text-sm">
-                      <div className="flex items-center gap-4">
-                        {program.incentive_url && (
-                          <a
-                            href={program.incentive_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
-                          >
-                            <ExternalLink className="h-3 w-3" />
-                            {(() => {
-                              try {
-                                const domain = new URL(program.incentive_url).hostname.replace('www.', '');
-                                return domain;
-                              } catch {
-                                return 'Apply';
-                              }
-                            })()}
-                          </a>
-                        )}
-                        {program.program_contact_email && (
-                          <a href={`mailto:${program.program_contact_email}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
-                            <Mail className="h-3 w-3" />
-                            Email
-                          </a>
-                        )}
-                        {program.program_contact_phone && (
-                          <a href={`tel:${program.program_contact_phone}`} className="flex items-center gap-1 text-gray-500 hover:text-emerald-600">
-                            <Phone className="h-3 w-3" />
-                            {program.program_contact_phone}
-                          </a>
-                        )}
-                      </div>
-
-                      {/* Expand/Collapse Button */}
-                      {hasDetails && (
-                        <button
-                          onClick={() => toggleProgramExpanded(program.program_name)}
-                          className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-medium"
+          {/* Incentives Card */}
+          {allIncentives.length > 0 ? (
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+              <div className="bg-emerald-50 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <DollarSign className="h-4 w-4 text-emerald-600" />
+                  Available Incentives
+                </h2>
+                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-medium">
+                  {allIncentives.length} programs
+                </span>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {allIncentives.map((program: any, idx: number) => (
+                  <div key={idx} className="px-5 py-3 flex items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-gray-900 text-sm truncate">{program.program_name || 'Rebate Program'}</p>
+                      {program.program_description && (
+                        <p className="text-xs text-gray-500 truncate">{program.program_description}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      {program.incentive_amount_max && (
+                        <span className="text-sm font-semibold text-emerald-600">
+                          Up to ${program.incentive_amount_max.toLocaleString()}
+                        </span>
+                      )}
+                      {program.incentive_url && (
+                        <a
+                          href={program.incentive_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                         >
-                          {isExpanded ? 'Less' : 'More details'}
-                          {isExpanded ? <ChevronDown className="h-4 w-4 rotate-180" /> : <ChevronDown className="h-4 w-4" />}
-                        </button>
+                          Apply <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
                       )}
                     </div>
                   </div>
-
-                  {/* Expanded Details Section */}
-                  {isExpanded && hasDetails && (
-                    <div className="bg-gray-50 border-t border-gray-200 p-4 space-y-4">
-                      {/* Eligibility Details */}
-                      {program.eligibility_details && (
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
-                            <Check className="h-4 w-4 text-emerald-600" />
-                            Eligibility Requirements
-                          </h4>
-                          <p className="text-sm text-gray-600 pl-6">{program.eligibility_details}</p>
-                        </div>
-                      )}
-
-                      {/* How to Apply */}
-                      {program.how_to_apply && (
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
-                            <ListChecks className="h-4 w-4 text-emerald-600" />
-                            How to Apply
-                          </h4>
-                          <p className="text-sm text-gray-600 pl-6 whitespace-pre-line">{program.how_to_apply}</p>
-                        </div>
-                      )}
-
-                      {/* Documentation Required */}
-                      {program.documentation_required && (
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
-                            <ClipboardList className="h-4 w-4 text-emerald-600" />
-                            Required Documentation
-                          </h4>
-                          <p className="text-sm text-gray-600 pl-6">{program.documentation_required}</p>
-                        </div>
-                      )}
-
-                      {/* Coverage Area & Deadline in a row */}
-                      {(program.coverage_area || program.deadline_info) && (
-                        <div className="flex flex-wrap gap-6 pt-2">
-                          {program.coverage_area && (
-                            <div className="flex items-start gap-2">
-                              <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
-                              <div>
-                                <p className="text-xs text-gray-500 uppercase tracking-wide">Coverage Area</p>
-                                <p className="text-sm text-gray-700">{program.coverage_area}</p>
-                              </div>
-                            </div>
-                          )}
-                          {program.deadline_info && (
-                            <div className="flex items-start gap-2">
-                              <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
-                              <div>
-                                <p className="text-xs text-gray-500 uppercase tracking-wide">Timing</p>
-                                <p className="text-sm text-gray-700">{program.deadline_info}</p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-                  )
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* No Rebates Message */}
-        {allIncentives.length === 0 && (
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6 text-center">
-            <DollarSign className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-gray-600">No rebate programs currently available for this location.</p>
-            <p className="text-sm text-gray-500 mt-1">Check back later or contact your local water utility.</p>
-          </div>
-        )}
-
-        {/* Official Resources */}
-        {(effective?.documentation_url || stateStaticData?.governmentWebsite) && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Official Resources</h2>
-            <div className="space-y-3">
-              {effective?.documentation_url && (
-                <a
-                  href={effective.documentation_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  View Local Regulations
-                </a>
-              )}
-              {stateStaticData?.governmentWebsite && (
-                <a
-                  href={stateStaticData.governmentWebsite}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  State Regulatory Agency
-                </a>
-              )}
-              {stateStaticData?.governingCode && (
-                <div className="pt-2 mt-2 border-t border-gray-100">
-                  <p className="text-sm text-gray-500">Governing Code:</p>
-                  <p className="text-sm text-gray-700">{stateStaticData.governingCode}</p>
+          ) : (
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+              <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <DollarSign className="h-4 w-4 text-gray-400" />
+                  Incentives
+                </h2>
+              </div>
+              <div className="p-5 text-center">
+                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <HelpCircle className="h-5 w-5 text-gray-400" />
                 </div>
-              )}
+                <p className="text-sm text-gray-600 font-medium mb-1">No rebates found for this area</p>
+                <p className="text-xs text-gray-500">Check with your local water utility for potential rebate programs.</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Resources Card */}
+          {(effective?.documentation_url || stateStaticData?.governmentWebsite) && (
+            <div className="bg-white rounded-2xl border border-gray-200 p-5">
+              <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <ExternalLink className="h-4 w-4 text-gray-600" />
+                Official Resources
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {effective?.documentation_url && (
+                  <a
+                    href={effective.documentation_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <FileText className="h-4 w-4" />
+                    Local Regulations
+                  </a>
+                )}
+                {stateStaticData?.governmentWebsite && (
+                  <a
+                    href={stateStaticData.governmentWebsite}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <Building2 className="h-4 w-4" />
+                    State Regulatory Agency
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* CTA Section */}
+          <DirectoryCTA
+            stateName={selectedState.state_name}
+            countyName={selectedCounty.county_name}
+            cityName={selectedCity.city_name}
+          />
+        </div>
       </div>
     )
   }
 
   // Fallback
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-      <p className="text-gray-600">Loading...</p>
+    <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+      <p className="text-sm text-gray-400">Loading...</p>
     </div>
   )
 }

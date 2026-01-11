@@ -99,11 +99,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/directory" className="text-gray-300 hover:text-white text-sm">
-                  Greywater Laws Directory
-                </Link>
-              </li>
-              <li>
                 <Link href="/customer-stories" className="text-gray-300 hover:text-white text-sm">
                   Customer Stories
                 </Link>
@@ -111,6 +106,36 @@ export function Footer() {
               <li>
                 <Link href="/blog" className="text-gray-300 hover:text-white text-sm">
                   Blog
+                </Link>
+              </li>
+            </ul>
+
+            {/* Popular Locations */}
+            <h3 className="font-semibold text-lg mt-6 mb-3">Water Laws by State</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/ca" className="text-gray-300 hover:text-white text-sm">
+                  California
+                </Link>
+              </li>
+              <li>
+                <Link href="/tx" className="text-gray-300 hover:text-white text-sm">
+                  Texas
+                </Link>
+              </li>
+              <li>
+                <Link href="/az" className="text-gray-300 hover:text-white text-sm">
+                  Arizona
+                </Link>
+              </li>
+              <li>
+                <Link href="/co" className="text-gray-300 hover:text-white text-sm">
+                  Colorado
+                </Link>
+              </li>
+              <li>
+                <Link href="/or" className="text-gray-300 hover:text-white text-sm">
+                  Oregon
                 </Link>
               </li>
             </ul>

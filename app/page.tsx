@@ -629,6 +629,84 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Water Laws by Location */}
+      <section className="py-24 lg:py-32 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-6">
+              <CloudRain className="h-4 w-4" />
+              Local Regulations
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+              Water Laws & Rebates in Your Area
+            </h2>
+            <p className="text-xl text-gray-600">
+              Find greywater regulations, rainwater harvesting rules, and available rebates in your state
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              { state: 'California', code: 'ca', status: 'Legal', rebates: '50+', color: 'emerald' },
+              { state: 'Texas', code: 'tx', status: 'Legal', rebates: '30+', color: 'blue' },
+              { state: 'Arizona', code: 'az', status: 'Legal', rebates: '25+', color: 'orange' },
+              { state: 'Colorado', code: 'co', status: 'Regulated', rebates: '15+', color: 'cyan' },
+              { state: 'Oregon', code: 'or', status: 'Legal', rebates: '20+', color: 'teal' },
+              { state: 'Washington', code: 'wa', status: 'Legal', rebates: '15+', color: 'indigo' },
+            ].map((item) => (
+              <Link
+                key={item.code}
+                href={`/${item.code}`}
+                className="group bg-white rounded-2xl border border-gray-200 p-6 hover:border-emerald-300 hover:shadow-lg transition-all"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
+                    {item.state}
+                  </h3>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full bg-${item.color}-100 text-${item.color}-700`}>
+                    {item.status}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span className="flex items-center gap-1.5">
+                    <Droplets className="h-4 w-4 text-emerald-500" />
+                    Greywater
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <CloudRain className="h-4 w-4 text-cyan-500" />
+                    Rainwater
+                  </span>
+                </div>
+                <p className="mt-3 text-sm text-emerald-600 font-medium">
+                  {item.rebates} rebate programs available →
+                </p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <p className="text-gray-500 mb-4">Don't see your state?</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Florida', 'Nevada', 'New Mexico', 'Utah', 'Georgia'].map((state) => (
+                <Link
+                  key={state}
+                  href={`/${state.toLowerCase().replace(' ', '-').substring(0, 2)}`}
+                  className="text-sm text-gray-600 hover:text-emerald-600 px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-emerald-300 transition-colors"
+                >
+                  {state}
+                </Link>
+              ))}
+              <Link
+                href="/ca"
+                className="text-sm text-emerald-600 font-medium px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full hover:bg-emerald-100 transition-colors"
+              >
+                All 50 States →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA - Clean */}
       <section className="py-24 lg:py-32 bg-gray-900">
         <div className="container mx-auto px-4">
