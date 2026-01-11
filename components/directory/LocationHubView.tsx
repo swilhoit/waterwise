@@ -86,6 +86,9 @@ interface IncentiveProgram {
   coverage_area?: string
   deadline_info?: string
   program_end_date?: string
+  // Jurisdiction tracking
+  jurisdiction_id?: string
+  jurisdiction_level?: 'state' | 'county' | 'city' | 'other'
 }
 
 interface CityItem {
@@ -211,6 +214,47 @@ const EligibilityBadges = ({ residential, commercial }: { residential?: boolean 
         </span>
       )}
     </div>
+  )
+}
+
+const JurisdictionLevelBadge = ({ level, stateName, countyName, cityName }: {
+  level?: 'state' | 'county' | 'city' | 'other'
+  stateName?: string
+  countyName?: string
+  cityName?: string
+}) => {
+  if (!level) return null
+
+  const config: Record<string, { label: string; icon: string; className: string }> = {
+    state: {
+      label: stateName || 'State',
+      icon: '🏛️',
+      className: 'bg-purple-50 text-purple-700 border-purple-200'
+    },
+    county: {
+      label: countyName ? `${countyName} County` : 'County',
+      icon: '🏢',
+      className: 'bg-amber-50 text-amber-700 border-amber-200'
+    },
+    city: {
+      label: cityName || 'City',
+      icon: '🏠',
+      className: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    },
+    other: {
+      label: 'Regional',
+      icon: '📍',
+      className: 'bg-gray-50 text-gray-700 border-gray-200'
+    }
+  }
+
+  const { label, icon, className } = config[level] || config.other
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${className}`}>
+      <span>{icon}</span>
+      {label}
+    </span>
   )
 }
 
@@ -381,6 +425,60 @@ export default function LocationHubView({
           </div>
         )}
 
+        {/* Regulatory Hierarchy Explanation - City Level Only */}
+        {level === 'city' && (
+          <div className="bg-gradient-to-r from-slate-50 to-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
+            <div className="flex items-start gap-4">
+              <div className="hidden sm:flex flex-col items-center gap-0.5 flex-shrink-0">
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <span className="text-sm">🏛️</span>
+                </div>
+                <div className="w-0.5 h-3 bg-gray-300"></div>
+                {countyName && (
+                  <>
+                    <div className="w-6 h-6 bg-amber-100 rounded flex items-center justify-center">
+                      <span className="text-xs">🏢</span>
+                    </div>
+                    <div className="w-0.5 h-3 bg-gray-300"></div>
+                  </>
+                )}
+                <div className="w-6 h-6 bg-emerald-100 rounded flex items-center justify-center">
+                  <span className="text-xs">🏠</span>
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 text-sm mb-2">Understanding Your Regulations</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Water regulations in {cityName} come from multiple government levels. {stateName} state law provides the baseline,
+                  {countyName ? ` ${countyName} County may add local requirements,` : ''} and city ordinances can add further rules.
+                </p>
+                <div className="flex flex-wrap gap-3 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">
+                      🏛️ {stateName}
+                    </span>
+                    <span className="text-gray-500">State baseline</span>
+                  </div>
+                  {countyName && (
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                        🏢 {countyName} County
+                      </span>
+                      <span className="text-gray-500">County additions</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      🏠 {cityName}
+                    </span>
+                    <span className="text-gray-500">City-specific</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick Navigation Cards */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">
           {/* Greywater Card */}
@@ -481,7 +579,10 @@ export default function LocationHubView({
                 </span>
               </div>
               <p className="text-sm text-gray-600">
-                Rebates, tax credits, and other incentives for {locationName} homeowners and small businesses
+                {level === 'city'
+                  ? `Programs available to ${locationName} residents from state, ${countyName ? 'county, ' : ''}and city governments`
+                  : `Rebates, tax credits, and other incentives for ${locationName} homeowners and small businesses`
+                }
               </p>
             </div>
 
@@ -535,9 +636,15 @@ export default function LocationHubView({
                             {/* Program Name & Description */}
                             <td className="px-4 py-4">
                               <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 flex-wrap">
                                   <span className="font-medium text-gray-900">{program.program_name}</span>
                                   <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
+                                  <JurisdictionLevelBadge
+                                    level={program.jurisdiction_level}
+                                    stateName={stateName}
+                                    countyName={countyName}
+                                    cityName={cityName}
+                                  />
                                 </div>
                                 {program.program_description && (
                                   <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{program.program_description}</p>
