@@ -110,6 +110,13 @@ interface LocalRegulation {
   permitRequired?: boolean
 }
 
+interface WaterDistrictData {
+  name: string
+  website?: string
+  phone?: string
+  serviceArea?: string
+}
+
 interface LocationHubViewProps {
   level: 'state' | 'city'
   stateName: string
@@ -124,6 +131,7 @@ interface LocationHubViewProps {
   lastUpdated?: string
   preplumbing?: PreplumbingData | null
   localRegulation?: LocalRegulation | null
+  waterDistrict?: WaterDistrictData | null
 }
 
 // =============================================================================
@@ -289,7 +297,8 @@ export default function LocationHubView({
   cities = [],
   lastUpdated,
   preplumbing,
-  localRegulation
+  localRegulation,
+  waterDistrict
 }: LocationHubViewProps) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
@@ -479,89 +488,291 @@ export default function LocationHubView({
           </div>
         )}
 
-        {/* Quick Navigation Cards */}
-        <div className="grid md:grid-cols-2 gap-4 mb-8">
-          {/* Greywater Card */}
-          <Link
-            href={`${basePath}/greywater`}
-            className="group bg-white rounded-xl border border-gray-200 p-6 hover:border-emerald-300 hover:shadow-md transition-all"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <Droplets className="h-6 w-6 text-emerald-600" />
+        {/* Water District Info */}
+        {waterDistrict && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Droplets className="h-5 w-5 text-blue-600" />
               </div>
-              <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+              <div className="flex-1">
+                <p className="font-semibold text-blue-900 text-sm">Water District</p>
+                <p className="text-blue-800 font-medium">{waterDistrict.name}</p>
+                {waterDistrict.serviceArea && (
+                  <p className="text-xs text-blue-600 mt-1">Service Area: {waterDistrict.serviceArea}</p>
+                )}
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {waterDistrict.phone && (
+                    <a href={`tel:${waterDistrict.phone}`} className="inline-flex items-center gap-1 text-xs text-blue-700 hover:text-blue-800">
+                      <Phone className="h-3 w-3" />
+                      {waterDistrict.phone}
+                    </a>
+                  )}
+                  {waterDistrict.website && (
+                    <a href={waterDistrict.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-700 hover:text-blue-800">
+                      <ExternalLink className="h-3 w-3" />
+                      Website
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-emerald-700">
-              Greywater Regulations
-            </h2>
-            <p className="text-gray-500 text-sm mb-4">
-              {greywater?.legalStatus
-                ? `Greywater is ${greywater.legalStatus.toLowerCase()} in ${locationName}`
-                : `Learn about greywater rules in ${locationName}`
-              }
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {greywater?.permitRequired && (
-                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                  Permit: {greywater.permitRequired}
-                </span>
-              )}
-              {greywater?.permitThresholdGpd && greywater.permitThresholdGpd > 0 && (
-                <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
-                  No permit under {greywater.permitThresholdGpd} GPD
-                </span>
-              )}
-              {incentiveCounts.greywater > 0 && (
-                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-medium">
-                  {incentiveCounts.greywater} rebates
-                </span>
-              )}
-            </div>
-          </Link>
+          </div>
+        )}
 
-          {/* Rainwater Card */}
-          <Link
-            href={`${basePath}/rainwater`}
-            className="group bg-white rounded-xl border border-gray-200 p-6 hover:border-cyan-300 hover:shadow-md transition-all"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center">
-                <CloudRain className="h-6 w-6 text-cyan-600" />
+        {/* Detailed Regulations Section */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          {/* Greywater Regulations */}
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-emerald-50 to-emerald-100/50 px-5 py-4 border-b border-emerald-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center">
+                    <Droplets className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Greywater Regulations</h2>
+                    <p className="text-xs text-gray-500">{stateName} state law {level === 'city' ? '+ local rules' : ''}</p>
+                  </div>
+                </div>
+                <Link
+                  href={`${basePath}/greywater`}
+                  className="text-xs text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
+                >
+                  Full details <ArrowRight className="h-3 w-3" />
+                </Link>
               </div>
-              <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-cyan-700">
-              Rainwater Harvesting
-            </h2>
-            <p className="text-gray-500 text-sm mb-4">
-              {rainwater?.legalStatus
-                ? `Rainwater collection is ${rainwater.legalStatus.toLowerCase()} in ${locationName}`
-                : `Learn about rainwater harvesting rules in ${locationName}`
-              }
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0 ? (
-                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                  Limit: {rainwater.collectionLimitGallons.toLocaleString()} gal
-                </span>
+            <div className="p-5">
+              {/* Status & Key Info */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-xs text-gray-500 mb-1">Legal Status</p>
+                  <p className={`font-semibold ${greywater?.legalStatus?.toLowerCase().includes('legal') ? 'text-emerald-700' : 'text-gray-700'}`}>
+                    {greywater?.legalStatus || 'Varies by jurisdiction'}
+                  </p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-xs text-gray-500 mb-1">Permit Required</p>
+                  <p className="font-semibold text-gray-700">
+                    {greywater?.permitThresholdGpd && greywater.permitThresholdGpd > 0
+                      ? `Over ${greywater.permitThresholdGpd} GPD`
+                      : greywater?.permitRequired || 'Varies'
+                    }
+                  </p>
+                </div>
+              </div>
+
+              {/* Summary */}
+              {greywater?.summary ? (
+                <p className="text-sm text-gray-600 mb-4">{greywater.summary}</p>
               ) : (
-                <span className="text-xs bg-cyan-50 text-cyan-700 px-2 py-1 rounded">
-                  No collection limit
-                </span>
+                <p className="text-sm text-gray-500 mb-4 italic">
+                  {level === 'city' && stateName === 'California'
+                    ? 'California allows greywater systems under the Plumbing Code Chapter 15. Simple laundry-to-landscape systems under 250 GPD typically don\'t require a permit.'
+                    : `Contact your local building department for specific greywater regulations in ${locationName}.`
+                  }
+                </p>
               )}
-              {rainwater?.potableUseAllowed && (
-                <span className="text-xs bg-cyan-50 text-cyan-700 px-2 py-1 rounded">
-                  Potable use allowed
+
+              {/* Allowed Uses */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${greywater?.outdoorUseAllowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {greywater?.outdoorUseAllowed !== false ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                  Outdoor Irrigation
                 </span>
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${greywater?.indoorUseAllowed ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {greywater?.indoorUseAllowed ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                  Indoor Use (Toilet Flushing)
+                </span>
+              </div>
+
+              {/* Governing Code */}
+              {greywater?.governingCode && (
+                <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                  <p className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                    <FileText className="h-3 w-3" /> Governing Code
+                  </p>
+                  <p className="text-sm font-medium text-gray-700">{greywater.governingCode}</p>
+                </div>
               )}
-              {incentiveCounts.rainwater > 0 && (
-                <span className="text-xs bg-cyan-100 text-cyan-700 px-2 py-1 rounded font-medium">
-                  {incentiveCounts.rainwater} rebates
-                </span>
+
+              {/* Approved Uses List */}
+              {greywater?.approvedUses && greywater.approvedUses.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Approved Uses</p>
+                  <div className="flex flex-wrap gap-1">
+                    {greywater.approvedUses.slice(0, 4).map((use, idx) => (
+                      <span key={idx} className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
+                        {use}
+                      </span>
+                    ))}
+                    {greywater.approvedUses.length > 4 && (
+                      <span className="text-xs text-gray-500">+{greywater.approvedUses.length - 4} more</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Key Restrictions */}
+              {greywater?.keyRestrictions && greywater.keyRestrictions.length > 0 && (
+                <div className="border-t border-gray-100 pt-3">
+                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" /> Key Restrictions
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    {greywater.keyRestrictions.slice(0, 3).map((restriction, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-amber-500 mt-0.5">•</span>
+                        <span>{restriction}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Rebates badge */}
+              {incentiveCounts.greywater > 0 && (
+                <div className="mt-4 pt-3 border-t border-gray-100">
+                  <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-medium">
+                    <DollarSign className="h-3 w-3" />
+                    {incentiveCounts.greywater} rebate{incentiveCounts.greywater !== 1 ? 's' : ''} available
+                  </span>
+                </div>
               )}
             </div>
-          </Link>
+          </div>
+
+          {/* Rainwater Regulations */}
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-cyan-50 to-cyan-100/50 px-5 py-4 border-b border-cyan-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center">
+                    <CloudRain className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Rainwater Harvesting</h2>
+                    <p className="text-xs text-gray-500">{stateName} state law {level === 'city' ? '+ local rules' : ''}</p>
+                  </div>
+                </div>
+                <Link
+                  href={`${basePath}/rainwater`}
+                  className="text-xs text-cyan-600 hover:text-cyan-700 font-medium flex items-center gap-1"
+                >
+                  Full details <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+            <div className="p-5">
+              {/* Status & Key Info */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-xs text-gray-500 mb-1">Legal Status</p>
+                  <p className={`font-semibold ${rainwater?.legalStatus?.toLowerCase().includes('legal') ? 'text-cyan-700' : 'text-gray-700'}`}>
+                    {rainwater?.legalStatus || 'Legal in most areas'}
+                  </p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-xs text-gray-500 mb-1">Collection Limit</p>
+                  <p className="font-semibold text-gray-700">
+                    {rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0
+                      ? `${rainwater.collectionLimitGallons.toLocaleString()} gallons`
+                      : 'No limit'
+                    }
+                  </p>
+                </div>
+              </div>
+
+              {/* Summary */}
+              {rainwater?.summary ? (
+                <p className="text-sm text-gray-600 mb-4">{rainwater.summary}</p>
+              ) : (
+                <p className="text-sm text-gray-500 mb-4 italic">
+                  {level === 'city' && stateName === 'California'
+                    ? 'California encourages rainwater harvesting with no permit required for residential collection. Rain barrels and cisterns are allowed without restriction on collection volume.'
+                    : `Rainwater harvesting is generally encouraged in ${locationName}. Check local regulations for specific requirements.`
+                  }
+                </p>
+              )}
+
+              {/* Allowed Uses */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-cyan-100 text-cyan-700">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Outdoor Irrigation
+                </span>
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${rainwater?.potableUseAllowed ? 'bg-cyan-100 text-cyan-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {rainwater?.potableUseAllowed ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                  Potable Use {rainwater?.potableUseAllowed ? '(with treatment)' : '(not allowed)'}
+                </span>
+              </div>
+
+              {/* Governing Code */}
+              {rainwater?.governingCode && (
+                <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                  <p className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                    <FileText className="h-3 w-3" /> Governing Code
+                  </p>
+                  <p className="text-sm font-medium text-gray-700">{rainwater.governingCode}</p>
+                </div>
+              )}
+
+              {/* Tax Incentives */}
+              {rainwater?.taxIncentives && (
+                <div className="bg-cyan-50 rounded-lg p-3 mb-4">
+                  <p className="text-xs text-cyan-600 mb-1 flex items-center gap-1">
+                    <DollarSign className="h-3 w-3" /> Tax Incentives
+                  </p>
+                  <p className="text-sm text-cyan-700">{rainwater.taxIncentives}</p>
+                </div>
+              )}
+
+              {/* Approved Uses List */}
+              {rainwater?.approvedUses && rainwater.approvedUses.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Approved Uses</p>
+                  <div className="flex flex-wrap gap-1">
+                    {rainwater.approvedUses.slice(0, 4).map((use, idx) => (
+                      <span key={idx} className="text-xs bg-cyan-50 text-cyan-700 px-2 py-1 rounded">
+                        {use}
+                      </span>
+                    ))}
+                    {rainwater.approvedUses.length > 4 && (
+                      <span className="text-xs text-gray-500">+{rainwater.approvedUses.length - 4} more</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Key Restrictions */}
+              {rainwater?.keyRestrictions && rainwater.keyRestrictions.length > 0 && (
+                <div className="border-t border-gray-100 pt-3">
+                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" /> Key Restrictions
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    {rainwater.keyRestrictions.slice(0, 3).map((restriction, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-amber-500 mt-0.5">•</span>
+                        <span>{restriction}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Rebates badge */}
+              {incentiveCounts.rainwater > 0 && (
+                <div className="mt-4 pt-3 border-t border-gray-100">
+                  <span className="inline-flex items-center gap-1 text-xs bg-cyan-100 text-cyan-700 px-2 py-1 rounded font-medium">
+                    <DollarSign className="h-3 w-3" />
+                    {incentiveCounts.rainwater} rebate{incentiveCounts.rainwater !== 1 ? 's' : ''} available
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Incentives Section */}
