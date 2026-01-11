@@ -402,38 +402,6 @@ export default function LocationHubView({
           </div>
         )}
 
-        {/* Pre-Plumbing Mandate Alert */}
-        {preplumbing?.hasMandate && (
-          <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Building2 className="h-4 w-4 text-purple-600" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-purple-800 text-sm mb-1">Pre-Plumbing Mandate</p>
-                <p className="text-sm text-purple-700 mb-2">
-                  {preplumbing.details || 'New construction must include greywater-ready plumbing.'}
-                </p>
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  {preplumbing.buildingTypes && (
-                    <p className="text-xs text-purple-600">
-                      <strong>Applies to:</strong> {preplumbing.buildingTypes}
-                    </p>
-                  )}
-                  {preplumbing.thresholdSqft && (
-                    <p className="text-xs text-purple-600">
-                      <strong>Threshold:</strong> {preplumbing.thresholdSqft.toLocaleString()}+ sqft
-                    </p>
-                  )}
-                </div>
-                {preplumbing.codeReference && (
-                  <p className="text-xs text-purple-500 mt-1">{preplumbing.codeReference}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Regulatory Hierarchy Explanation - City Level Only */}
         {level === 'city' && (
           <div className="bg-gradient-to-r from-slate-50 to-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
@@ -628,6 +596,34 @@ export default function LocationHubView({
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+
+              {/* Pre-Plumbing Mandate */}
+              {preplumbing?.hasMandate && (
+                <div className="border-t border-gray-100 pt-3 mt-3">
+                  <div className="bg-purple-50 rounded-lg p-3">
+                    <div className="flex items-start gap-2">
+                      <Building2 className="h-4 w-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-purple-700 uppercase tracking-wide mb-1">Pre-Plumbing Mandate</p>
+                        <p className="text-xs text-purple-600 mb-2">
+                          {preplumbing.details || 'New construction must include greywater-ready plumbing.'}
+                        </p>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-purple-500">
+                          {preplumbing.buildingTypes && (
+                            <span><strong>Applies to:</strong> {preplumbing.buildingTypes}</span>
+                          )}
+                          {preplumbing.thresholdSqft && (
+                            <span><strong>Threshold:</strong> {preplumbing.thresholdSqft.toLocaleString()}+ sqft</span>
+                          )}
+                        </div>
+                        {preplumbing.codeReference && (
+                          <p className="text-xs text-purple-400 mt-1">{preplumbing.codeReference}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
