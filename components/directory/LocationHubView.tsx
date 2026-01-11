@@ -320,49 +320,29 @@ export default function LocationHubView({
         </nav>
 
         {/* Hero Header */}
-        <div className="bg-gradient-to-br from-emerald-50 to-cyan-50 rounded-2xl border border-emerald-100 p-8 mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-3 mb-3">
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
-                  {level === 'city'
-                    ? `Water Conservation in ${cityName}, ${stateCode}`
-                    : `${stateName} Water Regulations`
-                  }
-                </h1>
-              </div>
-              <p className="text-gray-600 text-lg mb-4">
-                {level === 'city'
-                  ? `Complete guide to greywater, rainwater harvesting, and rebates in ${cityName}`
-                  : `Greywater laws, rainwater harvesting rules, and water conservation programs across ${stateName}`
-                }
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <DataConfidenceBadge confidence={getDataConfidence(greywater)} />
-                {lastUpdated && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs text-gray-500 bg-white border border-gray-200">
-                    <Clock className="h-3 w-3" />
-                    Updated {new Date(lastUpdated).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="flex gap-4">
-              {incentiveCounts.total > 0 && (
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-emerald-100 text-center min-w-[120px]">
-                  <p className="text-3xl font-bold text-emerald-600">{incentiveCounts.total}</p>
-                  <p className="text-sm text-gray-500">Rebate Programs</p>
-                </div>
-              )}
-              {maxRebate > 0 && (
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-emerald-100 text-center min-w-[120px]">
-                  <p className="text-3xl font-bold text-emerald-600">${maxRebate.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">Max Rebate</p>
-                </div>
-              )}
-            </div>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
+              {level === 'city'
+                ? `Water Conservation in ${cityName}, ${stateCode}`
+                : `${stateName} Water Regulations`
+              }
+            </h1>
+          </div>
+          <p className="text-gray-600 text-lg mb-4">
+            {level === 'city'
+              ? `Complete guide to greywater, rainwater harvesting, and rebates in ${cityName}`
+              : `Greywater laws, rainwater harvesting rules, and water conservation programs across ${stateName}`
+            }
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <DataConfidenceBadge confidence={getDataConfidence(greywater)} />
+            {lastUpdated && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs text-gray-500 bg-gray-100 border border-gray-200">
+                <Clock className="h-3 w-3" />
+                Updated {new Date(lastUpdated).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+              </span>
+            )}
           </div>
         </div>
 
