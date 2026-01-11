@@ -36,6 +36,31 @@ interface IncentiveProgram {
   incentive_url?: string
   program_description?: string
   water_utility?: string
+  residential_eligible?: boolean | string
+  commercial_eligible?: boolean | string
+}
+
+type ProgramType = 'rebate' | 'grant' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
+
+const ProgramTypeBadge = ({ type }: { type: ProgramType }) => {
+  const config: Record<ProgramType, { label: string; className: string }> = {
+    rebate: { label: 'Rebate', className: 'bg-green-100 text-green-800' },
+    grant: { label: 'Grant', className: 'bg-purple-100 text-purple-800' },
+    loan: { label: 'Loan', className: 'bg-blue-100 text-blue-800' },
+    tax_credit: { label: 'Tax Credit', className: 'bg-indigo-100 text-indigo-800' },
+    tax_exemption: { label: 'Tax Exemption', className: 'bg-indigo-100 text-indigo-800' },
+    subsidy: { label: 'Subsidy', className: 'bg-amber-100 text-amber-800' },
+    free_installation: { label: 'Free Install', className: 'bg-pink-100 text-pink-800' },
+    permit_waiver: { label: 'Permit Waiver', className: 'bg-gray-100 text-gray-800' },
+    education: { label: 'Education', className: 'bg-sky-100 text-sky-800' },
+    various: { label: 'Multiple', className: 'bg-gray-100 text-gray-700' }
+  }
+  const { label, className } = config[type] || { label: type, className: 'bg-gray-100 text-gray-700' }
+  return (
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${className}`}>
+      {label}
+    </span>
+  )
 }
 
 interface LocalRegulation {
@@ -307,13 +332,16 @@ export default function RainwaterSpokeView({
                 <div className="bg-cyan-50 px-5 py-4 border-b border-cyan-100">
                   <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                     <DollarSign className="h-5 w-5 text-cyan-600" />
-                    Rainwater Rebates
+                    Rainwater Incentives
                   </h3>
                 </div>
                 <div className="divide-y divide-gray-100">
                   {rainwaterIncentives.slice(0, 3).map((incentive, idx) => (
                     <div key={idx} className="p-4">
-                      <p className="font-medium text-gray-900 text-sm">{incentive.program_name}</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium text-gray-900 text-sm">{incentive.program_name}</p>
+                        <ProgramTypeBadge type={(incentive.incentive_type as ProgramType) || 'rebate'} />
+                      </div>
                       {incentive.incentive_amount_max && (
                         <p className="text-lg font-bold text-cyan-600 mt-1">
                           Up to ${incentive.incentive_amount_max.toLocaleString()}
@@ -338,7 +366,7 @@ export default function RainwaterSpokeView({
                       href={basePath}
                       className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
                     >
-                      View all {rainwaterIncentives.length} rebates
+                      View all {rainwaterIncentives.length} programs
                     </Link>
                   </div>
                 )}

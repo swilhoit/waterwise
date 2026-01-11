@@ -140,6 +140,65 @@ const ResourceTypeBadge = ({ type }: { type: 'greywater' | 'rainwater' | 'conser
   )
 }
 
+type ProgramType = 'rebate' | 'grant' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
+
+const ProgramTypeBadge = ({ type }: { type: ProgramType }) => {
+  const config: Record<ProgramType, { label: string; className: string }> = {
+    rebate: { label: 'Rebate', className: 'bg-green-100 text-green-800' },
+    grant: { label: 'Grant', className: 'bg-purple-100 text-purple-800' },
+    loan: { label: 'Low-Interest Loan', className: 'bg-blue-100 text-blue-800' },
+    tax_credit: { label: 'Tax Credit', className: 'bg-indigo-100 text-indigo-800' },
+    tax_exemption: { label: 'Tax Exemption', className: 'bg-indigo-100 text-indigo-800' },
+    subsidy: { label: 'Subsidy', className: 'bg-amber-100 text-amber-800' },
+    free_installation: { label: 'Free Install', className: 'bg-pink-100 text-pink-800' },
+    permit_waiver: { label: 'Permit Waiver', className: 'bg-gray-100 text-gray-800' },
+    education: { label: 'Education', className: 'bg-sky-100 text-sky-800' },
+    various: { label: 'Multiple', className: 'bg-gray-100 text-gray-700' }
+  }
+  const { label, className } = config[type] || { label: type, className: 'bg-gray-100 text-gray-700' }
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${className}`}>
+      {label}
+    </span>
+  )
+}
+
+const EligibilityBadges = ({ residential, commercial }: { residential?: boolean | string; commercial?: boolean | string }) => {
+  const isResidential = residential === true || residential === 'true'
+  const isCommercial = commercial === true || commercial === 'true'
+
+  if (!isResidential && !isCommercial) return null
+
+  return (
+    <div className="flex gap-1">
+      {isResidential && (
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+          Residential
+        </span>
+      )}
+      {isCommercial && (
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-200">
+          Commercial
+        </span>
+      )}
+    </div>
+  )
+}
+
+const getProgramAmountLabel = (type?: string): string => {
+  const typeMap: Record<string, string> = {
+    rebate: 'max rebate',
+    grant: 'max grant',
+    loan: 'loan amount',
+    tax_credit: 'tax credit',
+    tax_exemption: 'exemption value',
+    subsidy: 'max subsidy',
+    free_installation: 'value',
+    various: 'max amount'
+  }
+  return typeMap[type || 'rebate'] || 'max amount'
+}
+
 // =============================================================================
 // MAIN COMPONENT
 // =============================================================================
@@ -397,44 +456,53 @@ export default function LocationHubView({
                 </span>
               </div>
               <p className="text-sm text-gray-600 mt-1">
-                Water conservation rebates available to {locationName} residents
+                Rebates, grants, tax credits, and other incentives for {locationName} residents and businesses
               </p>
             </div>
 
             <div className="divide-y divide-gray-100">
               {(showAllIncentives ? incentives : incentives.slice(0, 5)).map((program, idx) => (
-                <div key={idx} className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium text-gray-900 truncate">{program.program_name}</p>
-                      <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
-                    </div>
-                    {program.program_description && (
-                      <p className="text-sm text-gray-500 truncate">{program.program_description}</p>
-                    )}
-                    {program.water_utility && (
-                      <p className="text-xs text-gray-400 mt-1">via {program.water_utility}</p>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-4 flex-shrink-0">
-                    {program.incentive_amount_max && (
-                      <div className="text-right">
-                        <p className="text-lg font-semibold text-emerald-600">
-                          ${program.incentive_amount_max.toLocaleString()}
-                        </p>
-                        <p className="text-xs text-gray-400">max rebate</p>
+                <div key={idx} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                        <p className="font-medium text-gray-900">{program.program_name}</p>
+                        <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
+                        <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
                       </div>
-                    )}
-                    {program.incentive_url && (
-                      <a
-                        href={program.incentive_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-                      >
-                        Apply <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
-                    )}
+                      {program.program_description && (
+                        <p className="text-sm text-gray-500 line-clamp-2 mb-2">{program.program_description}</p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-3">
+                        <EligibilityBadges
+                          residential={program.residential_eligible}
+                          commercial={program.commercial_eligible}
+                        />
+                        {program.water_utility && (
+                          <span className="text-xs text-gray-400">via {program.water_utility}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 flex-shrink-0">
+                      {program.incentive_amount_max && (
+                        <div className="text-right">
+                          <p className="text-lg font-semibold text-emerald-600">
+                            ${program.incentive_amount_max.toLocaleString()}
+                          </p>
+                          <p className="text-xs text-gray-400">{getProgramAmountLabel(program.incentive_type)}</p>
+                        </div>
+                      )}
+                      {program.incentive_url && (
+                        <a
+                          href={program.incentive_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                        >
+                          Apply <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -446,7 +514,7 @@ export default function LocationHubView({
                   onClick={() => setShowAllIncentives(!showAllIncentives)}
                   className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
                 >
-                  {showAllIncentives ? 'Show fewer' : `View all ${incentives.length} rebate programs`}
+                  {showAllIncentives ? 'Show fewer' : `View all ${incentives.length} programs`}
                 </button>
               </div>
             )}
