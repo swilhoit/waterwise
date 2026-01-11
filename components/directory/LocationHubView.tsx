@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
-  ChevronRight, Search, ExternalLink, Phone, Building2,
+  ChevronRight, ChevronDown, Search, ExternalLink, Phone, Building2,
   Droplets, CloudRain, DollarSign, Leaf, MapPin,
-  CheckCircle2, AlertCircle, HelpCircle, Clock, ArrowRight
+  CheckCircle2, AlertCircle, HelpCircle, Clock, ArrowRight,
+  FileText, ClipboardList, Wrench, Timer, Users, Home, BadgeCheck
 } from 'lucide-react'
 
 // =============================================================================
@@ -51,11 +52,40 @@ interface IncentiveProgram {
   program_subtype?: string
   incentive_amount_min?: number
   incentive_amount_max?: number
+  incentive_per_unit?: string
   incentive_url?: string
   program_description?: string
   water_utility?: string
   residential_eligible?: boolean | string
   commercial_eligible?: boolean | string
+  // Eligibility details
+  eligibility_details?: string
+  property_requirements?: string
+  income_requirements?: string
+  // How to apply
+  how_to_apply?: string
+  steps_to_apply?: string
+  documentation_required?: string
+  pre_approval_required?: boolean | string
+  processing_time?: string
+  // Requirements
+  installation_requirements?: string
+  contractor_requirements?: string
+  product_requirements?: string
+  inspection_required?: boolean | string
+  timeline_to_complete?: string
+  // Reimbursement
+  reimbursement_process?: string
+  restrictions?: string
+  // Stacking
+  stacking_allowed?: boolean | string
+  stacking_details?: string
+  // Contact
+  contact_email?: string
+  contact_phone?: string
+  coverage_area?: string
+  deadline_info?: string
+  program_end_date?: string
 }
 
 interface CityItem {
@@ -220,10 +250,20 @@ export default function LocationHubView({
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
-  const [showAllIncentives, setShowAllIncentives] = useState(false)
-  const [programTypeFilter, setProgramTypeFilter] = useState<string>('all')
-  const [eligibilityFilter, setEligibilityFilter] = useState<string>('all')
+  const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set())
   const INITIAL_CITIES = 30
+
+  const toggleProgram = (programId: string) => {
+    setExpandedPrograms(prev => {
+      const next = new Set(prev)
+      if (next.has(programId)) {
+        next.delete(programId)
+      } else {
+        next.add(programId)
+      }
+      return next
+    })
+  }
 
   const locationName = level === 'city' ? cityName : stateName
   const basePath = level === 'city'
@@ -246,61 +286,8 @@ export default function LocationHubView({
   // Filter out grants - only show rebates for homeowners and small businesses
   const relevantIncentives = incentives.filter(i => i.incentive_type !== 'grant')
 
-  // Count by program type
-  const programTypeCounts = relevantIncentives.reduce((acc, i) => {
-    const type = i.incentive_type || 'other'
-    acc[type] = (acc[type] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
-  // Filter incentives based on selected filters
-  const filteredIncentives = relevantIncentives.filter(program => {
-    // Program type filter
-    if (programTypeFilter !== 'all' && program.incentive_type !== programTypeFilter) {
-      return false
-    }
-    // Eligibility filter
-    if (eligibilityFilter === 'residential') {
-      const isResidential = program.residential_eligible === true || program.residential_eligible === 'true'
-      if (!isResidential) return false
-    }
-    if (eligibilityFilter === 'commercial') {
-      const isCommercial = program.commercial_eligible === true || program.commercial_eligible === 'true'
-      if (!isCommercial) return false
-    }
-    return true
-  })
-
-  // Group filtered incentives by program type
-  const groupedIncentives = filteredIncentives.reduce((acc, program) => {
-    const type = program.incentive_type || 'other'
-    if (!acc[type]) acc[type] = []
-    acc[type].push(program)
-    return acc
-  }, {} as Record<string, IncentiveProgram[]>)
-
-  // Order for program type groups (grants excluded)
-  const programTypeOrder = ['rebate', 'tax_credit', 'tax_exemption', 'loan', 'subsidy', 'free_installation', 'permit_waiver', 'education', 'various', 'other']
-  const sortedGroupKeys = Object.keys(groupedIncentives).sort(
-    (a, b) => programTypeOrder.indexOf(a) - programTypeOrder.indexOf(b)
-  )
-
   // Max rebate amount
   const maxRebate = Math.max(...incentives.map(i => i.incentive_amount_max || 0), 0)
-
-  // Program type display names
-  const programTypeLabels: Record<string, string> = {
-    rebate: 'Rebates',
-    loan: 'Loans',
-    tax_credit: 'Tax Credits',
-    tax_exemption: 'Tax Exemptions',
-    subsidy: 'Subsidies',
-    free_installation: 'Free Installation Programs',
-    permit_waiver: 'Permit Waivers',
-    education: 'Educational Programs',
-    various: 'Multiple Types',
-    other: 'Other Programs'
-  }
 
   return (
     <div className="bg-white min-h-screen">
@@ -487,10 +474,10 @@ export default function LocationHubView({
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-emerald-600" />
-                  Available Incentives
+                  Available Rebates & Incentives
                 </h2>
                 <span className="text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">
-                  {filteredIncentives.length} of {relevantIncentives.length} programs
+                  {relevantIncentives.length} programs
                 </span>
               </div>
               <p className="text-sm text-gray-600">
@@ -498,173 +485,292 @@ export default function LocationHubView({
               </p>
             </div>
 
-            {/* Filters */}
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <div className="flex flex-wrap gap-4">
-                {/* Program Type Filter */}
-                <div className="flex-1 min-w-[200px]">
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Program Type</label>
-                  <select
-                    value={programTypeFilter}
-                    onChange={(e) => setProgramTypeFilter(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  >
-                    <option value="all">All Types ({relevantIncentives.length})</option>
-                    {programTypeOrder.map(type => {
-                      const count = programTypeCounts[type]
-                      if (!count) return null
-                      return (
-                        <option key={type} value={type}>
-                          {programTypeLabels[type] || type} ({count})
-                        </option>
+            {/* Programs Table */}
+            <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-8"></th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Program</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Type</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Eligibility</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Provider</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {relevantIncentives.map((program, idx) => {
+                      const programId = `table-${idx}-${program.program_name}`
+                      const isExpanded = expandedPrograms.has(programId)
+                      const hasDetails = !!(
+                        program.eligibility_details ||
+                        program.how_to_apply ||
+                        program.steps_to_apply ||
+                        program.documentation_required ||
+                        program.installation_requirements ||
+                        program.contractor_requirements ||
+                        program.property_requirements ||
+                        program.reimbursement_process ||
+                        program.restrictions ||
+                        program.stacking_details ||
+                        program.contact_email ||
+                        program.contact_phone
                       )
-                    })}
-                  </select>
-                </div>
 
-                {/* Eligibility Filter */}
-                <div className="flex-1 min-w-[200px]">
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Eligibility</label>
-                  <select
-                    value={eligibilityFilter}
-                    onChange={(e) => setEligibilityFilter(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  >
-                    <option value="all">All (Residential & Commercial)</option>
-                    <option value="residential">Residential Only</option>
-                    <option value="commercial">Commercial Only</option>
-                  </select>
-                </div>
-              </div>
+                      return (
+                        <React.Fragment key={idx}>
+                          {/* Main Row */}
+                          <tr
+                            className={`${hasDetails ? 'cursor-pointer' : ''} hover:bg-gray-50 transition-colors ${isExpanded ? 'bg-emerald-50' : ''}`}
+                            onClick={() => hasDetails && toggleProgram(programId)}
+                          >
+                            {/* Expand Icon */}
+                            <td className="px-4 py-4">
+                              {hasDetails && (
+                                <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180 text-emerald-600' : ''}`} />
+                              )}
+                            </td>
 
-              {/* Quick Filter Pills */}
-              <div className="flex flex-wrap gap-2 mt-3">
-                {programTypeOrder.map(type => {
-                  const count = programTypeCounts[type]
-                  if (!count) return null
-                  const isActive = programTypeFilter === type
-                  return (
-                    <button
-                      key={type}
-                      onClick={() => setProgramTypeFilter(isActive ? 'all' : type)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                        isActive
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-white border border-gray-200 text-gray-600 hover:border-emerald-300 hover:text-emerald-700'
-                      }`}
-                    >
-                      {programTypeLabels[type] || type} ({count})
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Grouped Programs */}
-            {filteredIncentives.length === 0 ? (
-              <div className="px-6 py-12 text-center">
-                <p className="text-gray-500">No programs match your filters.</p>
-                <button
-                  onClick={() => { setProgramTypeFilter('all'); setEligibilityFilter('all'); }}
-                  className="mt-2 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
-                >
-                  Clear filters
-                </button>
-              </div>
-            ) : (
-              <div>
-                {sortedGroupKeys.map((groupType, groupIdx) => {
-                  const programs = groupedIncentives[groupType]
-                  if (!programs || programs.length === 0) return null
-
-                  // Get color scheme for this program type
-                  const colorSchemes: Record<string, { bg: string; border: string; text: string; icon: string }> = {
-                    rebate: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800', icon: 'text-green-600' },
-                    loan: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800', icon: 'text-blue-600' },
-                    tax_credit: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', icon: 'text-indigo-600' },
-                    tax_exemption: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', icon: 'text-indigo-600' },
-                    subsidy: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-800', icon: 'text-amber-600' },
-                    free_installation: { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-800', icon: 'text-pink-600' },
-                    permit_waiver: { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-800', icon: 'text-gray-600' },
-                    education: { bg: 'bg-sky-50', border: 'border-sky-200', text: 'text-sky-800', icon: 'text-sky-600' },
-                  }
-                  const colors = colorSchemes[groupType] || { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-800', icon: 'text-gray-600' }
-
-                  return (
-                    <div key={groupType} className={groupIdx > 0 ? 'border-t-4 border-gray-100' : ''}>
-                      {/* Group Header */}
-                      <div className={`px-6 py-3 ${colors.bg} border-b ${colors.border}`}>
-                        <h3 className={`font-semibold ${colors.text} flex items-center gap-2`}>
-                          <DollarSign className={`h-4 w-4 ${colors.icon}`} />
-                          {programTypeLabels[groupType] || groupType}
-                          <span className="text-xs font-normal opacity-75">({programs.length})</span>
-                        </h3>
-                      </div>
-
-                      {/* Programs in this group */}
-                      <div className="divide-y divide-gray-100">
-                        {programs.map((program, idx) => (
-                          <div key={idx} className="px-6 py-4 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                                  <p className="font-medium text-gray-900">{program.program_name}</p>
-                                  <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
+                            {/* Program Name & Description */}
+                            <td className="px-4 py-4">
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-900">{program.program_name}</span>
+                                  <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
                                 </div>
                                 {program.program_description && (
-                                  <p className="text-sm text-gray-500 line-clamp-2 mb-2">{program.program_description}</p>
+                                  <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{program.program_description}</p>
                                 )}
-                                <div className="flex flex-wrap items-center gap-3">
-                                  <EligibilityBadges
-                                    residential={program.residential_eligible}
-                                    commercial={program.commercial_eligible}
-                                  />
-                                  {program.water_utility && (
-                                    <span className="text-xs text-gray-400">via {program.water_utility}</span>
-                                  )}
+                                {program.deadline_info && (
+                                  <span className="text-xs text-amber-600 font-medium">⏰ {program.deadline_info}</span>
+                                )}
+                                {/* Mobile-only badges */}
+                                <div className="flex flex-wrap gap-1 md:hidden mt-1">
+                                  <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
+                                  <EligibilityBadges residential={program.residential_eligible} commercial={program.commercial_eligible} />
                                 </div>
                               </div>
-                              <div className="flex items-center gap-4 flex-shrink-0">
-                                {program.incentive_amount_max && (
-                                  <div className="text-right">
-                                    <p className="text-lg font-semibold text-emerald-600">
-                                      ${program.incentive_amount_max.toLocaleString()}
-                                    </p>
-                                    <p className="text-xs text-gray-400">{getProgramAmountLabel(program.incentive_type)}</p>
-                                  </div>
-                                )}
-                                {program.incentive_url && (
-                                  <a
-                                    href={program.incentive_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-                                  >
-                                    Apply <ExternalLink className="h-3.5 w-3.5" />
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+                            </td>
 
-            {/* Footer with reset */}
-            {(programTypeFilter !== 'all' || eligibilityFilter !== 'all') && (
-              <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 text-center">
-                <button
-                  onClick={() => { setProgramTypeFilter('all'); setEligibilityFilter('all'); }}
-                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
-                >
-                  Clear filters and show all {relevantIncentives.length} programs
-                </button>
+                            {/* Resource Type */}
+                            <td className="px-4 py-4 hidden md:table-cell">
+                              <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
+                            </td>
+
+                            {/* Eligibility */}
+                            <td className="px-4 py-4 hidden lg:table-cell">
+                              <EligibilityBadges residential={program.residential_eligible} commercial={program.commercial_eligible} />
+                            </td>
+
+                            {/* Provider */}
+                            <td className="px-4 py-4 hidden lg:table-cell">
+                              <span className="text-sm text-gray-600">{program.water_utility || '—'}</span>
+                            </td>
+
+                            {/* Amount */}
+                            <td className="px-4 py-4 text-right">
+                              {program.incentive_amount_max ? (
+                                <div>
+                                  <span className="font-semibold text-emerald-600">${program.incentive_amount_max.toLocaleString()}</span>
+                                  {program.incentive_per_unit && (
+                                    <p className="text-xs text-gray-400">{program.incentive_per_unit}</p>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-gray-400">—</span>
+                              )}
+                            </td>
+
+                            {/* Apply Button */}
+                            <td className="px-4 py-4 text-center">
+                              {program.incentive_url ? (
+                                <a
+                                  href={program.incentive_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors"
+                                >
+                                  Apply <ExternalLink className="h-3 w-3" />
+                                </a>
+                              ) : (
+                                <span className="text-gray-400 text-xs">—</span>
+                              )}
+                            </td>
+                          </tr>
+
+                          {/* Expanded Details Row */}
+                          {isExpanded && hasDetails && (
+                            <tr className="bg-gray-50">
+                              <td colSpan={7} className="px-4 py-0">
+                                <div className="py-4 border-t border-gray-100">
+                                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {/* Eligibility Details */}
+                                    {program.eligibility_details && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <Users className="h-3.5 w-3.5 text-blue-600" />
+                                          Who's Eligible
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.eligibility_details}</p>
+                                      </div>
+                                    )}
+
+                                    {/* How to Apply */}
+                                    {(program.how_to_apply || program.steps_to_apply) && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <ClipboardList className="h-3.5 w-3.5 text-emerald-600" />
+                                          How to Apply
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.steps_to_apply || program.how_to_apply}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Documentation */}
+                                    {program.documentation_required && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <FileText className="h-3.5 w-3.5 text-indigo-600" />
+                                          Documentation Required
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.documentation_required}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Property Requirements */}
+                                    {program.property_requirements && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <Home className="h-3.5 w-3.5 text-purple-600" />
+                                          Property Requirements
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.property_requirements}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Installation Requirements */}
+                                    {program.installation_requirements && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <Wrench className="h-3.5 w-3.5 text-orange-600" />
+                                          Installation Requirements
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.installation_requirements}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Contractor Requirements */}
+                                    {program.contractor_requirements && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <BadgeCheck className="h-3.5 w-3.5 text-teal-600" />
+                                          Contractor Requirements
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.contractor_requirements}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Timeline */}
+                                    {(program.processing_time || program.timeline_to_complete) && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <Timer className="h-3.5 w-3.5 text-amber-600" />
+                                          Timeline
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.processing_time || program.timeline_to_complete}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Reimbursement */}
+                                    {program.reimbursement_process && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <DollarSign className="h-3.5 w-3.5 text-green-600" />
+                                          Reimbursement Process
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.reimbursement_process}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Restrictions */}
+                                    {program.restrictions && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <AlertCircle className="h-3.5 w-3.5 text-red-600" />
+                                          Restrictions
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.restrictions}</p>
+                                      </div>
+                                    )}
+
+                                    {/* Stacking */}
+                                    {program.stacking_details && (
+                                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                        <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                          <Leaf className="h-3.5 w-3.5 text-emerald-600" />
+                                          Stacking Programs
+                                        </h4>
+                                        <p className="text-sm text-gray-600">{program.stacking_details}</p>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Footer with Contact & Badges */}
+                                  <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-4 border-t border-gray-200">
+                                    <div className="flex flex-wrap items-center gap-3">
+                                      {(program.pre_approval_required === true || program.pre_approval_required === 'true') && (
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded">
+                                          ⚠️ Pre-approval required
+                                        </span>
+                                      )}
+                                      {(program.inspection_required === true || program.inspection_required === 'true') && (
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                          🔍 Inspection required
+                                        </span>
+                                      )}
+                                      {program.coverage_area && (
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">
+                                          📍 {program.coverage_area}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                      {program.contact_phone && (
+                                        <a href={`tel:${program.contact_phone}`} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-emerald-600">
+                                          <Phone className="h-4 w-4" />
+                                          {program.contact_phone}
+                                        </a>
+                                      )}
+                                      {program.contact_email && (
+                                        <a href={`mailto:${program.contact_email}`} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-emerald-600">
+                                          <ExternalLink className="h-4 w-4" />
+                                          {program.contact_email}
+                                        </a>
+                                      )}
+                                      {program.incentive_url && (
+                                        <a
+                                          href={program.incentive_url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                                        >
+                                          Apply Now <ArrowRight className="h-4 w-4" />
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      )
+                    })}
+                  </tbody>
+                </table>
               </div>
-            )}
           </div>
         )}
 
