@@ -54,8 +54,8 @@ interface IncentiveProgram {
   incentive_url?: string
   program_description?: string
   water_utility?: string
-  residential_eligible?: boolean
-  commercial_eligible?: boolean
+  residential_eligible?: boolean | string
+  commercial_eligible?: boolean | string
 }
 
 interface CityItem {
@@ -222,6 +222,8 @@ export default function LocationHubView({
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
   const [showAllIncentives, setShowAllIncentives] = useState(false)
+  const [programTypeFilter, setProgramTypeFilter] = useState<string>('all')
+  const [eligibilityFilter, setEligibilityFilter] = useState<string>('all')
   const INITIAL_CITIES = 30
 
   const locationName = level === 'city' ? cityName : stateName
@@ -234,7 +236,7 @@ export default function LocationHubView({
     c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
   ).sort((a, b) => (a.city_name || '').localeCompare(b.city_name || ''))
 
-  // Count incentives by type
+  // Count incentives by resource type
   const incentiveCounts = {
     greywater: incentives.filter(i => i.resource_type === 'greywater').length,
     rainwater: incentives.filter(i => i.resource_type === 'rainwater').length,
@@ -242,8 +244,62 @@ export default function LocationHubView({
     total: incentives.length
   }
 
+  // Count by program type
+  const programTypeCounts = incentives.reduce((acc, i) => {
+    const type = i.incentive_type || 'other'
+    acc[type] = (acc[type] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  // Filter incentives based on selected filters
+  const filteredIncentives = incentives.filter(program => {
+    // Program type filter
+    if (programTypeFilter !== 'all' && program.incentive_type !== programTypeFilter) {
+      return false
+    }
+    // Eligibility filter
+    if (eligibilityFilter === 'residential') {
+      const isResidential = program.residential_eligible === true || program.residential_eligible === 'true'
+      if (!isResidential) return false
+    }
+    if (eligibilityFilter === 'commercial') {
+      const isCommercial = program.commercial_eligible === true || program.commercial_eligible === 'true'
+      if (!isCommercial) return false
+    }
+    return true
+  })
+
+  // Group filtered incentives by program type
+  const groupedIncentives = filteredIncentives.reduce((acc, program) => {
+    const type = program.incentive_type || 'other'
+    if (!acc[type]) acc[type] = []
+    acc[type].push(program)
+    return acc
+  }, {} as Record<string, IncentiveProgram[]>)
+
+  // Order for program type groups
+  const programTypeOrder = ['rebate', 'grant', 'tax_credit', 'tax_exemption', 'loan', 'subsidy', 'free_installation', 'permit_waiver', 'education', 'various', 'other']
+  const sortedGroupKeys = Object.keys(groupedIncentives).sort(
+    (a, b) => programTypeOrder.indexOf(a) - programTypeOrder.indexOf(b)
+  )
+
   // Max rebate amount
   const maxRebate = Math.max(...incentives.map(i => i.incentive_amount_max || 0), 0)
+
+  // Program type display names
+  const programTypeLabels: Record<string, string> = {
+    rebate: 'Rebates',
+    grant: 'Grants',
+    loan: 'Loans',
+    tax_credit: 'Tax Credits',
+    tax_exemption: 'Tax Exemptions',
+    subsidy: 'Subsidies',
+    free_installation: 'Free Installation Programs',
+    permit_waiver: 'Permit Waivers',
+    education: 'Educational Programs',
+    various: 'Multiple Types',
+    other: 'Other Programs'
+  }
 
   return (
     <div className="bg-white min-h-screen">
@@ -442,79 +498,190 @@ export default function LocationHubView({
           </Link>
         </div>
 
-        {/* Rebates Section */}
+        {/* Incentives Section */}
         {incentives.length > 0 && (
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-8">
+            {/* Header */}
             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-emerald-600" />
-                  Available Rebates & Incentives
+                  Available Incentives
                 </h2>
                 <span className="text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">
-                  {incentives.length} programs
+                  {filteredIncentives.length} of {incentives.length} programs
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600">
                 Rebates, grants, tax credits, and other incentives for {locationName} residents and businesses
               </p>
             </div>
 
-            <div className="divide-y divide-gray-100">
-              {(showAllIncentives ? incentives : incentives.slice(0, 5)).map((program, idx) => (
-                <div key={idx} className="px-6 py-4 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                        <p className="font-medium text-gray-900">{program.program_name}</p>
-                        <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
-                        <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
-                      </div>
-                      {program.program_description && (
-                        <p className="text-sm text-gray-500 line-clamp-2 mb-2">{program.program_description}</p>
-                      )}
-                      <div className="flex flex-wrap items-center gap-3">
-                        <EligibilityBadges
-                          residential={program.residential_eligible}
-                          commercial={program.commercial_eligible}
-                        />
-                        {program.water_utility && (
-                          <span className="text-xs text-gray-400">via {program.water_utility}</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 flex-shrink-0">
-                      {program.incentive_amount_max && (
-                        <div className="text-right">
-                          <p className="text-lg font-semibold text-emerald-600">
-                            ${program.incentive_amount_max.toLocaleString()}
-                          </p>
-                          <p className="text-xs text-gray-400">{getProgramAmountLabel(program.incentive_type)}</p>
-                        </div>
-                      )}
-                      {program.incentive_url && (
-                        <a
-                          href={program.incentive_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-                        >
-                          Apply <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
+            {/* Filters */}
+            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <div className="flex flex-wrap gap-4">
+                {/* Program Type Filter */}
+                <div className="flex-1 min-w-[200px]">
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Program Type</label>
+                  <select
+                    value={programTypeFilter}
+                    onChange={(e) => setProgramTypeFilter(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    <option value="all">All Types ({incentives.length})</option>
+                    {programTypeOrder.map(type => {
+                      const count = programTypeCounts[type]
+                      if (!count) return null
+                      return (
+                        <option key={type} value={type}>
+                          {programTypeLabels[type] || type} ({count})
+                        </option>
+                      )
+                    })}
+                  </select>
                 </div>
-              ))}
+
+                {/* Eligibility Filter */}
+                <div className="flex-1 min-w-[200px]">
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Eligibility</label>
+                  <select
+                    value={eligibilityFilter}
+                    onChange={(e) => setEligibilityFilter(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    <option value="all">All (Residential & Commercial)</option>
+                    <option value="residential">Residential Only</option>
+                    <option value="commercial">Commercial Only</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Quick Filter Pills */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {programTypeOrder.map(type => {
+                  const count = programTypeCounts[type]
+                  if (!count) return null
+                  const isActive = programTypeFilter === type
+                  return (
+                    <button
+                      key={type}
+                      onClick={() => setProgramTypeFilter(isActive ? 'all' : type)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                        isActive
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-white border border-gray-200 text-gray-600 hover:border-emerald-300 hover:text-emerald-700'
+                      }`}
+                    >
+                      {programTypeLabels[type] || type} ({count})
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
-            {incentives.length > 5 && (
+            {/* Grouped Programs */}
+            {filteredIncentives.length === 0 ? (
+              <div className="px-6 py-12 text-center">
+                <p className="text-gray-500">No programs match your filters.</p>
+                <button
+                  onClick={() => { setProgramTypeFilter('all'); setEligibilityFilter('all'); }}
+                  className="mt-2 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div>
+                {sortedGroupKeys.map((groupType, groupIdx) => {
+                  const programs = groupedIncentives[groupType]
+                  if (!programs || programs.length === 0) return null
+
+                  // Get color scheme for this program type
+                  const colorSchemes: Record<string, { bg: string; border: string; text: string; icon: string }> = {
+                    rebate: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800', icon: 'text-green-600' },
+                    grant: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-800', icon: 'text-purple-600' },
+                    loan: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800', icon: 'text-blue-600' },
+                    tax_credit: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', icon: 'text-indigo-600' },
+                    tax_exemption: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', icon: 'text-indigo-600' },
+                    subsidy: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-800', icon: 'text-amber-600' },
+                    free_installation: { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-800', icon: 'text-pink-600' },
+                    permit_waiver: { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-800', icon: 'text-gray-600' },
+                    education: { bg: 'bg-sky-50', border: 'border-sky-200', text: 'text-sky-800', icon: 'text-sky-600' },
+                  }
+                  const colors = colorSchemes[groupType] || { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-800', icon: 'text-gray-600' }
+
+                  return (
+                    <div key={groupType} className={groupIdx > 0 ? 'border-t-4 border-gray-100' : ''}>
+                      {/* Group Header */}
+                      <div className={`px-6 py-3 ${colors.bg} border-b ${colors.border}`}>
+                        <h3 className={`font-semibold ${colors.text} flex items-center gap-2`}>
+                          <DollarSign className={`h-4 w-4 ${colors.icon}`} />
+                          {programTypeLabels[groupType] || groupType}
+                          <span className="text-xs font-normal opacity-75">({programs.length})</span>
+                        </h3>
+                      </div>
+
+                      {/* Programs in this group */}
+                      <div className="divide-y divide-gray-100">
+                        {programs.map((program, idx) => (
+                          <div key={idx} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                                  <p className="font-medium text-gray-900">{program.program_name}</p>
+                                  <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
+                                </div>
+                                {program.program_description && (
+                                  <p className="text-sm text-gray-500 line-clamp-2 mb-2">{program.program_description}</p>
+                                )}
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <EligibilityBadges
+                                    residential={program.residential_eligible}
+                                    commercial={program.commercial_eligible}
+                                  />
+                                  {program.water_utility && (
+                                    <span className="text-xs text-gray-400">via {program.water_utility}</span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4 flex-shrink-0">
+                                {program.incentive_amount_max && (
+                                  <div className="text-right">
+                                    <p className="text-lg font-semibold text-emerald-600">
+                                      ${program.incentive_amount_max.toLocaleString()}
+                                    </p>
+                                    <p className="text-xs text-gray-400">{getProgramAmountLabel(program.incentive_type)}</p>
+                                  </div>
+                                )}
+                                {program.incentive_url && (
+                                  <a
+                                    href={program.incentive_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                                  >
+                                    Apply <ExternalLink className="h-3.5 w-3.5" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* Footer with reset */}
+            {(programTypeFilter !== 'all' || eligibilityFilter !== 'all') && (
               <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 text-center">
                 <button
-                  onClick={() => setShowAllIncentives(!showAllIncentives)}
+                  onClick={() => { setProgramTypeFilter('all'); setEligibilityFilter('all'); }}
                   className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
                 >
-                  {showAllIncentives ? 'Show fewer' : `View all ${incentives.length} programs`}
+                  Clear filters and show all {incentives.length} programs
                 </button>
               </div>
             )}
