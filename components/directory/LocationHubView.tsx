@@ -140,12 +140,11 @@ const ResourceTypeBadge = ({ type }: { type: 'greywater' | 'rainwater' | 'conser
   )
 }
 
-type ProgramType = 'rebate' | 'grant' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
+type ProgramType = 'rebate' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
 
 const ProgramTypeBadge = ({ type }: { type: ProgramType }) => {
   const config: Record<ProgramType, { label: string; className: string }> = {
     rebate: { label: 'Rebate', className: 'bg-green-100 text-green-800' },
-    grant: { label: 'Grant', className: 'bg-purple-100 text-purple-800' },
     loan: { label: 'Low-Interest Loan', className: 'bg-blue-100 text-blue-800' },
     tax_credit: { label: 'Tax Credit', className: 'bg-indigo-100 text-indigo-800' },
     tax_exemption: { label: 'Tax Exemption', className: 'bg-indigo-100 text-indigo-800' },
@@ -244,15 +243,18 @@ export default function LocationHubView({
     total: incentives.length
   }
 
+  // Filter out grants - only show rebates for homeowners and small businesses
+  const relevantIncentives = incentives.filter(i => i.incentive_type !== 'grant')
+
   // Count by program type
-  const programTypeCounts = incentives.reduce((acc, i) => {
+  const programTypeCounts = relevantIncentives.reduce((acc, i) => {
     const type = i.incentive_type || 'other'
     acc[type] = (acc[type] || 0) + 1
     return acc
   }, {} as Record<string, number>)
 
   // Filter incentives based on selected filters
-  const filteredIncentives = incentives.filter(program => {
+  const filteredIncentives = relevantIncentives.filter(program => {
     // Program type filter
     if (programTypeFilter !== 'all' && program.incentive_type !== programTypeFilter) {
       return false
@@ -277,8 +279,8 @@ export default function LocationHubView({
     return acc
   }, {} as Record<string, IncentiveProgram[]>)
 
-  // Order for program type groups
-  const programTypeOrder = ['rebate', 'grant', 'tax_credit', 'tax_exemption', 'loan', 'subsidy', 'free_installation', 'permit_waiver', 'education', 'various', 'other']
+  // Order for program type groups (grants excluded)
+  const programTypeOrder = ['rebate', 'tax_credit', 'tax_exemption', 'loan', 'subsidy', 'free_installation', 'permit_waiver', 'education', 'various', 'other']
   const sortedGroupKeys = Object.keys(groupedIncentives).sort(
     (a, b) => programTypeOrder.indexOf(a) - programTypeOrder.indexOf(b)
   )
@@ -289,7 +291,6 @@ export default function LocationHubView({
   // Program type display names
   const programTypeLabels: Record<string, string> = {
     rebate: 'Rebates',
-    grant: 'Grants',
     loan: 'Loans',
     tax_credit: 'Tax Credits',
     tax_exemption: 'Tax Exemptions',
@@ -489,11 +490,11 @@ export default function LocationHubView({
                   Available Incentives
                 </h2>
                 <span className="text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">
-                  {filteredIncentives.length} of {incentives.length} programs
+                  {filteredIncentives.length} of {relevantIncentives.length} programs
                 </span>
               </div>
               <p className="text-sm text-gray-600">
-                Rebates, grants, tax credits, and other incentives for {locationName} residents and businesses
+                Rebates, tax credits, and other incentives for {locationName} homeowners and small businesses
               </p>
             </div>
 
@@ -508,7 +509,7 @@ export default function LocationHubView({
                     onChange={(e) => setProgramTypeFilter(e.target.value)}
                     className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   >
-                    <option value="all">All Types ({incentives.length})</option>
+                    <option value="all">All Types ({relevantIncentives.length})</option>
                     {programTypeOrder.map(type => {
                       const count = programTypeCounts[type]
                       if (!count) return null
@@ -579,7 +580,6 @@ export default function LocationHubView({
                   // Get color scheme for this program type
                   const colorSchemes: Record<string, { bg: string; border: string; text: string; icon: string }> = {
                     rebate: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800', icon: 'text-green-600' },
-                    grant: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-800', icon: 'text-purple-600' },
                     loan: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800', icon: 'text-blue-600' },
                     tax_credit: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', icon: 'text-indigo-600' },
                     tax_exemption: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', icon: 'text-indigo-600' },
@@ -661,7 +661,7 @@ export default function LocationHubView({
                   onClick={() => { setProgramTypeFilter('all'); setEligibilityFilter('all'); }}
                   className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
                 >
-                  Clear filters and show all {incentives.length} programs
+                  Clear filters and show all {relevantIncentives.length} programs
                 </button>
               </div>
             )}

@@ -40,12 +40,11 @@ interface IncentiveProgram {
   commercial_eligible?: boolean | string
 }
 
-type ProgramType = 'rebate' | 'grant' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
+type ProgramType = 'rebate' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
 
 const ProgramTypeBadge = ({ type }: { type: ProgramType }) => {
   const config: Record<ProgramType, { label: string; className: string }> = {
     rebate: { label: 'Rebate', className: 'bg-green-100 text-green-800' },
-    grant: { label: 'Grant', className: 'bg-purple-100 text-purple-800' },
     loan: { label: 'Loan', className: 'bg-blue-100 text-blue-800' },
     tax_credit: { label: 'Tax Credit', className: 'bg-indigo-100 text-indigo-800' },
     tax_exemption: { label: 'Tax Exemption', className: 'bg-indigo-100 text-indigo-800' },
