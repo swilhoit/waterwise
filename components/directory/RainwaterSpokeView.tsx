@@ -4,7 +4,7 @@ import Link from 'next/link'
 import {
   ChevronRight, ExternalLink, Phone, Building2,
   CloudRain, DollarSign, Check, AlertTriangle,
-  FileText, Gauge, ArrowRight, Droplet
+  FileText, Gauge, ArrowRight, Droplet, MapPin
 } from 'lucide-react'
 
 interface RainwaterData {
@@ -38,6 +38,10 @@ interface IncentiveProgram {
   water_utility?: string
 }
 
+interface LocalRegulation {
+  regulationSummary?: string
+}
+
 interface RainwaterSpokeViewProps {
   level: 'state' | 'city'
   stateName: string
@@ -47,6 +51,7 @@ interface RainwaterSpokeViewProps {
   rainwater: RainwaterData | null
   agency: AgencyData | null
   incentives: IncentiveProgram[]
+  localRegulation?: LocalRegulation | null
 }
 
 export default function RainwaterSpokeView({
@@ -57,7 +62,8 @@ export default function RainwaterSpokeView({
   countyName,
   rainwater,
   agency,
-  incentives
+  incentives,
+  localRegulation
 }: RainwaterSpokeViewProps) {
   const locationName = level === 'city' ? cityName : stateName
   const basePath = level === 'city'
@@ -149,6 +155,19 @@ export default function RainwaterSpokeView({
               <div>
                 <p className="font-medium text-emerald-800">Tax Incentives Available</p>
                 <p className="text-sm text-emerald-700 mt-1">{rainwater.taxIncentives}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Local Regulation Summary */}
+        {localRegulation?.regulationSummary && (
+          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4 mb-8">
+            <div className="flex items-start gap-3">
+              <MapPin className="h-5 w-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-cyan-800">Local Rainwater Regulations</p>
+                <p className="text-sm text-cyan-700 mt-1">{localRegulation.regulationSummary}</p>
               </div>
             </div>
           </div>

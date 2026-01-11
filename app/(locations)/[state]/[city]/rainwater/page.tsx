@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import RainwaterSpokeView from '@/components/directory/RainwaterSpokeView'
 import { getBigQueryClient } from '@/lib/bigquery'
 import { STATE_NAMES, STATE_CODES } from '@/lib/state-utils'
+import { getLocalRegulations } from '@/lib/directory-data'
 
 interface PageProps {
   params: Promise<{ state: string; city: string }>
@@ -229,9 +230,10 @@ export default async function CityRainwaterPage({ params }: PageProps) {
   const cityInfo = await getCityInfo(stateCode, city)
   const cityName = cityInfo.city_name
 
-  const [data, incentives] = await Promise.all([
+  const [data, incentives, localRegs] = await Promise.all([
     getRainwaterData(stateCode),
-    getRainwaterIncentives(stateCode, cityName, cityInfo.county_name)
+    getRainwaterIncentives(stateCode, cityName, cityInfo.county_name),
+    getLocalRegulations(stateCode, cityName, cityInfo.county_name)
   ])
 
   return (
@@ -244,6 +246,9 @@ export default async function CityRainwaterPage({ params }: PageProps) {
       rainwater={data?.rainwater || null}
       agency={data?.agency || null}
       incentives={incentives}
+      localRegulation={localRegs ? {
+        regulationSummary: localRegs.regulationSummary
+      } : null}
     />
   )
 }

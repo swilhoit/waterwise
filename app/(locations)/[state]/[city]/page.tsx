@@ -4,6 +4,7 @@ import LocationHubView from '@/components/directory/LocationHubView'
 import { getBigQueryClient } from '@/lib/bigquery'
 import { STATE_NAMES, STATE_CODES } from '@/lib/state-utils'
 import { FAQSchema } from '@/components/schema-markup'
+import { getLocalRegulations } from '@/lib/directory-data'
 
 interface PageProps {
   params: Promise<{ state: string; city: string }>
@@ -305,7 +306,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const greyStatus = regulations?.greywater?.legalStatus || 'varies'
   const rainStatus = regulations?.rainwater?.legalStatus || 'legal'
   const rebateCount = incentives.length
-  const maxRebate = Math.max(...incentives.map(i => i.incentive_amount_max || 0), 0)
+  const maxRebate = Math.max(...incentives.map((i: { incentive_amount_max?: number }) => i.incentive_amount_max || 0), 0)
 
   return {
     title: `${cityName}, ${stateCode} Water Conservation | Greywater, Rainwater & Rebates`,
@@ -341,8 +342,11 @@ export default async function CityHubPage({ params }: PageProps) {
   if (!cityData) {
     // Create page anyway with formatted city name
     const cityName = formatCityName(city)
-    const regulations = await getStateRegulations(stateCode)
-    const incentives = await getCityIncentives(stateCode, cityName, '')
+    const [regulations, incentives, localRegs] = await Promise.all([
+      getStateRegulations(stateCode),
+      getCityIncentives(stateCode, cityName, ''),
+      getLocalRegulations(stateCode, cityName)
+    ])
 
     const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
 
@@ -359,6 +363,11 @@ export default async function CityHubPage({ params }: PageProps) {
           agency={regulations?.agency || null}
           incentives={incentives}
           lastUpdated={regulations?.lastUpdated}
+          preplumbing={localRegs?.preplumbing || null}
+          localRegulation={localRegs ? {
+            regulationSummary: localRegs.regulationSummary,
+            permitRequired: localRegs.permitRequired
+          } : null}
         />
       </>
     )
@@ -367,9 +376,10 @@ export default async function CityHubPage({ params }: PageProps) {
   const cityName = cityData.city_name
   const countyName = cityData.county_name
 
-  const [regulations, incentives] = await Promise.all([
+  const [regulations, incentives, localRegs] = await Promise.all([
     getStateRegulations(stateCode),
-    getCityIncentives(stateCode, cityName, countyName)
+    getCityIncentives(stateCode, cityName, countyName),
+    getLocalRegulations(stateCode, cityName, countyName)
   ])
 
   const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
@@ -388,6 +398,11 @@ export default async function CityHubPage({ params }: PageProps) {
         agency={regulations?.agency || null}
         incentives={incentives}
         lastUpdated={regulations?.lastUpdated}
+        preplumbing={localRegs?.preplumbing || null}
+        localRegulation={localRegs ? {
+          regulationSummary: localRegs.regulationSummary,
+          permitRequired: localRegs.permitRequired
+        } : null}
       />
     </>
   )

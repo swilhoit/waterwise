@@ -38,6 +38,19 @@ interface IncentiveProgram {
   water_utility?: string
 }
 
+interface PreplumbingData {
+  hasMandate: boolean
+  details?: string
+  buildingTypes?: string
+  thresholdSqft?: number
+  codeReference?: string
+}
+
+interface LocalRegulation {
+  regulationSummary?: string
+  permitRequired?: boolean
+}
+
 interface GreywaterSpokeViewProps {
   level: 'state' | 'city'
   stateName: string
@@ -47,6 +60,8 @@ interface GreywaterSpokeViewProps {
   greywater: GreywaterData | null
   agency: AgencyData | null
   incentives: IncentiveProgram[]
+  preplumbing?: PreplumbingData | null
+  localRegulation?: LocalRegulation | null
 }
 
 export default function GreywaterSpokeView({
@@ -57,7 +72,9 @@ export default function GreywaterSpokeView({
   countyName,
   greywater,
   agency,
-  incentives
+  incentives,
+  preplumbing,
+  localRegulation
 }: GreywaterSpokeViewProps) {
   const locationName = level === 'city' ? cityName : stateName
   const basePath = level === 'city'
@@ -144,6 +161,49 @@ export default function GreywaterSpokeView({
               <div>
                 <p className="font-medium text-amber-800">Recent Changes</p>
                 <p className="text-sm text-amber-700 mt-1">{greywater.recentChanges}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Local Regulation Summary */}
+        {localRegulation?.regulationSummary && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-8">
+            <div className="flex items-start gap-3">
+              <MapPin className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-emerald-800">Local Greywater Regulations</p>
+                <p className="text-sm text-emerald-700 mt-1">{localRegulation.regulationSummary}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Pre-Plumbing Mandate Alert */}
+        {preplumbing?.hasMandate && (
+          <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-8">
+            <div className="flex items-start gap-3">
+              <Building2 className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-medium text-purple-800">Pre-Plumbing Mandate</p>
+                <p className="text-sm text-purple-700 mt-1">
+                  {preplumbing.details || 'New construction must include greywater-ready plumbing.'}
+                </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+                  {preplumbing.buildingTypes && (
+                    <p className="text-xs text-purple-600">
+                      <strong>Applies to:</strong> {preplumbing.buildingTypes}
+                    </p>
+                  )}
+                  {preplumbing.thresholdSqft && (
+                    <p className="text-xs text-purple-600">
+                      <strong>Threshold:</strong> {preplumbing.thresholdSqft.toLocaleString()}+ sqft
+                    </p>
+                  )}
+                </div>
+                {preplumbing.codeReference && (
+                  <p className="text-xs text-purple-500 mt-1">{preplumbing.codeReference}</p>
+                )}
               </div>
             </div>
           </div>

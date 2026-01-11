@@ -32,7 +32,7 @@ export function Header() {
         { title: "Arizona", href: "/az", description: "AZ water conservation laws" },
         { title: "Colorado", href: "/co", description: "CO rainwater & greywater rules" },
         { title: "Oregon", href: "/or", description: "OR water recycling regulations" },
-        { title: "All States", href: "/ca", description: "Browse all 50 states" }
+        { title: "All States", href: "/directory", description: "Browse all 50 states" }
       ]
     },
     {

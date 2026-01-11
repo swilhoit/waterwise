@@ -64,6 +64,19 @@ interface CityItem {
   city_jurisdiction_id?: string
 }
 
+interface PreplumbingData {
+  hasMandate: boolean
+  details?: string
+  buildingTypes?: string
+  thresholdSqft?: number
+  codeReference?: string
+}
+
+interface LocalRegulation {
+  regulationSummary?: string
+  permitRequired?: boolean
+}
+
 interface LocationHubViewProps {
   level: 'state' | 'city'
   stateName: string
@@ -76,6 +89,8 @@ interface LocationHubViewProps {
   incentives: IncentiveProgram[]
   cities?: CityItem[]
   lastUpdated?: string
+  preplumbing?: PreplumbingData | null
+  localRegulation?: LocalRegulation | null
 }
 
 // =============================================================================
@@ -140,11 +155,14 @@ export default function LocationHubView({
   agency,
   incentives,
   cities = [],
-  lastUpdated
+  lastUpdated,
+  preplumbing,
+  localRegulation
 }: LocationHubViewProps) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
+  const [showAllIncentives, setShowAllIncentives] = useState(false)
   const INITIAL_CITIES = 30
 
   const locationName = level === 'city' ? cityName : stateName
@@ -232,6 +250,53 @@ export default function LocationHubView({
             </div>
           </div>
         </div>
+
+        {/* Local Regulation Summary */}
+        {localRegulation?.regulationSummary && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <MapPin className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div>
+                <p className="font-medium text-emerald-800 text-sm">Local Regulations</p>
+                <p className="text-sm text-emerald-700">{localRegulation.regulationSummary}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Pre-Plumbing Mandate Alert */}
+        {preplumbing?.hasMandate && (
+          <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Building2 className="h-4 w-4 text-purple-600" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-purple-800 text-sm mb-1">Pre-Plumbing Mandate</p>
+                <p className="text-sm text-purple-700 mb-2">
+                  {preplumbing.details || 'New construction must include greywater-ready plumbing.'}
+                </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {preplumbing.buildingTypes && (
+                    <p className="text-xs text-purple-600">
+                      <strong>Applies to:</strong> {preplumbing.buildingTypes}
+                    </p>
+                  )}
+                  {preplumbing.thresholdSqft && (
+                    <p className="text-xs text-purple-600">
+                      <strong>Threshold:</strong> {preplumbing.thresholdSqft.toLocaleString()}+ sqft
+                    </p>
+                  )}
+                </div>
+                {preplumbing.codeReference && (
+                  <p className="text-xs text-purple-500 mt-1">{preplumbing.codeReference}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quick Navigation Cards */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -337,7 +402,7 @@ export default function LocationHubView({
             </div>
 
             <div className="divide-y divide-gray-100">
-              {incentives.slice(0, 5).map((program, idx) => (
+              {(showAllIncentives ? incentives : incentives.slice(0, 5)).map((program, idx) => (
                 <div key={idx} className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -377,8 +442,11 @@ export default function LocationHubView({
 
             {incentives.length > 5 && (
               <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 text-center">
-                <button className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-                  View all {incentives.length} rebate programs
+                <button
+                  onClick={() => setShowAllIncentives(!showAllIncentives)}
+                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  {showAllIncentives ? 'Show fewer' : `View all ${incentives.length} rebate programs`}
                 </button>
               </div>
             )}
