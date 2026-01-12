@@ -100,6 +100,11 @@ async function getStateData(stateCode: string) {
       }
 
       const row = fallbackRows[0]
+
+      // California-specific greywater governing code (database has rainwater data mixed in)
+      const isCA = stateCode.toUpperCase() === 'CA'
+      const caGreywaterGoverningCode = 'California Plumbing Code Chapter 15, Health & Safety Code §17922.12'
+
       return {
         stateCode: row.state_code,
         stateName: row.state_name,
@@ -109,7 +114,7 @@ async function getStateData(stateCode: string) {
           permitThresholdGpd: row.permit_threshold_gpd,
           indoorUseAllowed: row.indoor_use_allowed,
           outdoorUseAllowed: row.outdoor_use_allowed,
-          governingCode: row.governing_code,
+          governingCode: isCA ? caGreywaterGoverningCode : row.governing_code,
           approvedUses: row.approved_uses ? row.approved_uses.split(',').map((s: string) => s.trim()) : [],
           keyRestrictions: row.key_restrictions ? row.key_restrictions.split(',').map((s: string) => s.trim()) : [],
           recentChanges: row.recent_changes
@@ -125,6 +130,11 @@ async function getStateData(stateCode: string) {
     }
 
     const row = stateRows[0]
+
+    // California-specific greywater governing code (database has rainwater data mixed in)
+    const isCA = stateCode.toUpperCase() === 'CA'
+    const caGreywaterGoverningCode = 'California Plumbing Code Chapter 15, Health & Safety Code §17922.12'
+
     return {
       stateCode: row.state_code,
       stateName: row.state_name,
@@ -134,7 +144,7 @@ async function getStateData(stateCode: string) {
         permitThresholdGpd: row.greywater_permit_threshold,
         indoorUseAllowed: row.greywater_indoor_allowed,
         outdoorUseAllowed: row.greywater_outdoor_allowed,
-        governingCode: row.greywater_governing_code,
+        governingCode: isCA ? caGreywaterGoverningCode : row.greywater_governing_code,
         approvedUses: row.greywater_approved_uses ? row.greywater_approved_uses.split(',').map((s: string) => s.trim()) : [],
         keyRestrictions: row.greywater_key_restrictions ? row.greywater_key_restrictions.split(',').map((s: string) => s.trim()) : [],
         recentChanges: row.greywater_recent_changes
