@@ -328,7 +328,7 @@ const EligibilityBadges = ({ residential, commercial }: { residential?: boolean 
   )
 }
 
-const JurisdictionLevelBadge = ({ level, stateName, countyName, cityName }: {
+const JurisdictionLevelBadge = ({ level }: {
   level?: 'state' | 'county' | 'city' | 'other'
   stateName?: string
   countyName?: string
@@ -336,34 +336,29 @@ const JurisdictionLevelBadge = ({ level, stateName, countyName, cityName }: {
 }) => {
   if (!level) return null
 
-  const config: Record<string, { label: string; icon: string; className: string }> = {
+  const config: Record<string, { label: string; className: string }> = {
     state: {
-      label: stateName || 'State',
-      icon: '🏛️',
+      label: 'State',
       className: 'bg-purple-50 text-purple-700 border-purple-200'
     },
     county: {
-      label: countyName ? `${countyName} County` : 'County',
-      icon: '🏢',
+      label: 'County',
       className: 'bg-amber-50 text-amber-700 border-amber-200'
     },
     city: {
-      label: cityName || 'City',
-      icon: '🏠',
+      label: 'City',
       className: 'bg-emerald-50 text-emerald-700 border-emerald-200'
     },
     other: {
-      label: 'Regional',
-      icon: '📍',
-      className: 'bg-gray-50 text-gray-700 border-gray-200'
+      label: 'District',
+      className: 'bg-blue-50 text-blue-700 border-blue-200'
     }
   }
 
-  const { label, icon, className } = config[level] || config.other
+  const { label, className } = config[level] || config.other
 
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${className}`}>
-      <span>{icon}</span>
+    <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-medium border whitespace-nowrap ${className}`}>
       {label}
     </span>
   )
