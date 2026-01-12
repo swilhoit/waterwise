@@ -834,15 +834,6 @@ export default function LocationHubView({
                 </div>
               )}
 
-              {/* Rebates badge */}
-              {incentiveCounts.greywater > 0 && (
-                <div className="mt-4 pt-3 border-t border-gray-100">
-                  <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-medium">
-                    <DollarSign className="h-3 w-3" />
-                    {incentiveCounts.greywater} rebate{incentiveCounts.greywater !== 1 ? 's' : ''} available
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 
@@ -965,15 +956,6 @@ export default function LocationHubView({
                 </div>
               )}
 
-              {/* Rebates badge */}
-              {incentiveCounts.rainwater > 0 && (
-                <div className="mt-4 pt-3 border-t border-gray-100">
-                  <span className="inline-flex items-center gap-1 text-xs bg-cyan-100 text-cyan-700 px-2 py-1 rounded font-medium">
-                    <DollarSign className="h-3 w-3" />
-                    {incentiveCounts.rainwater} rebate{incentiveCounts.rainwater !== 1 ? 's' : ''} available
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>
