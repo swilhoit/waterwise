@@ -670,9 +670,15 @@ export default function RainwaterSpokeView({
                           <td className="px-4 py-4 text-right">
                             {program.incentive_amount_max ? (
                               <div>
-                                <span className="font-semibold text-cyan-600">${program.incentive_amount_max.toLocaleString()}</span>
-                                {program.incentive_per_unit && (
+                                <span className="font-semibold text-cyan-600">
+                                  {program.incentive_per_unit?.toLowerCase().includes('per ') ? 'Up to ' : ''}
+                                  ${program.incentive_amount_max.toLocaleString()}
+                                </span>
+                                {program.incentive_per_unit && !program.incentive_per_unit.toLowerCase().includes('per ') && (
                                   <p className="text-xs text-gray-400">{program.incentive_per_unit}</p>
+                                )}
+                                {program.incentive_per_unit?.toLowerCase().includes('per ') && (
+                                  <p className="text-xs text-gray-400">max</p>
                                 )}
                               </div>
                             ) : (
