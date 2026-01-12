@@ -383,117 +383,143 @@ export default function GreywaterSpokeView({
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Overview Card */}
+            {/* Comprehensive Regulations Card - Matches Hub Page Detail */}
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Greywater Overview</h2>
-              </div>
-              <div className="p-6">
-                {greywater?.summary && (
-                  <p className="text-gray-600 mb-6">{greywater.summary}</p>
-                )}
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                      <Gauge className="h-4 w-4" />
-                      Permit Threshold
+              <div className="bg-emerald-50 px-6 py-4 border-b border-emerald-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center">
+                      <Droplets className="h-5 w-5 text-white" />
                     </div>
-                    <p className="text-xl font-semibold text-gray-900">
-                      {greywater?.permitThresholdGpd && greywater.permitThresholdGpd > 0
-                        ? `${greywater.permitThresholdGpd} GPD`
-                        : 'Varies'
-                      }
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Systems below this may not need a permit
-                    </p>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                      <MapPin className="h-4 w-4" />
-                      Allowed Uses
-                    </div>
-                    <div className="flex gap-2">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${greywater?.outdoorUseAllowed ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-500'}`}>
-                        Outdoor
-                      </span>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${greywater?.indoorUseAllowed ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-500'}`}>
-                        Indoor
-                      </span>
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">Greywater Regulations</h2>
+                      <p className="text-sm text-gray-600">{stateName} state law + local rules</p>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="p-6">
+                {/* Legal Status and Permit Required - Primary Info */}
+                <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Legal Status</p>
+                    <p className={`text-xl font-bold ${
+                      greywater?.legalStatus?.toLowerCase().includes('legal') ? 'text-emerald-600' :
+                      greywater?.legalStatus?.toLowerCase().includes('prohibited') ? 'text-red-600' :
+                      'text-amber-600'
+                    }`}>
+                      {greywater?.legalStatus || 'Varies by jurisdiction'}
+                    </p>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Required</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      {greywater?.permitRequired || 'Varies'}
+                    </p>
+                  </div>
+                </div>
 
+                {/* Summary Description */}
+                {greywater?.summary && (
+                  <p className="text-gray-600 italic mb-6">{greywater.summary}</p>
+                )}
+
+                {/* Use Badges */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {greywater?.outdoorUseAllowed && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium border border-emerald-200">
+                      <Check className="h-4 w-4" />
+                      Outdoor Irrigation
+                    </span>
+                  )}
+                  {greywater?.indoorUseAllowed && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium border border-blue-200">
+                      <Check className="h-4 w-4" />
+                      Indoor Use (Toilet Flushing)
+                    </span>
+                  )}
+                  {!greywater?.outdoorUseAllowed && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-500 rounded-full text-sm font-medium border border-gray-200">
+                      <AlertCircle className="h-4 w-4" />
+                      Outdoor Use (check local rules)
+                    </span>
+                  )}
+                </div>
+
+                {/* Governing Code */}
                 {greywater?.governingCode && (
-                  <div className="mt-6 pt-6 border-t border-gray-100">
-                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Governing Code</p>
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 flex items-center gap-1">
+                      <FileText className="h-3 w-3" />
+                      Governing Code
+                    </p>
                     {stateRegulationUrls[stateCode] ? (
                       <a
                         href={stateRegulationUrls[stateCode]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-700 hover:text-emerald-800 flex items-center gap-1 group"
+                        className="text-emerald-700 hover:text-emerald-800 font-medium flex items-center gap-1 group"
                       >
                         {greywater.governingCode}
                         <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
                       </a>
                     ) : (
-                      <p className="text-gray-900">{greywater.governingCode}</p>
+                      <p className="text-gray-900 font-medium">{greywater.governingCode}</p>
                     )}
+                  </div>
+                )}
+
+                {/* Approved Uses - Inline for quick scanning */}
+                {greywater?.approvedUses && greywater.approvedUses.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">Approved Uses</p>
+                    <div className="flex flex-wrap gap-2">
+                      {greywater.approvedUses.slice(0, 4).map((use, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm border border-emerald-200">
+                          {use}
+                        </span>
+                      ))}
+                      {greywater.approvedUses.length > 4 && (
+                        <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+                          +{greywater.approvedUses.length - 4} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Key Restrictions - Important warnings */}
+                {greywater?.keyRestrictions && greywater.keyRestrictions.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <p className="text-xs text-amber-600 uppercase tracking-wide mb-3 flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3" />
+                      Key Restrictions
+                    </p>
+                    <ul className="space-y-2">
+                      {greywater.keyRestrictions.map((restriction, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+                          <span className="text-amber-500 mt-1">•</span>
+                          {restriction}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Permit Threshold Info */}
+                {greywater?.permitThresholdGpd && greywater.permitThresholdGpd > 0 && (
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Gauge className="h-4 w-4 text-gray-500" />
+                      <span className="text-gray-600">
+                        Systems under <strong className="text-gray-900">{greywater.permitThresholdGpd} GPD</strong> may not require a permit
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Approved Uses */}
-            {greywater?.approvedUses && greywater.approvedUses.length > 0 && (
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="bg-emerald-50 px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <Check className="h-5 w-5 text-emerald-600" />
-                    Approved Greywater Uses
-                  </h2>
-                </div>
-                <div className="p-6">
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    {greywater.approvedUses.map((use, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
-                        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Check className="h-4 w-4 text-emerald-600" />
-                        </div>
-                        <span className="text-gray-700">{use}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Key Restrictions */}
-            {greywater?.keyRestrictions && greywater.keyRestrictions.length > 0 && (
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="bg-amber-50 px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-amber-600" />
-                    Key Restrictions
-                  </h2>
-                </div>
-                <div className="p-6">
-                  <ul className="space-y-3">
-                    {greywater.keyRestrictions.map((restriction, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-semibold text-amber-700">{idx + 1}</span>
-                        </div>
-                        <span className="text-gray-600">{restriction}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sidebar */}
@@ -545,6 +571,39 @@ export default function GreywaterSpokeView({
                   <span className="text-gray-700 group-hover:text-emerald-700">All {locationName} Programs</span>
                   <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-emerald-500" />
                 </Link>
+              </div>
+            </div>
+
+            {/* Quick Tips */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-5">
+              <h3 className="font-semibold text-gray-900 mb-4">Quick Tips</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-gray-600">
+                    {greywater?.legalStatus?.toLowerCase().includes('legal')
+                      ? `Greywater systems are legal in ${locationName}`
+                      : 'Check local rules before installing'
+                    }
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-gray-600">
+                    {greywater?.permitRequired === 'Tiered' || greywater?.permitRequired?.toLowerCase().includes('tier')
+                      ? 'Simple systems often don\'t need permits'
+                      : greywater?.permitRequired?.toLowerCase() === 'no'
+                        ? 'Most residential systems don\'t need permits'
+                        : 'Contact your building department for permits'
+                    }
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-gray-600">
+                    Laundry-to-landscape is the easiest system to start with
+                  </span>
+                </div>
               </div>
             </div>
           </div>
