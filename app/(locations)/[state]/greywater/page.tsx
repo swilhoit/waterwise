@@ -20,6 +20,14 @@ function getStateCodeFromSlug(slug: string): string | null {
   return null
 }
 
+// Helper to safely parse comma-separated string or array
+function parseArrayField(value: any): string[] {
+  if (!value) return []
+  if (Array.isArray(value)) return value.map((s: any) => String(s).trim()).filter(Boolean)
+  if (typeof value === 'string') return value.split(',').map((s: string) => s.trim()).filter(Boolean)
+  return []
+}
+
 async function getGreywaterData(stateCode: string) {
   try {
     const bigquery = getBigQueryClient()
@@ -37,6 +45,7 @@ async function getGreywaterData(stateCode: string) {
         approved_uses,
         key_restrictions,
         recent_changes,
+        summary,
         primary_agency,
         agency_phone,
         government_website
@@ -53,19 +62,29 @@ async function getGreywaterData(stateCode: string) {
     if (!rows || rows.length === 0) return null
 
     const row = rows[0]
+
+    // Map legal status codes to readable names
+    let legalStatus = row.legal_status
+    if (legalStatus === 'L') legalStatus = 'Legal'
+    else if (legalStatus === 'R') legalStatus = 'Regulated'
+    else if (!legalStatus) legalStatus = 'Varies'
+
     return {
       stateCode: row.state_code,
       stateName: row.state_name,
       greywater: {
-        legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : row.legal_status || 'Varies',
-        permitRequired: row.permit_required,
+        legalStatus,
+        permitRequired: row.permit_required || 'Varies',
         permitThresholdGpd: row.permit_threshold_gpd,
         indoorUseAllowed: row.indoor_use_allowed,
         outdoorUseAllowed: row.outdoor_use_allowed,
         governingCode: row.governing_code,
-        approvedUses: row.approved_uses ? row.approved_uses.split(',').map((s: string) => s.trim()) : [],
-        keyRestrictions: row.key_restrictions ? row.key_restrictions.split(',').map((s: string) => s.trim()) : [],
-        recentChanges: row.recent_changes
+        approvedUses: parseArrayField(row.approved_uses),
+        keyRestrictions: parseArrayField(row.key_restrictions),
+        recentChanges: row.recent_changes,
+        summary: row.summary || (stateCode === 'CA'
+          ? 'California allows greywater systems under the Plumbing Code Chapter 15. Simple laundry-to-landscape systems under 250 GPD typically don\'t require a permit.'
+          : null)
       },
       agency: {
         name: row.primary_agency,
