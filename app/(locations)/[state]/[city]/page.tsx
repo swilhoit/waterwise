@@ -354,7 +354,7 @@ export default async function CityHubPage({ params }: PageProps) {
           rainwater={regulations?.rainwater || null}
           agency={regulations?.agency || null}
           incentives={incentives}
-          lastUpdated={regulations?.lastUpdated}
+          lastUpdated={regulations?.lastUpdated || undefined}
           preplumbing={localRegs?.preplumbing || null}
           localRegulation={localRegs ? {
             regulationSummary: localRegs.regulationSummary,
@@ -389,7 +389,7 @@ export default async function CityHubPage({ params }: PageProps) {
         rainwater={regulations?.rainwater || null}
         agency={regulations?.agency || null}
         incentives={incentives}
-        lastUpdated={regulations?.lastUpdated}
+        lastUpdated={regulations?.lastUpdated || undefined}
         preplumbing={localRegs?.preplumbing || null}
         localRegulation={localRegs ? {
           regulationSummary: localRegs.regulationSummary,
