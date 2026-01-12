@@ -755,11 +755,23 @@ export default function LocationHubView({
 
               {/* Allowed Uses */}
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${greywater?.outdoorUseAllowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-help ${greywater?.outdoorUseAllowed !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}
+                  title={greywater?.outdoorUseAllowed !== false
+                    ? "Greywater can be used for subsurface landscape irrigation. Most jurisdictions allow laundry-to-landscape systems without a permit when following state guidelines."
+                    : "Outdoor greywater irrigation is restricted or prohibited in this jurisdiction. Check local regulations for specific requirements."
+                  }
+                >
                   {greywater?.outdoorUseAllowed !== false ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
                   Outdoor Irrigation
                 </span>
-                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${greywater?.indoorUseAllowed ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-help ${greywater?.indoorUseAllowed ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}
+                  title={greywater?.indoorUseAllowed
+                    ? "Treated greywater can be used for toilet flushing and other indoor non-potable uses. Requires filtration, disinfection, and permits."
+                    : "Indoor greywater reuse (toilet flushing) is not permitted in this jurisdiction. Only subsurface irrigation is allowed for untreated greywater."
+                  }
+                >
                   {greywater?.indoorUseAllowed ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
                   Indoor Use (Toilet Flushing)
                 </span>
@@ -907,11 +919,20 @@ export default function LocationHubView({
 
               {/* Allowed Uses */}
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-cyan-100 text-cyan-700">
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-help bg-cyan-100 text-cyan-700"
+                  title="Rainwater can be used for landscape irrigation without treatment. Systems under 360 gallons have no water quality requirements for outdoor use."
+                >
                   <CheckCircle2 className="h-3 w-3" />
                   Outdoor Irrigation
                 </span>
-                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${rainwater?.potableUseAllowed ? 'bg-cyan-100 text-cyan-700' : 'bg-gray-100 text-gray-500'}`}>
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-help ${rainwater?.potableUseAllowed ? 'bg-cyan-100 text-cyan-700' : 'bg-gray-100 text-gray-500'}`}
+                  title={rainwater?.potableUseAllowed
+                    ? "Rainwater can be treated and used as drinking water with proper filtration, disinfection, and permits from local health authorities."
+                    : "Rainwater cannot be used for drinking water in this jurisdiction. Only non-potable uses (irrigation, toilet flushing) are permitted."
+                  }
+                >
                   {rainwater?.potableUseAllowed ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
                   Potable Use {rainwater?.potableUseAllowed ? '(with treatment)' : '(not allowed)'}
                 </span>
