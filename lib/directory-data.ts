@@ -502,13 +502,21 @@ export async function getAllStates(): Promise<Array<{
           ON p.program_id = pjl.program_id
         WHERE LOWER(p.program_status) = 'active'
         GROUP BY 1
+      ),
+      unique_states AS (
+        SELECT DISTINCT
+          state_code,
+          state_name,
+          legal_status
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
+        WHERE state_code IS NOT NULL
       )
       SELECT
         g.state_code,
         g.state_name,
         g.legal_status,
         COALESCE(si.incentive_count, 0) as incentive_count
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` g
+      FROM unique_states g
       LEFT JOIN state_incentives si ON g.state_code = si.state_code
       ORDER BY g.state_name
     `

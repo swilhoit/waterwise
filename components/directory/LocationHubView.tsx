@@ -256,13 +256,31 @@ const getJurisdictionUrls = (stateCode: string, stateName: string, countyName?: 
 
 const DataConfidenceBadge = ({ confidence }: { confidence: DataConfidence }) => {
   const config = {
-    verified: { icon: CheckCircle2, className: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'Verified' },
-    partial: { icon: AlertCircle, className: 'bg-amber-50 text-amber-700 border-amber-200', label: 'Partial Data' },
-    unknown: { icon: HelpCircle, className: 'bg-gray-100 text-gray-600 border-gray-200', label: 'Not Verified' }
+    verified: {
+      icon: CheckCircle2,
+      className: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      label: 'Verified',
+      tooltip: 'Regulation data confirmed with official sources'
+    },
+    partial: {
+      icon: AlertCircle,
+      className: 'bg-amber-50 text-amber-700 border-amber-200',
+      label: 'Partial Data',
+      tooltip: 'Some regulation details may be incomplete - contact your local authority to confirm'
+    },
+    unknown: {
+      icon: HelpCircle,
+      className: 'bg-gray-100 text-gray-600 border-gray-200',
+      label: 'Not Verified',
+      tooltip: 'Regulation data pending verification - contact your local building department for current rules'
+    }
   }
-  const { icon: Icon, className, label } = config[confidence]
+  const { icon: Icon, className, label, tooltip } = config[confidence]
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${className}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border cursor-help ${className}`}
+      title={tooltip}
+    >
       <Icon className="h-3 w-3" />
       {label}
     </span>
@@ -483,7 +501,7 @@ export default function LocationHubView({
               : `Greywater laws, rainwater harvesting rules, and water conservation programs across ${stateName}`
             }
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             <DataConfidenceBadge confidence={getDataConfidence(greywater)} />
             {lastUpdated && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs text-gray-500 bg-gray-100 border border-gray-200">
@@ -492,6 +510,25 @@ export default function LocationHubView({
               </span>
             )}
           </div>
+
+          {/* Quick Summary & Jump Links */}
+          {level === 'city' && incentives.length > 0 && (
+            <div className="flex flex-wrap items-center gap-3 p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
+              <div className="flex items-center gap-2 text-sm">
+                <DollarSign className="h-4 w-4 text-emerald-600" />
+                <span className="font-semibold text-emerald-700">{incentives.length} rebate programs</span>
+                <span className="text-gray-500">•</span>
+                <span className="text-emerald-600">Up to ${Math.max(...incentives.map(i => i.incentive_amount_max || 0)).toLocaleString()}</span>
+              </div>
+              <a
+                href="#rebates"
+                className="ml-auto inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                View Rebates
+                <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Local Regulation Summary */}
@@ -996,7 +1033,7 @@ export default function LocationHubView({
 
         {/* Incentives Section */}
         {incentives.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-8">
+          <div id="rebates" className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-8 scroll-mt-4">
             {/* Header */}
             <div className="px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between mb-2">
@@ -1016,15 +1053,192 @@ export default function LocationHubView({
               </p>
             </div>
 
-            {/* Programs Table */}
-            <div className="overflow-x-auto">
+            {/* Mobile Cards - Visible only on small screens */}
+            <div className="md:hidden p-4 space-y-3">
+              {relevantIncentives.map((program, idx) => {
+                const programId = `mobile-${idx}-${program.program_name}`
+                const isExpanded = expandedPrograms.has(programId)
+                const hasDetails = !!(
+                  program.program_description ||
+                  program.eligibility_details ||
+                  program.how_to_apply ||
+                  program.steps_to_apply ||
+                  program.documentation_required ||
+                  program.installation_requirements ||
+                  program.contractor_requirements ||
+                  program.property_requirements ||
+                  program.reimbursement_process ||
+                  program.restrictions ||
+                  program.stacking_details ||
+                  program.contact_email ||
+                  program.contact_phone
+                )
+
+                return (
+                  <div
+                    key={idx}
+                    className={`bg-white rounded-xl border ${isExpanded ? 'border-emerald-300 shadow-sm' : 'border-gray-200'} overflow-hidden`}
+                  >
+                    {/* Card Header */}
+                    <div
+                      className={`p-4 ${hasDetails ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-emerald-50' : ''}`}
+                      onClick={() => hasDetails && toggleProgram(programId)}
+                    >
+                      {/* Top row: badges */}
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <JurisdictionLevelBadge
+                          level={program.jurisdiction_level}
+                          stateName={stateName}
+                          countyName={countyName}
+                          cityName={cityName}
+                        />
+                        <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
+                        {hasDetails && (
+                          <ChevronDown className={`h-4 w-4 text-gray-400 ml-auto transition-transform ${isExpanded ? 'rotate-180 text-emerald-600' : ''}`} />
+                        )}
+                      </div>
+
+                      {/* Program name */}
+                      <h3 className="font-semibold text-gray-900 mb-1">{program.program_name}</h3>
+
+                      {/* Provider */}
+                      {program.water_utility && (
+                        <p className="text-xs text-gray-500 mb-2">{program.water_utility}</p>
+                      )}
+
+                      {/* Deadline */}
+                      {program.deadline_info && (
+                        <p className="text-xs text-amber-600 font-medium mb-2">⏰ {program.deadline_info}</p>
+                      )}
+
+                      {/* Amount and Apply button row */}
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                        <div>
+                          {program.incentive_amount_max ? (
+                            <>
+                              <span className="text-lg font-bold text-emerald-600">
+                                ${program.incentive_amount_max.toLocaleString()}
+                              </span>
+                              <span className="text-xs text-gray-400 ml-1">
+                                {program.incentive_per_unit?.toLowerCase().includes('per ')
+                                  ? 'max'
+                                  : program.incentive_per_unit || 'max'}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-sm text-gray-400">Amount varies</span>
+                          )}
+                        </div>
+                        {program.incentive_url ? (
+                          <a
+                            href={program.incentive_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                          >
+                            Apply <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        ) : (
+                          <span className="text-xs text-gray-400">No link</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {isExpanded && hasDetails && (
+                      <div className="px-4 pb-4 pt-2 border-t border-gray-100 bg-gray-50">
+                        {program.program_description && (
+                          <p className="text-sm text-gray-600 mb-3">{program.program_description}</p>
+                        )}
+
+                        <div className="space-y-2">
+                          {program.eligibility_details && (
+                            <div className="bg-white rounded-lg p-3 border border-gray-100">
+                              <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1">
+                                <Users className="h-3.5 w-3.5 text-blue-600" />
+                                Who's Eligible
+                              </h4>
+                              <p className="text-sm text-gray-600">{program.eligibility_details}</p>
+                            </div>
+                          )}
+
+                          {(program.how_to_apply || program.steps_to_apply) && (
+                            <div className="bg-white rounded-lg p-3 border border-gray-100">
+                              <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1">
+                                <ClipboardList className="h-3.5 w-3.5 text-emerald-600" />
+                                How to Apply
+                              </h4>
+                              <p className="text-sm text-gray-600">{program.steps_to_apply || program.how_to_apply}</p>
+                            </div>
+                          )}
+
+                          {program.documentation_required && (
+                            <div className="bg-white rounded-lg p-3 border border-gray-100">
+                              <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1">
+                                <FileText className="h-3.5 w-3.5 text-indigo-600" />
+                                Documentation Required
+                              </h4>
+                              <p className="text-sm text-gray-600">{program.documentation_required}</p>
+                            </div>
+                          )}
+
+                          {program.installation_requirements && (
+                            <div className="bg-white rounded-lg p-3 border border-gray-100">
+                              <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1">
+                                <Wrench className="h-3.5 w-3.5 text-orange-600" />
+                                Installation Requirements
+                              </h4>
+                              <p className="text-sm text-gray-600">{program.installation_requirements}</p>
+                            </div>
+                          )}
+
+                          {program.restrictions && (
+                            <div className="bg-white rounded-lg p-3 border border-gray-100">
+                              <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1">
+                                <AlertCircle className="h-3.5 w-3.5 text-red-600" />
+                                Restrictions
+                              </h4>
+                              <p className="text-sm text-gray-600">{program.restrictions}</p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Contact & Badges */}
+                        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-gray-200">
+                          {(program.pre_approval_required === true || program.pre_approval_required === 'true') && (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded">
+                              ⚠️ Pre-approval
+                            </span>
+                          )}
+                          {(program.inspection_required === true || program.inspection_required === 'true') && (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                              🔍 Inspection
+                            </span>
+                          )}
+                          {program.contact_phone && (
+                            <a href={`tel:${program.contact_phone}`} className="inline-flex items-center gap-1 text-xs text-emerald-600">
+                              <Phone className="h-3 w-3" />
+                              {program.contact_phone}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Desktop Table - Hidden on small screens */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-8"></th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell w-28">Level</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-28">Level</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Program</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Type</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Provider</th>
                       <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
                       <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Action</th>
@@ -1065,7 +1279,7 @@ export default function LocationHubView({
                             </td>
 
                             {/* Jurisdiction Level */}
-                            <td className="px-4 py-4 hidden sm:table-cell">
+                            <td className="px-4 py-4">
                               <JurisdictionLevelBadge
                                 level={program.jurisdiction_level}
                                 stateName={stateName}
@@ -1077,22 +1291,7 @@ export default function LocationHubView({
                             {/* Program Name */}
                             <td className="px-4 py-4">
                               <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="font-medium text-gray-900">{program.program_name}</span>
-                                  {/* Mobile-only badges */}
-                                  <span className="md:hidden">
-                                    <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
-                                  </span>
-                                  {/* Mobile-only jurisdiction badge */}
-                                  <span className="sm:hidden">
-                                    <JurisdictionLevelBadge
-                                      level={program.jurisdiction_level}
-                                      stateName={stateName}
-                                      countyName={countyName}
-                                      cityName={cityName}
-                                    />
-                                  </span>
-                                </div>
+                                <span className="font-medium text-gray-900">{program.program_name}</span>
                                 {program.deadline_info && (
                                   <span className="text-xs text-amber-600 font-medium">⏰ {program.deadline_info}</span>
                                 )}
@@ -1100,7 +1299,7 @@ export default function LocationHubView({
                             </td>
 
                             {/* Program Type (Rebate/Tax Credit) */}
-                            <td className="px-4 py-4 hidden md:table-cell">
+                            <td className="px-4 py-4">
                               <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
                             </td>
 
