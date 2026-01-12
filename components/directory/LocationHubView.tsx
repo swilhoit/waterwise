@@ -426,6 +426,9 @@ export default function LocationHubView({
     ? `/${stateCode.toLowerCase()}/${cityName?.toLowerCase().replace(/\s+/g, '-')}`
     : `/${stateCode.toLowerCase()}`
 
+  // Get jurisdiction URLs for linking to official code documentation
+  const jurisdictionUrls = getJurisdictionUrls(stateCode, stateName, countyName, cityName)
+
   // Filter cities
   const filteredCities = cities.filter(c =>
     c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -768,7 +771,19 @@ export default function LocationHubView({
                   <p className="text-xs text-gray-500 mb-1 flex items-center gap-1">
                     <FileText className="h-3 w-3" /> Governing Code
                   </p>
-                  <p className="text-sm font-medium text-gray-700">{greywater.governingCode}</p>
+                  {jurisdictionUrls.stateUrl ? (
+                    <a
+                      href={jurisdictionUrls.stateUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-emerald-700 hover:text-emerald-800 flex items-center gap-1 group"
+                    >
+                      {greywater.governingCode}
+                      <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  ) : (
+                    <p className="text-sm font-medium text-gray-700">{greywater.governingCode}</p>
+                  )}
                 </div>
               )}
 
@@ -908,7 +923,19 @@ export default function LocationHubView({
                   <p className="text-xs text-gray-500 mb-1 flex items-center gap-1">
                     <FileText className="h-3 w-3" /> Governing Code
                   </p>
-                  <p className="text-sm font-medium text-gray-700">{rainwater.governingCode}</p>
+                  {jurisdictionUrls.stateUrl ? (
+                    <a
+                      href={jurisdictionUrls.stateUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-cyan-700 hover:text-cyan-800 flex items-center gap-1 group"
+                    >
+                      {rainwater.governingCode}
+                      <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  ) : (
+                    <p className="text-sm font-medium text-gray-700">{rainwater.governingCode}</p>
+                  )}
                 </div>
               )}
 

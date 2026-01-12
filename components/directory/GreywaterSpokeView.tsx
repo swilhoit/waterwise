@@ -166,6 +166,19 @@ interface GreywaterSpokeViewProps {
   localRegulation?: LocalRegulation | null
 }
 
+// State regulation URLs
+const stateRegulationUrls: Record<string, string> = {
+  'CA': 'https://www.hcd.ca.gov/building-standards/state-housing-law/wildfire-702-greywater',
+  'AZ': 'https://www.azdeq.gov/permits/water-permits/reclaimed-water',
+  'TX': 'https://www.tceq.texas.gov/permitting/water_quality/rainwater-greywater-water-reuse',
+  'NM': 'https://www.srca.nm.gov/water-resources/',
+  'CO': 'https://cdphe.colorado.gov/graywater',
+  'OR': 'https://www.oregon.gov/oha/ph/healthyenvironments/drinkingwater/pages/graywater.aspx',
+  'WA': 'https://ecology.wa.gov/water-shorelines/water-supply/water-recovery-reuse',
+  'NV': 'https://ndep.nv.gov/water/water-reuse-program',
+  'UT': 'https://deq.utah.gov/water-quality/water-reuse',
+}
+
 export default function GreywaterSpokeView({
   level,
   stateName,
@@ -260,12 +273,6 @@ export default function GreywaterSpokeView({
               <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-gray-700 border border-gray-200">
                 <FileText className="h-4 w-4" />
                 Permit: {greywater.permitRequired}
-              </span>
-            )}
-            {greywaterIncentives.length > 0 && (
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full font-medium">
-                <DollarSign className="h-4 w-4" />
-                {greywaterIncentives.length} Rebate{greywaterIncentives.length !== 1 ? 's' : ''} Available
               </span>
             )}
           </div>
@@ -423,7 +430,19 @@ export default function GreywaterSpokeView({
                 {greywater?.governingCode && (
                   <div className="mt-6 pt-6 border-t border-gray-100">
                     <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Governing Code</p>
-                    <p className="text-gray-900">{greywater.governingCode}</p>
+                    {stateRegulationUrls[stateCode] ? (
+                      <a
+                        href={stateRegulationUrls[stateCode]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-700 hover:text-emerald-800 flex items-center gap-1 group"
+                      >
+                        {greywater.governingCode}
+                        <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                      </a>
+                    ) : (
+                      <p className="text-gray-900">{greywater.governingCode}</p>
+                    )}
                   </div>
                 )}
               </div>
@@ -459,7 +478,7 @@ export default function GreywaterSpokeView({
                 <div className="bg-amber-50 px-6 py-4 border-b border-gray-200">
                   <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <AlertTriangle className="h-5 w-5 text-amber-600" />
-                    Key Restrictions & Requirements
+                    Key Restrictions
                   </h2>
                 </div>
                 <div className="p-6">
