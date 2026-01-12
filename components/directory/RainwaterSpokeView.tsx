@@ -1,10 +1,12 @@
 "use client"
 
+import React, { useState } from 'react'
 import Link from 'next/link'
 import {
-  ChevronRight, ExternalLink, Phone, Building2,
-  CloudRain, DollarSign, Check, AlertTriangle,
-  FileText, Gauge, ArrowRight, Droplet, MapPin
+  ChevronRight, ChevronDown, ExternalLink, Phone, Building2,
+  CloudRain, DollarSign, Check, AlertTriangle, Home,
+  FileText, Gauge, ArrowRight, Droplet, MapPin, Users, ClipboardList,
+  Wrench, Timer, BadgeCheck, AlertCircle, Leaf
 } from 'lucide-react'
 
 interface RainwaterData {
@@ -31,13 +33,39 @@ interface IncentiveProgram {
   program_name: string
   incentive_type?: string
   resource_type?: string
+  program_subtype?: string
   incentive_amount_min?: number
   incentive_amount_max?: number
+  incentive_per_unit?: string
   incentive_url?: string
   program_description?: string
   water_utility?: string
   residential_eligible?: boolean | string
   commercial_eligible?: boolean | string
+  eligibility_details?: string
+  property_requirements?: string
+  income_requirements?: string
+  how_to_apply?: string
+  steps_to_apply?: string
+  documentation_required?: string
+  pre_approval_required?: boolean | string
+  processing_time?: string
+  installation_requirements?: string
+  contractor_requirements?: string
+  product_requirements?: string
+  inspection_required?: boolean | string
+  timeline_to_complete?: string
+  reimbursement_process?: string
+  restrictions?: string
+  stacking_allowed?: boolean | string
+  stacking_details?: string
+  contact_email?: string
+  contact_phone?: string
+  coverage_area?: string
+  deadline_info?: string
+  program_end_date?: string
+  jurisdiction_id?: string
+  jurisdiction_level?: 'state' | 'county' | 'city' | 'other'
 }
 
 type ProgramType = 'rebate' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
@@ -62,8 +90,58 @@ const ProgramTypeBadge = ({ type }: { type: ProgramType }) => {
   )
 }
 
+const JurisdictionLevelBadge = ({ level, stateName, countyName, cityName }: {
+  level?: 'state' | 'county' | 'city' | 'other'
+  stateName?: string
+  countyName?: string
+  cityName?: string
+}) => {
+  if (!level) return null
+
+  const config: Record<string, { label: string; icon: string; className: string }> = {
+    state: { label: stateName || 'State', icon: '🏛️', className: 'bg-purple-50 text-purple-700 border-purple-200' },
+    county: { label: countyName ? `${countyName} County` : 'County', icon: '🏢', className: 'bg-amber-50 text-amber-700 border-amber-200' },
+    city: { label: cityName || 'City', icon: '🏠', className: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
+    other: { label: 'Regional', icon: '📍', className: 'bg-gray-50 text-gray-700 border-gray-200' }
+  }
+
+  const { label, icon, className } = config[level] || config.other
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${className}`}>
+      <span>{icon}</span>
+      {label}
+    </span>
+  )
+}
+
+const EligibilityBadges = ({ residential, commercial }: { residential?: boolean | string; commercial?: boolean | string }) => {
+  const isResidential = residential === true || residential === 'true'
+  const isCommercial = commercial === true || commercial === 'true'
+  if (!isResidential && !isCommercial) return null
+  return (
+    <div className="flex gap-1">
+      {isResidential && (
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+          Residential
+        </span>
+      )}
+      {isCommercial && (
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-200">
+          Commercial
+        </span>
+      )}
+    </div>
+  )
+}
+
 interface LocalRegulation {
   regulationSummary?: string
+}
+
+interface WaterUtilityData {
+  name: string
+  programCount?: number
 }
 
 interface RainwaterSpokeViewProps {
@@ -89,15 +167,31 @@ export default function RainwaterSpokeView({
   incentives,
   localRegulation
 }: RainwaterSpokeViewProps) {
+  const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set())
+
+  const toggleProgram = (programId: string) => {
+    setExpandedPrograms(prev => {
+      const next = new Set(prev)
+      if (next.has(programId)) {
+        next.delete(programId)
+      } else {
+        next.add(programId)
+      }
+      return next
+    })
+  }
+
   const locationName = level === 'city' ? cityName : stateName
   const basePath = level === 'city'
     ? `/${stateCode.toLowerCase()}/${cityName?.toLowerCase().replace(/\s+/g, '-')}`
     : `/${stateCode.toLowerCase()}`
 
-  // Filter rainwater-specific incentives
-  const rainwaterIncentives = incentives.filter(i =>
-    i.resource_type === 'rainwater'
-  )
+  // Filter rainwater-specific incentives, excluding grants (case-insensitive)
+  const rainwaterIncentives = incentives.filter(i => {
+    const type = (i.incentive_type || '').toLowerCase()
+    const isNotGrant = type !== 'grant' && !type.includes('grant')
+    return i.resource_type === 'rainwater' && isNotGrant
+  })
 
   const getLegalStatusColor = (status?: string) => {
     if (!status) return 'bg-gray-100 text-gray-700'
@@ -196,6 +290,53 @@ export default function RainwaterSpokeView({
             </div>
           </div>
         )}
+
+        {/* Water Utilities */}
+        {(() => {
+          const utilitiesFromIncentives = Array.from(
+            rainwaterIncentives.reduce((acc, i) => {
+              if (i.water_utility && i.water_utility.trim()) {
+                const name = i.water_utility.trim()
+                if (!acc.has(name)) {
+                  acc.set(name, { name, programCount: 1 })
+                } else {
+                  acc.get(name)!.programCount = (acc.get(name)!.programCount || 0) + 1
+                }
+              }
+              return acc
+            }, new Map<string, WaterUtilityData>())
+          ).map(([, v]) => v).sort((a, b) => (b.programCount || 0) - (a.programCount || 0))
+
+          if (utilitiesFromIncentives.length === 0) return null
+
+          return (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
+              <div className="flex items-start gap-3">
+                <Droplet className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-medium text-blue-800 mb-2">
+                    Water {utilitiesFromIncentives.length === 1 ? 'Utility' : 'Utilities'} with Rainwater Programs
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {utilitiesFromIncentives.map((utility, idx) => (
+                      <div
+                        key={idx}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-blue-200"
+                      >
+                        <span className="text-sm font-medium text-blue-800">{utility.name}</span>
+                        {utility.programCount && utility.programCount > 0 && (
+                          <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">
+                            {utility.programCount} program{utility.programCount !== 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
@@ -325,53 +466,6 @@ export default function RainwaterSpokeView({
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Rebates Card */}
-            {rainwaterIncentives.length > 0 && (
-              <div className="bg-white rounded-2xl border border-cyan-200 overflow-hidden">
-                <div className="bg-cyan-50 px-5 py-4 border-b border-cyan-100">
-                  <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-cyan-600" />
-                    Rainwater Incentives
-                  </h3>
-                </div>
-                <div className="divide-y divide-gray-100">
-                  {rainwaterIncentives.slice(0, 3).map((incentive, idx) => (
-                    <div key={idx} className="p-4">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="font-medium text-gray-900 text-sm">{incentive.program_name}</p>
-                        <ProgramTypeBadge type={(incentive.incentive_type as ProgramType) || 'rebate'} />
-                      </div>
-                      {incentive.incentive_amount_max && (
-                        <p className="text-lg font-bold text-cyan-600 mt-1">
-                          Up to ${incentive.incentive_amount_max.toLocaleString()}
-                        </p>
-                      )}
-                      {incentive.incentive_url && (
-                        <a
-                          href={incentive.incentive_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700 mt-2"
-                        >
-                          Apply Now <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {rainwaterIncentives.length > 3 && (
-                  <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
-                    <Link
-                      href={basePath}
-                      className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
-                    >
-                      View all {rainwaterIncentives.length} programs
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Agency Card */}
             {agency?.name && (
               <div className="bg-white rounded-2xl border border-gray-200 p-5">
@@ -442,6 +536,308 @@ export default function RainwaterSpokeView({
             </div>
           </div>
         </div>
+
+        {/* Full-Width Incentives Section */}
+        {rainwaterIncentives.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mt-8">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-cyan-600" />
+                  Rainwater Harvesting Rebates & Incentives
+                </h2>
+                <span className="text-sm bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full font-medium">
+                  {rainwaterIncentives.length} programs
+                </span>
+              </div>
+              <p className="text-sm text-gray-600">
+                Available rebates and incentives for rainwater harvesting systems in {locationName}
+              </p>
+            </div>
+
+            {/* Programs Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-8"></th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell w-28">Level</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Program</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Type</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Provider</th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {rainwaterIncentives.map((program, idx) => {
+                    const programId = `rw-${idx}-${program.program_name}`
+                    const isExpanded = expandedPrograms.has(programId)
+                    const hasDetails = !!(
+                      program.program_description ||
+                      program.eligibility_details ||
+                      program.how_to_apply ||
+                      program.steps_to_apply ||
+                      program.documentation_required ||
+                      program.installation_requirements ||
+                      program.contractor_requirements ||
+                      program.property_requirements ||
+                      program.reimbursement_process ||
+                      program.restrictions ||
+                      program.stacking_details ||
+                      program.contact_email ||
+                      program.contact_phone
+                    )
+
+                    return (
+                      <React.Fragment key={idx}>
+                        {/* Main Row */}
+                        <tr
+                          className={`${hasDetails ? 'cursor-pointer' : ''} hover:bg-gray-50 transition-colors ${isExpanded ? 'bg-cyan-50' : ''}`}
+                          onClick={() => hasDetails && toggleProgram(programId)}
+                        >
+                          {/* Expand Icon */}
+                          <td className="px-4 py-4">
+                            {hasDetails && (
+                              <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180 text-cyan-600' : ''}`} />
+                            )}
+                          </td>
+
+                          {/* Jurisdiction Level */}
+                          <td className="px-4 py-4 hidden sm:table-cell">
+                            <JurisdictionLevelBadge
+                              level={program.jurisdiction_level}
+                              stateName={stateName}
+                              countyName={countyName}
+                              cityName={cityName}
+                            />
+                          </td>
+
+                          {/* Program Name */}
+                          <td className="px-4 py-4">
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-medium text-gray-900">{program.program_name}</span>
+                                {/* Mobile-only badges */}
+                                <span className="md:hidden">
+                                  <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
+                                </span>
+                                <span className="sm:hidden">
+                                  <JurisdictionLevelBadge
+                                    level={program.jurisdiction_level}
+                                    stateName={stateName}
+                                    countyName={countyName}
+                                    cityName={cityName}
+                                  />
+                                </span>
+                              </div>
+                              {program.deadline_info && (
+                                <span className="text-xs text-amber-600 font-medium">⏰ {program.deadline_info}</span>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Program Type (Rebate/Tax Credit) */}
+                          <td className="px-4 py-4 hidden md:table-cell">
+                            <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
+                          </td>
+
+                          {/* Provider */}
+                          <td className="px-4 py-4 hidden lg:table-cell">
+                            <span className="text-sm text-gray-600">{program.water_utility || '—'}</span>
+                          </td>
+
+                          {/* Amount */}
+                          <td className="px-4 py-4 text-right">
+                            {program.incentive_amount_max ? (
+                              <div>
+                                <span className="font-semibold text-cyan-600">${program.incentive_amount_max.toLocaleString()}</span>
+                                {program.incentive_per_unit && (
+                                  <p className="text-xs text-gray-400">{program.incentive_per_unit}</p>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-gray-400">—</span>
+                            )}
+                          </td>
+
+                          {/* Apply Button */}
+                          <td className="px-4 py-4 text-center">
+                            {program.incentive_url ? (
+                              <a
+                                href={program.incentive_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors"
+                              >
+                                Apply <ExternalLink className="h-3 w-3" />
+                              </a>
+                            ) : (
+                              <span className="text-gray-400 text-xs">—</span>
+                            )}
+                          </td>
+                        </tr>
+
+                        {/* Expanded Details Row */}
+                        {isExpanded && hasDetails && (
+                          <tr className="bg-gray-50">
+                            <td colSpan={7} className="px-4 py-0">
+                              <div className="py-4 border-t border-gray-100">
+                                {/* Description */}
+                                {program.program_description && (
+                                  <p className="text-sm text-gray-600 mb-4">{program.program_description}</p>
+                                )}
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                  {program.eligibility_details && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <Users className="h-3.5 w-3.5 text-blue-600" />
+                                        Who's Eligible
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.eligibility_details}</p>
+                                    </div>
+                                  )}
+                                  {(program.how_to_apply || program.steps_to_apply) && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <ClipboardList className="h-3.5 w-3.5 text-cyan-600" />
+                                        How to Apply
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.steps_to_apply || program.how_to_apply}</p>
+                                    </div>
+                                  )}
+                                  {program.documentation_required && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <FileText className="h-3.5 w-3.5 text-indigo-600" />
+                                        Documentation Required
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.documentation_required}</p>
+                                    </div>
+                                  )}
+                                  {program.property_requirements && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <Home className="h-3.5 w-3.5 text-purple-600" />
+                                        Property Requirements
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.property_requirements}</p>
+                                    </div>
+                                  )}
+                                  {program.installation_requirements && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <Wrench className="h-3.5 w-3.5 text-orange-600" />
+                                        Installation Requirements
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.installation_requirements}</p>
+                                    </div>
+                                  )}
+                                  {program.contractor_requirements && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <BadgeCheck className="h-3.5 w-3.5 text-teal-600" />
+                                        Contractor Requirements
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.contractor_requirements}</p>
+                                    </div>
+                                  )}
+                                  {(program.processing_time || program.timeline_to_complete) && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <Timer className="h-3.5 w-3.5 text-amber-600" />
+                                        Timeline
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.processing_time || program.timeline_to_complete}</p>
+                                    </div>
+                                  )}
+                                  {program.reimbursement_process && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <DollarSign className="h-3.5 w-3.5 text-green-600" />
+                                        Reimbursement Process
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.reimbursement_process}</p>
+                                    </div>
+                                  )}
+                                  {program.restrictions && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <AlertCircle className="h-3.5 w-3.5 text-red-600" />
+                                        Restrictions
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.restrictions}</p>
+                                    </div>
+                                  )}
+                                  {program.stacking_details && (
+                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
+                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
+                                        <Leaf className="h-3.5 w-3.5 text-cyan-600" />
+                                        Stacking Programs
+                                      </h4>
+                                      <p className="text-sm text-gray-600">{program.stacking_details}</p>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Footer with Contact & Badges */}
+                                <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-4 border-t border-gray-200">
+                                  <div className="flex flex-wrap items-center gap-3">
+                                    {(program.pre_approval_required === true || program.pre_approval_required === 'true') && (
+                                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded">
+                                        ⚠️ Pre-approval required
+                                      </span>
+                                    )}
+                                    {(program.inspection_required === true || program.inspection_required === 'true') && (
+                                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                        🔍 Inspection required
+                                      </span>
+                                    )}
+                                    {program.coverage_area && (
+                                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">
+                                        📍 {program.coverage_area}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-4">
+                                    {program.contact_phone && (
+                                      <a href={`tel:${program.contact_phone}`} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-cyan-600">
+                                        <Phone className="h-4 w-4" />
+                                        {program.contact_phone}
+                                      </a>
+                                    )}
+                                    {program.contact_email && (
+                                      <a href={`mailto:${program.contact_email}`} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-cyan-600">
+                                        <ExternalLink className="h-4 w-4" />
+                                        {program.contact_email}
+                                      </a>
+                                    )}
+                                    {program.incentive_url && (
+                                      <a
+                                        href={program.incentive_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+                                      >
+                                        Apply Now <ArrowRight className="h-4 w-4" />
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* CTA */}
         <div className="mt-12 bg-cyan-600 rounded-2xl p-8 text-center">

@@ -110,11 +110,11 @@ interface LocalRegulation {
   permitRequired?: boolean
 }
 
-interface WaterDistrictData {
+interface WaterUtilityData {
   name: string
   website?: string
   phone?: string
-  serviceArea?: string
+  programCount?: number
 }
 
 interface LocationHubViewProps {
@@ -131,7 +131,7 @@ interface LocationHubViewProps {
   lastUpdated?: string
   preplumbing?: PreplumbingData | null
   localRegulation?: LocalRegulation | null
-  waterDistrict?: WaterDistrictData | null
+  waterUtilities?: WaterUtilityData[]
 }
 
 // =============================================================================
@@ -149,6 +149,109 @@ const getDataConfidence = (data: GreywaterData | RainwaterData | null): DataConf
   if (score >= 2) return 'verified'
   if (score >= 1) return 'partial'
   return 'unknown'
+}
+
+// Get official regulation website URLs for jurisdictions
+const getJurisdictionUrls = (stateCode: string, stateName: string, countyName?: string, cityName?: string) => {
+  // State water regulation URLs
+  const stateUrls: Record<string, string> = {
+    'CA': 'https://www.hcd.ca.gov/building-standards/state-housing-law/wildfire-702-greywater',
+    'AZ': 'https://www.azdeq.gov/permits/water-permits/reclaimed-water',
+    'TX': 'https://www.tceq.texas.gov/permitting/water_quality/rainwater-greywater-water-reuse',
+    'NM': 'https://www.srca.nm.gov/water-resources/',
+    'CO': 'https://cdphe.colorado.gov/graywater',
+    'OR': 'https://www.oregon.gov/oha/ph/healthyenvironments/drinkingwater/pages/graywater.aspx',
+    'WA': 'https://ecology.wa.gov/water-shorelines/water-supply/water-recovery-reuse',
+    'NV': 'https://ndep.nv.gov/water/water-reuse-program',
+    'UT': 'https://deq.utah.gov/water-quality/water-reuse',
+  }
+
+  // Known county water/building code URLs (key = "STATE_COUNTY")
+  const countyUrls: Record<string, string> = {
+    'CA_LOS_ANGELES': 'https://pw.lacounty.gov/bsd/lib/BuildingCode/',
+    'CA_SAN_DIEGO': 'https://www.sandiegocounty.gov/pds/bldg/',
+    'CA_ORANGE': 'https://ocpublicworks.com/building',
+    'CA_SANTA_CLARA': 'https://www.sccgov.org/sites/dpd/Pages/dpd.aspx',
+    'CA_ALAMEDA': 'https://www.acgov.org/cda/planning/',
+    'CA_SAN_FRANCISCO': 'https://sfdbi.org/building-codes',
+    'CA_VENTURA': 'https://www.ventura.org/building-and-safety/',
+    'CA_RIVERSIDE': 'https://rivcoeda.org/Building-and-Safety',
+    'CA_SAN_BERNARDINO': 'https://sbcounty.gov/lus/building_and_safety/',
+    'CA_KERN': 'https://kernpublicworks.com/building-and-development/',
+    'CA_FRESNO': 'https://www.co.fresno.ca.us/departments/public-works-planning/development-services',
+    'CA_SACRAMENTO': 'https://building.saccounty.gov/',
+    'CA_CONTRA_COSTA': 'https://www.contracosta.ca.gov/6282/Building-Inspection',
+    'CA_MARIN': 'https://www.marincounty.org/depts/cd/divisions/building-and-safety',
+    'CA_SONOMA': 'https://sonomacounty.ca.gov/development-services/permit-sonoma/',
+    'CA_SAN_MATEO': 'https://www.smcgov.org/planning/building',
+    'CA_SANTA_BARBARA': 'https://www.countyofsb.org/339/Building-Safety',
+    'CA_MONTEREY': 'https://www.co.monterey.ca.us/government/departments-i-z/resource-management-agency/building-services',
+  }
+
+  // Known city municipal code URLs (key = "STATE_CITY")
+  const cityUrls: Record<string, string> = {
+    'CA_LOS_ANGELES': 'https://codelibrary.amlegal.com/codes/los_angeles/latest/lamc/0-0-0-1',
+    'CA_SAN_DIEGO': 'https://www.sandiego.gov/development-services/codes-policies',
+    'CA_SAN_FRANCISCO': 'https://codelibrary.amlegal.com/codes/san_francisco/latest/overview',
+    'CA_SAN_JOSE': 'https://www.sanjoseca.gov/your-government/departments/planning-building-code-enforcement/building-code-enforcement',
+    'CA_OAKLAND': 'https://www.oaklandca.gov/departments/planning-building',
+    'CA_LONG_BEACH': 'https://www.longbeach.gov/lbds/',
+    'CA_SANTA_MONICA': 'https://www.santamonica.gov/building-codes',
+    'CA_PASADENA': 'https://www.cityofpasadena.net/building-and-safety/',
+    'CA_BURBANK': 'https://www.burbankca.gov/departments/community-development/building-division',
+    'CA_GLENDALE': 'https://www.glendaleca.gov/government/departments/community-development/building-safety',
+    'CA_IRVINE': 'https://www.cityofirvine.org/community-development/building-safety',
+    'CA_ANAHEIM': 'https://www.anaheim.net/1085/Building',
+    'CA_SANTA_ANA': 'https://www.santa-ana.org/building-and-engineering/',
+    'CA_BERKELEY': 'https://berkeleyca.gov/construction-development/permit-types/building',
+    'CA_PALO_ALTO': 'https://www.cityofpaloalto.org/Departments/Planning-Development-Services/Development-Services/Building',
+    'CA_ALTADENA': 'https://pw.lacounty.gov/bsd/lib/BuildingCode/', // Unincorporated, uses LA County
+  }
+
+  // Known water utility URLs
+  const utilityUrls: Record<string, string> = {
+    'LADWP': 'https://www.ladwp.com/ladwp/faces/ladwp/residential/r-savemoney/r-sm-rebatesandprograms',
+    'MWD': 'https://www.bewaterwise.com/',
+    'EBMUD': 'https://www.ebmud.com/water/conservation-and-rebates/',
+    'SFPUC': 'https://sfpuc.org/programs/rebates',
+    'San Diego County Water Authority': 'https://www.sdcwa.org/your-water/conservation/',
+    'SDCWA': 'https://www.sdcwa.org/your-water/conservation/',
+    'Santa Clara Valley Water': 'https://www.valleywater.org/saving-water',
+    'Valley Water': 'https://www.valleywater.org/saving-water',
+    'Marin Water': 'https://www.marinwater.org/rebates',
+    'MMWD': 'https://www.marinwater.org/rebates',
+    'IRWD': 'https://www.irwd.com/save-water/rebates',
+    'Long Beach Water': 'https://lbwater.org/save/rebates/',
+    'Las Virgenes MWD': 'https://www.lvmwd.com/conservation/',
+    'LVMWD': 'https://www.lvmwd.com/conservation/',
+    'West Basin MWD': 'https://westbasin.org/conservation/',
+    'Contra Costa Water': 'https://www.ccwater.com/290/Rebates-Programs',
+    'Zone 7 Water Agency': 'https://www.zone7water.com/',
+    'ACWD': 'https://www.acwd.org/193/Rebates-Programs',
+    'Alameda County Water': 'https://www.acwd.org/193/Rebates-Programs',
+    'Calleguas MWD': 'https://www.calleguas.com/',
+    'Eastern MWD': 'https://www.emwd.org/post/rebates',
+    'EMWD': 'https://www.emwd.org/post/rebates',
+    'Inland Empire Utilities': 'https://www.ieua.org/water-use-efficiency/',
+    'IEUA': 'https://www.ieua.org/water-use-efficiency/',
+    'Western MWD': 'https://www.wmwd.com/288/Rebates-Incentives',
+  }
+
+  // Helper to normalize names for key lookup
+  const normalize = (name: string) => name?.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') || ''
+
+  const stateUrl = stateUrls[stateCode] || undefined
+  const countyKey = countyName ? `${stateCode}_${normalize(countyName)}` : ''
+  const countyUrl = countyUrls[countyKey] || undefined
+  const cityKey = cityName ? `${stateCode}_${normalize(cityName)}` : ''
+  const cityUrl = cityUrls[cityKey] || undefined
+
+  return {
+    stateUrl,
+    countyUrl,
+    cityUrl,
+    getUtilityUrl: (utilityName: string) => utilityUrls[utilityName] || utilityUrls[normalize(utilityName)] || undefined
+  }
 }
 
 const DataConfidenceBadge = ({ confidence }: { confidence: DataConfidence }) => {
@@ -298,7 +401,7 @@ export default function LocationHubView({
   lastUpdated,
   preplumbing,
   localRegulation,
-  waterDistrict
+  waterUtilities = []
 }: LocationHubViewProps) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
@@ -328,19 +431,25 @@ export default function LocationHubView({
     c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
   ).sort((a, b) => (a.city_name || '').localeCompare(b.city_name || ''))
 
-  // Count incentives by resource type
+  // Filter function to exclude grants
+  const isNotGrant = (i: IncentiveProgram) => {
+    const type = (i.incentive_type || '').toLowerCase()
+    return type !== 'grant' && !type.includes('grant')
+  }
+
+  // Count incentives by resource type (excluding grants)
   const incentiveCounts = {
-    greywater: incentives.filter(i => i.resource_type === 'greywater').length,
-    rainwater: incentives.filter(i => i.resource_type === 'rainwater').length,
-    conservation: incentives.filter(i => i.resource_type === 'conservation' || !i.resource_type).length,
-    total: incentives.length
+    greywater: incentives.filter(i => i.resource_type === 'greywater' && isNotGrant(i)).length,
+    rainwater: incentives.filter(i => i.resource_type === 'rainwater' && isNotGrant(i)).length,
+    conservation: incentives.filter(i => (i.resource_type === 'conservation' || !i.resource_type) && isNotGrant(i)).length,
+    total: incentives.filter(isNotGrant).length
   }
 
   // Filter out grants - only show rebates for homeowners and small businesses
-  const relevantIncentives = incentives.filter(i => i.incentive_type !== 'grant')
+  const relevantIncentives = incentives.filter(isNotGrant)
 
-  // Max rebate amount
-  const maxRebate = Math.max(...incentives.map(i => i.incentive_amount_max || 0), 0)
+  // Max rebate amount (excluding grants)
+  const maxRebate = Math.max(...relevantIncentives.map(i => i.incentive_amount_max || 0), 0)
 
   return (
     <div className="bg-white min-h-screen">
@@ -403,90 +512,188 @@ export default function LocationHubView({
         )}
 
         {/* Regulatory Hierarchy Explanation - City Level Only */}
-        {level === 'city' && (
-          <div className="bg-gradient-to-r from-slate-50 to-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
-            <div className="flex items-start gap-4">
-              <div className="hidden sm:flex flex-col items-center gap-0.5 flex-shrink-0">
-                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <span className="text-sm">🏛️</span>
-                </div>
-                <div className="w-0.5 h-3 bg-gray-300"></div>
-                {countyName && (
-                  <>
-                    <div className="w-6 h-6 bg-amber-100 rounded flex items-center justify-center">
-                      <span className="text-xs">🏢</span>
+        {level === 'city' && (() => {
+          const jurisdictionUrls = getJurisdictionUrls(stateCode, stateName, countyName, cityName)
+          return (
+            <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 text-base mb-3">Understanding Your Regulations</h3>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                Water regulations in {cityName} are governed by multiple levels of government, each building upon the previous level.
+              </p>
+              <div className="space-y-3">
+                {/* State Law */}
+                {jurisdictionUrls.stateUrl ? (
+                  <a
+                    href={jurisdictionUrls.stateUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 p-3 bg-purple-50/50 rounded-lg border border-purple-100 hover:bg-purple-100/50 hover:border-purple-200 transition-colors group"
+                  >
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Building2 className="w-4 h-4 text-purple-600" />
                     </div>
-                    <div className="w-0.5 h-3 bg-gray-300"></div>
-                  </>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm text-gray-900 mb-0.5 group-hover:text-purple-700 flex items-center gap-1.5">
+                        {stateName} State Law
+                        <ExternalLink className="w-3 h-3 text-purple-400 group-hover:text-purple-600" />
+                      </div>
+                      <div className="text-xs text-gray-600">Provides the baseline regulations for water systems</div>
+                    </div>
+                  </a>
+                ) : (
+                  <div className="flex items-start gap-3 p-3 bg-purple-50/50 rounded-lg border border-purple-100">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Building2 className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm text-gray-900 mb-0.5">{stateName} State Law</div>
+                      <div className="text-xs text-gray-600">Provides the baseline regulations for water systems</div>
+                    </div>
+                  </div>
                 )}
-                <div className="w-6 h-6 bg-emerald-100 rounded flex items-center justify-center">
-                  <span className="text-xs">🏠</span>
-                </div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 text-sm mb-2">Understanding Your Regulations</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  Water regulations in {cityName} come from multiple government levels. {stateName} state law provides the baseline,
-                  {countyName ? ` ${countyName} County may add local requirements,` : ''} and city ordinances can add further rules.
-                </p>
-                <div className="flex flex-wrap gap-3 text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">
-                      🏛️ {stateName}
-                    </span>
-                    <span className="text-gray-500">State baseline</span>
-                  </div>
-                  {countyName && (
-                    <div className="flex items-center gap-1.5">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
-                        🏢 {countyName} County
-                      </span>
-                      <span className="text-gray-500">County additions</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      🏠 {cityName}
-                    </span>
-                    <span className="text-gray-500">City-specific</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
-        {/* Water District Info */}
-        {waterDistrict && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Droplets className="h-5 w-5 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-blue-900 text-sm">Water District</p>
-                <p className="text-blue-800 font-medium">{waterDistrict.name}</p>
-                {waterDistrict.serviceArea && (
-                  <p className="text-xs text-blue-600 mt-1">Service Area: {waterDistrict.serviceArea}</p>
+                {/* County */}
+                {countyName && (
+                  jurisdictionUrls.countyUrl ? (
+                    <a
+                      href={jurisdictionUrls.countyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 bg-amber-50/50 rounded-lg border border-amber-100 hover:bg-amber-100/50 hover:border-amber-200 transition-colors group"
+                    >
+                      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Building2 className="w-4 h-4 text-amber-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 mb-0.5 group-hover:text-amber-700 flex items-center gap-1.5">
+                          {countyName} County
+                          <ExternalLink className="w-3 h-3 text-amber-400 group-hover:text-amber-600" />
+                        </div>
+                        <div className="text-xs text-gray-600">May add additional local requirements</div>
+                      </div>
+                    </a>
+                  ) : (
+                    <div className="flex items-start gap-3 p-3 bg-amber-50/50 rounded-lg border border-amber-100">
+                      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Building2 className="w-4 h-4 text-amber-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 mb-0.5">{countyName} County</div>
+                        <div className="text-xs text-gray-600">May add additional local requirements</div>
+                      </div>
+                    </div>
+                  )
                 )}
-                <div className="flex flex-wrap gap-3 mt-2">
-                  {waterDistrict.phone && (
-                    <a href={`tel:${waterDistrict.phone}`} className="inline-flex items-center gap-1 text-xs text-blue-700 hover:text-blue-800">
-                      <Phone className="h-3 w-3" />
-                      {waterDistrict.phone}
-                    </a>
-                  )}
-                  {waterDistrict.website && (
-                    <a href={waterDistrict.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-700 hover:text-blue-800">
-                      <ExternalLink className="h-3 w-3" />
-                      Website
-                    </a>
-                  )}
+
+                {/* City */}
+                {jurisdictionUrls.cityUrl ? (
+                  <a
+                    href={jurisdictionUrls.cityUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 p-3 bg-emerald-50/50 rounded-lg border border-emerald-100 hover:bg-emerald-100/50 hover:border-emerald-200 transition-colors group"
+                  >
+                    <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Home className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm text-gray-900 mb-0.5 group-hover:text-emerald-700 flex items-center gap-1.5">
+                        {cityName} City Ordinances
+                        <ExternalLink className="w-3 h-3 text-emerald-400 group-hover:text-emerald-600" />
+                      </div>
+                      <div className="text-xs text-gray-600">Can add further city-specific rules and requirements</div>
+                    </div>
+                  </a>
+                ) : (
+                  <div className="flex items-start gap-3 p-3 bg-emerald-50/50 rounded-lg border border-emerald-100">
+                    <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Home className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm text-gray-900 mb-0.5">{cityName} City Ordinances</div>
+                      <div className="text-xs text-gray-600">Can add further city-specific rules and requirements</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* Water Utilities Section */}
+        {(() => {
+          // Get utility URL helper
+          const { getUtilityUrl } = getJurisdictionUrls(stateCode, stateName, countyName, cityName)
+
+          // Extract unique water utilities from incentives if not provided
+          const utilitiesFromIncentives = waterUtilities.length > 0
+            ? waterUtilities
+            : Array.from(
+                incentives.reduce((acc, i) => {
+                  if (i.water_utility && i.water_utility.trim()) {
+                    const name = i.water_utility.trim()
+                    if (!acc.has(name)) {
+                      acc.set(name, { name, programCount: 1 })
+                    } else {
+                      acc.get(name)!.programCount = (acc.get(name)!.programCount || 0) + 1
+                    }
+                  }
+                  return acc
+                }, new Map<string, WaterUtilityData>())
+              ).map(([, v]) => v)
+                .sort((a, b) => (b.programCount || 0) - (a.programCount || 0))
+
+          if (utilitiesFromIncentives.length === 0) return null
+
+          return (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Droplets className="h-5 w-5 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-blue-900 text-sm mb-2">
+                    Water {utilitiesFromIncentives.length === 1 ? 'Utility' : 'Utilities'} Serving This Area
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {utilitiesFromIncentives.map((utility, idx) => {
+                      const utilityUrl = utility.website || getUtilityUrl(utility.name)
+                      return utilityUrl ? (
+                        <a
+                          key={idx}
+                          href={utilityUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-colors group"
+                        >
+                          <span className="text-sm font-medium text-blue-800 group-hover:text-blue-900">{utility.name}</span>
+                          {utility.programCount && utility.programCount > 0 && (
+                            <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">
+                              {utility.programCount} program{utility.programCount !== 1 ? 's' : ''}
+                            </span>
+                          )}
+                          <ExternalLink className="w-3 h-3 text-blue-400 group-hover:text-blue-600" />
+                        </a>
+                      ) : (
+                        <div
+                          key={idx}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-blue-200"
+                        >
+                          <span className="text-sm font-medium text-blue-800">{utility.name}</span>
+                          {utility.programCount && utility.programCount > 0 && (
+                            <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">
+                              {utility.programCount} program{utility.programCount !== 1 ? 's' : ''}
+                            </span>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        })()}
 
         {/* Detailed Regulations Section */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
@@ -775,7 +982,7 @@ export default function LocationHubView({
         {incentives.length > 0 && (
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-8">
             {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-emerald-600" />
@@ -799,9 +1006,9 @@ export default function LocationHubView({
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-8"></th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell w-28">Level</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Program</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Type</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Eligibility</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Provider</th>
                       <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
                       <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Action</th>
@@ -812,6 +1019,7 @@ export default function LocationHubView({
                       const programId = `table-${idx}-${program.program_name}`
                       const isExpanded = expandedPrograms.has(programId)
                       const hasDetails = !!(
+                        program.program_description ||
                         program.eligibility_details ||
                         program.how_to_apply ||
                         program.steps_to_apply ||
@@ -840,41 +1048,44 @@ export default function LocationHubView({
                               )}
                             </td>
 
-                            {/* Program Name & Description */}
+                            {/* Jurisdiction Level */}
+                            <td className="px-4 py-4 hidden sm:table-cell">
+                              <JurisdictionLevelBadge
+                                level={program.jurisdiction_level}
+                                stateName={stateName}
+                                countyName={countyName}
+                                cityName={cityName}
+                              />
+                            </td>
+
+                            {/* Program Name */}
                             <td className="px-4 py-4">
                               <div className="flex flex-col gap-1">
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <span className="font-medium text-gray-900">{program.program_name}</span>
-                                  <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
-                                  <JurisdictionLevelBadge
-                                    level={program.jurisdiction_level}
-                                    stateName={stateName}
-                                    countyName={countyName}
-                                    cityName={cityName}
-                                  />
+                                  {/* Mobile-only badges */}
+                                  <span className="md:hidden">
+                                    <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
+                                  </span>
+                                  {/* Mobile-only jurisdiction badge */}
+                                  <span className="sm:hidden">
+                                    <JurisdictionLevelBadge
+                                      level={program.jurisdiction_level}
+                                      stateName={stateName}
+                                      countyName={countyName}
+                                      cityName={cityName}
+                                    />
+                                  </span>
                                 </div>
-                                {program.program_description && (
-                                  <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{program.program_description}</p>
-                                )}
                                 {program.deadline_info && (
                                   <span className="text-xs text-amber-600 font-medium">⏰ {program.deadline_info}</span>
                                 )}
-                                {/* Mobile-only badges */}
-                                <div className="flex flex-wrap gap-1 md:hidden mt-1">
-                                  <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
-                                  <EligibilityBadges residential={program.residential_eligible} commercial={program.commercial_eligible} />
-                                </div>
                               </div>
                             </td>
 
-                            {/* Resource Type */}
+                            {/* Program Type (Rebate/Tax Credit) */}
                             <td className="px-4 py-4 hidden md:table-cell">
-                              <ResourceTypeBadge type={(program.resource_type as any) || 'conservation'} />
-                            </td>
-
-                            {/* Eligibility */}
-                            <td className="px-4 py-4 hidden lg:table-cell">
-                              <EligibilityBadges residential={program.residential_eligible} commercial={program.commercial_eligible} />
+                              <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
                             </td>
 
                             {/* Provider */}
@@ -919,6 +1130,10 @@ export default function LocationHubView({
                             <tr className="bg-gray-50">
                               <td colSpan={7} className="px-4 py-0">
                                 <div className="py-4 border-t border-gray-100">
+                                  {/* Description */}
+                                  {program.program_description && (
+                                    <p className="text-sm text-gray-600 mb-4">{program.program_description}</p>
+                                  )}
                                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {/* Eligibility Details */}
                                     {program.eligibility_details && (

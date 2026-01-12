@@ -124,23 +124,71 @@ async function getGreywaterIncentives(stateCode: string, cityName: string, count
     if (countyJurisdictionId) jurisdictionIds.push(countyJurisdictionId)
     jurisdictionIds.push(cityJurisdictionId)
 
+    // Get full program details with jurisdiction level tracking
     const query = `
-      SELECT DISTINCT
-        p.program_name,
-        p.program_type as incentive_type,
-        p.resource_type,
-        p.incentive_amount_min,
-        p.incentive_amount_max,
-        p.application_url as incentive_url,
-        p.program_description,
-        p.water_utility
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\` p
-      JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` pjl
-        ON p.program_id = pjl.program_id
-      WHERE LOWER(p.program_status) = 'active'
-        AND pjl.jurisdiction_id IN UNNEST(@jurisdictionIds)
-        AND (p.resource_type = 'greywater' OR p.resource_type IS NULL)
-      ORDER BY p.incentive_amount_max DESC NULLS LAST
+      WITH ranked_programs AS (
+        SELECT
+          p.program_id,
+          p.program_name,
+          p.program_type as incentive_type,
+          p.resource_type,
+          p.program_subtype,
+          p.incentive_amount_min,
+          p.incentive_amount_max,
+          p.incentive_per_unit,
+          p.application_url as incentive_url,
+          p.program_description,
+          p.water_utility,
+          p.residential_eligible,
+          p.commercial_eligible,
+          p.eligibility_details,
+          p.how_to_apply,
+          p.documentation_required,
+          p.installation_requirements,
+          p.property_requirements,
+          p.income_requirements,
+          p.pre_approval_required,
+          p.inspection_required,
+          p.contractor_requirements,
+          p.product_requirements,
+          p.timeline_to_complete,
+          p.reimbursement_process,
+          p.restrictions,
+          p.steps_to_apply,
+          p.processing_time,
+          p.stacking_allowed,
+          p.stacking_details,
+          p.contact_email,
+          p.contact_phone,
+          p.coverage_area,
+          p.deadline_info,
+          p.program_end_date,
+          pjl.jurisdiction_id,
+          CASE
+            WHEN pjl.jurisdiction_id LIKE '%_CITY_%' THEN 'city'
+            WHEN pjl.jurisdiction_id LIKE '%_COUNTY_%' THEN 'county'
+            WHEN pjl.jurisdiction_id LIKE '%_STATE' THEN 'state'
+            ELSE 'other'
+          END as jurisdiction_level,
+          ROW_NUMBER() OVER (PARTITION BY p.program_id ORDER BY
+            CASE
+              WHEN pjl.jurisdiction_id LIKE '%_CITY_%' THEN 3
+              WHEN pjl.jurisdiction_id LIKE '%_COUNTY_%' THEN 2
+              WHEN pjl.jurisdiction_id LIKE '%_STATE' THEN 1
+              ELSE 0
+            END DESC
+          ) as rn
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\` p
+        JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` pjl
+          ON p.program_id = pjl.program_id
+        WHERE LOWER(p.program_status) = 'active'
+          AND pjl.jurisdiction_id IN UNNEST(@jurisdictionIds)
+          AND (p.resource_type = 'greywater' OR p.resource_type IS NULL)
+      )
+      SELECT * EXCEPT(rn, program_id)
+      FROM ranked_programs
+      WHERE rn = 1
+      ORDER BY incentive_amount_max DESC NULLS LAST
     `
 
     const [rows] = await bigquery.query({

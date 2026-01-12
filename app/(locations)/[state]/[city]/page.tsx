@@ -80,67 +80,8 @@ async function getStateRegulations(stateCode: string) {
   try {
     const bigquery = getBigQueryClient()
 
-    // Try unified table
+    // Query greywater_laws table (primary source)
     const query = `
-      SELECT
-        state_code,
-        state_name,
-        legal_status as greywater_legal_status,
-        permit_required as greywater_permit_required,
-        permit_threshold_gpd as greywater_permit_threshold,
-        indoor_use_allowed as greywater_indoor_allowed,
-        outdoor_use_allowed as greywater_outdoor_allowed,
-        governing_code as greywater_governing_code,
-        approved_uses as greywater_approved_uses,
-        key_restrictions as greywater_key_restrictions,
-        rainwater_legal_status,
-        rainwater_collection_limit_gallons,
-        rainwater_potable_allowed,
-        rainwater_permit_required,
-        primary_agency,
-        agency_phone,
-        government_website,
-        last_updated
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
-      WHERE state_code = @stateCode
-      LIMIT 1
-    `
-
-    const [rows] = await bigquery.query({
-      query,
-      params: { stateCode: stateCode.toUpperCase() }
-    }) as any
-
-    if (rows && rows.length > 0) {
-      const row = rows[0]
-      return {
-        greywater: {
-          legalStatus: row.greywater_legal_status === 'L' ? 'Legal' : row.greywater_legal_status === 'R' ? 'Regulated' : row.greywater_legal_status || 'Varies',
-          permitRequired: row.greywater_permit_required,
-          permitThresholdGpd: row.greywater_permit_threshold,
-          indoorUseAllowed: row.greywater_indoor_allowed,
-          outdoorUseAllowed: row.greywater_outdoor_allowed,
-          governingCode: row.greywater_governing_code,
-          approvedUses: row.greywater_approved_uses ? row.greywater_approved_uses.split(',').map((s: string) => s.trim()) : [],
-          keyRestrictions: row.greywater_key_restrictions ? row.greywater_key_restrictions.split(',').map((s: string) => s.trim()) : []
-        },
-        rainwater: {
-          legalStatus: row.rainwater_legal_status || 'Legal',
-          collectionLimitGallons: row.rainwater_collection_limit_gallons,
-          potableUseAllowed: row.rainwater_potable_allowed,
-          permitRequired: row.rainwater_permit_required || 'No'
-        },
-        agency: {
-          name: row.primary_agency,
-          phone: row.agency_phone,
-          website: row.government_website
-        },
-        lastUpdated: row.last_updated
-      }
-    }
-
-    // Fallback to greywater_laws
-    const fallbackQuery = `
       SELECT
         state_code,
         state_name,
@@ -160,23 +101,23 @@ async function getStateRegulations(stateCode: string) {
       LIMIT 1
     `
 
-    const [fallbackRows] = await bigquery.query({
-      query: fallbackQuery,
+    const [rows] = await bigquery.query({
+      query,
       params: { stateCode: stateCode.toUpperCase() }
     }) as any
 
-    if (fallbackRows && fallbackRows.length > 0) {
-      const row = fallbackRows[0]
+    if (rows && rows.length > 0) {
+      const row = rows[0]
       return {
         greywater: {
-          legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : 'Varies',
+          legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : row.legal_status || 'Varies',
           permitRequired: row.permit_required,
           permitThresholdGpd: row.permit_threshold_gpd,
           indoorUseAllowed: row.indoor_use_allowed,
           outdoorUseAllowed: row.outdoor_use_allowed,
           governingCode: row.governing_code,
-          approvedUses: row.approved_uses ? row.approved_uses.split(',').map((s: string) => s.trim()) : [],
-          keyRestrictions: row.key_restrictions ? row.key_restrictions.split(',').map((s: string) => s.trim()) : []
+          approvedUses: row.approved_uses ? (typeof row.approved_uses === 'string' ? row.approved_uses.split(',').map((s: string) => s.trim()) : row.approved_uses) : [],
+          keyRestrictions: row.key_restrictions ? (typeof row.key_restrictions === 'string' ? row.key_restrictions.split(',').map((s: string) => s.trim()) : row.key_restrictions) : []
         },
         rainwater: {
           legalStatus: 'Legal',
