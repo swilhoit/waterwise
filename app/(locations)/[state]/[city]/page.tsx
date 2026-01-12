@@ -93,6 +93,7 @@ async function getStateRegulations(stateCode: string) {
         governing_code,
         approved_uses,
         key_restrictions,
+        summary,
         primary_agency,
         agency_phone,
         government_website
@@ -109,10 +110,6 @@ async function getStateRegulations(stateCode: string) {
     if (rows && rows.length > 0) {
       const row = rows[0]
 
-      // California-specific greywater governing code (database has rainwater data mixed in)
-      const isCA = stateCode.toUpperCase() === 'CA'
-      const caGreywaterGoverningCode = 'California Plumbing Code Chapter 15, Health & Safety Code §17922.12'
-
       return {
         greywater: {
           legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : row.legal_status || 'Varies',
@@ -120,9 +117,10 @@ async function getStateRegulations(stateCode: string) {
           permitThresholdGpd: row.permit_threshold_gpd,
           indoorUseAllowed: row.indoor_use_allowed,
           outdoorUseAllowed: row.outdoor_use_allowed,
-          governingCode: isCA ? caGreywaterGoverningCode : row.governing_code,
+          governingCode: row.governing_code,
           approvedUses: row.approved_uses ? (typeof row.approved_uses === 'string' ? row.approved_uses.split(',').map((s: string) => s.trim()) : row.approved_uses) : [],
-          keyRestrictions: row.key_restrictions ? (typeof row.key_restrictions === 'string' ? row.key_restrictions.split(',').map((s: string) => s.trim()) : row.key_restrictions) : []
+          keyRestrictions: row.key_restrictions ? (typeof row.key_restrictions === 'string' ? row.key_restrictions.split(',').map((s: string) => s.trim()) : row.key_restrictions) : [],
+          summary: row.summary
         },
         rainwater: {
           legalStatus: 'Legal',

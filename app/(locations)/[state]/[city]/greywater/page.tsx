@@ -103,15 +103,6 @@ async function getGreywaterData(stateCode: string) {
     else if (legalStatus === 'R') legalStatus = 'Regulated'
     else if (!legalStatus) legalStatus = 'Varies'
 
-    // California-specific greywater data (database has mixed rainwater data)
-    const caGreywaterData = {
-      summary: 'California allows greywater systems under the Plumbing Code Chapter 15. Simple laundry-to-landscape systems under 250 GPD typically don\'t require a permit.',
-      governingCode: 'California Plumbing Code Chapter 15, Health & Safety Code §17922.12'
-    }
-
-    // Use California-specific greywater data, otherwise use database values
-    const isCA = stateCode.toUpperCase() === 'CA'
-
     return {
       greywater: {
         legalStatus,
@@ -119,11 +110,11 @@ async function getGreywaterData(stateCode: string) {
         permitThresholdGpd: row.permit_threshold_gpd,
         indoorUseAllowed: row.indoor_use_allowed,
         outdoorUseAllowed: row.outdoor_use_allowed,
-        governingCode: isCA ? caGreywaterData.governingCode : row.governing_code,
+        governingCode: row.governing_code,
         approvedUses: parseArrayField(row.approved_uses),
         keyRestrictions: parseArrayField(row.key_restrictions),
         recentChanges: row.recent_changes,
-        summary: isCA ? caGreywaterData.summary : row.summary
+        summary: row.summary
       },
       agency: {
         name: row.primary_agency,
