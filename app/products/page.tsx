@@ -3,107 +3,240 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, Droplets, Home as HomeIcon, Building, Zap, Shield, Star, ArrowRight, ChevronRight, Truck, Award, Check, X, Leaf, Timer, Settings, Waves, ArrowUpRight } from "lucide-react"
+import { CheckCircle, Droplets, Home as HomeIcon, Building, Zap, Shield, Star, ArrowRight, ChevronRight, Truck, Award, Check, X, Leaf, Timer, Settings, Waves, ArrowUpRight, CloudRain, Filter, Wrench } from "lucide-react"
 import { formatPriceDisplay } from '@/lib/price-utils'
 import { CTASection } from '@/components/sections'
+import { ProductCatalog } from '@/components/shop/ProductCatalog'
 
 export const metadata = {
-  title: 'Greywater Systems & Filters | Water Wise Group',
-  description: 'Professional greywater recycling systems for homes, cabins, and commercial properties. Save up to 40% on water bills with our WaterMark-approved Aqua2use systems.',
+  title: 'Water Conservation Systems & Equipment | Water Wise Group',
+  description: 'Professional greywater recycling and rainwater harvesting systems for homes, cabins, and commercial properties. Save up to 40% on water bills.',
+}
+
+// Product categories
+const categories = [
+  { id: 'all', name: 'All Products' },
+  { id: 'greywater', name: 'Greywater Systems' },
+  { id: 'rainwater', name: 'Rainwater Harvesting' },
+  { id: 'parts', name: 'Parts & Accessories' },
+  { id: 'filtration', name: 'Filtration' },
+]
+
+// All products with categories
+const allProducts = [
+  // Greywater Systems
+  {
+    id: "gw-1",
+    title: "Aqua2use GWDD Gravity",
+    description: "Entry-level greywater system for single-story homes. Gravity-fed design requires no pump. Features 4-stage Matala filtration with 90% solid removal.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
+    price: "$599",
+    handle: "aqua2use",
+    badge: "Best Seller",
+    badgeColor: "ocean",
+    category: "greywater",
+    application: "residential",
+  },
+  {
+    id: "gw-2",
+    title: "Aqua2use GWDD with Pump",
+    description: "Versatile greywater system with integrated pump for multi-story homes or uphill installations. 17 GPM processing capacity.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-pump.jpg?v=1719253734",
+    price: "$899",
+    handle: "aqua2use",
+    badge: "Popular",
+    badgeColor: "ocean",
+    category: "greywater",
+    application: "residential",
+  },
+  {
+    id: "gw-3",
+    title: "Aqua2use Pro System",
+    description: "Commercial-grade greywater treatment for high-capacity applications. 50-gallon tank with 25 GPM flow rate. Ideal for multi-family or commercial.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-ug.jpg?v=1719241821",
+    price: "$2,699",
+    handle: "aqua2use",
+    badge: "Commercial",
+    badgeColor: "terra",
+    category: "greywater",
+    application: "commercial",
+  },
+  // Rainwater Harvesting
+  {
+    id: "rw-1",
+    title: "50-Gallon Rain Barrel",
+    description: "Compact rain barrel perfect for beginners. Includes spigot, overflow valve, and debris screen. Connects easily to any downspout.",
+    image: "/images/cabin-greywater.jpg",
+    price: "$89",
+    handle: "rain-barrel-50",
+    badge: "Starter",
+    badgeColor: "ocean",
+    category: "rainwater",
+    application: "residential",
+  },
+  {
+    id: "rw-2",
+    title: "100-Gallon Rain Barrel System",
+    description: "Double-capacity rain collection with linking kit. UV-resistant polyethylene construction. Includes brass spigot and overflow hose.",
+    image: "/images/cabin-greywater.jpg",
+    price: "$149",
+    handle: "rain-barrel-100",
+    badge: "Popular",
+    badgeColor: "ocean",
+    category: "rainwater",
+    application: "residential",
+  },
+  {
+    id: "rw-3",
+    title: "First Flush Diverter Kit",
+    description: "Automatically diverts the first flush of contaminated roof water away from your tank. Essential for clean rainwater collection.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+    price: "$59",
+    handle: "first-flush-diverter",
+    badge: "Essential",
+    badgeColor: "sand",
+    category: "rainwater",
+    application: "residential",
+  },
+  {
+    id: "rw-4",
+    title: "Downspout Filter & Diverter",
+    description: "2-in-1 downspout filter and diverter. Stainless steel mesh removes leaves and debris while directing water to your barrel.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+    price: "$45",
+    handle: "downspout-filter",
+    badge: "Essential",
+    badgeColor: "sand",
+    category: "rainwater",
+    application: "residential",
+  },
+  {
+    id: "rw-5",
+    title: "Complete Rain Harvesting Kit",
+    description: "Everything needed to start collecting rainwater: 100-gal barrel, first flush diverter, downspout connector, and overflow kit.",
+    image: "/images/cabin-greywater.jpg",
+    price: "$299",
+    handle: "rain-harvest-kit",
+    badge: "Best Value",
+    badgeColor: "terra",
+    category: "rainwater",
+    application: "residential",
+  },
+  {
+    id: "rw-6",
+    title: "265-Gallon IBC Tote System",
+    description: "High-capacity rainwater storage using repurposed food-grade IBC tote. Includes inlet filter, spigot, and overflow fitting.",
+    image: "/images/cabin-greywater.jpg",
+    price: "$349",
+    handle: "ibc-tote-system",
+    badge: "High Capacity",
+    badgeColor: "ocean",
+    category: "rainwater",
+    application: "residential",
+  },
+  // Parts & Accessories
+  {
+    id: "part-1",
+    title: "Replacement Filter Set",
+    description: "Genuine Aqua2use 4-stage Matala filters. Tool-free replacement, reusable for up to 3 years with proper cleaning.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+    price: "$249",
+    handle: "replacement-filters",
+    badge: "Maintenance",
+    badgeColor: "sand",
+    category: "parts",
+    application: "residential",
+  },
+  {
+    id: "part-2",
+    title: "Replacement Pump Kit",
+    description: "Direct OEM replacement pump with electronic controller. Features dry run protection and automatic water level sensing.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+    price: "$399",
+    handle: "replacement-greywater-pump",
+    badge: "Parts",
+    badgeColor: "terra",
+    category: "parts",
+    application: "residential",
+  },
+  {
+    id: "part-3",
+    title: "Drip Irrigation Kit",
+    description: "Complete subsurface drip system for greywater or rainwater distribution. 250 ft tubing with pressure regulator.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+    price: "$199",
+    handle: "drip-irrigation-kit",
+    badge: "Essential",
+    badgeColor: "ocean",
+    category: "parts",
+    application: "residential",
+  },
+  {
+    id: "part-4",
+    title: "Rainwater Pump - 1/2 HP",
+    description: "Automatic 1/2 HP pump for pressurizing rainwater systems. 17 GPM flow rate with 34 PSI max. Quiet operation.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+    price: "$299",
+    handle: "rainwater-pump-half-hp",
+    badge: "Popular",
+    badgeColor: "ocean",
+    category: "parts",
+    application: "residential",
+  },
+  // Filtration
+  {
+    id: "filt-1",
+    title: "Sediment Pre-Filter",
+    description: "Inline sediment filter for rainwater systems. Removes particles down to 50 microns. Easy cartridge replacement.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+    price: "$39",
+    handle: "sediment-pre-filter",
+    badge: "Filtration",
+    badgeColor: "sand",
+    category: "filtration",
+    application: "residential",
+  },
+  {
+    id: "filt-2",
+    title: "Carbon Block Filter",
+    description: "Activated carbon filter for rainwater polishing. Removes odors, chlorine, and organic compounds. 6-month cartridge life.",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+    price: "$49",
+    handle: "carbon-block-filter",
+    badge: "Filtration",
+    badgeColor: "sand",
+    category: "filtration",
+    application: "residential",
+  },
+]
+
+// Featured accessories for hero section
+const featuredAccessories = {
+  dripKit: {
+    title: "Drip Irrigation Kit",
+    description: "Complete subsurface drip system for greywater distribution",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+    price: "$199",
+    handle: "drip-irrigation-kit",
+    badge: "Essential",
+    features: ["250 ft tubing", "Pressure regulated", "Easy install"]
+  },
+  pump: {
+    title: "Replacement Pump",
+    description: "OEM pump with controller & dry run protection",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+    price: "$399",
+    handle: "replacement-greywater-pump",
+    badge: "Parts",
+    features: ["12-mo warranty", "110V power", "Auto sensing"]
+  }
 }
 
 export default async function ProductsPage() {
-  const products = await getProducts()
+  const shopifyProducts = await getProducts()
 
-  const defaultProducts = [
-    {
-      id: "1",
-      title: "Aqua2use Greywater Recycling System",
-      description: "The most advanced greywater treatment system available. Choose from GWDD Gravity, GWDD Pump, or Pro configurations to match your needs. All feature patented 4-stage Matala filtration.",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
-      price: "From $599",
-      handle: "aqua2use",
-      badge: "Best Seller",
-      badgeColor: "ocean",
-      features: [
-        "3 configurations: GWDD Gravity, Pump, or Pro",
-        "Up to 90% solid removal efficiency",
-        "17-25 GPM processing capacity",
-        "Residential to commercial applications"
-      ],
-      specs: {
-        capacity: "21-50 gal",
-        flow: "17-25 GPM",
-        configs: "3 options"
-      }
-    },
-    {
-      id: "3",
-      title: "Replacement Filters",
-      description: "Genuine Aqua2use progressive 4-stage Matala filters. Maintain peak filtration performance with easy tool-free replacement. Reusable for up to 3 years with proper care.",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
-      price: "From $249",
-      handle: "replacement-filters",
-      badge: "Maintenance",
-      badgeColor: "sand",
-      features: [
-        "Genuine OEM Matala filters",
-        "Tool-free replacement",
-        "Cleanable & reusable design",
-        "15,850 gallons before cleaning"
-      ],
-      specs: {
-        type: "4-Stage",
-        life: "3 years",
-        cleaning: "4-6 mo"
-      }
-    },
-    {
-      id: "4",
-      title: "Replacement Pump Kit",
-      description: "Direct OEM replacement pump with electronic controller for Aqua2use GWDD systems. Features dry run protection and automatic water level sensing for reliable operation.",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
-      price: "From $399",
-      handle: "replacement-greywater-pump",
-      badge: "Parts",
-      badgeColor: "terra",
-      features: [
-        "Direct OEM replacement",
-        "Electronic controller included",
-        "Dry run protection",
-        "12-month warranty"
-      ],
-      specs: {
-        type: "Submersible",
-        power: "110V",
-        warranty: "12 mo"
-      }
-    }
-  ]
-
-  // Featured accessories for hero section
-  const featuredAccessories = {
-    dripKit: {
-      title: "Drip Irrigation Kit",
-      description: "Complete subsurface drip system for greywater distribution",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
-      price: "$199",
-      handle: "drip-irrigation-kit",
-      badge: "Essential",
-      features: ["250 ft tubing", "Pressure regulated", "Easy install"]
-    },
-    pump: {
-      title: "Replacement Pump",
-      description: "OEM pump with controller & dry run protection",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
-      price: "$399",
-      handle: "replacement-greywater-pump",
-      badge: "Parts",
-      features: ["12-mo warranty", "110V power", "Auto sensing"]
-    }
-  }
-
-  const displayProducts = products.length > 0 ? products : defaultProducts
+  // Merge Shopify products with our catalog (Shopify takes priority if available)
+  const displayProducts = shopifyProducts.length > 0 ? shopifyProducts : allProducts
 
   // Product comparison data
   const comparisonData = {
@@ -327,68 +460,20 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      {/* Products Section */}
+      {/* Products Section with Filters */}
       <section id="products" className="section-padding bg-sand-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="max-w-3xl mx-auto text-center mb-12">
             <div className="line-accent mx-auto mb-6" />
             <h2 className="text-display-md font-display text-sand-900 mb-4">
-              Our Greywater Systems
+              Shop All Products
             </h2>
             <p className="text-xl text-sand-600">
-              Professional-grade water recycling solutions for every application
+              Greywater systems, rainwater harvesting equipment, and accessories
             </p>
           </div>
 
-          {/* Product Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {displayProducts.map((product: any, index: number) => (
-              <Link
-                key={product.id || index}
-                href={`/products/${product.handle}`}
-                className="group bg-white rounded-2xl border border-sand-200 overflow-hidden hover:border-ocean-200 transition-colors"
-              >
-                <div className="relative aspect-square bg-sand-50">
-                  <Image
-                    src={product.images?.edges?.[0]?.node?.url || product.image}
-                    alt={product.title}
-                    fill
-                    className="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
-                    unoptimized
-                  />
-                  {product.badge && (
-                    <span className={`absolute top-4 left-4 badge-${product.badgeColor || 'ocean'}`}>
-                      {product.badge}
-                    </span>
-                  )}
-                </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-display text-sand-900 mb-2 group-hover:text-ocean-600 transition-colors">
-                    {product.title}
-                  </h3>
-
-                  <p className="text-sm text-sand-600 mb-4 line-clamp-2">
-                    {product.description?.substring(0, 100)}...
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs text-sand-500">From</span>
-                      <div className="text-2xl font-bold text-sand-900">
-                        {product.priceRange?.minVariantPrice ?
-                          formatPriceDisplay(product.priceRange.minVariantPrice.amount) :
-                          product.price}
-                      </div>
-                    </div>
-                    <span className="text-ocean-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                      View <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <ProductCatalog products={allProducts} categories={categories} />
         </div>
       </section>
 
