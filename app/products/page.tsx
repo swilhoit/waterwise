@@ -66,7 +66,7 @@ const allProducts = [
     id: "rw-1",
     title: "50-Gallon Rain Barrel",
     description: "Compact rain barrel perfect for beginners. Includes spigot, overflow valve, and debris screen. Connects easily to any downspout.",
-    image: "https://images.unsplash.com/photo-1594087589030-978612518d6e?w=600&h=600&fit=crop",
+    image: "https://rtshomeaccents.com/cdn/shop/files/551000300A8081pic1.jpg?v=1732721905",
     price: "$89",
     handle: "rain-barrel-50",
     badge: "Starter",
@@ -78,7 +78,7 @@ const allProducts = [
     id: "rw-2",
     title: "100-Gallon Rain Barrel System",
     description: "Double-capacity rain collection with linking kit. UV-resistant polyethylene construction. Includes brass spigot and overflow hose.",
-    image: "https://images.unsplash.com/photo-1670852378831-016d28f801b2?w=600&h=600&fit=crop",
+    image: "https://cdn11.bigcommerce.com/s-j602wc6a/images/stencil/1280x1280/products/7595/30513/2QokdHh11uSe3TvhtuL0JQxF4z6J9GukP6rdFTinp5glbwI1KDS7fwrQPQs8zTZw__92598.1712267672.jpg?c=2",
     price: "$149",
     handle: "rain-barrel-100",
     badge: "Popular",
@@ -90,7 +90,7 @@ const allProducts = [
     id: "rw-3",
     title: "First Flush Diverter Kit",
     description: "Automatically diverts the first flush of contaminated roof water away from your tank. Essential for clean rainwater collection.",
-    image: "https://images.unsplash.com/photo-1635176243601-6e9de3664910?w=600&h=600&fit=crop",
+    image: "https://cdn11.bigcommerce.com/s-c3j5hz28/images/stencil/600x600/products/5136/4543/20190712_122603__01847.1667844724.jpg?c=2",
     price: "$59",
     handle: "first-flush-diverter",
     badge: "Essential",
@@ -102,7 +102,7 @@ const allProducts = [
     id: "rw-4",
     title: "Downspout Filter & Diverter",
     description: "2-in-1 downspout filter and diverter. Stainless steel mesh removes leaves and debris while directing water to your barrel.",
-    image: "https://images.unsplash.com/photo-1676977626654-89eec7f2d904?w=600&h=600&fit=crop",
+    image: "https://www.tank-depot.com/media/catalog/product/r/h/rh-ddcr98_180.jpg",
     price: "$45",
     handle: "downspout-filter",
     badge: "Essential",
@@ -114,7 +114,7 @@ const allProducts = [
     id: "rw-5",
     title: "Complete Rain Harvesting Kit",
     description: "Everything needed to start collecting rainwater: 100-gal barrel, first flush diverter, downspout connector, and overflow kit.",
-    image: "https://images.unsplash.com/photo-1659281608769-9af567d23294?w=600&h=600&fit=crop",
+    image: "https://cdn11.bigcommerce.com/s-j602wc6a/images/stencil/1280x1280/products/7595/30514/jgGnQqduoyCcKhym8tIfqjQu1YXXaV388lVAGHT23m3cXJCFCwTEBQa7b3hGqVGM__98629.1712267673.jpg?c=2",
     price: "$299",
     handle: "rain-harvest-kit",
     badge: "Best Value",
@@ -126,7 +126,7 @@ const allProducts = [
     id: "rw-6",
     title: "265-Gallon IBC Tote System",
     description: "High-capacity rainwater storage using repurposed food-grade IBC tote. Includes inlet filter, spigot, and overflow fitting.",
-    image: "https://images.unsplash.com/photo-1660952830721-b979e1ec72ba?w=600&h=600&fit=crop",
+    image: "https://recyclewithintegrity.com/wp-content/uploads/2025/06/IBC-Tote-275-Gal.-Food-Grade-Clean.jpg",
     price: "$349",
     handle: "ibc-tote-system",
     badge: "High Capacity",
@@ -163,7 +163,7 @@ const allProducts = [
     id: "part-3",
     title: "Drip Irrigation Kit",
     description: "Complete subsurface drip system for greywater or rainwater distribution. 250 ft tubing with pressure regulator.",
-    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+    image: "https://waterwisegroup.com/cdn/shop/files/Irrigation_Kit_Hero.png?v=1758930026",
     price: "$199",
     handle: "drip-irrigation-kit",
     badge: "Essential",
@@ -215,7 +215,7 @@ const featuredAccessories = {
   dripKit: {
     title: "Drip Irrigation Kit",
     description: "Complete subsurface drip system for greywater distribution",
-    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
+    image: "https://waterwisegroup.com/cdn/shop/files/Irrigation_Kit_Hero.png?v=1758930026",
     price: "$199",
     handle: "drip-irrigation-kit",
     badge: "Essential",
@@ -254,38 +254,6 @@ export default async function ProductsPage() {
 
   return (
     <div className="bg-sand-50">
-      {/* Trust Bar */}
-      <section className="bg-white border-b border-sand-200 py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
-                <Shield className="h-5 w-5 text-ocean-600" />
-              </div>
-              <span className="font-medium">12-Month Warranty</span>
-            </div>
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
-                <Truck className="h-5 w-5 text-ocean-600" />
-              </div>
-              <span className="font-medium">Free Shipping</span>
-            </div>
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-terra-100 flex items-center justify-center">
-                <Star className="h-5 w-5 text-terra-600 fill-current" />
-              </div>
-              <span className="font-medium">5-Star Rated</span>
-            </div>
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
-                <Award className="h-5 w-5 text-ocean-600" />
-              </div>
-              <span className="font-medium">WaterMark Certified</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Products Section with Filters */}
       <section id="products" className="section-padding bg-sand-50">
         <div className="container mx-auto px-4">
@@ -472,6 +440,36 @@ export default async function ProductsPage() {
                 <ArrowRight className="h-5 w-5 text-ocean-600 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="mt-12 pt-8 border-t border-sand-200">
+            <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
+              <div className="flex items-center gap-3 text-sand-700">
+                <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
+                  <Shield className="h-5 w-5 text-ocean-600" />
+                </div>
+                <span className="font-medium">12-Month Warranty</span>
+              </div>
+              <div className="flex items-center gap-3 text-sand-700">
+                <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
+                  <Truck className="h-5 w-5 text-ocean-600" />
+                </div>
+                <span className="font-medium">Free Shipping</span>
+              </div>
+              <div className="flex items-center gap-3 text-sand-700">
+                <div className="w-10 h-10 rounded-xl bg-terra-100 flex items-center justify-center">
+                  <Star className="h-5 w-5 text-terra-600 fill-current" />
+                </div>
+                <span className="font-medium">5-Star Rated</span>
+              </div>
+              <div className="flex items-center gap-3 text-sand-700">
+                <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
+                  <Award className="h-5 w-5 text-ocean-600" />
+                </div>
+                <span className="font-medium">WaterMark Certified</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
