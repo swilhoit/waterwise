@@ -86,7 +86,7 @@ export default async function ProductsPage() {
     dripKit: {
       title: "Drip Irrigation Kit",
       description: "Complete subsurface drip system for greywater distribution",
-      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Drip_Kit_Parts_Web.jpg?v=1742748645",
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978",
       price: "$199",
       handle: "drip-irrigation-kit",
       badge: "Essential",
