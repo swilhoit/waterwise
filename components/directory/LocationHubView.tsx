@@ -487,7 +487,7 @@ export default function LocationHubView({
           </div>
         </div>
 
-        {/* Location Context Card - Rebates, Local Regulations, Hierarchy, Utilities */}
+        {/* Location Context Card - Local Regulations, Hierarchy, Utilities */}
         <div className="mb-6">
           <LocationContextCard
             level={level}
@@ -499,6 +499,50 @@ export default function LocationHubView({
             localRegulation={localRegulation}
             waterUtilities={waterUtilities}
           />
+        </div>
+
+        {/* Permit Sections - Greywater and Rainwater side by side */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          {/* Greywater Permit Section */}
+          <PermitSection
+            level={level}
+            locationName={level === 'city' ? cityName! : stateName}
+            stateCode={stateCode}
+            stateName={stateName}
+            waterType="greywater"
+            permitData={permitData ? {
+              ...permitData,
+              thresholdGpd: permitData.thresholdGpd || greywater?.permitThresholdGpd || undefined
+            } : null}
+            stateBaseline={greywater ? {
+              thresholdGpd: greywater.permitThresholdGpd || undefined,
+              permitFramework: greywater.governingCode,
+              exemptions: greywater.permitRequired === 'Tiered' ? ['Simple laundry-to-landscape systems under GPD threshold'] : undefined
+            } : undefined}
+          />
+
+          {/* Rainwater Permit Section */}
+          {rainwater && (
+            <PermitSection
+              level={level}
+              locationName={level === 'city' ? cityName! : stateName}
+              stateCode={stateCode}
+              stateName={stateName}
+              waterType="rainwater"
+              permitData={{
+                permitRequired: rainwater.permitRequired,
+                collectionLimitGallons: rainwater.collectionLimitGallons,
+                potableUseAllowed: rainwater.potableUseAllowed,
+                keyRestrictions: rainwater.keyRestrictions,
+                permitFramework: rainwater.governingCode
+              }}
+              stateBaseline={{
+                permitFramework: rainwater.governingCode,
+                collectionLimitGallons: rainwater.collectionLimitGallons,
+                keyRestrictions: rainwater.keyRestrictions
+              }}
+            />
+          )}
         </div>
 
         {/* Detailed Regulations Section */}
