@@ -53,6 +53,11 @@ export default function RootLayout({
           strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
+              window.chatwootSettings = {
+                position: 'right',
+                type: 'standard',
+                launcherTitle: 'Chat with us'
+              };
               (function(d,t) {
                 var BASE_URL="https://34-53-43-15.nip.io";
                 var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
@@ -64,7 +69,11 @@ export default function RootLayout({
                   window.chatwootSDK.run({
                     websiteToken: 'dbs2VnN4mNJSPpgFxmHGmZrC',
                     baseUrl: BASE_URL
-                  })
+                  });
+                  // Apply custom color to match site theme (ocean-600)
+                  var style = document.createElement('style');
+                  style.textContent = '.woot-widget-bubble { background-color: #267d7d !important; } .woot-widget-bubble:hover { background-color: #1f6666 !important; }';
+                  document.head.appendChild(style);
                 }
               })(document,"script");
             `,

@@ -81,6 +81,28 @@ export default async function ProductsPage() {
     }
   ]
 
+  // Featured accessories for hero section
+  const featuredAccessories = {
+    dripKit: {
+      title: "Drip Irrigation Kit",
+      description: "Complete subsurface drip system for greywater distribution",
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Drip_Kit_Parts_Web.jpg?v=1742748645",
+      price: "$199",
+      handle: "drip-irrigation-kit",
+      badge: "Essential",
+      features: ["250 ft tubing", "Pressure regulated", "Easy install"]
+    },
+    pump: {
+      title: "Replacement Pump",
+      description: "OEM pump with controller & dry run protection",
+      image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+      price: "$399",
+      handle: "replacement-greywater-pump",
+      badge: "Parts",
+      features: ["12-mo warranty", "110V power", "Auto sensing"]
+    }
+  }
+
   const displayProducts = products.length > 0 ? products : defaultProducts
 
   // Product comparison data
@@ -99,113 +121,177 @@ export default async function ProductsPage() {
 
   return (
     <div className="bg-sand-50">
-      {/* Hero Section - Bold Asymmetric Layout */}
-      <section className="relative min-h-[85vh] overflow-hidden bg-gradient-to-br from-ocean-950 via-ocean-900 to-ocean-800">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 bg-pattern-waves opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ocean-950/80 to-transparent" />
-
-        {/* Decorative elements */}
-        <div className="absolute top-20 right-[10%] w-96 h-96 bg-terra-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-[5%] w-64 h-64 bg-ocean-400/20 rounded-full blur-2xl" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[85vh] py-20">
+      {/* Hero Section */}
+      <section className="relative py-16 lg:py-24 bg-sand-50">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left: Content */}
-            <div className="space-y-8">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium border border-white/10">
-                <Award className="h-4 w-4 text-terra-400" />
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 bg-ocean-100 text-ocean-700 px-4 py-2 rounded-full text-sm font-medium border border-ocean-200">
+                <Award className="h-4 w-4 text-ocean-600" />
                 WaterMark Approved Systems
               </div>
 
-              <h1 className="text-display-lg lg:text-display-xl font-display text-white leading-none">
+              <h1 className="text-display-lg lg:text-display-xl font-display text-sand-900 leading-none">
                 Reclaim Your
-                <span className="block text-terra-400">Water</span>
+                <span className="block text-ocean-600">Water</span>
               </h1>
 
-              <p className="text-xl text-ocean-100 leading-relaxed max-w-lg">
-                Transform household greywater into a sustainable resource. Our Aqua2use systems save up to 40% on water bills while nourishing your landscape.
+              <p className="text-xl text-sand-600 leading-relaxed max-w-lg">
+                Transform household greywater into a sustainable resource. Save up to 40% on water bills while nourishing your landscape.
               </p>
 
               {/* Stats row */}
-              <div className="flex gap-12 pt-4">
+              <div className="flex gap-10 py-6 border-y border-sand-200">
                 <div>
-                  <div className="stat-number text-white">17K<span className="text-terra-400">+</span></div>
-                  <div className="text-sm text-ocean-200 mt-1">Gallons Saved/Year</div>
+                  <div className="text-3xl font-bold text-sand-900">17K<span className="text-ocean-600">+</span></div>
+                  <div className="text-sm text-sand-500">Gallons/Year</div>
                 </div>
                 <div>
-                  <div className="stat-number text-white">90<span className="text-terra-400">%</span></div>
-                  <div className="text-sm text-ocean-200 mt-1">Solid Removal</div>
+                  <div className="text-3xl font-bold text-sand-900">90<span className="text-ocean-600">%</span></div>
+                  <div className="text-sm text-sand-500">Filtration</div>
                 </div>
                 <div>
-                  <div className="stat-number text-white">40<span className="text-terra-400">%</span></div>
-                  <div className="text-sm text-ocean-200 mt-1">Bill Savings</div>
+                  <div className="text-3xl font-bold text-sand-900">40<span className="text-ocean-600">%</span></div>
+                  <div className="text-sm text-sand-500">Bill Savings</div>
                 </div>
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Link
-                  href="#products"
-                  className="btn-accent text-lg px-8 py-4 group"
-                >
+              <div className="flex flex-wrap gap-4">
+                <Link href="#products" className="btn-primary text-lg px-8 py-4 group">
                   View Systems
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link
-                  href="#comparison"
-                  className="btn-secondary bg-transparent border-white/30 text-white hover:bg-white/10 px-8 py-4"
-                >
+                <Link href="#comparison" className="btn-secondary px-8 py-4">
                   Compare Options
                 </Link>
               </div>
             </div>
 
-            {/* Right: Featured Product Card */}
+            {/* Right: Featured Greywater System Card */}
             <div className="relative">
-              <div className="relative bg-white rounded-3xl p-8 border border-sand-200">
-                <div className="absolute -top-3 -right-3 badge-terra">
-                  <Star className="h-3 w-3 fill-current" />
-                  Best Seller
-                </div>
+              <Link href="/products/aqua2use" className="group block">
+                <div className="bg-white rounded-3xl p-8 border border-sand-200 shadow-xl hover:shadow-2xl transition-shadow">
+                  <div className="absolute -top-3 -right-3 badge-terra">
+                    <Star className="h-3 w-3 fill-current" />
+                    Best Seller
+                  </div>
 
-                <div className="aspect-square relative mb-6 bg-gradient-to-br from-sand-50 to-sand-100 rounded-2xl overflow-hidden">
+                  <div className="aspect-square relative mb-6 bg-sand-50 rounded-2xl overflow-hidden">
+                    <Image
+                      src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223"
+                      alt="Aqua2use GWDD System"
+                      fill
+                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                      priority
+                      unoptimized
+                    />
+                  </div>
+
+                  <h3 className="text-2xl font-display text-sand-900 mb-2 group-hover:text-ocean-600 transition-colors">Aqua2use GWDD</h3>
+                  <p className="text-sand-600 mb-4">Complete greywater recycling system with 4-stage Matala filtration</p>
+
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    <div className="bg-sand-100 rounded-xl p-3 text-center">
+                      <div className="text-lg font-bold text-ocean-600">21</div>
+                      <div className="text-xs text-sand-600">Gal Tank</div>
+                    </div>
+                    <div className="bg-sand-100 rounded-xl p-3 text-center">
+                      <div className="text-lg font-bold text-ocean-600">17</div>
+                      <div className="text-xs text-sand-600">GPM Flow</div>
+                    </div>
+                    <div className="bg-sand-100 rounded-xl p-3 text-center">
+                      <div className="text-lg font-bold text-ocean-600">90%</div>
+                      <div className="text-xs text-sand-600">Filtration</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-sm text-sand-500">Starting at</span>
+                      <div className="text-3xl font-bold text-ocean-600">$599</div>
+                    </div>
+                    <span className="btn-primary">
+                      View Details
+                      <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {/* Accessories Row */}
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Drip Kit */}
+            <Link href={`/products/${featuredAccessories.dripKit.handle}`} className="group">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-ocean-200 hover:shadow-lg transition-all h-full flex items-center gap-4">
+                <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
                   <Image
-                    src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223"
-                    alt="Aqua2use GWDD System"
+                    src={featuredAccessories.dripKit.image}
+                    alt={featuredAccessories.dripKit.title}
                     fill
-                    className="object-contain p-4"
-                    priority
+                    className="object-contain p-2"
                     unoptimized
                   />
                 </div>
-
-                <h3 className="text-2xl font-display text-sand-900 mb-2">Aqua2use GWDD</h3>
-                <p className="text-sand-600 mb-4">Complete greywater recycling system with 4-stage Matala filtration</p>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-sand-500">Starting at</span>
-                    <div className="text-3xl font-bold text-ocean-600">$599</div>
-                  </div>
-                  <Link
-                    href="/products/aqua2use"
-                    className="btn-primary"
-                  >
-                    View Details
-                    <ArrowUpRight className="h-4 w-4" />
-                  </Link>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-display text-sand-900 group-hover:text-ocean-600 transition-colors">{featuredAccessories.dripKit.title}</h4>
+                  <p className="text-sm text-sand-500 truncate">{featuredAccessories.dripKit.description}</p>
+                  <div className="text-lg font-bold text-ocean-600 mt-1">{featuredAccessories.dripKit.price}</div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </Link>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60">
-          <span className="text-xs uppercase tracking-widest">Scroll to explore</span>
-          <div className="w-px h-12 bg-gradient-to-b from-white/60 to-transparent" />
+            {/* Replacement Pump */}
+            <Link href={`/products/${featuredAccessories.pump.handle}`} className="group">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-terra-200 hover:shadow-lg transition-all h-full flex items-center gap-4">
+                <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
+                  <Image
+                    src={featuredAccessories.pump.image}
+                    alt={featuredAccessories.pump.title}
+                    fill
+                    className="object-contain p-2"
+                    unoptimized
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-display text-sand-900 group-hover:text-terra-600 transition-colors">{featuredAccessories.pump.title}</h4>
+                  <p className="text-sm text-sand-500 truncate">{featuredAccessories.pump.description}</p>
+                  <div className="text-lg font-bold text-terra-600 mt-1">{featuredAccessories.pump.price}</div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Replacement Filters */}
+            <Link href="/products/replacement-filters" className="group">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-sand-300 hover:shadow-lg transition-all h-full flex items-center gap-4">
+                <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
+                  <Image
+                    src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368"
+                    alt="Replacement Filters"
+                    fill
+                    className="object-contain p-2"
+                    unoptimized
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-display text-sand-900 group-hover:text-sand-700 transition-colors">Replacement Filters</h4>
+                  <p className="text-sm text-sand-500 truncate">4-stage Matala filters</p>
+                  <div className="text-lg font-bold text-sand-700 mt-1">$249</div>
+                </div>
+              </div>
+            </Link>
+
+            {/* View All */}
+            <Link href="#products" className="group">
+              <div className="bg-ocean-50 rounded-xl p-4 border border-ocean-200 hover:bg-ocean-100 transition-all h-full flex items-center justify-center gap-3">
+                <span className="font-display text-ocean-700">View All Products</span>
+                <ArrowRight className="h-5 w-5 text-ocean-600 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -378,16 +464,8 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      {/* Why Greywater Section - Full-bleed with overlapping cards */}
-      <section className="relative py-32 overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-ocean-900" />
-        <div className="absolute inset-0 bg-pattern-waves opacity-20" />
-
-        {/* Decorative circles */}
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-terra-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-ocean-400/20 rounded-full blur-2xl" />
-
+      {/* Why Greywater Section */}
+      <section className="relative py-24 lg:py-32 overflow-hidden bg-ocean-900">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="badge-ocean bg-white/10 border-white/20 text-white mb-6">
@@ -402,7 +480,7 @@ export default async function ProductsPage() {
             </p>
           </div>
 
-          {/* Stats Grid - Floating Cards */}
+          {/* Stats Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
               { icon: Droplets, stat: "17,000+", label: "Gallons Saved Annually", color: "ocean" },
@@ -413,7 +491,6 @@ export default async function ProductsPage() {
               <div
                 key={index}
                 className="group relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 text-center border border-white/10 hover:bg-white/15 transition-all duration-500"
-                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className={`w-14 h-14 rounded-2xl bg-${item.color}-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
                   <item.icon className={`h-7 w-7 text-${item.color}-400`} />
@@ -717,10 +794,7 @@ export default async function ProductsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-ocean-900 via-ocean-800 to-ocean-900" />
-        <div className="absolute inset-0 bg-pattern-waves opacity-20" />
-
+      <section className="relative py-24 overflow-hidden bg-ocean-900">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-display-md font-display text-white mb-6">
