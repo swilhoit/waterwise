@@ -319,96 +319,101 @@ export default async function ProductsPage() {
               </div>
             </div>
 
-            {/* Right: Featured Greywater System Card */}
-            <div className="relative">
-              <Link href="/products/aqua2use" className="group block">
-                <div className="bg-white rounded-3xl p-8 border border-sand-200">
+            {/* Right: Featured Products - Drip Kit & Pump */}
+            <div className="space-y-4">
+              {/* Featured: Drip Irrigation Kit */}
+              <Link href={`/products/${featuredAccessories.dripKit.handle}`} className="group block">
+                <div className="bg-white rounded-2xl p-6 border border-sand-200 hover:border-ocean-300 transition-all relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 badge-ocean">
+                    <Leaf className="h-3 w-3" />
+                    Essential
+                  </div>
+
+                  <div className="flex gap-5 items-center">
+                    <div className="w-32 h-32 flex-shrink-0 bg-sand-50 rounded-xl overflow-hidden relative">
+                      <Image
+                        src={featuredAccessories.dripKit.image}
+                        alt={featuredAccessories.dripKit.title}
+                        fill
+                        className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                        unoptimized
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-display text-sand-900 mb-1 group-hover:text-ocean-600 transition-colors">{featuredAccessories.dripKit.title}</h3>
+                      <p className="text-sand-600 text-sm mb-3">{featuredAccessories.dripKit.description}</p>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {featuredAccessories.dripKit.features.map((f, i) => (
+                          <span key={i} className="text-xs bg-ocean-50 text-ocean-700 px-2 py-1 rounded-full">{f}</span>
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-2xl font-bold text-ocean-600">{featuredAccessories.dripKit.price}</div>
+                        <span className="text-ocean-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all text-sm">
+                          View <ArrowRight className="h-4 w-4" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+
+              {/* Featured: Replacement Pump */}
+              <Link href={`/products/${featuredAccessories.pump.handle}`} className="group block">
+                <div className="bg-white rounded-2xl p-6 border border-sand-200 hover:border-terra-300 transition-all relative overflow-hidden">
                   <div className="absolute -top-3 -right-3 badge-terra">
-                    <Star className="h-3 w-3 fill-current" />
-                    Best Seller
+                    <Settings className="h-3 w-3" />
+                    Parts
                   </div>
 
-                  <div className="aspect-square relative mb-6 bg-sand-50 rounded-2xl overflow-hidden">
-                    <Image
-                      src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223"
-                      alt="Aqua2use GWDD System"
-                      fill
-                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                      unoptimized
-                    />
-                  </div>
-
-                  <h3 className="text-2xl font-display text-sand-900 mb-2 group-hover:text-ocean-600 transition-colors">Aqua2use GWDD</h3>
-                  <p className="text-sand-600 mb-4">Complete greywater recycling system with 4-stage Matala filtration</p>
-
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="bg-sand-100 rounded-xl p-3 text-center">
-                      <div className="text-lg font-bold text-ocean-600">21</div>
-                      <div className="text-xs text-sand-600">Gal Tank</div>
+                  <div className="flex gap-5 items-center">
+                    <div className="w-32 h-32 flex-shrink-0 bg-sand-50 rounded-xl overflow-hidden relative">
+                      <Image
+                        src={featuredAccessories.pump.image}
+                        alt={featuredAccessories.pump.title}
+                        fill
+                        className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                        unoptimized
+                      />
                     </div>
-                    <div className="bg-sand-100 rounded-xl p-3 text-center">
-                      <div className="text-lg font-bold text-ocean-600">17</div>
-                      <div className="text-xs text-sand-600">GPM Flow</div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-display text-sand-900 mb-1 group-hover:text-terra-600 transition-colors">{featuredAccessories.pump.title}</h3>
+                      <p className="text-sand-600 text-sm mb-3">{featuredAccessories.pump.description}</p>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {featuredAccessories.pump.features.map((f, i) => (
+                          <span key={i} className="text-xs bg-terra-50 text-terra-700 px-2 py-1 rounded-full">{f}</span>
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-2xl font-bold text-terra-600">{featuredAccessories.pump.price}</div>
+                        <span className="text-terra-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all text-sm">
+                          View <ArrowRight className="h-4 w-4" />
+                        </span>
+                      </div>
                     </div>
-                    <div className="bg-sand-100 rounded-xl p-3 text-center">
-                      <div className="text-lg font-bold text-ocean-600">90%</div>
-                      <div className="text-xs text-sand-600">Filtration</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-sm text-sand-500">Starting at</span>
-                      <div className="text-3xl font-bold text-ocean-600">$599</div>
-                    </div>
-                    <span className="btn-primary">
-                      View Details
-                      <ArrowUpRight className="h-4 w-4" />
-                    </span>
                   </div>
                 </div>
               </Link>
             </div>
           </div>
 
-          {/* Accessories Row */}
+          {/* Quick Links Row */}
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Drip Kit */}
-            <Link href={`/products/${featuredAccessories.dripKit.handle}`} className="group">
+            {/* Aqua2use System */}
+            <Link href="/products/aqua2use" className="group">
               <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-ocean-200 transition-all h-full flex items-center gap-4">
-                <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
+                <div className="w-16 h-16 flex-shrink-0 bg-ocean-50 rounded-lg overflow-hidden relative">
                   <Image
-                    src={featuredAccessories.dripKit.image}
-                    alt={featuredAccessories.dripKit.title}
+                    src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223"
+                    alt="Aqua2use GWDD"
                     fill
                     className="object-contain p-2"
                     unoptimized
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-display text-sand-900 group-hover:text-ocean-600 transition-colors">{featuredAccessories.dripKit.title}</h4>
-                  <p className="text-sm text-sand-500 truncate">{featuredAccessories.dripKit.description}</p>
-                  <div className="text-lg font-bold text-ocean-600 mt-1">{featuredAccessories.dripKit.price}</div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Replacement Pump */}
-            <Link href={`/products/${featuredAccessories.pump.handle}`} className="group">
-              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-terra-200 transition-all h-full flex items-center gap-4">
-                <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
-                  <Image
-                    src={featuredAccessories.pump.image}
-                    alt={featuredAccessories.pump.title}
-                    fill
-                    className="object-contain p-2"
-                    unoptimized
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-display text-sand-900 group-hover:text-terra-600 transition-colors">{featuredAccessories.pump.title}</h4>
-                  <p className="text-sm text-sand-500 truncate">{featuredAccessories.pump.description}</p>
-                  <div className="text-lg font-bold text-terra-600 mt-1">{featuredAccessories.pump.price}</div>
+                  <h4 className="font-display text-sand-900 group-hover:text-ocean-600 transition-colors">Aqua2use Systems</h4>
+                  <p className="text-sm text-sand-500">From $599</p>
                 </div>
               </div>
             </Link>
@@ -416,7 +421,7 @@ export default async function ProductsPage() {
             {/* Replacement Filters */}
             <Link href="/products/replacement-filters" className="group">
               <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-sand-300 transition-all h-full flex items-center gap-4">
-                <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
+                <div className="w-16 h-16 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
                   <Image
                     src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368"
                     alt="Replacement Filters"
@@ -427,8 +432,20 @@ export default async function ProductsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-display text-sand-900 group-hover:text-sand-700 transition-colors">Replacement Filters</h4>
-                  <p className="text-sm text-sand-500 truncate">4-stage Matala filters</p>
-                  <div className="text-lg font-bold text-sand-700 mt-1">$249</div>
+                  <p className="text-sm text-sand-500">$249</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Rain Barrels */}
+            <Link href="/products/rain-barrel-100" className="group">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-ocean-200 transition-all h-full flex items-center gap-4">
+                <div className="w-16 h-16 flex-shrink-0 bg-ocean-50 rounded-lg overflow-hidden relative flex items-center justify-center">
+                  <CloudRain className="h-8 w-8 text-ocean-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-display text-sand-900 group-hover:text-ocean-600 transition-colors">Rain Barrels</h4>
+                  <p className="text-sm text-sand-500">From $89</p>
                 </div>
               </div>
             </Link>

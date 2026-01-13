@@ -594,6 +594,694 @@ const fallbackProducts: { [key: string]: any } = {
         answer: "While many homeowners can install it themselves, professional installation is recommended for optimal performance."
       }
     ]
+  },
+  "rain-barrel-50": {
+    id: "rw-1",
+    title: "50-Gallon Rain Barrel",
+    description: "Start collecting rainwater with this compact, beginner-friendly rain barrel. Perfect for small gardens and patios, this 50-gallon barrel includes everything you need: a brass spigot for easy access, overflow valve, and debris screen to keep water clean.",
+    handle: "rain-barrel-50",
+    priceRange: {
+      minVariantPrice: {
+        amount: "89.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://rtshomeaccents.com/cdn/shop/files/551000300A8081pic1.jpg?v=1732721905",
+            altText: "50-Gallon Rain Barrel"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "rw-variant-1",
+            title: "50-Gallon Rain Barrel",
+            priceV2: {
+              amount: "89.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "50-gallon capacity - perfect for beginners",
+      "Includes brass spigot for garden hose connection",
+      "Built-in overflow valve prevents flooding",
+      "Mesh debris screen keeps water clean",
+      "UV-resistant polyethylene construction",
+      "Flat back design sits flush against walls",
+      "Easy connection to standard downspouts",
+      "Saves money on water bills"
+    ],
+    specifications: {
+      capacity: "50 gallons",
+      dimensions: "23\" x 23\" x 38\"",
+      material: "UV-resistant polyethylene",
+      spigot: "Brass with garden hose thread",
+      overflow: "Built-in overflow valve",
+      screen: "Mesh debris filter included",
+      weight: "14 lbs empty"
+    },
+    faq: [
+      {
+        question: "How do I connect it to my downspout?",
+        answer: "Simply position the barrel under your downspout and use the included diverter kit to direct water into the barrel. Overflow exits through the built-in valve."
+      },
+      {
+        question: "Can I connect a garden hose?",
+        answer: "Yes! The brass spigot has standard garden hose threads for easy connection to hoses, drip irrigation, or soaker systems."
+      },
+      {
+        question: "Will it freeze in winter?",
+        answer: "In freezing climates, drain the barrel before winter and store it indoors or inverted to prevent ice damage."
+      }
+    ]
+  },
+  "rain-barrel-100": {
+    id: "rw-2",
+    title: "100-Gallon Rain Barrel System",
+    description: "Double your rainwater collection capacity with this 100-gallon system. Features UV-resistant construction, linking kit for connecting multiple barrels, brass spigot, and overflow hose. Ideal for larger gardens and serious water conservation.",
+    handle: "rain-barrel-100",
+    priceRange: {
+      minVariantPrice: {
+        amount: "149.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn11.bigcommerce.com/s-j602wc6a/images/stencil/1280x1280/products/7595/30513/2QokdHh11uSe3TvhtuL0JQxF4z6J9GukP6rdFTinp5glbwI1KDS7fwrQPQs8zTZw__92598.1712267672.jpg?c=2",
+            altText: "100-Gallon Rain Barrel System"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "rw-variant-2",
+            title: "100-Gallon Rain Barrel",
+            priceV2: {
+              amount: "149.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "100-gallon capacity for serious water collection",
+      "Linking kit included to connect multiple barrels",
+      "UV-resistant polyethylene won't fade or crack",
+      "Brass spigot with garden hose thread",
+      "Overflow hose directs excess water away",
+      "BPA-free, food-grade safe material",
+      "Screen keeps out debris, insects, and animals",
+      "Made from 100% recycled plastic"
+    ],
+    specifications: {
+      capacity: "100 gallons",
+      dimensions: "30\" x 23\" x 21.5\"",
+      material: "UV-protected BPA-free recycled plastic",
+      spigot: "Brass with garden hose thread",
+      overflow: "Overflow hose included",
+      screen: "Plastic screen mesh included",
+      weight: "20 lbs empty"
+    },
+    faq: [
+      {
+        question: "Can I connect multiple barrels together?",
+        answer: "Yes! The linking kit allows you to connect multiple barrels in series to increase your total storage capacity."
+      },
+      {
+        question: "Is the water safe for vegetable gardens?",
+        answer: "Rainwater is excellent for gardens. For edibles, use drip irrigation at the base of plants rather than overhead watering."
+      },
+      {
+        question: "How much rain does it take to fill?",
+        answer: "About 0.6 inches of rain on a 1,000 sq ft roof will fill a 100-gallon barrel. Most roofs can fill it with a single rain event."
+      }
+    ]
+  },
+  "first-flush-diverter": {
+    id: "rw-3",
+    title: "First Flush Diverter Kit",
+    description: "Improve your rainwater quality by automatically diverting the first flush of contaminated roof water away from your storage tank. This essential accessory removes dust, bird droppings, and debris that accumulates on your roof between rain events.",
+    handle: "first-flush-diverter",
+    priceRange: {
+      minVariantPrice: {
+        amount: "59.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn11.bigcommerce.com/s-c3j5hz28/images/stencil/600x600/products/5136/4543/20190712_122603__01847.1667844724.jpg?c=2",
+            altText: "First Flush Diverter Kit"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "rw-variant-3",
+            title: "First Flush Diverter Kit",
+            priceV2: {
+              amount: "59.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "Automatically diverts first flush of dirty water",
+      "Ball and seat system requires no maintenance",
+      "Slow-release valve auto-drains between storms",
+      "Fits standard 3\" round downspouts",
+      "Significantly improves water quality",
+      "Reduces tank maintenance and cleaning",
+      "Protects pumps and filters downstream",
+      "Simple installation - no tools required"
+    ],
+    specifications: {
+      compatibility: "3\" round downspouts",
+      diversionCapacity: "12.5 gallons per 1,000 sq ft roof recommended",
+      mechanism: "Ball and seat auto-diversion",
+      drainValve: "Slow-release auto-drain",
+      material: "UV-resistant PVC",
+      installation: "Tool-free, includes all fittings"
+    },
+    faq: [
+      {
+        question: "How does it work?",
+        answer: "As rain begins, water flows into the diverter chamber. A floating ball rises with the water level. Once the chamber fills, the ball seals the inlet, diverting clean water to your tank."
+      },
+      {
+        question: "How much water should I divert?",
+        answer: "Divert at least 12.5 gallons per 1,000 sq ft of roof area. More diversion means cleaner water but less total collection."
+      },
+      {
+        question: "Does it work in freezing weather?",
+        answer: "In freezing climates, drain the diverter before winter to prevent ice damage. Not recommended for use in sub-freezing temperatures."
+      }
+    ]
+  },
+  "downspout-filter": {
+    id: "rw-4",
+    title: "Downspout Filter & Diverter",
+    description: "This 2-in-1 downspout filter and diverter removes leaves and debris while directing clean rainwater to your barrel. Features a stainless steel mesh filter for easy cleaning and adjustable flow control.",
+    handle: "downspout-filter",
+    priceRange: {
+      minVariantPrice: {
+        amount: "45.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://www.tank-depot.com/media/catalog/product/r/h/rh-ddcr98_180.jpg",
+            altText: "Downspout Filter and Diverter"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "rw-variant-4",
+            title: "Downspout Filter & Diverter",
+            priceV2: {
+              amount: "45.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "2-in-1 filter and diverter design",
+      "Stainless steel mesh removes debris",
+      "Adjustable valve controls water flow",
+      "Fits 2\"x3\" and 3\"x4\" downspouts",
+      "Removable filter for easy cleaning",
+      "Corrosion-resistant PP construction",
+      "Includes 5ft connection hose",
+      "Diverts up to 100% of rainwater"
+    ],
+    specifications: {
+      compatibility: "2\"x3\" and 3\"x4\" rectangular downspouts",
+      filterMaterial: "Stainless steel mesh",
+      bodyMaterial: "PP (polypropylene)",
+      flowControl: "5 settings: closed, 20%, 50%, 80%, 100%",
+      hoseLength: "5 feet included",
+      installation: "No tools required"
+    },
+    faq: [
+      {
+        question: "How often should I clean the filter?",
+        answer: "Check the filter monthly and clean when debris accumulates. More frequent cleaning during fall leaf season."
+      },
+      {
+        question: "Can I control how much water goes to my barrel?",
+        answer: "Yes! The adjustable valve lets you control flow from 0% to 100%, so you can balance collection with drainage needs."
+      }
+    ]
+  },
+  "rain-harvest-kit": {
+    id: "rw-5",
+    title: "Complete Rain Harvesting Kit",
+    description: "Everything you need to start collecting rainwater in one convenient package. Includes a 100-gallon barrel, first flush diverter, downspout connector, overflow kit, and detailed instructions. The perfect starter kit for rainwater harvesting beginners.",
+    handle: "rain-harvest-kit",
+    priceRange: {
+      minVariantPrice: {
+        amount: "299.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn11.bigcommerce.com/s-j602wc6a/images/stencil/1280x1280/products/7595/30514/jgGnQqduoyCcKhym8tIfqjQu1YXXaV388lVAGHT23m3cXJCFCwTEBQa7b3hGqVGM__98629.1712267673.jpg?c=2",
+            altText: "Complete Rain Harvesting Kit"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "rw-variant-5",
+            title: "Complete Rain Harvesting Kit",
+            priceV2: {
+              amount: "299.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "Complete system - everything included",
+      "100-gallon UV-resistant rain barrel",
+      "First flush diverter for clean water",
+      "Downspout connector and adapters",
+      "Overflow kit with hose",
+      "Brass spigot for garden hose",
+      "Detailed installation instructions",
+      "Best value for new rainwater harvesters"
+    ],
+    specifications: {
+      barrelCapacity: "100 gallons",
+      includes: "Barrel, first flush diverter, downspout connector, overflow kit, spigot, instructions",
+      compatibility: "Most standard residential downspouts",
+      material: "UV-resistant polyethylene",
+      installation: "DIY-friendly, basic tools only"
+    },
+    faq: [
+      {
+        question: "Is this a good kit for beginners?",
+        answer: "Absolutely! This kit includes everything you need with clear instructions. Most homeowners complete installation in 1-2 hours."
+      },
+      {
+        question: "What tools do I need?",
+        answer: "Basic hand tools only: a drill, hacksaw (for downspout), and screwdriver. All fittings and hardware are included."
+      },
+      {
+        question: "Can I expand the system later?",
+        answer: "Yes! You can add additional barrels using linking kits, or upgrade to larger storage tanks as your needs grow."
+      }
+    ]
+  },
+  "ibc-tote-system": {
+    id: "rw-6",
+    title: "265-Gallon IBC Tote System",
+    description: "Maximize your rainwater storage with this high-capacity IBC tote system. Repurposed food-grade containers offer excellent value for large-scale collection. Includes inlet filter, 2\" ball valve with camlock, and overflow fitting.",
+    handle: "ibc-tote-system",
+    priceRange: {
+      minVariantPrice: {
+        amount: "349.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://recyclewithintegrity.com/wp-content/uploads/2025/06/IBC-Tote-275-Gal.-Food-Grade-Clean.jpg",
+            altText: "265-Gallon IBC Tote System"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "rw-variant-6",
+            title: "265-Gallon IBC Tote",
+            priceV2: {
+              amount: "349.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "265-gallon high-capacity storage",
+      "Food-grade HDPE inner tank",
+      "Protective galvanized steel cage",
+      "6\" screw cap with EPDM gasket",
+      "2\" ball valve with camlock fitting",
+      "UV inhibitors for outdoor use",
+      "Stackable for multiple-tank systems",
+      "Best cost-per-gallon value"
+    ],
+    specifications: {
+      capacity: "265 gallons (275 gallon nominal)",
+      dimensions: "48\" L x 40\" W x 46\" H",
+      material: "FDA food-grade HDPE with steel cage",
+      inlet: "6\" screw cap",
+      outlet: "2\" ball valve with camlock",
+      certification: "NSF/ANSI 61 certified for drinking water",
+      weight: "130 lbs empty"
+    },
+    faq: [
+      {
+        question: "Are IBC totes safe for rainwater?",
+        answer: "Yes! Our totes are food-grade HDPE with NSF/ANSI 61 certification. They're commonly used for drinking water storage."
+      },
+      {
+        question: "Will algae grow in the tank?",
+        answer: "Sunlight promotes algae growth. Cover the tote with dark fabric or paint it to block light and prevent algae."
+      },
+      {
+        question: "Can I connect multiple totes?",
+        answer: "Yes! Use the 2\" camlock fittings to link multiple totes in series for increased storage capacity."
+      }
+    ]
+  },
+  "drip-irrigation-kit": {
+    id: "part-3",
+    title: "Greywater Drip Irrigation Kit",
+    description: "The complete subsurface drip irrigation kit designed specifically for greywater and rainwater distribution. Includes 250 feet of dripline tubing, pressure regulator, filter, fittings, and stakes. Perfect for connecting to your Aqua2use system or rain barrel.",
+    handle: "drip-irrigation-kit",
+    priceRange: {
+      minVariantPrice: {
+        amount: "199.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://waterwisegroup.com/cdn/shop/files/Irrigation_Kit_Hero.png?v=1758930026",
+            altText: "Greywater Drip Irrigation Kit"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "part-variant-3",
+            title: "Standard Drip Kit",
+            priceV2: {
+              amount: "199.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "250 feet of subsurface dripline tubing",
+      "Pressure regulator for consistent flow",
+      "Inline filter protects emitters",
+      "Stakes and fittings included",
+      "Works with greywater and rainwater",
+      "Subsurface design - no surface contact",
+      "Compatible with Aqua2use systems",
+      "Digital flow meter for monitoring"
+    ],
+    specifications: {
+      tubingLength: "250 feet",
+      tubingType: "Subsurface dripline",
+      emitterSpacing: "12\" apart",
+      flowRate: "0.5 GPH per emitter",
+      pressureRegulator: "25 PSI included",
+      filter: "Inline filter included",
+      fittings: "All connectors and stakes included"
+    },
+    faq: [
+      {
+        question: "Can I use this with my greywater system?",
+        answer: "Yes! This kit is specifically designed for greywater distribution. The subsurface design keeps greywater below ground as required by most codes."
+      },
+      {
+        question: "Do I need a pump?",
+        answer: "For gravity-fed systems, you need at least 6 feet of elevation. For lower elevations or longer runs, a pump is recommended."
+      },
+      {
+        question: "How much area can this cover?",
+        answer: "With 250 feet of tubing at 12\" spacing, you can cover approximately 200-250 square feet of garden or landscape."
+      }
+    ]
+  },
+  "rainwater-pump-half-hp": {
+    id: "part-4",
+    title: "Rainwater Pump - 1/2 HP",
+    description: "Pressurize your rainwater system with this quiet, efficient 1/2 HP automatic pump. Features 17 GPM flow rate, 34 PSI max pressure, and automatic on/off based on demand. Perfect for connecting rain barrels to drip irrigation or garden hoses.",
+    handle: "rainwater-pump-half-hp",
+    priceRange: {
+      minVariantPrice: {
+        amount: "299.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
+            altText: "Rainwater Pump 1/2 HP"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "part-variant-4",
+            title: "1/2 HP Rainwater Pump",
+            priceV2: {
+              amount: "299.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "1/2 HP motor for reliable pressure",
+      "17 GPM flow rate",
+      "34 PSI maximum pressure",
+      "Automatic on/off operation",
+      "Dry run protection",
+      "Quiet operation under 60 dB",
+      "Stainless steel components",
+      "1-year manufacturer warranty"
+    ],
+    specifications: {
+      horsepower: "1/2 HP",
+      flowRate: "17 GPM",
+      maxPressure: "34 PSI",
+      voltage: "110V / 60Hz",
+      operation: "Automatic demand-based",
+      protection: "Thermal overload & dry run",
+      noiseLevel: "< 60 dB",
+      warranty: "1 year"
+    },
+    faq: [
+      {
+        question: "Will it turn on automatically?",
+        answer: "Yes! The pump has a built-in pressure switch that turns it on when you open a faucet or start irrigation, and off when flow stops."
+      },
+      {
+        question: "What if my barrel runs dry?",
+        answer: "The dry run protection automatically shuts off the pump when water level is too low, preventing damage."
+      },
+      {
+        question: "Is it noisy?",
+        answer: "No, this pump operates at under 60 dB - quieter than a normal conversation. Suitable for residential use."
+      }
+    ]
+  },
+  "sediment-pre-filter": {
+    id: "filt-1",
+    title: "Sediment Pre-Filter",
+    description: "Protect your rainwater system with this inline sediment filter. Removes particles down to 50 microns including sand, silt, and debris. Easy cartridge replacement and clear housing lets you see when cleaning is needed.",
+    handle: "sediment-pre-filter",
+    priceRange: {
+      minVariantPrice: {
+        amount: "39.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+            altText: "Sediment Pre-Filter"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "filt-variant-1",
+            title: "50 Micron Sediment Filter",
+            priceV2: {
+              amount: "39.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "50 micron filtration",
+      "Clear housing shows filter condition",
+      "Easy cartridge replacement",
+      "Standard 10\" filter size",
+      "3/4\" inlet and outlet",
+      "Protects pumps and downstream equipment",
+      "Reusable/washable cartridge option",
+      "Pressure gauge port"
+    ],
+    specifications: {
+      filtration: "50 microns",
+      housingSize: "Standard 10\"",
+      connections: "3/4\" NPT inlet/outlet",
+      maxFlow: "10 GPM",
+      maxPressure: "90 PSI",
+      housing: "Clear polycarbonate"
+    },
+    faq: [
+      {
+        question: "How often should I change the filter?",
+        answer: "Check monthly - the clear housing lets you see buildup. Replace or clean when visibly dirty or flow decreases. Typically every 3-6 months."
+      },
+      {
+        question: "Can I wash and reuse the cartridge?",
+        answer: "Yes! Washable/reusable cartridge options are available. Rinse with clean water and reinstall."
+      }
+    ]
+  },
+  "carbon-block-filter": {
+    id: "filt-2",
+    title: "Carbon Block Filter",
+    description: "Polish your rainwater with this activated carbon filter. Removes odors, chlorine, organic compounds, and improves taste. Perfect as a final stage filter for rainwater used in household applications.",
+    handle: "carbon-block-filter",
+    priceRange: {
+      minVariantPrice: {
+        amount: "49.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368",
+            altText: "Carbon Block Filter"
+          }
+        }
+      ]
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "filt-variant-2",
+            title: "Activated Carbon Block Filter",
+            priceV2: {
+              amount: "49.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true
+          }
+        }
+      ]
+    },
+    features: [
+      "Activated carbon block technology",
+      "Removes odors and organic compounds",
+      "Reduces chlorine and chemicals",
+      "Improves water taste",
+      "5 micron filtration",
+      "Standard 10\" cartridge",
+      "6-month cartridge life",
+      "NSF certified media"
+    ],
+    specifications: {
+      filtration: "5 microns",
+      media: "Activated carbon block",
+      cartridgeSize: "Standard 10\"",
+      connections: "3/4\" NPT",
+      maxFlow: "5 GPM",
+      cartridgeLife: "6 months or 5,000 gallons",
+      certification: "NSF certified carbon"
+    },
+    faq: [
+      {
+        question: "What does carbon filtration remove?",
+        answer: "Activated carbon removes chlorine, volatile organic compounds (VOCs), odors, and improves taste. It does not remove minerals or bacteria."
+      },
+      {
+        question: "Should I use this before or after sediment filter?",
+        answer: "Always use a sediment pre-filter before the carbon filter. Sediment can clog carbon quickly and reduce its effectiveness."
+      },
+      {
+        question: "How do I know when to replace it?",
+        answer: "Replace every 6 months or 5,000 gallons, or when you notice odors or taste changes returning to the water."
+      }
+    ]
   }
 }
 
