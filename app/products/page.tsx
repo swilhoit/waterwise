@@ -327,7 +327,7 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      {/* Products Section - Bento Grid Layout */}
+      {/* Products Section */}
       <section id="products" className="section-padding bg-sand-50">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
@@ -340,102 +340,30 @@ export default async function ProductsPage() {
             </p>
           </div>
 
-          {/* Bento Grid */}
-          <div className="grid lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {/* Featured Product - Large Card */}
-            <div className="lg:col-span-2 lg:row-span-2">
-              <div className="card-elevated h-full p-8 group">
-                <div className="flex flex-col h-full">
-                  <div className="flex items-start justify-between mb-4">
-                    <span className="badge-ocean">
-                      <Droplets className="h-3 w-3" />
-                      Featured System
+          {/* Product Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {displayProducts.map((product: any, index: number) => (
+              <Link
+                key={product.id || index}
+                href={`/products/${product.handle}`}
+                className="group bg-white rounded-2xl border border-sand-200 overflow-hidden hover:border-ocean-200 transition-colors"
+              >
+                <div className="relative aspect-square bg-sand-50">
+                  <Image
+                    src={product.images?.edges?.[0]?.node?.url || product.image}
+                    alt={product.title}
+                    fill
+                    className="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
+                    unoptimized
+                  />
+                  {product.badge && (
+                    <span className={`absolute top-4 left-4 badge-${product.badgeColor || 'ocean'}`}>
+                      {product.badge}
                     </span>
-                    <span className="badge-terra">
-                      <Star className="h-3 w-3 fill-current" />
-                      Best Seller
-                    </span>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-8 flex-1">
-                    <div className="relative aspect-square bg-gradient-to-br from-sand-50 to-sand-100 rounded-2xl overflow-hidden">
-                      <Image
-                        src={displayProducts[0]?.images?.edges?.[0]?.node?.url || displayProducts[0]?.image || "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223"}
-                        alt="Aqua2use System"
-                        fill
-                        className="object-contain p-6 group-hover:scale-105 transition-transform duration-700"
-                        unoptimized
-                      />
-                    </div>
-
-                    <div className="flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-3xl font-display text-sand-900 mb-3">
-                          {displayProducts[0]?.title || "Aqua2use Greywater System"}
-                        </h3>
-                        <p className="text-sand-600 mb-6 leading-relaxed">
-                          {displayProducts[0]?.description?.substring(0, 180)}...
-                        </p>
-
-                        <div className="grid grid-cols-3 gap-3 mb-6">
-                          <div className="bg-sand-100 rounded-xl p-3 text-center">
-                            <div className="text-lg font-bold text-ocean-600">21-50</div>
-                            <div className="text-xs text-sand-600">Gal Capacity</div>
-                          </div>
-                          <div className="bg-sand-100 rounded-xl p-3 text-center">
-                            <div className="text-lg font-bold text-ocean-600">17-25</div>
-                            <div className="text-xs text-sand-600">GPM Flow</div>
-                          </div>
-                          <div className="bg-sand-100 rounded-xl p-3 text-center">
-                            <div className="text-lg font-bold text-ocean-600">90%</div>
-                            <div className="text-xs text-sand-600">Solid Removal</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <span className="text-sm text-sand-500">Starting at</span>
-                          <div className="text-4xl font-bold text-sand-900">
-                            {displayProducts[0]?.priceRange?.minVariantPrice ?
-                              formatPriceDisplay(displayProducts[0].priceRange.minVariantPrice.amount) :
-                              "$599"}
-                          </div>
-                        </div>
-                        <Link
-                          href={`/products/${displayProducts[0]?.handle || 'aqua2use'}`}
-                          className="btn-primary text-lg"
-                        >
-                          View Options
-                          <ArrowRight className="h-5 w-5" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
-              </div>
-            </div>
 
-            {/* Secondary Products - Compact Cards */}
-            {displayProducts.slice(1, 3).map((product: any, index: number) => (
-              <div key={product.id || index} className="card-premium group">
-                <Link href={`/products/${product.handle}`} className="block p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <span className={`badge-${product.badgeColor || 'sand'}`}>
-                      {product.badge || 'Product'}
-                    </span>
-                  </div>
-
-                  <div className="relative aspect-[4/3] bg-gradient-to-br from-sand-50 to-sand-100 rounded-xl overflow-hidden mb-4">
-                    <Image
-                      src={product.images?.edges?.[0]?.node?.url || product.image}
-                      alt={product.title}
-                      fill
-                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                      unoptimized
-                    />
-                  </div>
-
+                <div className="p-6">
                   <h3 className="text-xl font-display text-sand-900 mb-2 group-hover:text-ocean-600 transition-colors">
                     {product.title}
                   </h3>
@@ -444,7 +372,7 @@ export default async function ProductsPage() {
                     {product.description?.substring(0, 100)}...
                   </p>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-sand-200">
+                  <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs text-sand-500">From</span>
                       <div className="text-2xl font-bold text-sand-900">
@@ -454,11 +382,11 @@ export default async function ProductsPage() {
                       </div>
                     </div>
                     <span className="text-ocean-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Details <ArrowRight className="h-4 w-4" />
+                      View <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
