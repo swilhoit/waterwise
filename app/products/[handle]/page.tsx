@@ -11,6 +11,9 @@ import { formatPriceDisplay } from '@/lib/price-utils'
 import { ProductWithReviewsSchema } from '@/components/schema-markup'
 import { getReviewsByProduct, type Review } from '@/data/aqua2use-reviews'
 
+// Category-specific templates
+import { RainwaterTemplate, PartsTemplate, FiltrationTemplate, getProductCategory } from '@/components/product-templates'
+
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
   "aqua2use": {
@@ -1977,6 +1980,23 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     url: `https://waterwisegroup.com/products/${handle}`
   }
 
+  // Detect product category and render appropriate template
+  const category = getProductCategory(handle)
+
+  // Use category-specific templates for non-greywater products
+  if (category === 'rainwater') {
+    return <RainwaterTemplate product={product} productContent={productContent} handle={handle} />
+  }
+
+  if (category === 'parts') {
+    return <PartsTemplate product={product} productContent={productContent} handle={handle} />
+  }
+
+  if (category === 'filtration') {
+    return <FiltrationTemplate product={product} productContent={productContent} handle={handle} />
+  }
+
+  // Default: Greywater/Aqua2use template (existing detailed layout)
   return (
     <div className="bg-sand-50">
       {/* Google Rich Snippets Schema */}
