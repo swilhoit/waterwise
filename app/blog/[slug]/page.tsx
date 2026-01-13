@@ -362,87 +362,72 @@ export default async function BlogPost({
         </div>
       </section>
 
-      {/* CTA Section - Premium Design */}
+      {/* CTA Section - Teal Design */}
       <section className="relative py-20 lg:py-28 overflow-hidden">
-        {/* Background with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-emerald-950" />
+        {/* Background with teal gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-teal-700 to-teal-800" />
 
-        {/* Subtle pattern overlay */}
+        {/* Subtle dot pattern overlay */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+            backgroundSize: '40px 40px'
           }}
         />
 
         {/* Decorative gradient orbs */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4" />
 
         <div className="container relative mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto text-center">
             {/* Top badge */}
             <div className="flex justify-center mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                <Droplets className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-medium text-emerald-400">Save up to 40,000 gallons per year</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm">
+                <Droplets className="w-4 h-4 text-white" />
+                <span className="text-sm font-medium text-white">Save up to 40,000 gallons per year</span>
               </div>
             </div>
 
             {/* Main content */}
-            <div className="text-center">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
-                Ready to Start Your
-                <span className="block mt-2 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                  Water Conservation Journey?
-                </span>
-              </h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
+              Ready to Start Your Water Conservation Journey?
+            </h2>
 
-              <p className="text-lg lg:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Join thousands of homeowners saving water and money with our proven greywater recycling systems.
-              </p>
+            <p className="text-lg lg:text-xl text-teal-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Join thousands of homeowners saving water and money with our proven greywater recycling systems.
+            </p>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <Button
-                  size="lg"
-                  asChild
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-base font-semibold rounded-xl shadow-lg shadow-emerald-500/25 transition-all duration-300 hover:shadow-emerald-500/40 hover:scale-[1.02]"
-                >
-                  <Link href="/products" className="flex items-center gap-2">
-                    <Leaf className="w-5 h-5" />
-                    View Products
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  asChild
-                  className="bg-white/10 hover:bg-white/15 text-white border border-white/20 px-8 py-6 text-base font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 hover:border-white/30"
-                >
-                  <Link href="/contact" className="flex items-center gap-2">
-                    <Phone className="w-5 h-5" />
-                    Get Expert Advice
-                  </Link>
-                </Button>
-              </div>
-
-              {/* Trust indicators */}
-              <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>5,000+ systems sold</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Free consultation</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Same-day response</span>
-                </div>
-              </div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+              <Button
+                size="lg"
+                asChild
+                className="bg-white text-teal-700 hover:bg-teal-50 px-8 py-6 text-base font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.02]"
+              >
+                <Link href="/products" className="flex items-center gap-2">
+                  <Leaf className="w-5 h-5" />
+                  View Products
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                asChild
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-6 text-base font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 hover:border-white/50"
+              >
+                <Link href="/contact" className="flex items-center gap-2">
+                  <Phone className="w-5 h-5" />
+                  Get Expert Advice
+                </Link>
+              </Button>
             </div>
+
+            {/* Trust indicators */}
+            <p className="text-sm text-teal-100">
+              No obligation · Expert consultation · Same-day response
+            </p>
           </div>
         </div>
       </section>

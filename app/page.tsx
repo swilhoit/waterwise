@@ -708,28 +708,28 @@ export default async function Home() {
       </section>
 
       {/* Final CTA - Clean */}
-      <section className="py-24 lg:py-32 bg-sand-950">
+      <section className="py-24 lg:py-32 bg-slate-800">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
               Ready to start saving water?
             </h2>
-            <p className="text-xl text-sand-400 mb-10">
+            <p className="text-xl text-slate-300 mb-10">
               Get a personalized recommendation for your property
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-ocean-500 hover:bg-ocean-600 text-white px-10 py-6 text-lg" asChild>
+              <Button size="lg" className="bg-teal-500 hover:bg-teal-400 text-white px-10 py-6 text-lg" asChild>
                 <Link href="/contact">
                   Get Your Free Quote
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-sand-600 text-white hover:bg-sand-800 px-10 py-6 text-lg" asChild>
+              <Button size="lg" variant="outline" className="border-slate-500 text-white hover:bg-slate-700 px-10 py-6 text-lg" asChild>
                 <Link href="/products">
                   Browse Products
                 </Link>
               </Button>
             </div>
-            <p className="mt-8 text-sm text-sand-500">
+            <p className="mt-8 text-sm text-slate-400">
               No obligation · Expert consultation · Same-day response
             </p>
           </div>
