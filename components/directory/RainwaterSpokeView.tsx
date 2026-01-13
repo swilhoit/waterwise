@@ -9,6 +9,7 @@ import {
   Wrench, Timer, BadgeCheck, AlertCircle, Leaf
 } from 'lucide-react'
 import LocationContextCard from './LocationContextCard'
+import PermitSection from './PermitSection'
 
 interface RainwaterData {
   legalStatus?: string
@@ -295,9 +296,33 @@ export default function RainwaterSpokeView({
             countyName={countyName}
             incentives={rainwaterIncentives}
             localRegulation={localRegulation}
-            showRebateBanner={false}
           />
         </div>
+
+        {/* Permit Section - Rainwater permit requirements */}
+        {rainwater && (
+          <div className="mb-8">
+            <PermitSection
+              level={level}
+              locationName={level === 'city' ? cityName! : stateName}
+              stateCode={stateCode}
+              stateName={stateName}
+              waterType="rainwater"
+              permitData={{
+                permitRequired: rainwater.permitRequired,
+                collectionLimitGallons: rainwater.collectionLimitGallons,
+                potableUseAllowed: rainwater.potableUseAllowed,
+                keyRestrictions: rainwater.keyRestrictions,
+                permitFramework: rainwater.governingCode
+              }}
+              stateBaseline={{
+                permitFramework: rainwater.governingCode,
+                collectionLimitGallons: rainwater.collectionLimitGallons,
+                keyRestrictions: rainwater.keyRestrictions
+              }}
+            />
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}

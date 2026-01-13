@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import RainwaterSpokeView from '@/components/directory/RainwaterSpokeView'
 import { getBigQueryClient } from '@/lib/bigquery'
 import { STATE_NAMES, STATE_CODES } from '@/lib/state-utils'
+import { normalizeLegalStatus } from '@/lib/directory-data'
 
 interface PageProps {
   params: Promise<{ state: string }>
@@ -24,22 +25,24 @@ async function getRainwaterData(stateCode: string) {
   try {
     const bigquery = getBigQueryClient()
 
-    // Try unified table first
+    // Get rainwater data from state_water_regulations where resource_type = 'rainwater'
     const query = `
       SELECT
         state_code,
         state_name,
-        rainwater_legal_status,
-        rainwater_collection_limit_gallons,
-        rainwater_potable_allowed,
-        rainwater_permit_required,
-        rainwater_governing_code,
-        rainwater_tax_incentives,
+        legal_status,
+        collection_limit_gallons,
+        potable_use_allowed,
+        permit_required,
+        governing_code,
+        tax_incentives,
+        key_restrictions,
         primary_agency,
         agency_phone,
         government_website
       FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
       WHERE state_code = @stateCode
+        AND resource_type = 'rainwater'
       LIMIT 1
     `
 
@@ -50,16 +53,18 @@ async function getRainwaterData(stateCode: string) {
 
     if (rows && rows.length > 0) {
       const row = rows[0]
+
       return {
         stateCode: row.state_code,
         stateName: row.state_name,
         rainwater: {
-          legalStatus: row.rainwater_legal_status || 'Legal',
-          collectionLimitGallons: row.rainwater_collection_limit_gallons,
-          potableUseAllowed: row.rainwater_potable_allowed,
-          permitRequired: row.rainwater_permit_required || 'No',
-          governingCode: row.rainwater_governing_code,
-          taxIncentives: row.rainwater_tax_incentives
+          legalStatus: normalizeLegalStatus(row.legal_status),
+          collectionLimitGallons: row.collection_limit_gallons,
+          potableUseAllowed: row.potable_use_allowed,
+          permitRequired: row.permit_required || undefined,
+          governingCode: row.governing_code,
+          taxIncentives: row.tax_incentives,
+          keyRestrictions: row.key_restrictions || []
         },
         agency: {
           name: row.primary_agency,
@@ -89,17 +94,12 @@ async function getRainwaterData(stateCode: string) {
 
     if (fallbackRows && fallbackRows.length > 0) {
       const row = fallbackRows[0]
+      // No rainwater data available - return null for rainwater
+      // The UI should handle this by showing "Data not available" instead of false "Legal"
       return {
         stateCode: row.state_code,
         stateName: row.state_name,
-        rainwater: {
-          legalStatus: 'Legal',
-          collectionLimitGallons: null,
-          potableUseAllowed: false,
-          permitRequired: 'No',
-          governingCode: null,
-          taxIncentives: null
-        },
+        rainwater: null,
         agency: {
           name: row.primary_agency,
           phone: row.agency_phone,

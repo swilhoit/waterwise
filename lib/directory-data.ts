@@ -145,37 +145,58 @@ export function buildJurisdictionId(
 // =============================================================================
 
 /**
- * Fetch state-level regulations from BigQuery
+ * Normalize legal status values to a consistent enum
+ * Standard values: 'Legal', 'Regulated', 'Restricted', 'Prohibited', 'Unknown'
  */
-export async function getStateData(stateCode: string): Promise<StateData | null> {
-  try {
-    const bigquery = getBigQueryClient()
+export function normalizeLegalStatus(status: string | null | undefined): string {
+  if (!status) return 'Unknown'
 
-    // Try unified table first
+  const s = status.toLowerCase().trim()
+
+  // Abbreviations
+  if (s === 'l') return 'Legal'
+  if (s === 'r') return 'Regulated'
+
+  // Legal variants
+  if (s.includes('legal') && !s.includes('limit')) return 'Legal'
+
+  // Regulated/Permitted variants
+  if (s.includes('regulated') || s.includes('permitted') || s.includes('comprehensive')) return 'Regulated'
+
+  // Restricted/Limited variants
+  if (s.includes('restricted') || s.includes('limited') || s.includes('unclear')) return 'Restricted'
+
+  // Prohibited variants
+  if (s.includes('prohibited') || s.includes('illegal') || s.includes('not allowed')) return 'Prohibited'
+
+  // No clear status
+  if (s.includes('no formal') || s.includes('no specific') || s.includes('varies')) return 'Unknown'
+
+  // Default to the original value if it's already one of our standards
+  const normalized = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
+  if (['Legal', 'Regulated', 'Restricted', 'Prohibited', 'Unknown'].includes(normalized)) {
+    return normalized
+  }
+
+  return 'Unknown'
+}
+
+/**
+ * Fetch rainwater data from the rainwater_laws table
+ */
+async function getRainwaterData(bigquery: any, stateCode: string): Promise<RainwaterData | null> {
+  try {
     const query = `
       SELECT
-        state_code,
-        state_name,
-        legal_status as greywater_legal_status,
-        permit_required as greywater_permit_required,
-        permit_threshold_gpd as greywater_permit_threshold,
-        indoor_use_allowed as greywater_indoor_allowed,
-        outdoor_use_allowed as greywater_outdoor_allowed,
-        governing_code as greywater_governing_code,
-        approved_uses as greywater_approved_uses,
-        key_restrictions as greywater_key_restrictions,
-        recent_changes as greywater_recent_changes,
-        rainwater_legal_status,
-        rainwater_collection_limit_gallons,
-        rainwater_potable_allowed,
-        rainwater_permit_required,
-        rainwater_governing_code,
-        rainwater_tax_incentives,
-        primary_agency,
-        agency_phone,
-        government_website,
-        last_updated
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+        legal_status,
+        permit_required,
+        governing_code,
+        potable_use_allowed,
+        approved_uses,
+        key_restrictions,
+        summary,
+        tax_incentives_available
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.rainwater_laws\`
       WHERE state_code = @stateCode
       LIMIT 1
     `
@@ -188,10 +209,89 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
     if (rows && rows.length > 0) {
       const row = rows[0]
       return {
+        legalStatus: normalizeLegalStatus(row.legal_status),
+        permitRequired: row.permit_required || undefined,
+        governingCode: row.governing_code || undefined,
+        potableUseAllowed: row.potable_use_allowed || false,
+        collectionLimitGallons: null, // Not in this table schema
+        approvedUses: row.approved_uses || [],
+        keyRestrictions: row.key_restrictions || [],
+        summary: row.summary || undefined,
+        taxIncentives: row.tax_incentives_available ? 'Available' : undefined
+      }
+    }
+
+    return null
+  } catch (error) {
+    // Table might not exist or have data - this is expected
+    console.log('No rainwater_laws data for state:', stateCode)
+    return null
+  }
+}
+
+/**
+ * Fetch state-level regulations from BigQuery
+ */
+export async function getStateData(stateCode: string): Promise<StateData | null> {
+  try {
+    const bigquery = getBigQueryClient()
+
+    // Join greywater and rainwater rows from state_water_regulations table
+    const query = `
+      SELECT
+        g.state_code,
+        g.state_name,
+        -- Greywater fields
+        g.legal_status as greywater_legal_status,
+        g.permit_required as greywater_permit_required,
+        g.permit_threshold_gpd as greywater_permit_threshold,
+        g.indoor_use_allowed as greywater_indoor_allowed,
+        g.outdoor_use_allowed as greywater_outdoor_allowed,
+        g.governing_code as greywater_governing_code,
+        g.approved_uses as greywater_approved_uses,
+        g.key_restrictions as greywater_key_restrictions,
+        g.recent_changes as greywater_recent_changes,
+        g.primary_agency,
+        g.agency_phone,
+        g.government_website,
+        -- Rainwater fields (from joined row)
+        r.legal_status as rainwater_legal_status,
+        r.collection_limit_gallons as rainwater_collection_limit_gallons,
+        r.potable_use_allowed as rainwater_potable_allowed,
+        r.permit_required as rainwater_permit_required,
+        r.governing_code as rainwater_governing_code,
+        r.tax_incentives as rainwater_tax_incentives,
+        r.key_restrictions as rainwater_key_restrictions
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` g
+      LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` r
+        ON g.state_code = r.state_code AND r.resource_type = 'rainwater'
+      WHERE g.state_code = @stateCode
+        AND g.resource_type = 'greywater'
+      LIMIT 1
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: { stateCode: stateCode.toUpperCase() }
+    }) as any
+
+    if (rows && rows.length > 0) {
+      const row = rows[0]
+
+      // Check if we have rainwater data in the unified table
+      const hasRainwaterData = row.rainwater_legal_status != null
+
+      // If no rainwater data in unified table, try the separate rainwater_laws table
+      let rainwaterData: RainwaterData | null = null
+      if (!hasRainwaterData) {
+        rainwaterData = await getRainwaterData(bigquery, stateCode)
+      }
+
+      return {
         stateCode: row.state_code,
         stateName: row.state_name || STATE_NAMES[stateCode.toUpperCase()],
         greywater: {
-          legalStatus: row.greywater_legal_status === 'L' ? 'Legal' : row.greywater_legal_status === 'R' ? 'Regulated' : row.greywater_legal_status || 'Varies',
+          legalStatus: normalizeLegalStatus(row.greywater_legal_status),
           permitRequired: row.greywater_permit_required,
           permitThresholdGpd: row.greywater_permit_threshold,
           indoorUseAllowed: row.greywater_indoor_allowed,
@@ -201,14 +301,15 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
           keyRestrictions: row.greywater_key_restrictions ? row.greywater_key_restrictions.split(',').map((s: string) => s.trim()) : [],
           recentChanges: row.greywater_recent_changes
         },
-        rainwater: {
-          legalStatus: row.rainwater_legal_status || 'Legal',
+        rainwater: hasRainwaterData ? {
+          legalStatus: normalizeLegalStatus(row.rainwater_legal_status),
           collectionLimitGallons: row.rainwater_collection_limit_gallons,
           potableUseAllowed: row.rainwater_potable_allowed,
-          permitRequired: row.rainwater_permit_required || 'No',
+          permitRequired: row.rainwater_permit_required || undefined,
           governingCode: row.rainwater_governing_code,
-          taxIncentives: row.rainwater_tax_incentives
-        },
+          taxIncentives: row.rainwater_tax_incentives,
+          keyRestrictions: row.rainwater_key_restrictions || []
+        } : rainwaterData, // Use data from rainwater_laws table if available
         agency: {
           name: row.primary_agency,
           phone: row.agency_phone,
@@ -218,7 +319,7 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
       }
     }
 
-    // Fallback to greywater_laws table
+    // Fallback to greywater_laws table for greywater data
     const fallbackQuery = `
       SELECT
         state_code,
@@ -247,11 +348,15 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
 
     if (fallbackRows && fallbackRows.length > 0) {
       const row = fallbackRows[0]
+
+      // Try to get rainwater data from the separate table
+      const rainwaterData = await getRainwaterData(bigquery, stateCode)
+
       return {
         stateCode: row.state_code,
         stateName: row.state_name || STATE_NAMES[stateCode.toUpperCase()],
         greywater: {
-          legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : row.legal_status || 'Varies',
+          legalStatus: normalizeLegalStatus(row.legal_status),
           permitRequired: row.permit_required,
           permitThresholdGpd: row.permit_threshold_gpd,
           indoorUseAllowed: row.indoor_use_allowed,
@@ -261,12 +366,7 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
           keyRestrictions: row.key_restrictions ? row.key_restrictions.split(',').map((s: string) => s.trim()) : [],
           recentChanges: row.recent_changes
         },
-        rainwater: {
-          legalStatus: 'Legal',
-          collectionLimitGallons: null,
-          potableUseAllowed: false,
-          permitRequired: 'No'
-        },
+        rainwater: rainwaterData, // null if no data - no more false 'Legal' default
         agency: {
           name: row.primary_agency,
           phone: row.agency_phone,
@@ -526,7 +626,7 @@ export async function getAllStates(): Promise<Array<{
     return (rows || []).map((row: any) => ({
       stateCode: row.state_code,
       stateName: row.state_name,
-      legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : 'Varies',
+      legalStatus: normalizeLegalStatus(row.legal_status),
       incentiveCount: row.incentive_count || 0
     }))
   } catch (error) {

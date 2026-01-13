@@ -9,6 +9,7 @@ import {
   Wrench, Timer, BadgeCheck, AlertCircle, Leaf
 } from 'lucide-react'
 import LocationContextCard from './LocationContextCard'
+import PermitSection from './PermitSection'
 
 interface GreywaterData {
   legalStatus?: string
@@ -323,18 +324,20 @@ export default function GreywaterSpokeView({
           </div>
         </div>
 
-        {/* Recent Changes Alert */}
-        {greywater?.recentChanges && (
+        {/* Recent Changes Alert - DISABLED: requires date and source URL for credibility
+        {greywater?.recentChanges && greywater?.recentChangesDate && greywater?.recentChangesSource && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-amber-800">Recent Changes</p>
+                <p className="font-medium text-amber-800">Recent Changes ({greywater.recentChangesDate})</p>
                 <p className="text-sm text-amber-700 mt-1">{greywater.recentChanges}</p>
+                <a href={greywater.recentChangesSource} target="_blank" rel="noopener noreferrer" className="text-xs text-amber-600 underline mt-1 inline-block">Source</a>
               </div>
             </div>
           </div>
         )}
+        */}
 
         {/* Location Context Card - Local Regulations, Hierarchy, Utilities */}
         <div className="mb-8">
@@ -346,7 +349,6 @@ export default function GreywaterSpokeView({
             countyName={countyName}
             incentives={greywaterIncentives}
             localRegulation={localRegulation}
-            showRebateBanner={false}
           />
         </div>
 
@@ -520,275 +522,49 @@ export default function GreywaterSpokeView({
               </div>
             </div>
 
-            {/* City-Specific Permit Details - Shows when we have detailed data */}
-            {permitDetails && level === 'city' && (
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="bg-blue-50 px-6 py-4 border-b border-blue-200">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                        <ClipboardList className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-semibold text-gray-900">{cityName} Permit Requirements</h2>
-                        <p className="text-sm text-gray-600">Local greywater permit details</p>
-                      </div>
-                    </div>
-                    {permitDetails.data_confidence && (
-                      <span className={`px-2 py-1 text-xs font-medium rounded ${
-                        permitDetails.data_confidence === 'verified' ? 'bg-emerald-100 text-emerald-700' :
-                        permitDetails.data_confidence === 'partial' ? 'bg-amber-100 text-amber-700' :
-                        'bg-gray-100 text-gray-600'
-                      }`}>
-                        {permitDetails.data_confidence === 'verified' ? '✓ Verified' :
-                         permitDetails.data_confidence === 'partial' ? 'Partial' : 'Unverified'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  {/* Quick Info Grid */}
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    {permitDetails.permit_type && (
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Type</p>
-                        <p className="font-semibold text-gray-900">{permitDetails.permit_type}</p>
-                      </div>
-                    )}
-                    {permitDetails.typical_processing_days && (
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Processing Time</p>
-                        <p className="font-semibold text-gray-900">{permitDetails.typical_processing_days} days</p>
-                      </div>
-                    )}
-                    {(permitDetails.permit_fee_min !== null || permitDetails.permit_fee_max !== null) && (
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Fee</p>
-                        <p className="font-semibold text-gray-900">
-                          {permitDetails.permit_fee_min === 0 && permitDetails.permit_fee_max === 0
-                            ? 'Free'
-                            : permitDetails.permit_fee_min === 0
-                              ? `Up to $${permitDetails.permit_fee_max}`
-                              : `$${permitDetails.permit_fee_min} - $${permitDetails.permit_fee_max}`}
-                        </p>
-                      </div>
-                    )}
-                    {permitDetails.application_method && (
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Apply Method</p>
-                        <p className="font-semibold text-gray-900">{permitDetails.application_method}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* System Types Allowed */}
-                  <div className="mb-6">
-                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">Allowed System Types</p>
-                    <div className="flex flex-wrap gap-2">
-                      {permitDetails.laundry_to_landscape_allowed && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium border border-emerald-200">
-                          <Check className="h-4 w-4" />
-                          Laundry-to-Landscape
-                        </span>
-                      )}
-                      {permitDetails.branched_drain_allowed && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium border border-emerald-200">
-                          <Check className="h-4 w-4" />
-                          Branched Drain
-                        </span>
-                      )}
-                      {permitDetails.surge_tank_system_allowed && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium border border-emerald-200">
-                          <Check className="h-4 w-4" />
-                          Surge Tank
-                        </span>
-                      )}
-                      {permitDetails.indoor_reuse_allowed && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium border border-blue-200">
-                          <Check className="h-4 w-4" />
-                          Indoor Reuse
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* DIY & Professional Requirements */}
-                  <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
-                        <Wrench className="h-3 w-3" />
-                        Installation Requirements
-                      </p>
-                      <div className="space-y-2">
-                        {permitDetails.diy_allowed !== undefined && (
-                          <div className="flex items-center gap-2 text-sm">
-                            {permitDetails.diy_allowed ? (
-                              <>
-                                <Check className="h-4 w-4 text-emerald-500" />
-                                <span className="text-gray-700">DIY installation allowed</span>
-                              </>
-                            ) : (
-                              <>
-                                <AlertCircle className="h-4 w-4 text-amber-500" />
-                                <span className="text-gray-700">Professional installation required</span>
-                              </>
-                            )}
-                          </div>
-                        )}
-                        {permitDetails.licensed_plumber_required && (
-                          <div className="flex items-center gap-2 text-sm">
-                            <AlertCircle className="h-4 w-4 text-amber-500" />
-                            <span className="text-gray-700">Licensed plumber required</span>
-                          </div>
-                        )}
-                        {permitDetails.licensed_contractor_required && (
-                          <div className="flex items-center gap-2 text-sm">
-                            <AlertCircle className="h-4 w-4 text-amber-500" />
-                            <span className="text-gray-700">Licensed contractor required</span>
-                          </div>
-                        )}
-                        {permitDetails.professional_requirements_notes && (
-                          <p className="text-xs text-gray-500 mt-1">{permitDetails.professional_requirements_notes}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Inspections */}
-                    {permitDetails.inspections_required && permitDetails.inspections_required.length > 0 && (
-                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
-                          <BadgeCheck className="h-3 w-3" />
-                          Required Inspections
-                        </p>
-                        <ul className="space-y-1">
-                          {permitDetails.inspections_required.map((inspection, idx) => (
-                            <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                              {inspection}
-                            </li>
-                          ))}
-                        </ul>
-                        {permitDetails.inspection_scheduling_phone && (
-                          <a href={`tel:${permitDetails.inspection_scheduling_phone}`} className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 mt-2">
-                            <Phone className="h-3 w-3" />
-                            Schedule: {permitDetails.inspection_scheduling_phone}
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Required Documents */}
-                  {permitDetails.required_documents && permitDetails.required_documents.length > 0 && (
-                    <div className="mb-6">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
-                        <FileText className="h-3 w-3" />
-                        Required Documents
-                      </p>
-                      <ul className="grid sm:grid-cols-2 gap-2">
-                        {permitDetails.required_documents.map((doc, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                            <span className="text-emerald-500">•</span>
-                            {doc}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Exemptions - Important callout */}
-                  {permitDetails.exemptions && permitDetails.exemptions.length > 0 && (
-                    <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200 mb-6">
-                      <p className="text-xs text-emerald-700 uppercase tracking-wide mb-2 font-medium">
-                        ✓ Permit Exemptions
-                      </p>
-                      <ul className="space-y-1">
-                        {permitDetails.exemptions.map((exemption, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm text-emerald-800">
-                            <Check className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                            {exemption}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Special Requirements - Warning callout */}
-                  {permitDetails.special_requirements && permitDetails.special_requirements.length > 0 && (
-                    <div className="bg-amber-50 rounded-lg p-4 border border-amber-200 mb-6">
-                      <p className="text-xs text-amber-700 uppercase tracking-wide mb-2 font-medium">
-                        ⚠ Special Requirements
-                      </p>
-                      <ul className="space-y-1">
-                        {permitDetails.special_requirements.map((req, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm text-amber-800">
-                            <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                            {req}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Fee Notes */}
-                  {permitDetails.fee_notes && (
-                    <p className="text-sm text-gray-600 italic mb-6">{permitDetails.fee_notes}</p>
-                  )}
-
-                  {/* Tips for Residents */}
-                  {permitDetails.tips_for_residents && (
-                    <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 mb-6">
-                      <p className="text-xs text-blue-700 uppercase tracking-wide mb-1 font-medium">💡 Pro Tip</p>
-                      <p className="text-sm text-blue-800">{permitDetails.tips_for_residents}</p>
-                    </div>
-                  )}
-
-                  {/* Department Contact & Apply Button */}
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-gray-200">
-                    {permitDetails.department_name && (
-                      <div>
-                        <p className="font-medium text-gray-900">{permitDetails.department_name}</p>
-                        {permitDetails.department_address && (
-                          <p className="text-sm text-gray-600">{permitDetails.department_address}</p>
-                        )}
-                        <div className="flex flex-wrap gap-4 mt-1">
-                          {permitDetails.department_phone && (
-                            <a href={`tel:${permitDetails.department_phone}`} className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                              <Phone className="h-3 w-3" />
-                              {permitDetails.department_phone}
-                            </a>
-                          )}
-                          {permitDetails.department_hours && (
-                            <span className="text-sm text-gray-500">{permitDetails.department_hours}</span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    {permitDetails.application_url && (
-                      <a
-                        href={permitDetails.application_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Apply for Permit
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-
-                  {/* Data Source */}
-                  {permitDetails.data_source && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <p className="text-xs text-gray-400">
-                        Source: <a href={permitDetails.data_source} target="_blank" rel="noopener noreferrer" className="hover:text-gray-600">{permitDetails.data_source}</a>
-                        {permitDetails.data_verified_date && ` • Verified ${permitDetails.data_verified_date}`}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
+            {/* Permit Section - Uses reusable PermitSection component */}
+            {(permitDetails || greywater) && (
+              <PermitSection
+                level={level}
+                locationName={level === 'city' ? cityName! : stateName}
+                stateCode={stateCode}
+                stateName={stateName}
+                waterType="greywater"
+                permitData={permitDetails ? {
+                  permitType: permitDetails.permit_type,
+                  permitRequired: permitDetails.permit_required,
+                  thresholdGpd: permitDetails.permit_required_threshold_gpd || greywater?.permitThresholdGpd || undefined,
+                  applicationUrl: permitDetails.application_url,
+                  applicationMethod: permitDetails.application_method,
+                  requiredDocuments: permitDetails.required_documents,
+                  typicalFees: permitDetails.fee_notes,
+                  feeMin: permitDetails.permit_fee_min ?? undefined,
+                  feeMax: permitDetails.permit_fee_max ?? undefined,
+                  processingDays: permitDetails.typical_processing_days,
+                  laundryToLandscapeAllowed: permitDetails.laundry_to_landscape_allowed,
+                  branchedDrainAllowed: permitDetails.branched_drain_allowed,
+                  surgeTankAllowed: permitDetails.surge_tank_system_allowed,
+                  indoorReuseAllowed: permitDetails.indoor_reuse_allowed,
+                  diyAllowed: permitDetails.diy_allowed,
+                  licensedPlumberRequired: permitDetails.licensed_plumber_required,
+                  licensedContractorRequired: permitDetails.licensed_contractor_required,
+                  inspectionsRequired: permitDetails.inspections_required,
+                  departmentName: permitDetails.department_name,
+                  departmentPhone: permitDetails.department_phone,
+                  departmentAddress: permitDetails.department_address,
+                  departmentHours: permitDetails.department_hours,
+                  departmentUrl: permitDetails.department_url,
+                  exemptions: permitDetails.exemptions,
+                  specialRequirements: permitDetails.special_requirements,
+                  tips: permitDetails.tips_for_residents,
+                  notes: permitDetails.notes
+                } : null}
+                stateBaseline={greywater ? {
+                  thresholdGpd: greywater.permitThresholdGpd || undefined,
+                  permitFramework: greywater.governingCode,
+                  exemptions: greywater.permitRequired === 'Tiered' ? ['Simple laundry-to-landscape systems under GPD threshold'] : undefined
+                } : undefined}
+              />
             )}
 
           </div>

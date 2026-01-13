@@ -3,9 +3,12 @@
 import React from 'react'
 import Link from 'next/link'
 import {
-  Building2, Home, ExternalLink, MapPin, Droplets,
-  DollarSign, ArrowRight
+  Building2, Home, ExternalLink, MapPin, Droplets
 } from 'lucide-react'
+import {
+  getJurisdictionUrls,
+  getUtilityUrl
+} from '@/data/jurisdiction-urls'
 
 interface WaterUtilityData {
   name: string
@@ -25,94 +28,7 @@ interface LocationContextCardProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   localRegulation?: { regulationSummary?: string; permitRequired?: any } | null
   waterUtilities?: WaterUtilityData[]
-  showRebateBanner?: boolean
   compact?: boolean
-}
-
-// State water regulation URLs
-const stateUrls: Record<string, string> = {
-  'CA': 'https://www.hcd.ca.gov/building-standards/state-housing-law/wildfire-702-greywater',
-  'AZ': 'https://www.azdeq.gov/permits/water-permits/reclaimed-water',
-  'TX': 'https://www.tceq.texas.gov/permitting/water_quality/rainwater-greywater-water-reuse',
-  'NM': 'https://www.srca.nm.gov/water-resources/',
-  'CO': 'https://cdphe.colorado.gov/graywater',
-  'OR': 'https://www.oregon.gov/oha/ph/healthyenvironments/drinkingwater/pages/graywater.aspx',
-  'WA': 'https://ecology.wa.gov/water-shorelines/water-supply/water-recovery-reuse',
-  'NV': 'https://ndep.nv.gov/water/water-reuse-program',
-  'UT': 'https://deq.utah.gov/water-quality/water-reuse',
-}
-
-// Known county water/building code URLs
-const countyUrls: Record<string, string> = {
-  'CA_LOS_ANGELES': 'https://pw.lacounty.gov/bsd/lib/BuildingCode/',
-  'CA_SAN_DIEGO': 'https://www.sandiegocounty.gov/pds/bldg/',
-  'CA_ORANGE': 'https://ocpublicworks.com/building',
-  'CA_VENTURA': 'https://www.ventura.org/building-and-safety/',
-  'CA_RIVERSIDE': 'https://rivcoeda.org/Building-and-Safety',
-  'CA_SAN_BERNARDINO': 'https://sbcounty.gov/lus/building_and_safety/',
-  'CA_SANTA_CLARA': 'https://www.sccgov.org/sites/dpd/Pages/dpd.aspx',
-  'CA_ALAMEDA': 'https://www.acgov.org/cda/planning/',
-  'CA_SAN_FRANCISCO': 'https://sfdbi.org/building-codes',
-  'CA_CONTRA_COSTA': 'https://www.contracosta.ca.gov/6282/Building-Inspection',
-  'CA_MARIN': 'https://www.marincounty.org/depts/cd/divisions/building-and-safety',
-  'CA_SONOMA': 'https://sonomacounty.ca.gov/development-services/permit-sonoma/',
-  'CA_KERN': 'https://kernpublicworks.com/building-and-development/',
-  'CA_FRESNO': 'https://www.co.fresno.ca.us/departments/public-works-planning/development-services',
-  'CA_SACRAMENTO': 'https://building.saccounty.gov/',
-}
-
-// Known city municipal code URLs
-const cityUrls: Record<string, string> = {
-  'CA_LOS_ANGELES': 'https://codelibrary.amlegal.com/codes/los_angeles/latest/lamc/0-0-0-1',
-  'CA_SAN_DIEGO': 'https://www.sandiego.gov/development-services/codes-policies',
-  'CA_SAN_FRANCISCO': 'https://codelibrary.amlegal.com/codes/san_francisco/latest/overview',
-  'CA_SAN_JOSE': 'https://www.sanjoseca.gov/your-government/departments/planning-building-code-enforcement/building-code-enforcement',
-  'CA_OAKLAND': 'https://www.oaklandca.gov/departments/planning-building',
-  'CA_LONG_BEACH': 'https://www.longbeach.gov/lbds/',
-  'CA_SANTA_MONICA': 'https://www.santamonica.gov/building-codes',
-  'CA_PASADENA': 'https://www.cityofpasadena.net/building-and-safety/',
-  'CA_BURBANK': 'https://www.burbankca.gov/departments/community-development/building-division',
-  'CA_GLENDALE': 'https://www.glendaleca.gov/government/departments/community-development/building-safety',
-  'CA_BAKERSFIELD': 'https://www.bakersfieldcity.us/184/Building-Division',
-  'CA_FRESNO': 'https://www.fresno.gov/planning/building-and-safety/',
-  'CA_SACRAMENTO': 'https://www.cityofsacramento.gov/community-development/building/building-codes',
-}
-
-// Known water utility URLs
-const utilityUrls: Record<string, string> = {
-  'LADWP': 'https://www.ladwp.com/ladwp/faces/ladwp/residential/r-savemoney/r-sm-rebatesandprograms',
-  'MWD': 'https://www.bewaterwise.com/',
-  'EBMUD': 'https://www.ebmud.com/water/conservation-and-rebates/',
-  'SFPUC': 'https://sfpuc.org/programs/rebates',
-  'Santa Clara Valley Water': 'https://www.valleywater.org/saving-water',
-  'Valley Water': 'https://www.valleywater.org/saving-water',
-  'San Diego County Water Authority': 'https://www.sdcwa.org/your-water/conservation/',
-  'SDCWA': 'https://www.sdcwa.org/your-water/conservation/',
-  'Eastern MWD': 'https://www.emwd.org/post/rebates',
-  'EMWD': 'https://www.emwd.org/post/rebates',
-  'IRWD': 'https://www.irwd.com/save-water/rebates',
-  'Golden State Water': 'https://www.gswater.com/conservation',
-  'Cal Water': 'https://www.calwater.com/conservation-rebates/',
-  'California Water Service': 'https://www.calwater.com/conservation-rebates/',
-  'CALWATER_BAK': 'https://www.calwater.com/conservation-rebates/',
-}
-
-// Helper to normalize names for key lookup
-const normalize = (name: string) =>
-  name?.toUpperCase().replace(/[^A-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') || ''
-
-function getJurisdictionUrls(stateCode: string, countyName?: string, cityName?: string) {
-  const stateUrl = stateUrls[stateCode] || undefined
-  const countyKey = countyName ? `${stateCode}_${normalize(countyName)}` : ''
-  const countyUrl = countyUrls[countyKey] || undefined
-  const cityKey = cityName ? `${stateCode}_${normalize(cityName)}` : ''
-  const cityUrl = cityUrls[cityKey] || undefined
-
-  return { stateUrl, countyUrl, cityUrl }
-}
-
-function getUtilityUrl(utilityName: string): string | undefined {
-  return utilityUrls[utilityName] || utilityUrls[normalize(utilityName)] || undefined
 }
 
 export default function LocationContextCard({
@@ -124,7 +40,6 @@ export default function LocationContextCard({
   incentives = [],
   localRegulation,
   waterUtilities = [],
-  showRebateBanner = true,
   compact = false
 }: LocationContextCardProps) {
   const jurisdictionUrls = getJurisdictionUrls(stateCode, countyName, cityName)
@@ -147,29 +62,8 @@ export default function LocationContextCard({
         }, new Map<string, WaterUtilityData>()).values()
       ).sort((a, b) => (b.programCount || 0) - (a.programCount || 0))
 
-  const maxRebate = Math.max(...incentives.map(i => i.incentive_amount_max || 0), 0)
-
   return (
     <div className={`space-y-${compact ? '3' : '4'}`}>
-      {/* Rebate Programs Banner */}
-      {showRebateBanner && level === 'city' && incentives.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3 p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
-          <div className="flex items-center gap-2 text-sm">
-            <DollarSign className="h-4 w-4 text-emerald-600" />
-            <span className="font-semibold text-emerald-700">{incentives.length} rebate programs</span>
-            <span className="text-gray-500">•</span>
-            <span className="text-emerald-600">Up to ${maxRebate.toLocaleString()}</span>
-          </div>
-          <a
-            href="#rebates"
-            className="ml-auto inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-          >
-            View Rebates
-            <ArrowRight className="h-3 w-3" />
-          </a>
-        </div>
-      )}
-
       {/* Local Regulation Summary */}
       {localRegulation?.regulationSummary && (
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
