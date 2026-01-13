@@ -508,16 +508,18 @@ export default function StateDetailView({
         </CollapsibleSection>
       )}
 
-      {/* Recent Changes */}
-      {stateData.recentChanges && (
+      {/* Recent Changes - DISABLED: requires date and source URL for credibility
+      {stateData.recentChanges && stateData.recentChangesDate && stateData.recentChangesSource && (
         <div className="border-l-2 border-teal-400 pl-4">
           <h3 className="font-medium text-gray-700 flex items-center gap-2 mb-2">
             <Calendar className="h-4 w-4 text-gray-400" />
-            Recent Policy Changes
+            Recent Policy Changes ({stateData.recentChangesDate})
           </h3>
           <p className="text-sm text-gray-600 leading-relaxed">{stateData.recentChanges}</p>
+          <a href={stateData.recentChangesSource} target="_blank" rel="noopener noreferrer" className="text-xs text-teal-600 underline mt-1 inline-block">Source</a>
         </div>
       )}
+      */}
     </div>
   )
 }

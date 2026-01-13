@@ -507,15 +507,18 @@ function GreywaterLawsContent({ laws }: { laws: GreywaterLaws }) {
         </div>
       )}
 
-      {laws.recent_changes && (
+      {/* Recent Changes - DISABLED: requires date and source URL for credibility
+      {laws.recent_changes && laws.recent_changes_date && laws.recent_changes_source && (
         <div className="border-l-2 border-gray-300 pl-4">
           <h4 className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1.5">
             <Info className="h-4 w-4 text-gray-400" />
-            Recent Changes
+            Recent Changes ({laws.recent_changes_date})
           </h4>
           <p className="text-sm text-gray-600">{laws.recent_changes}</p>
+          <a href={laws.recent_changes_source} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 underline mt-1 inline-block">Source</a>
         </div>
       )}
+      */}
 
       {laws.government_website && (
         <a

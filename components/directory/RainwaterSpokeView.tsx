@@ -1,15 +1,25 @@
 "use client"
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import {
-  ChevronRight, ChevronDown, ExternalLink, Phone, Building2,
-  CloudRain, DollarSign, Check, AlertTriangle, Home,
-  FileText, Gauge, ArrowRight, Droplet, MapPin, Users, ClipboardList,
-  Wrench, Timer, BadgeCheck, AlertCircle, Leaf
+  ChevronRight, ExternalLink, CloudRain, DollarSign,
+  Check, AlertTriangle, FileText, Gauge, Droplet
 } from 'lucide-react'
 import LocationContextCard from './LocationContextCard'
 import PermitSection from './PermitSection'
+import {
+  HeroSection,
+  HeroBadge,
+  CTASection,
+  AgencySidebar,
+  RelatedLinks,
+  IncentivesTable,
+  RegulationCard,
+  ListSection,
+  SidebarCard,
+  type IncentiveProgram
+} from './shared'
 
 interface RainwaterData {
   legalStatus?: string
@@ -31,118 +41,8 @@ interface AgencyData {
   website?: string
 }
 
-interface IncentiveProgram {
-  program_name: string
-  incentive_type?: string
-  resource_type?: string
-  program_subtype?: string
-  incentive_amount_min?: number
-  incentive_amount_max?: number
-  incentive_per_unit?: string
-  incentive_url?: string
-  program_description?: string
-  water_utility?: string
-  residential_eligible?: boolean | string
-  commercial_eligible?: boolean | string
-  eligibility_details?: string
-  property_requirements?: string
-  income_requirements?: string
-  how_to_apply?: string
-  steps_to_apply?: string
-  documentation_required?: string
-  pre_approval_required?: boolean | string
-  processing_time?: string
-  installation_requirements?: string
-  contractor_requirements?: string
-  product_requirements?: string
-  inspection_required?: boolean | string
-  timeline_to_complete?: string
-  reimbursement_process?: string
-  restrictions?: string
-  stacking_allowed?: boolean | string
-  stacking_details?: string
-  contact_email?: string
-  contact_phone?: string
-  coverage_area?: string
-  deadline_info?: string
-  program_end_date?: string
-  jurisdiction_id?: string
-  jurisdiction_level?: 'state' | 'county' | 'city' | 'other'
-}
-
-type ProgramType = 'rebate' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
-
-const ProgramTypeBadge = ({ type }: { type: ProgramType }) => {
-  const config: Record<ProgramType, { label: string; className: string }> = {
-    rebate: { label: 'Rebate', className: 'bg-green-100 text-green-800' },
-    loan: { label: 'Loan', className: 'bg-blue-100 text-blue-800' },
-    tax_credit: { label: 'Tax Credit', className: 'bg-indigo-100 text-indigo-800' },
-    tax_exemption: { label: 'Tax Exemption', className: 'bg-indigo-100 text-indigo-800' },
-    subsidy: { label: 'Subsidy', className: 'bg-amber-100 text-amber-800' },
-    free_installation: { label: 'Free Install', className: 'bg-pink-100 text-pink-800' },
-    permit_waiver: { label: 'Permit Waiver', className: 'bg-gray-100 text-gray-800' },
-    education: { label: 'Education', className: 'bg-sky-100 text-sky-800' },
-    various: { label: 'Multiple', className: 'bg-gray-100 text-gray-700' }
-  }
-  const { label, className } = config[type] || { label: type, className: 'bg-gray-100 text-gray-700' }
-  return (
-    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${className}`}>
-      {label}
-    </span>
-  )
-}
-
-const JurisdictionLevelBadge = ({ level }: {
-  level?: 'state' | 'county' | 'city' | 'other'
-  stateName?: string
-  countyName?: string
-  cityName?: string
-}) => {
-  if (!level) return null
-
-  const config: Record<string, { label: string; className: string }> = {
-    state: { label: 'State', className: 'bg-purple-50 text-purple-700 border-purple-200' },
-    county: { label: 'County', className: 'bg-amber-50 text-amber-700 border-amber-200' },
-    city: { label: 'City', className: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-    other: { label: 'District', className: 'bg-blue-50 text-blue-700 border-blue-200' }
-  }
-
-  const { label, className } = config[level] || config.other
-
-  return (
-    <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-medium border whitespace-nowrap ${className}`}>
-      {label}
-    </span>
-  )
-}
-
-const EligibilityBadges = ({ residential, commercial }: { residential?: boolean | string; commercial?: boolean | string }) => {
-  const isResidential = residential === true || residential === 'true'
-  const isCommercial = commercial === true || commercial === 'true'
-  if (!isResidential && !isCommercial) return null
-  return (
-    <div className="flex gap-1">
-      {isResidential && (
-        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
-          Residential
-        </span>
-      )}
-      {isCommercial && (
-        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-200">
-          Commercial
-        </span>
-      )}
-    </div>
-  )
-}
-
 interface LocalRegulation {
   regulationSummary?: string
-}
-
-interface WaterUtilityData {
-  name: string
-  programCount?: number
 }
 
 interface RainwaterSpokeViewProps {
@@ -181,20 +81,6 @@ export default function RainwaterSpokeView({
   incentives,
   localRegulation
 }: RainwaterSpokeViewProps) {
-  const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set())
-
-  const toggleProgram = (programId: string) => {
-    setExpandedPrograms(prev => {
-      const next = new Set(prev)
-      if (next.has(programId)) {
-        next.delete(programId)
-      } else {
-        next.add(programId)
-      }
-      return next
-    })
-  }
-
   const locationName = level === 'city' ? cityName : stateName
   const basePath = level === 'city'
     ? `/${stateCode.toLowerCase()}/${cityName?.toLowerCase().replace(/\s+/g, '-')}`
@@ -215,6 +101,22 @@ export default function RainwaterSpokeView({
     if (lower.includes('prohibited') || lower.includes('illegal')) return 'bg-red-100 text-red-700'
     return 'bg-gray-100 text-gray-700'
   }
+
+  // Build related links for sidebar
+  const relatedLinks = [
+    { label: 'Greywater Laws', href: `${basePath}/greywater` },
+    { label: `All ${locationName} Programs`, href: basePath }
+  ]
+
+  // Default approved uses if not provided
+  const approvedUses = rainwater?.approvedUses || [
+    'Landscape irrigation',
+    'Garden watering',
+    'Car washing',
+    'Toilet flushing',
+    'Laundry (non-potable)',
+    'Pool/fountain filling'
+  ]
 
   return (
     <div className="bg-white min-h-screen">
@@ -238,40 +140,32 @@ export default function RainwaterSpokeView({
           <span className="text-gray-900 font-medium">Rainwater Harvesting</span>
         </nav>
 
-        {/* Hero */}
-        <div className="bg-gradient-to-br from-cyan-50 to-blue-100/50 rounded-2xl border border-cyan-200 p-8 mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-14 h-14 bg-cyan-600 rounded-2xl flex items-center justify-center">
-              <CloudRain className="h-7 w-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {locationName} Rainwater Harvesting
-              </h1>
-              <p className="text-gray-600">
-                Collection laws, permits, and incentives in {level === 'city' ? `${cityName}, ${stateCode}` : stateName}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3 mt-6">
-            <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium ${getLegalStatusColor(rainwater?.legalStatus)}`}>
-              <CloudRain className="h-4 w-4" />
-              Rainwater Collection {rainwater?.legalStatus || 'Legal'}
-            </span>
-            {rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0 ? (
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-gray-700 border border-gray-200">
-                <Gauge className="h-4 w-4" />
-                Limit: {rainwater.collectionLimitGallons.toLocaleString()} gallons
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-100 text-cyan-700 rounded-full font-medium">
-                <Check className="h-4 w-4" />
-                No Collection Limit
-              </span>
-            )}
-          </div>
-        </div>
+        {/* Hero Section */}
+        <HeroSection
+          title={`${locationName} Rainwater Harvesting`}
+          subtitle={`Collection laws, permits, and incentives in ${level === 'city' ? `${cityName}, ${stateCode}` : stateName}`}
+          theme="cyan"
+          icon={CloudRain}
+          badges={
+            <>
+              <HeroBadge className={getLegalStatusColor(rainwater?.legalStatus)}>
+                <CloudRain className="h-4 w-4" />
+                Rainwater Collection {rainwater?.legalStatus || 'Legal'}
+              </HeroBadge>
+              {rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0 ? (
+                <HeroBadge className="bg-white text-gray-700 border border-gray-200">
+                  <Gauge className="h-4 w-4" />
+                  Limit: {rainwater.collectionLimitGallons.toLocaleString()} gallons
+                </HeroBadge>
+              ) : (
+                <HeroBadge className="bg-cyan-100 text-cyan-700">
+                  <Check className="h-4 w-4" />
+                  No Collection Limit
+                </HeroBadge>
+              )}
+            </>
+          }
+        />
 
         {/* Tax Incentives Alert */}
         {rainwater?.taxIncentives && (
@@ -328,78 +222,53 @@ export default function RainwaterSpokeView({
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Overview Card */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Rainwater Harvesting Overview</h2>
-              </div>
-              <div className="p-6">
-                {rainwater?.summary && (
-                  <p className="text-gray-600 mb-6">{rainwater.summary}</p>
-                )}
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                      <Droplet className="h-4 w-4" />
-                      Collection Limit
-                    </div>
-                    <p className="text-xl font-semibold text-gray-900">
-                      {rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0
-                        ? `${rainwater.collectionLimitGallons.toLocaleString()} gal`
-                        : 'Unlimited'
-                      }
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0
-                        ? 'Maximum collection capacity'
-                        : 'No restrictions on collection amount'
-                      }
-                    </p>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                      <FileText className="h-4 w-4" />
-                      Permit Required
-                    </div>
-                    <p className="text-xl font-semibold text-gray-900">
-                      {rainwater?.permitRequired || 'No'}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      For residential rainwater systems
-                    </p>
-                  </div>
+            <RegulationCard
+              title="Rainwater Harvesting Overview"
+              icon={CloudRain}
+              theme="cyan"
+              summary={rainwater?.summary}
+              infoBoxes={[
+                {
+                  label: 'Collection Limit',
+                  value: rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0
+                    ? `${rainwater.collectionLimitGallons.toLocaleString()} gal`
+                    : 'Unlimited',
+                  highlight: !rainwater?.collectionLimitGallons || rainwater.collectionLimitGallons === 0
+                },
+                {
+                  label: 'Permit Required',
+                  value: rainwater?.permitRequired || 'No'
+                }
+              ]}
+            >
+              {/* Potable Use Status */}
+              <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                <div className={`px-4 py-2 rounded-lg ${rainwater?.potableUseAllowed ? 'bg-cyan-100 text-cyan-700' : 'bg-gray-100 text-gray-600'}`}>
+                  <p className="text-xs uppercase tracking-wide mb-1">Potable Use</p>
+                  <p className="font-semibold">{rainwater?.potableUseAllowed ? 'Allowed' : 'Non-potable Only'}</p>
                 </div>
-
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <div className="flex items-center gap-4">
-                    <div className={`px-4 py-2 rounded-lg ${rainwater?.potableUseAllowed ? 'bg-cyan-100 text-cyan-700' : 'bg-gray-100 text-gray-600'}`}>
-                      <p className="text-xs uppercase tracking-wide mb-1">Potable Use</p>
-                      <p className="font-semibold">{rainwater?.potableUseAllowed ? 'Allowed' : 'Non-potable Only'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {rainwater?.governingCode && (
-                  <div className="mt-6 pt-6 border-t border-gray-100">
-                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Governing Code</p>
-                    {stateRegulationUrls[stateCode] ? (
-                      <a
-                        href={stateRegulationUrls[stateCode]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-700 hover:text-cyan-800 flex items-center gap-1 group"
-                      >
-                        {rainwater.governingCode}
-                        <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
-                      </a>
-                    ) : (
-                      <p className="text-gray-900">{rainwater.governingCode}</p>
-                    )}
-                  </div>
-                )}
               </div>
-            </div>
+
+              {/* Governing Code */}
+              {rainwater?.governingCode && (
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Governing Code</p>
+                  {stateRegulationUrls[stateCode] ? (
+                    <a
+                      href={stateRegulationUrls[stateCode]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan-700 hover:text-cyan-800 flex items-center gap-1 group"
+                    >
+                      {rainwater.governingCode}
+                      <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  ) : (
+                    <p className="text-gray-900">{rainwater.governingCode}</p>
+                  )}
+                </div>
+              )}
+            </RegulationCard>
 
             {/* Approved Uses */}
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
@@ -411,14 +280,7 @@ export default function RainwaterSpokeView({
               </div>
               <div className="p-6">
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {(rainwater?.approvedUses || [
-                    'Landscape irrigation',
-                    'Garden watering',
-                    'Car washing',
-                    'Toilet flushing',
-                    'Laundry (non-potable)',
-                    'Pool/fountain filling'
-                  ]).slice(0, 6).map((use, idx) => (
+                  {approvedUses.slice(0, 6).map((use, idx) => (
                     <div key={idx} className="flex items-center gap-3 p-3 bg-cyan-50 rounded-lg">
                       <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0">
                         <Check className="h-4 w-4 text-cyan-600" />
@@ -447,16 +309,12 @@ export default function RainwaterSpokeView({
                   </h2>
                 </div>
                 <div className="p-6">
-                  <ul className="space-y-3">
-                    {rainwater.keyRestrictions.map((restriction, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-semibold text-amber-700">{idx + 1}</span>
-                        </div>
-                        <span className="text-gray-600">{restriction}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <ListSection
+                    title=""
+                    items={rainwater.keyRestrictions}
+                    variant="number"
+                    theme="cyan"
+                  />
                 </div>
               </div>
             )}
@@ -465,58 +323,22 @@ export default function RainwaterSpokeView({
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Agency Card */}
-            {agency?.name && (
-              <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                    <Building2 className="h-5 w-5 text-gray-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">Water Agency</h3>
-                    <p className="text-xs text-gray-500">{agency.name}</p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  {agency.phone && (
-                    <a href={`tel:${agency.phone}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-cyan-600">
-                      <Phone className="h-4 w-4" />
-                      {agency.phone}
-                    </a>
-                  )}
-                  {agency.website && (
-                    <a href={agency.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-gray-600 hover:text-cyan-600">
-                      <ExternalLink className="h-4 w-4" />
-                      Official Website
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
+            <AgencySidebar
+              name={agency?.name}
+              phone={agency?.phone}
+              website={agency?.website}
+              theme="cyan"
+            />
 
             {/* Related Links */}
-            <div className="bg-gray-50 rounded-2xl p-5">
-              <h3 className="font-semibold text-gray-900 mb-4">Related Resources</h3>
-              <div className="space-y-2">
-                <Link
-                  href={`${basePath}/greywater`}
-                  className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-emerald-300 transition-colors group"
-                >
-                  <span className="text-gray-700 group-hover:text-emerald-700">Greywater Laws</span>
-                  <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-emerald-500" />
-                </Link>
-                <Link
-                  href={basePath}
-                  className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-cyan-300 transition-colors group"
-                >
-                  <span className="text-gray-700 group-hover:text-cyan-700">All {locationName} Programs</span>
-                  <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-cyan-500" />
-                </Link>
-              </div>
-            </div>
+            <RelatedLinks
+              title="Related Resources"
+              links={relatedLinks}
+              theme="cyan"
+            />
 
             {/* Quick Tips */}
-            <div className="bg-cyan-50 rounded-2xl p-5 border border-cyan-100">
-              <h3 className="font-semibold text-gray-900 mb-3">Quick Tips</h3>
+            <SidebarCard title="Quick Tips" theme="cyan" className="bg-cyan-50 border-cyan-100">
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-cyan-600 mt-0.5 flex-shrink-0" />
@@ -524,349 +346,36 @@ export default function RainwaterSpokeView({
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-cyan-600 mt-0.5 flex-shrink-0" />
-                  Most systems don't require permits
+                  Most systems don&apos;t require permits
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-cyan-600 mt-0.5 flex-shrink-0" />
                   First flush diverters recommended
                 </li>
               </ul>
-            </div>
+            </SidebarCard>
           </div>
         </div>
 
         {/* Full-Width Incentives Section */}
         {rainwaterIncentives.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mt-8">
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-cyan-600" />
-                  Rainwater Harvesting Rebates & Incentives
-                </h2>
-                <span className="text-sm bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full font-medium">
-                  {rainwaterIncentives.length} programs
-                </span>
-              </div>
-              <p className="text-sm text-gray-600">
-                Available rebates and incentives for rainwater harvesting systems in {locationName}
-              </p>
-            </div>
-
-            {/* Programs Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-8"></th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell w-28">Level</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Program</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Type</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Provider</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {rainwaterIncentives.map((program, idx) => {
-                    const programId = `rw-${idx}-${program.program_name}`
-                    const isExpanded = expandedPrograms.has(programId)
-                    const hasDetails = !!(
-                      program.program_description ||
-                      program.eligibility_details ||
-                      program.how_to_apply ||
-                      program.steps_to_apply ||
-                      program.documentation_required ||
-                      program.installation_requirements ||
-                      program.contractor_requirements ||
-                      program.property_requirements ||
-                      program.reimbursement_process ||
-                      program.restrictions ||
-                      program.stacking_details ||
-                      program.contact_email ||
-                      program.contact_phone
-                    )
-
-                    return (
-                      <React.Fragment key={idx}>
-                        {/* Main Row */}
-                        <tr
-                          className={`${hasDetails ? 'cursor-pointer' : ''} hover:bg-gray-50 transition-colors ${isExpanded ? 'bg-cyan-50' : ''}`}
-                          onClick={() => hasDetails && toggleProgram(programId)}
-                        >
-                          {/* Expand Icon */}
-                          <td className="px-4 py-4">
-                            {hasDetails && (
-                              <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180 text-cyan-600' : ''}`} />
-                            )}
-                          </td>
-
-                          {/* Jurisdiction Level */}
-                          <td className="px-4 py-4 hidden sm:table-cell">
-                            <JurisdictionLevelBadge
-                              level={program.jurisdiction_level}
-                              stateName={stateName}
-                              countyName={countyName}
-                              cityName={cityName}
-                            />
-                          </td>
-
-                          {/* Program Name */}
-                          <td className="px-4 py-4">
-                            <div className="flex flex-col gap-1">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-medium text-gray-900">{program.program_name}</span>
-                                {/* Mobile-only badges */}
-                                <span className="md:hidden">
-                                  <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
-                                </span>
-                                <span className="sm:hidden">
-                                  <JurisdictionLevelBadge
-                                    level={program.jurisdiction_level}
-                                    stateName={stateName}
-                                    countyName={countyName}
-                                    cityName={cityName}
-                                  />
-                                </span>
-                              </div>
-                              {program.deadline_info && (
-                                <span className="text-xs text-amber-600 font-medium">⏰ {program.deadline_info}</span>
-                              )}
-                            </div>
-                          </td>
-
-                          {/* Program Type (Rebate/Tax Credit) */}
-                          <td className="px-4 py-4 hidden md:table-cell">
-                            <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
-                          </td>
-
-                          {/* Provider */}
-                          <td className="px-4 py-4 hidden lg:table-cell">
-                            <span className="text-sm text-gray-600">{program.water_utility || '—'}</span>
-                          </td>
-
-                          {/* Amount */}
-                          <td className="px-4 py-4 text-right">
-                            {program.incentive_amount_max ? (
-                              <div>
-                                <span className="font-semibold text-cyan-600">
-                                  {program.incentive_per_unit?.toLowerCase().includes('per ') ? 'Up to ' : ''}
-                                  ${program.incentive_amount_max.toLocaleString()}
-                                </span>
-                                {program.incentive_per_unit && !program.incentive_per_unit.toLowerCase().includes('per ') && (
-                                  <p className="text-xs text-gray-400">{program.incentive_per_unit}</p>
-                                )}
-                                {program.incentive_per_unit?.toLowerCase().includes('per ') && (
-                                  <p className="text-xs text-gray-400">max</p>
-                                )}
-                              </div>
-                            ) : (
-                              <span className="text-gray-400">—</span>
-                            )}
-                          </td>
-
-                          {/* Apply Button */}
-                          <td className="px-4 py-4 text-center">
-                            {program.incentive_url ? (
-                              <a
-                                href={program.incentive_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors"
-                              >
-                                Apply <ExternalLink className="h-3 w-3" />
-                              </a>
-                            ) : (
-                              <span className="text-gray-400 text-xs">—</span>
-                            )}
-                          </td>
-                        </tr>
-
-                        {/* Expanded Details Row */}
-                        {isExpanded && hasDetails && (
-                          <tr className="bg-gray-50">
-                            <td colSpan={7} className="px-4 py-0">
-                              <div className="py-4 border-t border-gray-100">
-                                {/* Description */}
-                                {program.program_description && (
-                                  <p className="text-sm text-gray-600 mb-4">{program.program_description}</p>
-                                )}
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                  {program.eligibility_details && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <Users className="h-3.5 w-3.5 text-blue-600" />
-                                        Who's Eligible
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.eligibility_details}</p>
-                                    </div>
-                                  )}
-                                  {(program.how_to_apply || program.steps_to_apply) && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <ClipboardList className="h-3.5 w-3.5 text-cyan-600" />
-                                        How to Apply
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.steps_to_apply || program.how_to_apply}</p>
-                                    </div>
-                                  )}
-                                  {program.documentation_required && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <FileText className="h-3.5 w-3.5 text-indigo-600" />
-                                        Documentation Required
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.documentation_required}</p>
-                                    </div>
-                                  )}
-                                  {program.property_requirements && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <Home className="h-3.5 w-3.5 text-purple-600" />
-                                        Property Requirements
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.property_requirements}</p>
-                                    </div>
-                                  )}
-                                  {program.installation_requirements && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <Wrench className="h-3.5 w-3.5 text-orange-600" />
-                                        Installation Requirements
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.installation_requirements}</p>
-                                    </div>
-                                  )}
-                                  {program.contractor_requirements && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <BadgeCheck className="h-3.5 w-3.5 text-teal-600" />
-                                        Contractor Requirements
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.contractor_requirements}</p>
-                                    </div>
-                                  )}
-                                  {(program.processing_time || program.timeline_to_complete) && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <Timer className="h-3.5 w-3.5 text-amber-600" />
-                                        Timeline
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.processing_time || program.timeline_to_complete}</p>
-                                    </div>
-                                  )}
-                                  {program.reimbursement_process && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <DollarSign className="h-3.5 w-3.5 text-green-600" />
-                                        Reimbursement Process
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.reimbursement_process}</p>
-                                    </div>
-                                  )}
-                                  {program.restrictions && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <AlertCircle className="h-3.5 w-3.5 text-red-600" />
-                                        Restrictions
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.restrictions}</p>
-                                    </div>
-                                  )}
-                                  {program.stacking_details && (
-                                    <div className="bg-white rounded-lg p-3 border border-gray-100">
-                                      <h4 className="flex items-center gap-2 text-xs font-semibold text-gray-700 mb-1.5">
-                                        <Leaf className="h-3.5 w-3.5 text-cyan-600" />
-                                        Stacking Programs
-                                      </h4>
-                                      <p className="text-sm text-gray-600">{program.stacking_details}</p>
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Footer with Contact & Badges */}
-                                <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-4 border-t border-gray-200">
-                                  <div className="flex flex-wrap items-center gap-3">
-                                    {(program.pre_approval_required === true || program.pre_approval_required === 'true') && (
-                                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded">
-                                        ⚠️ Pre-approval required
-                                      </span>
-                                    )}
-                                    {(program.inspection_required === true || program.inspection_required === 'true') && (
-                                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
-                                        🔍 Inspection required
-                                      </span>
-                                    )}
-                                    {program.coverage_area && (
-                                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">
-                                        📍 {program.coverage_area}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <div className="flex items-center gap-4">
-                                    {program.contact_phone && (
-                                      <a href={`tel:${program.contact_phone}`} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-cyan-600">
-                                        <Phone className="h-4 w-4" />
-                                        {program.contact_phone}
-                                      </a>
-                                    )}
-                                    {program.contact_email && (
-                                      <a href={`mailto:${program.contact_email}`} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-cyan-600">
-                                        <ExternalLink className="h-4 w-4" />
-                                        {program.contact_email}
-                                      </a>
-                                    )}
-                                    {program.incentive_url && (
-                                      <a
-                                        href={program.incentive_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
-                                      >
-                                        Apply Now <ArrowRight className="h-4 w-4" />
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <IncentivesTable
+            incentives={rainwaterIncentives}
+            theme="cyan"
+            title="Rainwater Harvesting Rebates & Incentives"
+            showJurisdictionLevel={true}
+            locationName={locationName || stateName}
+          />
         )}
 
-        {/* CTA */}
-        <div className="mt-12 bg-cyan-600 rounded-2xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-white mb-3">
-            Start Harvesting Rainwater Today
-          </h3>
-          <p className="text-cyan-100 mb-6 max-w-xl mx-auto">
-            From simple rain barrels to complete cistern systems, we can help you collect and use rainwater in {locationName}.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-cyan-700 font-medium rounded-lg hover:bg-cyan-50 transition-colors"
-            >
-              View Products
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 text-white font-medium rounded-lg hover:bg-cyan-400 transition-colors"
-            >
-              Get a Quote
-            </Link>
-          </div>
-        </div>
+        {/* CTA Section */}
+        <CTASection
+          title="Start Harvesting Rainwater Today"
+          description={`From simple rain barrels to complete cistern systems, we can help you collect and use rainwater in ${locationName}.`}
+          primaryButton={{ label: 'View Products', href: '/products' }}
+          secondaryButton={{ label: 'Get a Quote', href: '/contact' }}
+          theme="cyan"
+        />
       </div>
     </div>
   )
