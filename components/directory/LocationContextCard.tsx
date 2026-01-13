@@ -66,14 +66,14 @@ export default function LocationContextCard({
     <div className={`space-y-${compact ? '3' : '4'}`}>
       {/* Local Regulation Summary */}
       {localRegulation?.regulationSummary && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+        <div className="bg-ocean-50 border border-ocean-200 rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <MapPin className="h-4 w-4 text-emerald-600" />
+            <div className="w-8 h-8 bg-ocean-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MapPin className="h-4 w-4 text-ocean-600" />
             </div>
             <div>
-              <p className="font-medium text-emerald-800 text-sm">Local Regulations</p>
-              <p className="text-sm text-emerald-700">{localRegulation.regulationSummary}</p>
+              <p className="font-medium text-ocean-800 text-sm">Local Regulations</p>
+              <p className="text-sm text-ocean-700">{localRegulation.regulationSummary}</p>
             </div>
           </div>
         </div>
@@ -81,8 +81,8 @@ export default function LocationContextCard({
 
       {/* Regulatory Hierarchy - City Level Only */}
       {level === 'city' && (
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-900 text-sm mb-2">Regulatory Hierarchy</h3>
+        <div className="bg-white border border-sand-200 rounded-xl p-4 shadow-sm">
+          <h3 className="font-semibold text-sand-900 text-sm mb-2">Regulatory Hierarchy</h3>
           <div className="grid grid-cols-3 gap-2">
             {/* State Law */}
             {jurisdictionUrls.stateUrl ? (
@@ -96,11 +96,11 @@ export default function LocationContextCard({
                   <Building2 className="w-3.5 h-3.5 text-purple-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-xs text-gray-900 group-hover:text-purple-700 flex items-center gap-1 truncate">
+                  <div className="font-medium text-xs text-sand-900 group-hover:text-purple-700 flex items-center gap-1 truncate">
                     {stateName} State
                     <ExternalLink className="w-2.5 h-2.5 text-purple-400 flex-shrink-0" />
                   </div>
-                  <div className="text-[10px] text-gray-500 truncate">Baseline regulations</div>
+                  <div className="text-[10px] text-sand-500 truncate">Baseline regulations</div>
                 </div>
               </a>
             ) : (
@@ -109,8 +109,8 @@ export default function LocationContextCard({
                   <Building2 className="w-3.5 h-3.5 text-purple-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-xs text-gray-900 truncate">{stateName} State</div>
-                  <div className="text-[10px] text-gray-500 truncate">Baseline regulations</div>
+                  <div className="font-medium text-xs text-sand-900 truncate">{stateName} State</div>
+                  <div className="text-[10px] text-sand-500 truncate">Baseline regulations</div>
                 </div>
               </div>
             )}
@@ -128,11 +128,11 @@ export default function LocationContextCard({
                     <Building2 className="w-3.5 h-3.5 text-amber-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-xs text-gray-900 group-hover:text-amber-700 flex items-center gap-1 truncate">
+                    <div className="font-medium text-xs text-sand-900 group-hover:text-amber-700 flex items-center gap-1 truncate">
                       {countyName}
                       <ExternalLink className="w-2.5 h-2.5 text-amber-400 flex-shrink-0" />
                     </div>
-                    <div className="text-[10px] text-gray-500 truncate">County rules</div>
+                    <div className="text-[10px] text-sand-500 truncate">County rules</div>
                   </div>
                 </a>
               ) : (
@@ -141,8 +141,8 @@ export default function LocationContextCard({
                     <Building2 className="w-3.5 h-3.5 text-amber-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-xs text-gray-900 truncate">{countyName}</div>
-                    <div className="text-[10px] text-gray-500 truncate">County rules</div>
+                    <div className="font-medium text-xs text-sand-900 truncate">{countyName}</div>
+                    <div className="text-[10px] text-sand-500 truncate">County rules</div>
                   </div>
                 </div>
               )
@@ -154,27 +154,27 @@ export default function LocationContextCard({
                 href={jurisdictionUrls.cityUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 p-2 bg-emerald-50/50 rounded-lg border border-emerald-100 hover:bg-emerald-100/50 hover:border-emerald-200 transition-colors group"
+                className="flex items-center gap-2 p-2 bg-ocean-50/50 rounded-lg border border-ocean-100 hover:bg-ocean-100/50 hover:border-ocean-200 transition-colors group"
               >
-                <div className="w-7 h-7 bg-emerald-100 rounded-md flex items-center justify-center flex-shrink-0">
-                  <Home className="w-3.5 h-3.5 text-emerald-600" />
+                <div className="w-7 h-7 bg-ocean-100 rounded-md flex items-center justify-center flex-shrink-0">
+                  <Home className="w-3.5 h-3.5 text-ocean-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-xs text-gray-900 group-hover:text-emerald-700 flex items-center gap-1 truncate">
+                  <div className="font-medium text-xs text-sand-900 group-hover:text-ocean-700 flex items-center gap-1 truncate">
                     {cityName}
-                    <ExternalLink className="w-2.5 h-2.5 text-emerald-400 flex-shrink-0" />
+                    <ExternalLink className="w-2.5 h-2.5 text-ocean-400 flex-shrink-0" />
                   </div>
-                  <div className="text-[10px] text-gray-500 truncate">City ordinances</div>
+                  <div className="text-[10px] text-sand-500 truncate">City ordinances</div>
                 </div>
               </a>
             ) : (
-              <div className="flex items-center gap-2 p-2 bg-emerald-50/50 rounded-lg border border-emerald-100">
-                <div className="w-7 h-7 bg-emerald-100 rounded-md flex items-center justify-center flex-shrink-0">
-                  <Home className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="flex items-center gap-2 p-2 bg-ocean-50/50 rounded-lg border border-ocean-100">
+                <div className="w-7 h-7 bg-ocean-100 rounded-md flex items-center justify-center flex-shrink-0">
+                  <Home className="w-3.5 h-3.5 text-ocean-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-xs text-gray-900 truncate">{cityName}</div>
-                  <div className="text-[10px] text-gray-500 truncate">City ordinances</div>
+                  <div className="font-medium text-xs text-sand-900 truncate">{cityName}</div>
+                  <div className="text-[10px] text-sand-500 truncate">City ordinances</div>
                 </div>
               </div>
             )}

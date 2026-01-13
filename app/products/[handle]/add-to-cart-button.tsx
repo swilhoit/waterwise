@@ -138,7 +138,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
                   onClick={() => setSelectedVariant(variant)}
                   className={`w-full text-left p-4 rounded-2xl border-2 transition-all duration-300 ${
                     isSelected
-                      ? 'border-ocean-500 bg-ocean-50 shadow-ocean'
+                      ? 'border-ocean-500 bg-ocean-50'
                       : 'border-sand-200 hover:border-sand-300 hover:bg-sand-50'
                   } ${!variant.availableForSale ? 'opacity-60' : ''}`}
                   disabled={!variant.availableForSale}
@@ -233,7 +233,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
       <Button
         size="lg"
-        className="w-full bg-terra-500 hover:bg-terra-600 text-white h-14 text-lg rounded-xl shadow-terra transition-all duration-300 hover:-translate-y-0.5"
+        className="w-full bg-terra-500 hover:bg-terra-600 text-white h-14 text-lg rounded-xl transition-all duration-300"
         onClick={handleAddToCart}
         disabled={!selectedVariant?.availableForSale || isAdded}
       >

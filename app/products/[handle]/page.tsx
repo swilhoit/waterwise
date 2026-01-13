@@ -1318,8 +1318,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 {product.images?.edges?.length > 0 ? (
                   <div className="space-y-4">
                     {/* Main Image */}
-                    <div className="relative aspect-square rounded-3xl overflow-hidden bg-white border border-sand-200 shadow-soft-lg">
-                      <div className="absolute -inset-1 bg-gradient-to-br from-ocean-100 to-terra-100 rounded-3xl opacity-50 blur-xl -z-10" />
+                    <div className="relative aspect-square rounded-3xl overflow-hidden bg-white border border-sand-200">
                       <Image
                         src={product.images.edges[0].node.url}
                         alt={product.images.edges[0].node.altText || product.title}
@@ -1337,7 +1336,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                         {product.images.edges.slice(0, 4).map((image: any, index: number) => (
                           <div
                             key={index}
-                            className={`relative aspect-square rounded-xl overflow-hidden bg-white border-2 transition-all duration-300 cursor-pointer hover:border-ocean-400 hover:shadow-ocean ${index === 0 ? 'border-ocean-500 ring-2 ring-ocean-500/20' : 'border-sand-200'}`}
+                            className={`relative aspect-square rounded-xl overflow-hidden bg-white border-2 transition-all duration-300 cursor-pointer hover:border-ocean-400 ${index === 0 ? 'border-ocean-500 ring-2 ring-ocean-500/20' : 'border-sand-200'}`}
                           >
                             <Image
                               src={image.node.url}
@@ -1422,7 +1421,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </div>
 
                 {/* Key Features Grid */}
-                <div className="bg-white rounded-2xl p-6 border border-sand-200 shadow-soft">
+                <div className="bg-white rounded-2xl p-6 border border-sand-200">
                   <h3 className="text-lg font-display text-sand-900 mb-4 flex items-center gap-2">
                     <Settings className="h-5 w-5 text-ocean-600" />
                     Key Features
@@ -1523,40 +1522,40 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       </section>
 
       {/* Product Description & Demo Video Section */}
-      <div className="bg-white border-b">
+      <div className="bg-white border-b border-sand-200">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                <h2 className="text-3xl lg:text-4xl font-display text-sand-900 mb-6">
                   See How It Works
                 </h2>
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                <p className="text-xl text-sand-600 mb-8 leading-relaxed">
                   {product.description}
                 </p>
-                <div className="space-y-4 text-gray-600">
+                <div className="space-y-4 text-sand-700">
                   <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-ocean-600 mt-0.5 flex-shrink-0" />
                     <span>Fully automated operation - no daily maintenance required</span>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-ocean-600 mt-0.5 flex-shrink-0" />
                     <span>Progressive 4-stage filtration removes up to 90% of solids</span>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-ocean-600 mt-0.5 flex-shrink-0" />
                     <span>WaterMark approved for safety and reliability</span>
                   </div>
                 </div>
               </div>
-              <div className="space-y-6">
+              <div>
                 {/* Video Demo */}
                 <div className="relative">
-                  <a 
-                    href="https://www.youtube.com/watch?v=XN6yyuSg5Kw" 
-                    target="_blank" 
+                  <a
+                    href="https://www.youtube.com/watch?v=XN6yyuSg5Kw"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    className="block relative aspect-video bg-gray-200 rounded-xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300 "
+                    className="block relative aspect-video bg-sand-200 rounded-xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
                   >
                     <Image
                       src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/maxresdefault.jpg?v=1719253200"
@@ -1566,21 +1565,13 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                       unoptimized
                     />
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                      <div className="bg-white rounded-full p-4  group-hover:scale-110 transition-transform duration-300">
-                        <svg className="h-8 w-8 text-gray-900 fill-gray-900 ml-1" viewBox="0 0 24 24">
+                      <div className="bg-white rounded-full p-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg className="h-8 w-8 text-sand-900 fill-sand-900 ml-1" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                       </div>
                     </div>
                   </a>
-                </div>
-                {/* Water Usage Infographic */}
-                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-blue-600 mb-2">55%</div>
-                    <div className="text-lg font-semibold text-gray-900 mb-2">Outdoor Irrigation</div>
-                    <p className="text-gray-600 text-sm">Average household water used for landscape watering</p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1589,23 +1580,23 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       </div>
 
       {/* Product Details Section - Open Layout */}
-      <div className="border-t bg-gray-50">
+      <div className="border-t border-sand-200 bg-sand-50">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-6xl mx-auto space-y-16">
         
-            {/* How It Works & Maintenance Section */}
-            <div className="grid lg:grid-cols-2 gap-8">
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <Zap className="h-5 w-5 text-gray-600" />
-                    How It Works
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 p-8">
-                  {/* How It Works Diagram */}
-                  <div className="mb-6">
-                    <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white border">
+            {/* How It Works Section - Full Width */}
+            <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+              <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <Zap className="h-5 w-5 text-ocean-600" />
+                  How It Works
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid lg:grid-cols-2 gap-8 items-start">
+                  {/* Diagram Side */}
+                  <div className="space-y-6">
+                    <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white border border-sand-200">
                       <Image
                         src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-how-it-works.jpg?v=1719253036"
                         alt="How Aqua2use Greywater System Works"
@@ -1614,127 +1605,108 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                         unoptimized
                       />
                     </div>
+                    <div>
+                      <h4 className="font-semibold text-sand-900 mb-3">4-Stage Filtration System</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
+                        <Image
+                          src="/docs/Aqua2use-Filtration-System.png"
+                          alt="Aqua2use 4-Stage Filtration System"
+                          fill
+                          className="object-contain p-4"
+                          unoptimized
+                        />
+                      </div>
+                      <p className="text-sm text-sand-600 mt-2">Progressive filtration removes up to 90% of suspended solids through multiple density layers.</p>
+                    </div>
                   </div>
 
-                  {/* Filtration System Diagram */}
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-4">4-Stage Filtration System</h4>
-                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
-                      <Image
-                        src="/docs/Aqua2use-Filtration-System.png"
-                        alt="Aqua2use 4-Stage Filtration System"
-                        fill
-                        className="object-contain p-4"
-                        unoptimized
-                      />
-                    </div>
-                    <p className="text-sm text-gray-600 mt-2">Progressive filtration removes up to 90% of suspended solids through multiple density layers.</p>
-                  </div>
-
-                  {/* Media Filter Chart */}
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-4">Filter Media Performance</h4>
-                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
-                      <Image
-                        src="/docs/Aqua2use-Filtration-System.png"
-                        alt="Aqua2use Filtration System Performance"
-                        fill
-                        className="object-contain p-4"
-                        unoptimized
-                      />
-                    </div>
-                    <p className="text-sm text-gray-600 mt-2">Progressive filtration removes up to 90% of suspended solids through multiple density layers.</p>
-                  </div>
-
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-bold text-white">1</span>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-2">Collect</h4>
-                      <p className="text-gray-600 leading-relaxed">Divert water from laundry, wash basins, bath, and shower into the treatment system</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-bold text-white">2</span>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-2">Filter</h4>
-                      <p className="text-gray-600 leading-relaxed">Advanced filter mats remove impurities with 4-stage progressive filtration technology</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-bold text-white">3</span>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-2">Flourish</h4>
-                      <p className="text-gray-600 leading-relaxed">Pump clean, filtered water to your subsurface irrigation system</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <Wrench className="h-5 w-5 text-gray-600" />
-                    Maintenance Schedule
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-8">
+                  {/* Steps Side */}
                   <div className="space-y-6">
-                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <div>
-                        <span className="font-medium text-gray-900">Clean filters</span>
-                        <p className="text-sm text-gray-600 mt-1">Simple rinse and reinstall</p>
+                    <div className="flex items-start gap-4 p-4 bg-ocean-50 rounded-xl border border-ocean-100">
+                      <div className="w-10 h-10 bg-ocean-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-bold text-white">1</span>
                       </div>
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-900 px-3 py-1 border border-gray-200">Every 4-6 months</Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <div>
-                        <span className="font-medium text-gray-900">Replace filters</span>
-                        <p className="text-sm text-gray-600 mt-1">Full filter replacement</p>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sand-900 mb-2">Collect</h4>
+                        <p className="text-sand-600 leading-relaxed">Divert water from laundry, wash basins, bath, and shower into the treatment system</p>
                       </div>
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-900 px-3 py-1 border border-gray-200">Every 3 years</Badge>
                     </div>
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
-                      <div className="flex items-start gap-3">
-                        <div className="text-amber-600 flex-shrink-0 mt-0.5">
-                          ⚠️
+                    <div className="flex items-start gap-4 p-4 bg-ocean-50 rounded-xl border border-ocean-100">
+                      <div className="w-10 h-10 bg-ocean-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-bold text-white">2</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sand-900 mb-2">Filter</h4>
+                        <p className="text-sand-600 leading-relaxed">Advanced filter mats remove impurities with 4-stage progressive filtration technology</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 bg-ocean-50 rounded-xl border border-ocean-100">
+                      <div className="w-10 h-10 bg-ocean-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-bold text-white">3</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sand-900 mb-2">Flourish</h4>
+                        <p className="text-sand-600 leading-relaxed">Pump clean, filtered water to your subsurface irrigation system</p>
+                      </div>
+                    </div>
+
+                    {/* Maintenance Info */}
+                    <div className="pt-4 border-t border-sand-200">
+                      <h4 className="font-semibold text-sand-900 mb-4 flex items-center gap-2">
+                        <Wrench className="h-4 w-4 text-ocean-600" />
+                        Maintenance Schedule
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center p-3 bg-sand-50 rounded-lg border border-sand-200">
+                          <div>
+                            <span className="font-medium text-sand-900 text-sm">Clean filters</span>
+                            <p className="text-xs text-sand-600 mt-0.5">Simple rinse and reinstall</p>
+                          </div>
+                          <span className="badge-ocean text-xs">Every 4-6 months</span>
                         </div>
-                        <div>
-                          <p className="text-amber-800 font-medium mb-1">Important Safety Note</p>
-                          <p className="text-amber-700 text-sm leading-relaxed">
-                            Do not store filtered greywater for more than 24 hours to prevent bacterial growth
-                          </p>
+                        <div className="flex justify-between items-center p-3 bg-sand-50 rounded-lg border border-sand-200">
+                          <div>
+                            <span className="font-medium text-sand-900 text-sm">Replace filters</span>
+                            <p className="text-xs text-sand-600 mt-0.5">Full filter replacement</p>
+                          </div>
+                          <span className="badge-sand text-xs">Every 3 years</span>
+                        </div>
+                        <div className="bg-terra-50 border border-terra-200 p-3 rounded-lg">
+                          <div className="flex items-start gap-2">
+                            <div className="text-terra-600 flex-shrink-0 mt-0.5 text-sm">
+                              ⚠️
+                            </div>
+                            <div>
+                              <p className="text-terra-700 text-sm leading-relaxed">
+                                Do not store filtered greywater for more than 24 hours to prevent bacterial growth
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* System Components & Cutaway Section - GWDD Only */}
             {handle === 'aqua2use-gwdd' && (
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <Settings className="h-6 w-6 text-gray-600" />
+                    <Settings className="h-6 w-6 text-ocean-600" />
                     System Components & Internal View
                   </CardTitle>
-                  <CardDescription className="text-gray-600 mt-2">
+                  <CardDescription className="text-sand-600 mt-2">
                     Detailed view of internal components and system construction
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-8">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-gray-900">System Internal View</h4>
-                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <h4 className="font-semibold text-sand-900">System Internal View</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                         <Image
                           src="/docs/Aqua2use-GWDD-Assembly-Guide.jpg"
                           alt="Aqua2use GWDD Assembly Guide"
@@ -1743,11 +1715,11 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                           unoptimized
                         />
                       </div>
-                      <p className="text-sm text-gray-600">Detailed assembly and component breakdown</p>
+                      <p className="text-sm text-sand-600">Detailed assembly and component breakdown</p>
                     </div>
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-gray-900">System Components</h4>
-                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <h4 className="font-semibold text-sand-900">System Components</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                         <Image
                           src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Aqua2use-GWDD-components.jpg?v=1719252978"
                           alt="Aqua2use GWDD System Components"
@@ -1756,25 +1728,8 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                           unoptimized
                         />
                       </div>
-                      <p className="text-sm text-gray-600">Detailed view of all system parts and assembly</p>
+                      <p className="text-sm text-sand-600">Detailed view of all system parts and assembly</p>
                     </div>
-                  </div>
-                  
-                  {/* Unit Dimensions */}
-                  <div className="pt-6 border-t border-gray-100">
-                    <h4 className="font-semibold text-gray-900 mb-4">System Features & Dimensions</h4>
-                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
-                      <Image
-                        src="/docs/Aqua2use-Pro-Features.jpg"
-                        alt="Aqua2use System Features and Dimensions"
-                        fill
-                        className="object-contain p-4"
-                        unoptimized
-                      />
-                    </div>
-                    <p className="text-sm text-gray-600 text-center mt-2">
-                      Complete feature overview and system specifications
-                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -1782,19 +1737,19 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Working Principle & Filter Flow Section - GWDD Only */}
             {handle === 'aqua2use-gwdd' && (
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <ArrowRight className="h-6 w-6 text-gray-600" />
+                    <ArrowRight className="h-6 w-6 text-ocean-600" />
                     Working Principle & Filter Flow
                   </CardTitle>
-                  <CardDescription className="text-gray-600 mt-2">
+                  <CardDescription className="text-sand-600 mt-2">
                     Step-by-step filtration process and water flow pattern
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-8">
-                  <div className="space-y-6">
-                    <div className="relative aspect-[5/2] rounded-lg overflow-hidden bg-white border">
+                  <div className="grid md:grid-cols-2 gap-8 items-start">
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                       <Image
                         src="/docs/Aqua2use-How-It-Works.jpg"
                         alt="Complete Filtration Process Flow"
@@ -1803,21 +1758,39 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                         unoptimized
                       />
                     </div>
-                    <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-600">
-                      <div>
-                        <h5 className="font-semibold text-gray-900 mb-2">Filtration Steps:</h5>
-                        <ul className="space-y-1">
-                          <li>1. Initial collection and overflow protection</li>
-                          <li>2. Primary debris separation</li>
-                          <li>3. Progressive density filtration</li>
+                    <div className="space-y-6">
+                      <div className="p-4 bg-ocean-50 rounded-xl border border-ocean-100">
+                        <h5 className="font-semibold text-sand-900 mb-3">Filtration Steps</h5>
+                        <ul className="space-y-2 text-sm text-sand-700">
+                          <li className="flex items-start gap-2">
+                            <span className="w-5 h-5 bg-ocean-600 rounded-full flex items-center justify-center flex-shrink-0 text-xs text-white font-bold">1</span>
+                            <span>Initial collection and overflow protection</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="w-5 h-5 bg-ocean-600 rounded-full flex items-center justify-center flex-shrink-0 text-xs text-white font-bold">2</span>
+                            <span>Primary debris separation</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="w-5 h-5 bg-ocean-600 rounded-full flex items-center justify-center flex-shrink-0 text-xs text-white font-bold">3</span>
+                            <span>Progressive density filtration</span>
+                          </li>
                         </ul>
                       </div>
-                      <div>
-                        <h5 className="font-semibold text-gray-900 mb-2">Advanced Features:</h5>
-                        <ul className="space-y-1">
-                          <li>4. Cross-flow filter design</li>
-                          <li>5. Clean water collection</li>
-                          <li>6. Automated distribution</li>
+                      <div className="p-4 bg-terra-50 rounded-xl border border-terra-100">
+                        <h5 className="font-semibold text-sand-900 mb-3">Advanced Features</h5>
+                        <ul className="space-y-2 text-sm text-sand-700">
+                          <li className="flex items-start gap-2">
+                            <span className="w-5 h-5 bg-terra-500 rounded-full flex items-center justify-center flex-shrink-0 text-xs text-white font-bold">4</span>
+                            <span>Cross-flow filter design</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="w-5 h-5 bg-terra-500 rounded-full flex items-center justify-center flex-shrink-0 text-xs text-white font-bold">5</span>
+                            <span>Clean water collection</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="w-5 h-5 bg-terra-500 rounded-full flex items-center justify-center flex-shrink-0 text-xs text-white font-bold">6</span>
+                            <span>Automated distribution</span>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -1828,19 +1801,19 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Pump Performance & Design Section - GWDD Only */}
             {handle === 'aqua2use-gwdd' && (
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <Zap className="h-6 w-6 text-gray-600" />
+                    <Zap className="h-6 w-6 text-ocean-600" />
                     Pump Performance & Design
                   </CardTitle>
-                  <CardDescription className="text-gray-600 mt-2">
+                  <CardDescription className="text-sand-600 mt-2">
                     Advanced pump technology with performance specifications
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-8">
-                  <div className="space-y-6">
-                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                  <div className="grid md:grid-cols-2 gap-8 items-start">
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                       <Image
                         src="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg"
                         alt="GWDD Pump Performance Chart"
@@ -1849,38 +1822,38 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                         unoptimized
                       />
                     </div>
-                    <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-600">
-                      <div>
-                        <h5 className="font-semibold text-gray-900 mb-3">Pump Design Features:</h5>
+                    <div className="space-y-6">
+                      <div className="p-4 bg-ocean-50 rounded-xl border border-ocean-100">
+                        <h5 className="font-semibold text-sand-900 mb-3">Pump Design Features</h5>
                         <ul className="space-y-2">
                           <li className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>Two magnetic micro floats for precise water level detection</span>
+                            <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-sand-700">Two magnetic micro floats for precise water level detection</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>Electronic pump controller with automatic operation</span>
+                            <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-sand-700">Electronic pump controller with automatic operation</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>Dry run protection prevents pump damage</span>
+                            <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-sand-700">Dry run protection prevents pump damage</span>
                           </li>
                         </ul>
                       </div>
-                      <div>
-                        <h5 className="font-semibold text-gray-900 mb-3">Performance Specifications:</h5>
+                      <div className="p-4 bg-sand-100 rounded-xl border border-sand-200">
+                        <h5 className="font-semibold text-sand-900 mb-3">Performance Specifications</h5>
                         <ul className="space-y-2">
                           <li className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>Processes up to 17 gallons per minute</span>
+                            <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-sand-700">Processes up to 17 gallons per minute</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>Automatic 4x daily residual water check</span>
+                            <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-sand-700">Automatic 4x daily residual water check</span>
                           </li>
                           <li className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>No external timers required</span>
+                            <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-sand-700">No external timers required</span>
                           </li>
                         </ul>
                       </div>
@@ -1892,14 +1865,14 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Assembly Guide & Technical Images Section */}
             {(handle === 'aqua2use-gwdd' || handle === 'aqua2use-pro' || handle === 'replacement-greywater-pump') && (
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <Wrench className="h-6 w-6 text-gray-600" />
+                    <Wrench className="h-6 w-6 text-ocean-600" />
                     {handle === 'replacement-greywater-pump' ? 'Performance Specifications' : 'Assembly Guide & Technical Diagrams'}
                   </CardTitle>
-                  <CardDescription className="text-gray-600 mt-2">
-                    {handle === 'replacement-greywater-pump' 
+                  <CardDescription className="text-sand-600 mt-2">
+                    {handle === 'replacement-greywater-pump'
                       ? 'Detailed pump performance specifications and installation guidelines'
                       : 'Visual guides and technical diagrams for installation and setup'
                     }
@@ -1908,8 +1881,8 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 <CardContent className="p-8">
                   {handle === 'replacement-greywater-pump' ? (
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-gray-900">Pump Performance Chart</h4>
-                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <h4 className="font-semibold text-sand-900">Pump Performance Chart</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                         <Image
                           src="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg"
                           alt="Pump Performance and Specifications"
@@ -1918,11 +1891,11 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                           unoptimized
                         />
                       </div>
-                      <a 
-                        href="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg" 
-                        target="_blank" 
+                      <a
+                        href="/docs/Aqua2use-GWDD-Pump-Performance-Specifications.jpg"
+                        target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700 font-medium"
                       >
                         <FileText className="h-4 w-4" />
                         View Full Size Performance Chart
@@ -1931,8 +1904,8 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   ) : handle === 'aqua2use-pro' ? (
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-4">
-                        <h4 className="font-semibold text-gray-900">Assembly Guide</h4>
-                        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                        <h4 className="font-semibold text-sand-900">Assembly Guide</h4>
+                        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                           <Image
                             src="/docs/Aqua2use-Pro-Assembly-Guide.jpg"
                             alt="Aqua2use Pro Assembly Guide"
@@ -1941,19 +1914,19 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                             unoptimized
                           />
                         </div>
-                        <a 
-                          href="/docs/Aqua2use-Pro-Assembly-Guide.jpg" 
-                          target="_blank" 
+                        <a
+                          href="/docs/Aqua2use-Pro-Assembly-Guide.jpg"
+                          target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                          className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700 font-medium"
                         >
                           <FileText className="h-4 w-4" />
                           View Full Size Assembly Guide
                         </a>
                       </div>
                       <div className="space-y-4">
-                        <h4 className="font-semibold text-gray-900">Performance Curve</h4>
-                        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                        <h4 className="font-semibold text-sand-900">Performance Curve</h4>
+                        <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                           <Image
                             src="/docs/Aqua2use-Pro-Performance-Curve.jpg"
                             alt="Aqua2use Pro Performance Curve"
@@ -1962,42 +1935,21 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                             unoptimized
                           />
                         </div>
-                        <a 
-                          href="/docs/Aqua2use-Pro-Performance-Curve.jpg" 
-                          target="_blank" 
+                        <a
+                          href="/docs/Aqua2use-Pro-Performance-Curve.jpg"
+                          target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                          className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700 font-medium"
                         >
                           <FileText className="h-4 w-4" />
                           View Performance Curve
                         </a>
                       </div>
-                      <div className="md:col-span-2 space-y-4">
-                        <h4 className="font-semibold text-gray-900">Pro Features & Specifications</h4>
-                        <div className="relative aspect-[5/2] rounded-lg overflow-hidden bg-white border">
-                          <Image
-                            src="/docs/Aqua2use-Pro-Features.jpg"
-                            alt="Aqua2use Pro Features"
-                            fill
-                            className="object-contain p-4"
-                            unoptimized
-                          />
-                        </div>
-                        <a 
-                          href="/docs/Aqua2use-Pro-Features.jpg" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          <FileText className="h-4 w-4" />
-                          View Features Diagram
-                        </a>
-                      </div>
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-gray-900">Assembly Guide</h4>
-                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border">
+                      <h4 className="font-semibold text-sand-900">Assembly Guide</h4>
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-sand-200">
                         <Image
                           src="/docs/Aqua2use-GWDD-Assembly-Guide.jpg"
                           alt="Aqua2use GWDD Assembly Guide"
@@ -2006,11 +1958,11 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                           unoptimized
                         />
                       </div>
-                      <a 
-                        href="/docs/Aqua2use-GWDD-Assembly-Guide.jpg" 
-                        target="_blank" 
+                      <a
+                        href="/docs/Aqua2use-GWDD-Assembly-Guide.jpg"
+                        target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700 font-medium"
                       >
                         <FileText className="h-4 w-4" />
                         View Full Size Assembly Guide
@@ -2022,27 +1974,27 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             )}
 
             {/* Technical Specifications Section */}
-            <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-              <CardHeader className="bg-gradient-to-r from-gray-900 to-gray-800 text-white pb-6">
+            <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-ocean-800 to-ocean-900 text-white pb-6">
                 <CardTitle className="flex items-center gap-3 text-2xl text-white">
                   <Ruler className="h-6 w-6" />
                   Technical Specifications
                 </CardTitle>
-                <CardDescription className="text-gray-300 mt-2">
+                <CardDescription className="text-ocean-100 mt-2">
                   Complete technical details and performance data
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-sand-100">
                   {productContent.specifications && Object.entries(productContent.specifications).map(([key, value]: [string, any], index: number) => (
-                    <div 
-                      key={key} 
-                      className={`flex justify-between items-center px-6 py-4 ${index % 2 === 0 ? 'bg-gray-50/50' : 'bg-white'} hover:bg-blue-50/50 transition-colors`}
+                    <div
+                      key={key}
+                      className={`flex justify-between items-center px-6 py-4 ${index % 2 === 0 ? 'bg-sand-50/50' : 'bg-white'} hover:bg-ocean-50/50 transition-colors`}
                     >
-                      <span className="font-medium text-gray-600">
+                      <span className="font-medium text-sand-600">
                         {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                       </span>
-                      <span className="text-gray-900 font-semibold text-right flex-shrink-0 ml-4">
+                      <span className="text-sand-900 font-semibold text-right flex-shrink-0 ml-4">
                         {value}
                       </span>
                     </div>
@@ -2053,95 +2005,95 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Installation & Documentation Section */}
             <div className="grid lg:grid-cols-2 gap-8">
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Wrench className="h-5 w-5 text-gray-600" />
+                    <Wrench className="h-5 w-5 text-ocean-600" />
                     Installation Guide
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
-                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Users className="h-5 w-5 text-gray-600" />
+                  <div className="bg-ocean-50 p-6 rounded-lg border border-ocean-100">
+                    <h4 className="font-semibold text-sand-900 mb-3 flex items-center gap-2">
+                      <Users className="h-5 w-5 text-ocean-600" />
                       Professional Installation Recommended
                     </h4>
-                    <p className="text-gray-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
+                    <p className="text-sand-600 leading-relaxed">While DIY installation is possible, professional installation ensures optimal performance and warranty compliance.</p>
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-ocean-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-1">Site Assessment</h5>
-                        <p className="text-gray-600">Evaluate plumbing connections and installation location</p>
+                        <h5 className="font-semibold text-sand-900 mb-1">Site Assessment</h5>
+                        <p className="text-sand-600">Evaluate plumbing connections and installation location</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-ocean-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-1">System Installation</h5>
-                        <p className="text-gray-600">Connect inlet, outlet, and irrigation distribution</p>
+                        <h5 className="font-semibold text-sand-900 mb-1">System Installation</h5>
+                        <p className="text-sand-600">Connect inlet, outlet, and irrigation distribution</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-ocean-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-1">Testing & Commissioning</h5>
-                        <p className="text-gray-600">Verify proper operation and flow rates</p>
+                        <h5 className="font-semibold text-sand-900 mb-1">Testing & Commissioning</h5>
+                        <p className="text-sand-600">Verify proper operation and flow rates</p>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <MessageSquare className="h-5 w-5 text-gray-600" />
+                    <MessageSquare className="h-5 w-5 text-ocean-600" />
                     Documentation & Support
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 p-8">
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-sand-200 hover:bg-sand-50 transition-all duration-200" asChild>
                     <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD' : handle === 'aqua2use-pro' ? 'Pro' : 'GWDD'}-Assembly-Guide.jpg`} target="_blank" rel="noopener noreferrer">
                       <div className="flex items-center gap-3">
-                        <FileText className="h-5 w-5 text-gray-600" />
+                        <FileText className="h-5 w-5 text-ocean-600" />
                         <div>
-                          <div className="font-medium">Assembly Guide</div>
-                          <div className="text-sm text-gray-500">Step-by-step installation</div>
+                          <div className="font-medium text-sand-900">Assembly Guide</div>
+                          <div className="text-sm text-sand-500">Step-by-step installation</div>
                         </div>
                       </div>
                     </a>
                   </Button>
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-sand-200 hover:bg-sand-50 transition-all duration-200" asChild>
                     <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD' : handle === 'aqua2use-pro' ? 'Pro' : 'GWDD'}-Installation-${handle === 'aqua2use-pro' ? 'Manual' : 'Instructions'}.pdf`} target="_blank" rel="noopener noreferrer">
                       <div className="flex items-center gap-3">
-                        <Settings className="h-5 w-5 text-gray-600" />
+                        <Settings className="h-5 w-5 text-ocean-600" />
                         <div>
-                          <div className="font-medium">Operating Instructions</div>
-                          <div className="text-sm text-gray-500">Daily operation guide</div>
+                          <div className="font-medium text-sand-900">Operating Instructions</div>
+                          <div className="text-sm text-sand-500">Daily operation guide</div>
                         </div>
                       </div>
                     </a>
                   </Button>
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-sand-200 hover:bg-sand-50 transition-all duration-200" asChild>
                     <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD-Technical-Brochure' : handle === 'aqua2use-pro' ? 'Pro-Dimensions' : 'GWDD-Technical-Brochure'}.pdf`} target="_blank" rel="noopener noreferrer">
                       <div className="flex items-center gap-3">
-                        <FileText className="h-5 w-5 text-gray-600" />
+                        <FileText className="h-5 w-5 text-ocean-600" />
                         <div>
-                          <div className="font-medium">Technical Brochure</div>
-                          <div className="text-sm text-gray-500">Complete specifications</div>
+                          <div className="font-medium text-sand-900">Technical Brochure</div>
+                          <div className="text-sm text-sand-500">Complete specifications</div>
                         </div>
                       </div>
                     </a>
                   </Button>
-                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-gray-200 hover:bg-gray-50 transition-all duration-200" asChild>
+                  <Button variant="secondary" className="w-full justify-start h-14 text-left border-sand-200 hover:bg-sand-50 transition-all duration-200" asChild>
                     <a href={`/docs/Aqua2use-${handle === 'aqua2use-gwdd' ? 'GWDD' : handle === 'aqua2use-pro' ? 'Pro' : 'GWDD'}-Installation-${handle === 'aqua2use-pro' ? 'Manual' : 'Instructions'}.pdf`} target="_blank" rel="noopener noreferrer">
                       <div className="flex items-center gap-3">
-                        <Wrench className="h-5 w-5 text-gray-600" />
+                        <Wrench className="h-5 w-5 text-ocean-600" />
                         <div>
-                          <div className="font-medium">Maintenance Schedule</div>
-                          <div className="text-sm text-gray-500">Keep your system running</div>
+                          <div className="font-medium text-sand-900">Maintenance Schedule</div>
+                          <div className="text-sm text-sand-500">Keep your system running</div>
                         </div>
                       </div>
                     </a>
@@ -2152,10 +2104,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
             {/* Customer Reviews Section */}
             <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Star className="h-5 w-5 text-gray-600" />
+                    <Star className="h-5 w-5 text-terra-500" />
                     Customer Reviews ({hasImportedReviews ? productReviews.length : productContent.reviews?.length || 0})
                   </CardTitle>
                 </CardHeader>
@@ -2163,39 +2115,39 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                   {/* Use imported reviews if available (includes images) */}
                   {hasImportedReviews ? (
                     productReviews.slice(0, 4).map((review: Review, index: number) => (
-                      <div key={review.id} className={`${index < Math.min(productReviews.length, 4) - 1 ? 'border-b pb-6' : 'pb-2'}`}>
+                      <div key={review.id} className={`${index < Math.min(productReviews.length, 4) - 1 ? 'border-b border-sand-200 pb-6' : 'pb-2'}`}>
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((star) => (
-                                <Star key={star} className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                                <Star key={star} className={`h-4 w-4 ${star <= review.rating ? 'fill-terra-400 text-terra-400' : 'text-sand-300'}`} />
                               ))}
                             </div>
-                            <span className="font-semibold text-gray-900">{review.name}</span>
+                            <span className="font-semibold text-sand-900">{review.name}</span>
                             {review.verified_buyer && (
-                              <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200 text-xs">
+                              <Badge variant="secondary" className="bg-ocean-50 text-ocean-700 border-ocean-200 text-xs">
                                 <ShieldCheck className="h-3 w-3 mr-1" />
                                 Verified
                               </Badge>
                             )}
                           </div>
                           {review.created_at && (
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <div className="flex items-center gap-1 text-xs text-sand-500">
                               <Calendar className="h-3 w-3" />
                               {new Date(review.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </div>
                           )}
                         </div>
                         {review.title && (
-                          <p className="font-medium text-gray-900 mb-2">{review.title}</p>
+                          <p className="font-medium text-sand-900 mb-2">{review.title}</p>
                         )}
-                        <p className="text-gray-600 leading-relaxed mb-3">"{review.review}"</p>
+                        <p className="text-sand-600 leading-relaxed mb-3">"{review.review}"</p>
                         {/* Review Images */}
                         {review.images && review.images.length > 0 && (
                           <div className="mt-3">
                             <div className="flex flex-wrap gap-2">
                               {review.images.slice(0, 4).map((image, imageIndex) => (
-                                <div key={imageIndex} className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                <div key={imageIndex} className="relative w-16 h-16 rounded-lg overflow-hidden border border-sand-200">
                                   <Image
                                     src={image.url}
                                     alt={image.alt}
@@ -2206,12 +2158,12 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                                 </div>
                               ))}
                               {review.images.length > 4 && (
-                                <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 text-xs font-medium">
+                                <div className="w-16 h-16 rounded-lg bg-sand-100 flex items-center justify-center text-sand-500 text-xs font-medium">
                                   +{review.images.length - 4}
                                 </div>
                               )}
                             </div>
-                            <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                            <p className="text-xs text-sand-500 mt-2 flex items-center gap-1">
                               <ImageIcon className="h-3 w-3" />
                               {review.images.length} photo{review.images.length !== 1 ? 's' : ''} from customer
                             </p>
@@ -2221,81 +2173,81 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     ))
                   ) : (
                     productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
-                      <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-6' : 'pb-2'}`}>
+                      <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b border-sand-200 pb-6' : 'pb-2'}`}>
                         <div className="flex items-center gap-3 mb-3">
                           <div className="flex">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <Star key={star} className="h-4 w-4 fill-terra-400 text-terra-400" />
                             ))}
                           </div>
-                          <span className="font-semibold text-gray-900">{review.name}</span>
+                          <span className="font-semibold text-sand-900">{review.name}</span>
                         </div>
-                        <p className="text-gray-600 leading-relaxed">"{review.review}"</p>
+                        <p className="text-sand-600 leading-relaxed">"{review.review}"</p>
                       </div>
                     ))
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
+              <Card className="bg-white border border-sand-200 rounded-xl overflow-hidden">
+                <CardHeader className="bg-sand-50 border-b border-sand-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
-                    <Star className="h-5 w-5 text-gray-600" />
+                    <Star className="h-5 w-5 text-terra-500" />
                     Review Summary
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8">
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="font-medium text-gray-700">Performance</span>
+                    <div className="flex items-center justify-between p-3 bg-sand-50 rounded-lg">
+                      <span className="font-medium text-sand-700">Performance</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star key={star} className="h-4 w-4 fill-terra-400 text-terra-400" />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="font-medium text-gray-700">Easy Installation</span>
+                    <div className="flex items-center justify-between p-3 bg-sand-50 rounded-lg">
+                      <span className="font-medium text-sand-700">Easy Installation</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star key={star} className="h-4 w-4 fill-terra-400 text-terra-400" />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="font-medium text-gray-700">Value for Money</span>
+                    <div className="flex items-center justify-between p-3 bg-sand-50 rounded-lg">
+                      <span className="font-medium text-sand-700">Value for Money</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star key={star} className="h-4 w-4 fill-terra-400 text-terra-400" />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="font-medium text-gray-700">Customer Support</span>
+                    <div className="flex items-center justify-between p-3 bg-sand-50 rounded-lg">
+                      <span className="font-medium text-sand-700">Customer Support</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star key={star} className="h-4 w-4 fill-terra-400 text-terra-400" />
                         ))}
                       </div>
                     </div>
                   </div>
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <h4 className="font-semibold text-gray-900 mb-4">Common Highlights</h4>
-                    <div className="space-y-2 text-gray-700">
+                  <div className="mt-6 pt-6 border-t border-sand-200">
+                    <h4 className="font-semibold text-sand-900 mb-4">Common Highlights</h4>
+                    <div className="space-y-2 text-sand-700">
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-ocean-600 flex-shrink-0" />
                         <span>Excellent long-term performance</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-ocean-600 flex-shrink-0" />
                         <span>Significant water savings</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-ocean-600 flex-shrink-0" />
                         <span>Low maintenance requirements</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-ocean-600 flex-shrink-0" />
                         <span>Great customer support</span>
                       </div>
                     </div>
@@ -2305,35 +2257,35 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
             </div>
 
             {/* FAQ Section */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-8 text-center">
+            <div className="bg-white rounded-xl border border-sand-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-ocean-600 to-ocean-700 text-white px-8 py-8 text-center">
                 <MessageSquare className="h-10 w-10 mx-auto mb-4 opacity-90" />
-                <h2 className="text-2xl lg:text-3xl font-bold mb-2">
+                <h2 className="text-2xl lg:text-3xl font-display mb-2">
                   Frequently Asked Questions
                 </h2>
-                <p className="text-blue-100 max-w-2xl mx-auto">
+                <p className="text-ocean-100 max-w-2xl mx-auto">
                   Everything you need to know about this greywater system
                 </p>
               </div>
-              
-              <div className="divide-y divide-gray-100">
+
+              <div className="divide-y divide-sand-100">
                 {productContent.faq.slice(0, 8).map((item: any, index: number) => (
-                  <div key={index} className="px-8 py-6 hover:bg-gray-50/50 transition-colors">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-start gap-3">
-                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 text-blue-700 text-sm font-bold flex-shrink-0 mt-0.5">
+                  <div key={index} className="px-8 py-6 hover:bg-ocean-50/50 transition-colors">
+                    <h3 className="text-lg font-semibold text-sand-900 mb-3 flex items-start gap-3">
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-ocean-100 text-ocean-700 text-sm font-bold flex-shrink-0 mt-0.5">
                         {index + 1}
                       </span>
                       {item.question}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed pl-10">{item.answer}</p>
+                    <p className="text-sand-600 leading-relaxed pl-10">{item.answer}</p>
                   </div>
                 ))}
               </div>
-              
+
               {productContent.faq.length > 8 && (
-                <div className="px-8 py-6 bg-gray-50 text-center border-t border-gray-100">
-                  <p className="text-sm text-gray-600">
-                    Have more questions? <a href="/contact" className="text-blue-600 font-medium hover:underline">Contact our team</a>
+                <div className="px-8 py-6 bg-sand-50 text-center border-t border-sand-100">
+                  <p className="text-sm text-sand-600">
+                    Have more questions? <a href="/contact" className="text-ocean-600 font-medium hover:underline">Contact our team</a>
                   </p>
                 </div>
               )}

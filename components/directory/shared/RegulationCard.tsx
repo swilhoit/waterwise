@@ -39,7 +39,7 @@ export function RegulationCard({
   title,
   subtitle,
   icon: Icon,
-  theme = 'emerald',
+  theme = 'ocean',
   detailsLink,
   detailsLinkText = 'Full details',
   infoBoxes,
@@ -51,7 +51,7 @@ export function RegulationCard({
   const colors = getThemeColors(theme)
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-2xl border border-sand-200 overflow-hidden">
       {/* Header */}
       <div className={`${colors.bgGradient} px-5 py-4 border-b ${colors.border}`}>
         <div className="flex items-center justify-between">
@@ -60,8 +60,8 @@ export function RegulationCard({
               <Icon className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-              {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+              <h2 className="text-lg font-display font-semibold text-sand-900">{title}</h2>
+              {subtitle && <p className="text-xs text-sand-500">{subtitle}</p>}
             </div>
           </div>
           {detailsLink && (
@@ -81,9 +81,9 @@ export function RegulationCard({
         {infoBoxes && infoBoxes.length > 0 && (
           <div className={`grid grid-cols-${Math.min(infoBoxes.length, 2)} gap-3 mb-4`}>
             {infoBoxes.map((box, idx) => (
-              <div key={idx} className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500 mb-1">{box.label}</p>
-                <p className={`font-semibold ${box.highlight ? colors.text : 'text-gray-700'}`}>
+              <div key={idx} className="bg-sand-50 rounded-lg p-3">
+                <p className="text-xs text-sand-500 mb-1">{box.label}</p>
+                <p className={`font-semibold ${box.highlight ? colors.text : 'text-sand-700'}`}>
                   {box.value}
                 </p>
               </div>
@@ -93,7 +93,7 @@ export function RegulationCard({
 
         {/* Summary */}
         {summary && (
-          <p className="text-sm text-gray-600 mb-4">{summary}</p>
+          <p className="text-sm text-sand-600 mb-4">{summary}</p>
         )}
 
         {/* Use Badges */}
@@ -104,8 +104,8 @@ export function RegulationCard({
                 key={idx}
                 className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-help ${
                   badge.allowed
-                    ? 'bg-emerald-100 text-emerald-700'
-                    : 'bg-gray-100 text-gray-500'
+                    ? 'bg-ocean-100 text-ocean-700'
+                    : 'bg-sand-100 text-sand-500'
                 }`}
                 title={badge.tooltip}
               >
@@ -118,9 +118,9 @@ export function RegulationCard({
 
         {/* Governing Code */}
         {governingCode && (
-          <div className="bg-gray-50 rounded-lg p-3 mb-4">
-            <p className="text-xs text-gray-500 mb-1">Governing Code</p>
-            <p className="text-sm text-gray-700 font-medium">{governingCode}</p>
+          <div className="bg-sand-50 rounded-lg p-3 mb-4">
+            <p className="text-xs text-sand-500 mb-1">Governing Code</p>
+            <p className="text-sm text-sand-700 font-medium">{governingCode}</p>
           </div>
         )}
 
@@ -149,7 +149,7 @@ export function ListSection({
   icon: Icon,
   items,
   variant = 'check',
-  theme = 'emerald',
+  theme = 'ocean',
   className = ''
 }: ListSectionProps) {
   const colors = getThemeColors(theme)
@@ -176,13 +176,13 @@ export function ListSection({
 
   return (
     <div className={className}>
-      <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+      <h3 className="text-sm font-semibold text-sand-700 mb-3 flex items-center gap-2">
         {Icon && <Icon className={`h-4 w-4 ${colors.iconText}`} />}
         {title}
       </h3>
       <ul className="space-y-2">
         {items.map((item, idx) => (
-          <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+          <li key={idx} className="flex items-start gap-2 text-sm text-sand-600">
             {renderIcon(idx)}
             <span>{item}</span>
           </li>
@@ -207,7 +207,7 @@ interface SidebarCardProps {
 export function SidebarCard({
   title,
   icon: Icon,
-  theme = 'neutral',
+  theme = 'sand',
   children,
   className = ''
 }: SidebarCardProps) {
@@ -215,7 +215,7 @@ export function SidebarCard({
 
   return (
     <div className={`${colors.bg} border ${colors.border} rounded-xl p-5 ${className}`}>
-      <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+      <h3 className="text-sm font-semibold text-sand-800 mb-3 flex items-center gap-2">
         {Icon && <Icon className={`h-4 w-4 ${colors.iconText}`} />}
         {title}
       </h3>

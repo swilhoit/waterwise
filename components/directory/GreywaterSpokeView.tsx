@@ -99,32 +99,32 @@ export default function GreywaterSpokeView({
   const diyAllowed = permitDetails?.diy_allowed
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-sand-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">
-          <Link href="/" className="text-gray-500 hover:text-emerald-600">Home</Link>
-          <ChevronRight className="h-3 w-3 text-gray-300" />
-          <Link href={`/${stateCode.toLowerCase()}`} className="text-gray-500 hover:text-emerald-600">{stateName}</Link>
+          <Link href="/" className="text-sand-500 hover:text-ocean-600">Home</Link>
+          <ChevronRight className="h-3 w-3 text-sand-300" />
+          <Link href={`/${stateCode.toLowerCase()}`} className="text-sand-500 hover:text-ocean-600">{stateName}</Link>
           {level === 'city' && cityName && (
             <>
-              <ChevronRight className="h-3 w-3 text-gray-300" />
-              <Link href={basePath} className="text-gray-500 hover:text-emerald-600">{cityName}</Link>
+              <ChevronRight className="h-3 w-3 text-sand-300" />
+              <Link href={basePath} className="text-sand-500 hover:text-ocean-600">{cityName}</Link>
             </>
           )}
-          <ChevronRight className="h-3 w-3 text-gray-300" />
-          <span className="text-gray-900 font-medium">Greywater</span>
+          <ChevronRight className="h-3 w-3 text-sand-300" />
+          <span className="text-sand-900 font-medium">Greywater</span>
         </nav>
 
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-ocean-600 rounded-xl flex items-center justify-center">
               <Droplets className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{locationName} Greywater Laws</h1>
-              <p className="text-gray-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
+              <h1 className="text-2xl font-bold text-sand-900">{locationName} Greywater Laws</h1>
+              <p className="text-sand-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
             </div>
           </div>
 
@@ -132,13 +132,13 @@ export default function GreywaterSpokeView({
           <div className="flex flex-wrap gap-2 mt-4">
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${
               greywater?.legalStatus?.toLowerCase().includes('legal')
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'bg-gray-100 text-gray-700'
+                ? 'bg-ocean-100 text-ocean-700'
+                : 'bg-sand-100 text-sand-700'
             }`}>
               {greywater?.legalStatus || 'Check Local Rules'}
             </span>
             {threshold && (
-              <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700">
+              <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-ocean-100 text-ocean-700">
                 No permit under {threshold} GPD
               </span>
             )}
@@ -164,40 +164,40 @@ export default function GreywaterSpokeView({
         )}
 
         {/* Main Content Card */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+        <div className="bg-white rounded-2xl border border-sand-200 overflow-hidden mb-6">
           {/* Summary */}
           {greywater?.summary && (
-            <div className="px-6 py-5 border-b border-gray-100">
-              <p className="text-gray-700 leading-relaxed">{greywater.summary}</p>
+            <div className="px-6 py-5 border-b border-sand-100">
+              <p className="text-sand-700 leading-relaxed">{greywater.summary}</p>
             </div>
           )}
 
           {/* Key Info Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-sand-100">
             {threshold && (
               <div className="bg-white p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Threshold</p>
-                <p className="text-xl font-bold text-emerald-700">{threshold} GPD</p>
+                <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">Permit Threshold</p>
+                <p className="text-xl font-bold text-ocean-700">{threshold} GPD</p>
               </div>
             )}
             {(permitDetails?.permit_fee_min !== undefined || permitDetails?.fee_notes) && (
               <div className="bg-white p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Fee</p>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">Permit Fee</p>
+                <p className="text-xl font-bold text-sand-900">
                   {permitDetails.fee_notes || (permitDetails.permit_fee_min === 0 ? 'Free' : `$${permitDetails.permit_fee_min}`)}
                 </p>
               </div>
             )}
             {permitDetails?.typical_processing_days && (
               <div className="bg-white p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Processing</p>
-                <p className="text-xl font-bold text-gray-900">{permitDetails.typical_processing_days} days</p>
+                <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">Processing</p>
+                <p className="text-xl font-bold text-sand-900">{permitDetails.typical_processing_days} days</p>
               </div>
             )}
             {diyAllowed !== undefined && (
               <div className="bg-white p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">DIY Install</p>
-                <p className={`text-xl font-bold ${diyAllowed ? 'text-emerald-700' : 'text-amber-700'}`}>
+                <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">DIY Install</p>
+                <p className={`text-xl font-bold ${diyAllowed ? 'text-ocean-700' : 'text-amber-700'}`}>
                   {diyAllowed ? 'Allowed' : 'Pro Required'}
                 </p>
               </div>
@@ -208,12 +208,12 @@ export default function GreywaterSpokeView({
             {/* Use Types */}
             <div className="flex flex-wrap gap-2 mb-6">
               {greywater?.outdoorUseAllowed && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ocean-50 text-ocean-700 rounded-lg text-sm">
                   <Flower2 className="h-4 w-4" /> Outdoor Irrigation
                 </span>
               )}
               {greywater?.indoorUseAllowed && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ocean-50 text-ocean-700 rounded-lg text-sm">
                   <Home className="h-4 w-4" /> Indoor (Toilet Flushing)
                 </span>
               )}
@@ -222,21 +222,21 @@ export default function GreywaterSpokeView({
             {/* System Types */}
             {(permitDetails?.laundry_to_landscape_allowed || permitDetails?.branched_drain_allowed || permitDetails?.surge_tank_system_allowed) && (
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">Allowed Systems</h3>
+                <h3 className="text-sm font-semibold text-sand-900 mb-2">Allowed Systems</h3>
                 <div className="flex flex-wrap gap-2">
                   {permitDetails.laundry_to_landscape_allowed && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm">
-                      <Check className="h-3 w-3 text-emerald-600" /> Laundry-to-Landscape
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-sand-100 text-sand-700 rounded text-sm">
+                      <Check className="h-3 w-3 text-ocean-600" /> Laundry-to-Landscape
                     </span>
                   )}
                   {permitDetails.branched_drain_allowed && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm">
-                      <Check className="h-3 w-3 text-emerald-600" /> Branched Drain
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-sand-100 text-sand-700 rounded text-sm">
+                      <Check className="h-3 w-3 text-ocean-600" /> Branched Drain
                     </span>
                   )}
                   {permitDetails.surge_tank_system_allowed && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm">
-                      <Check className="h-3 w-3 text-emerald-600" /> Surge Tank
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-sand-100 text-sand-700 rounded text-sm">
+                      <Check className="h-3 w-3 text-ocean-600" /> Surge Tank
                     </span>
                   )}
                 </div>
@@ -247,13 +247,13 @@ export default function GreywaterSpokeView({
             <div className="grid md:grid-cols-2 gap-6">
               {greywater?.approvedUses && greywater.approvedUses.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
-                    <Check className="h-4 w-4 text-emerald-600" /> Approved Uses
+                  <h3 className="text-sm font-semibold text-sand-900 mb-2 flex items-center gap-1.5">
+                    <Check className="h-4 w-4 text-ocean-600" /> Approved Uses
                   </h3>
                   <ul className="space-y-1">
                     {greywater.approvedUses.map((use, idx) => (
-                      <li key={idx} className="text-sm text-gray-600 flex items-center gap-2">
-                        <span className="w-1 h-1 bg-emerald-500 rounded-full" /> {use}
+                      <li key={idx} className="text-sm text-sand-600 flex items-center gap-2">
+                        <span className="w-1 h-1 bg-ocean-500 rounded-full" /> {use}
                       </li>
                     ))}
                   </ul>
@@ -261,12 +261,12 @@ export default function GreywaterSpokeView({
               )}
               {greywater?.keyRestrictions && greywater.keyRestrictions.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold text-sand-900 mb-2 flex items-center gap-1.5">
                     <AlertTriangle className="h-4 w-4 text-amber-600" /> Restrictions
                   </h3>
                   <ul className="space-y-1">
                     {greywater.keyRestrictions.map((r, idx) => (
-                      <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                      <li key={idx} className="text-sm text-sand-600 flex items-start gap-2">
                         <span className="w-1 h-1 bg-amber-500 rounded-full mt-1.5 flex-shrink-0" /> {r}
                       </li>
                     ))}
@@ -277,15 +277,15 @@ export default function GreywaterSpokeView({
 
             {/* Governing Code */}
             {greywater?.governingCode && (
-              <div className="mt-6 pt-4 border-t border-gray-100">
-                <p className="text-xs text-gray-500">
+              <div className="mt-6 pt-4 border-t border-sand-100">
+                <p className="text-xs text-sand-500">
                   <span className="font-medium">Governing Code:</span>{' '}
                   {greywater.governingCodeUrl ? (
                     <a
                       href={greywater.governingCodeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-emerald-600 hover:text-emerald-700 hover:underline inline-flex items-center gap-1"
+                      className="text-ocean-600 hover:text-ocean-700 hover:underline inline-flex items-center gap-1"
                     >
                       {greywater.governingCode}
                       <ExternalLink className="h-3 w-3" />
@@ -300,13 +300,13 @@ export default function GreywaterSpokeView({
 
           {/* Contact Footer */}
           {(agency?.name || permitDetails?.department_name || permitDetails?.application_url) && (
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+            <div className="px-6 py-4 bg-sand-50 border-t border-sand-100 flex flex-wrap items-center justify-between gap-4">
               <div>
                 {(permitDetails?.department_name || agency?.name) && (
-                  <p className="font-medium text-gray-900 text-sm">{permitDetails?.department_name || agency?.name}</p>
+                  <p className="font-medium text-sand-900 text-sm">{permitDetails?.department_name || agency?.name}</p>
                 )}
                 {(permitDetails?.department_phone || agency?.phone) && (
-                  <a href={`tel:${permitDetails?.department_phone || agency?.phone}`} className="text-sm text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                  <a href={`tel:${permitDetails?.department_phone || agency?.phone}`} className="text-sm text-ocean-600 hover:text-ocean-700 flex items-center gap-1">
                     <Phone className="h-3 w-3" /> {permitDetails?.department_phone || agency?.phone}
                   </a>
                 )}
@@ -316,7 +316,7 @@ export default function GreywaterSpokeView({
                   href={permitDetails.application_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-ocean-600 text-white text-sm font-medium rounded-lg hover:bg-ocean-700"
                 >
                   Apply for Permit <ExternalLink className="h-4 w-4" />
                 </a>
@@ -329,7 +329,7 @@ export default function GreywaterSpokeView({
         {greywaterIncentives.length > 0 && (
           <IncentivesTable
             incentives={greywaterIncentives}
-            theme="emerald"
+            theme="ocean"
             title="Rebates & Incentives"
             showJurisdictionLevel={true}
             locationName={locationName || stateName}
@@ -344,7 +344,7 @@ export default function GreywaterSpokeView({
           title="Ready to Install a Greywater System?"
           description={`Our systems are designed to meet ${locationName} regulations.`}
           primaryButton={{ label: 'View Systems', href: '/products' }}
-          theme="emerald"
+          theme="ocean"
         />
       </div>
     </div>

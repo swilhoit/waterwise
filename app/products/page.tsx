@@ -164,8 +164,7 @@ export default async function ProductsPage() {
 
             {/* Right: Featured Product Card */}
             <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-ocean-400/20 to-terra-400/20 rounded-4xl blur-2xl" />
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl">
+              <div className="relative bg-white rounded-3xl p-8 border border-sand-200">
                 <div className="absolute -top-3 -right-3 badge-terra">
                   <Star className="h-3 w-3 fill-current" />
                   Best Seller
@@ -442,7 +441,7 @@ export default async function ProductsPage() {
 
           <div className="max-w-5xl mx-auto">
             {/* Desktop Table */}
-            <div className="hidden lg:block overflow-hidden rounded-3xl border border-sand-200 bg-white shadow-soft">
+            <div className="hidden lg:block overflow-hidden rounded-3xl border border-sand-200 bg-white">
               <table className="w-full">
                 <thead>
                   <tr className="bg-sand-50">
@@ -702,8 +701,7 @@ export default async function ProductsPage() {
               </div>
 
               <div className="relative">
-                <div className="absolute -inset-6 bg-gradient-to-br from-ocean-100 to-terra-100 rounded-4xl opacity-50 blur-2xl" />
-                <div className="relative aspect-square rounded-3xl overflow-hidden bg-white border border-sand-200 shadow-soft-lg">
+                <div className="relative aspect-square rounded-3xl overflow-hidden bg-white border border-sand-200">
                   <Image
                     src="/docs/Aqua2use-How-It-Works.jpg"
                     alt="How Greywater Recycling Works"

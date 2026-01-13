@@ -10,7 +10,7 @@ export { builder }
 const EXCLUDED_PATHS = [
   '/products',        // Shopify product pages
   '/blog',            // Shopify blog
-  '/directory',       // BigQuery directory
+  '/resources',       // BigQuery directory
   '/contact',         // Form handling
   '/shipping',        // Policy pages
   '/returns',

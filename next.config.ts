@@ -35,14 +35,17 @@ const nextConfig: NextConfig = {
       { source: '/policies/privacy-policy', destination: '/privacy', permanent: true },
       { source: '/policies/terms-of-service', destination: '/terms', permanent: true },
 
-      // Directory/Laws redirects - old compliance pages redirect to new directory
-      { source: '/pages/greywater-directory', destination: '/directory', permanent: true },
-      { source: '/pages/greywater-compliance-ca', destination: '/directory/CA', permanent: true },
-      { source: '/pages/greywater-compliance-az', destination: '/directory/AZ', permanent: true },
-      { source: '/pages/greywater-compliance-tx', destination: '/directory/TX', permanent: true },
-      { source: '/pages/greywater-compliance-or', destination: '/directory/OR', permanent: true },
-      { source: '/pages/greywater-compliance-wa', destination: '/directory/WA', permanent: true },
-      { source: '/pages/greywater-compliance-co', destination: '/directory/CO', permanent: true },
+      // Directory/Laws redirects - old compliance pages redirect to resources
+      { source: '/pages/greywater-directory', destination: '/resources', permanent: true },
+      { source: '/pages/greywater-compliance-ca', destination: '/resources/CA', permanent: true },
+      { source: '/pages/greywater-compliance-az', destination: '/resources/AZ', permanent: true },
+      { source: '/pages/greywater-compliance-tx', destination: '/resources/TX', permanent: true },
+      { source: '/pages/greywater-compliance-or', destination: '/resources/OR', permanent: true },
+      { source: '/pages/greywater-compliance-wa', destination: '/resources/WA', permanent: true },
+      { source: '/pages/greywater-compliance-co', destination: '/resources/CO', permanent: true },
+      // Old /directory URLs redirect to /resources
+      { source: '/directory', destination: '/resources', permanent: true },
+      { source: '/directory/:path*', destination: '/resources/:path*', permanent: true },
 
       // Solution pages redirects
       { source: '/pages/greywater-systems-for-tiny-homes', destination: '/solutions/tiny-homes', permanent: true },

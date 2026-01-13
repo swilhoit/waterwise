@@ -13,28 +13,28 @@ interface CollapsibleSectionProps {
   children: ReactNode
   defaultOpen?: boolean
   variant?: 'default' | 'card' | 'minimal' | 'elevated'
-  accentColor?: 'emerald' | 'amber' | 'slate'
+  accentColor?: 'ocean' | 'terra' | 'sand'
   className?: string
 }
 
 const accentStyles = {
-  emerald: {
-    border: 'border-l-teal-400',
-    iconBg: 'bg-teal-50',
-    iconColor: 'text-teal-600',
-    hoverBg: 'hover:bg-teal-50/30'
+  ocean: {
+    border: 'border-l-ocean-400',
+    iconBg: 'bg-ocean-50',
+    iconColor: 'text-ocean-600',
+    hoverBg: 'hover:bg-ocean-50/30'
   },
-  amber: {
-    border: 'border-l-teal-400',
-    iconBg: 'bg-teal-50',
-    iconColor: 'text-teal-600',
-    hoverBg: 'hover:bg-teal-50/30'
+  terra: {
+    border: 'border-l-terra-400',
+    iconBg: 'bg-terra-50',
+    iconColor: 'text-terra-600',
+    hoverBg: 'hover:bg-terra-50/30'
   },
-  slate: {
-    border: 'border-l-gray-300',
-    iconBg: 'bg-gray-100',
-    iconColor: 'text-gray-600',
-    hoverBg: 'hover:bg-gray-50/50'
+  sand: {
+    border: 'border-l-sand-300',
+    iconBg: 'bg-sand-100',
+    iconColor: 'text-sand-600',
+    hoverBg: 'hover:bg-sand-50/50'
   }
 }
 
@@ -47,17 +47,17 @@ export default function CollapsibleSection({
   children,
   defaultOpen = false,
   variant = 'default',
-  accentColor = 'slate',
+  accentColor = 'sand',
   className
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const accent = accentStyles[accentColor]
 
   const baseStyles = {
-    default: 'bg-white border border-gray-200 rounded-xl overflow-hidden',
-    card: 'bg-white border border-gray-200 rounded-xl overflow-hidden',
-    minimal: 'border-b border-gray-200',
-    elevated: 'bg-white border border-gray-200 rounded-xl overflow-hidden'
+    default: 'bg-white border border-sand-200 rounded-xl overflow-hidden',
+    card: 'bg-white border border-sand-200 rounded-xl overflow-hidden',
+    minimal: 'border-b border-sand-200',
+    elevated: 'bg-white border border-sand-200 rounded-xl overflow-hidden'
   }
 
   const headerStyles = {
@@ -92,21 +92,21 @@ export default function CollapsibleSection({
           )}
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{title}</h3>
+              <h3 className="font-semibold text-sand-800 text-sm sm:text-base">{title}</h3>
               {badge}
             </div>
             {summary && !isOpen && (
-              <p className="text-xs sm:text-sm text-gray-500 mt-0.5 truncate">{summary}</p>
+              <p className="text-xs sm:text-sm text-sand-500 mt-0.5 truncate">{summary}</p>
             )}
           </div>
         </div>
         <div className={cn(
           'p-1.5 rounded-full transition-colors ml-2',
-          isOpen ? 'bg-gray-100' : 'bg-transparent'
+          isOpen ? 'bg-sand-100' : 'bg-transparent'
         )}>
           <ChevronDown
             className={cn(
-              'h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-200',
+              'h-4 w-4 sm:h-5 sm:w-5 text-sand-400 transition-transform duration-200',
               isOpen && 'rotate-180'
             )}
           />
@@ -120,7 +120,7 @@ export default function CollapsibleSection({
         )}
       >
         <div className={cn(
-          variant === 'minimal' ? 'pb-4' : 'px-4 pb-5 sm:px-5 sm:pb-6 border-t border-gray-100 bg-gray-50/30'
+          variant === 'minimal' ? 'pb-4' : 'px-4 pb-5 sm:px-5 sm:pb-6 border-t border-sand-100 bg-sand-50/30'
         )}>
           {children}
         </div>
@@ -149,7 +149,7 @@ export function InlineCollapsible({
     <div className={className}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-700 transition-colors font-medium"
+        className="flex items-center gap-1.5 text-sm text-ocean-600 hover:text-ocean-700 transition-colors font-medium"
       >
         <ChevronDown
           className={cn(

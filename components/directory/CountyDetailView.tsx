@@ -91,12 +91,12 @@ export default function CountyDetailView({
     return (
       <div className="mb-8 space-y-4">
         <div className="bg-white border rounded-lg p-6 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-8 bg-sand-200 rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-sand-200 rounded w-1/4"></div>
         </div>
         <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-24 bg-gray-200 rounded animate-pulse"></div>
+            <div key={i} className="h-24 bg-sand-200 rounded animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -109,16 +109,16 @@ export default function CountyDetailView({
       <div className="bg-white border rounded-lg p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+            <div className="flex items-center gap-2 text-sm text-sand-500 mb-1">
               <MapPin className="h-3.5 w-3.5" />
               <span>{stateCode}</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Building2 className="h-6 w-6 text-gray-600 flex-shrink-0" />
+            <h2 className="text-xl sm:text-2xl font-bold text-sand-900 flex items-center gap-2">
+              <Building2 className="h-6 w-6 text-sand-600 flex-shrink-0" />
               {countyName} County
             </h2>
             {countyData?.city_count && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-sand-500 mt-1">
                 {countyData.city_count} cities
               </p>
             )}
@@ -128,7 +128,7 @@ export default function CountyDetailView({
               Greywater Allowed
             </Badge>
             {stats.hasCountyPolicy && (
-              <Badge variant="outline" className="text-gray-600 border-gray-200">
+              <Badge variant="outline" className="text-sand-600 border-sand-200">
                 County Policy
               </Badge>
             )}
@@ -141,19 +141,19 @@ export default function CountyDetailView({
             label="Cities"
             value={countyData?.city_count || 0}
             icon={Home}
-            color="text-gray-600"
+            color="text-sand-600"
           />
           <QuickStat
             label="Incentive Programs"
             value={stats.totalCount}
             icon={DollarSign}
-            color="text-gray-600"
+            color="text-sand-600"
           />
           <QuickStat
             label="Max Rebate"
             value={stats.maxAmount > 0 ? `$${stats.maxAmount.toLocaleString()}` : '-'}
             icon={DollarSign}
-            color="text-gray-600"
+            color="text-sand-600"
           />
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function CountyDetailView({
       <CollapsibleSection
         title="Policy Framework"
         icon={Layers}
-        iconColor="text-gray-600"
+        iconColor="text-sand-600"
         summary={`State + ${stats.hasCountyPolicy ? 'County policy' : 'Follows state'}`}
         defaultOpen={true}
       >
@@ -196,30 +196,30 @@ export default function CountyDetailView({
       {/* Compliance by Sector */}
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="bg-white border rounded-lg p-4">
-          <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
-            <Home className="h-4 w-4 text-gray-600" />
+          <h3 className="font-semibold text-sand-900 flex items-center gap-2 mb-3">
+            <Home className="h-4 w-4 text-sand-600" />
             Residential
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-sand-600">
             {stats.hasCountyPolicy
               ? 'County-specific residential requirements apply'
               : 'Follows state residential guidelines'}
           </p>
           {countyData?.max_rebate_amount && countyData.max_rebate_amount > 0 && (
-            <p className="text-sm text-gray-700 font-semibold mt-2">
+            <p className="text-sm text-sand-700 font-semibold mt-2">
               Up to ${countyData.max_rebate_amount.toLocaleString()} in county rebates
             </p>
           )}
         </div>
         <div className="bg-white border rounded-lg p-4">
-          <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-3">
-            <Building className="h-4 w-4 text-gray-600" />
+          <h3 className="font-semibold text-sand-900 flex items-center gap-2 mb-3">
+            <Building className="h-4 w-4 text-sand-600" />
             Commercial
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-sand-600">
             Commercial systems require county review and approval
           </p>
-          <ul className="text-xs text-gray-500 mt-2 space-y-1">
+          <ul className="text-xs text-sand-500 mt-2 space-y-1">
             <li>• Health department approval may be required</li>
             <li>• Environmental review for large systems</li>
           </ul>
@@ -231,7 +231,7 @@ export default function CountyDetailView({
         <CollapsibleSection
           title="Available Incentives"
           icon={DollarSign}
-          iconColor="text-gray-500"
+          iconColor="text-sand-500"
           badge={
             <Badge className="bg-teal-50 text-teal-700 border border-teal-200">
               {stats.totalCount} Programs
@@ -247,7 +247,7 @@ export default function CountyDetailView({
                 level="State"
                 programs={localCompliance?.state?.incentives || []}
                 sectorView={sectorView}
-                color="emerald"
+                color="ocean"
               />
             )}
 
@@ -257,7 +257,7 @@ export default function CountyDetailView({
                 level="County"
                 programs={localCompliance?.county?.incentives || []}
                 sectorView={sectorView}
-                color="emerald"
+                color="ocean"
               />
             )}
           </div>
@@ -267,7 +267,7 @@ export default function CountyDetailView({
       {/* No Incentives Message */}
       {stats.totalCount === 0 && (
         <div className="bg-white border rounded-lg p-4">
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-sand-500">
             <DollarSign className="h-4 w-4" />
             <span className="text-sm">
               No {sectorView !== 'both' ? sectorView : ''} incentive programs found. Check individual cities for local programs.
@@ -281,10 +281,10 @@ export default function CountyDetailView({
         <CollapsibleSection
           title="Compliance Summary"
           icon={FileText}
-          iconColor="text-gray-600"
+          iconColor="text-sand-600"
           defaultOpen={false}
         >
-          <p className="text-sm text-gray-600 leading-relaxed pt-3">
+          <p className="text-sm text-sand-600 leading-relaxed pt-3">
             {countyCompliance.regulation_summary}
           </p>
         </CollapsibleSection>
@@ -311,7 +311,7 @@ function QuickStat({
         <Icon className="h-3.5 w-3.5" />
         <span className="font-bold text-lg">{value}</span>
       </div>
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-xs text-sand-500">{label}</p>
     </div>
   )
 }
@@ -331,11 +331,11 @@ function PolicyLevelCard({
   summary?: string
 }) {
   return (
-    <div className="border-l-4 border-l-teal-400 bg-gray-50/30 rounded-r-lg p-3">
+    <div className="border-l-4 border-l-teal-400 bg-sand-50/30 rounded-r-lg p-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <span className="text-xs font-medium text-gray-500 uppercase">{level}</span>
-          <p className="font-medium text-gray-900">{name}</p>
+          <span className="text-xs font-medium text-sand-500 uppercase">{level}</span>
+          <p className="font-medium text-sand-900">{name}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           {hasPolicy ? (
@@ -343,7 +343,7 @@ function PolicyLevelCard({
               Active Policy
             </Badge>
           ) : (
-            <Badge variant="outline" className="text-gray-500 text-xs">
+            <Badge variant="outline" className="text-sand-500 text-xs">
               Follows State
             </Badge>
           )}
@@ -355,7 +355,7 @@ function PolicyLevelCard({
         </div>
       </div>
       {summary && (
-        <p className="text-sm text-gray-600 mt-2">{summary}</p>
+        <p className="text-sm text-sand-600 mt-2">{summary}</p>
       )}
     </div>
   )
@@ -371,7 +371,7 @@ function IncentiveSection({
   level: string
   programs: any[]
   sectorView: string
-  color: 'emerald'
+  color: 'ocean'
 }) {
   const filtered = sectorView === 'both' ? programs : programs.filter(p =>
     sectorView === 'residential'
@@ -383,21 +383,21 @@ function IncentiveSection({
 
   return (
     <div>
-      <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-        <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+      <h4 className="font-medium text-sand-900 mb-2 flex items-center gap-2">
+        <Badge variant="outline" className="bg-sand-50 text-sand-700 border-sand-200">
           {level} Programs ({filtered.length})
         </Badge>
       </h4>
       <div className="space-y-2">
         {filtered.map((program: any, idx: number) => (
-          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-gray-50 transition-colors border-l-4 border-l-teal-400">
+          <div key={idx} className="border rounded-lg p-3 bg-white hover:bg-sand-50 transition-colors border-l-4 border-l-teal-400">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
-                <p className="font-medium text-gray-900 text-sm">
+                <p className="font-medium text-sand-900 text-sm">
                   {program.program_name || `${level} Program`}
                 </p>
                 {program.program_description && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+                  <p className="text-xs text-sand-500 mt-0.5 line-clamp-2">
                     {program.program_description}
                   </p>
                 )}
@@ -411,7 +411,7 @@ function IncentiveSection({
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="font-bold text-gray-700 text-sm">
+                <p className="font-bold text-sand-700 text-sm">
                   {program.incentive_amount_max
                     ? `Up to $${program.incentive_amount_max.toLocaleString()}`
                     : program.rebate_percentage

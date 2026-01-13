@@ -54,13 +54,12 @@ export function PageTemplate({
             </div>
             {heroImage && (
               <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-br from-ocean-100 to-terra-100 rounded-3xl opacity-50 blur-xl" />
                 <Image
                   src={heroImage}
                   alt={heroImageAlt || title}
                   width={600}
                   height={400}
-                  className="rounded-2xl relative z-10 shadow-soft-lg border border-sand-200 hover-lift"
+                  className="rounded-2xl relative z-10 border border-sand-200"
                 />
               </div>
             )}
@@ -130,7 +129,7 @@ export function FeatureCard({ title, description, icon, image, imageAlt }: Featu
           />
         )}
         {icon && (
-          <div className="w-12 h-12 rounded-xl bg-ocean-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-xl bg-ocean-100 flex items-center justify-center mb-4">
             {React.createElement(icon, { className: "h-6 w-6 text-ocean-600" })}
           </div>
         )}

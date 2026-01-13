@@ -20,7 +20,7 @@ interface HeroSectionProps {
 export function HeroSection({
   title,
   subtitle,
-  theme = 'neutral',
+  theme = 'sand',
   icon: Icon,
   badges,
   compact = false
@@ -31,10 +31,10 @@ export function HeroSection({
     // Compact hero for hub pages - no background, just title
     return (
       <div className="mb-6">
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl lg:text-3xl font-display font-bold text-sand-900 mb-2">
           {title}
         </h1>
-        <p className="text-gray-500 text-sm">{subtitle}</p>
+        <p className="text-sand-500 text-sm">{subtitle}</p>
         {badges && <div className="flex flex-wrap gap-2 mt-3">{badges}</div>}
       </div>
     )
@@ -50,10 +50,10 @@ export function HeroSection({
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl lg:text-3xl font-display font-bold text-sand-900 mb-2">
             {title}
           </h1>
-          <p className="text-gray-600">{subtitle}</p>
+          <p className="text-sand-600">{subtitle}</p>
           {badges && (
             <div className="flex flex-wrap gap-2 mt-4">
               {badges}
@@ -78,10 +78,10 @@ interface HeroBadgeProps {
 
 export function HeroBadge({ icon: Icon, children, variant = 'neutral', className }: HeroBadgeProps) {
   const variantClasses = {
-    success: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    success: 'bg-ocean-100 text-ocean-700 border-ocean-200',
     warning: 'bg-amber-100 text-amber-700 border-amber-200',
-    info: 'bg-cyan-100 text-cyan-700 border-cyan-200',
-    neutral: 'bg-gray-100 text-gray-700 border-gray-200'
+    info: 'bg-ocean-100 text-ocean-700 border-ocean-200',
+    neutral: 'bg-sand-100 text-sand-700 border-sand-200'
   }
 
   // If className is provided, use it instead of variant classes

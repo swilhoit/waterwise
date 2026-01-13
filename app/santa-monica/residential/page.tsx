@@ -830,7 +830,7 @@ export default function SantaMonicaResidential() {
                 <Users className="w-8 h-8 text-blue-600 mb-3" />
                 <h3 className="font-semibold mb-2">Residential Installers</h3>
                 <p className="text-sm text-gray-600 mb-3">Licensed plumbers for home greywater</p>
-                <a href="/directory/CA/los-angeles/santa-monica" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                <a href="/resources/CA/los-angeles/santa-monica" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
                   Find Local Contractors →
                 </a>
               </Card>

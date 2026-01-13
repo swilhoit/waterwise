@@ -59,15 +59,15 @@ type ProgramType = 'rebate' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy
 
 function ProgramTypeBadge({ type }: { type: ProgramType }) {
   const config: Record<ProgramType, { label: string; className: string }> = {
-    rebate: { label: 'Rebate', className: 'bg-green-100 text-green-800' },
+    rebate: { label: 'Rebate', className: 'bg-ocean-100 text-ocean-800' },
     loan: { label: 'Loan', className: 'bg-blue-100 text-blue-800' },
     tax_credit: { label: 'Tax Credit', className: 'bg-purple-100 text-purple-800' },
     tax_exemption: { label: 'Tax Exempt', className: 'bg-purple-100 text-purple-800' },
-    subsidy: { label: 'Subsidy', className: 'bg-teal-100 text-teal-800' },
-    free_installation: { label: 'Free Install', className: 'bg-emerald-100 text-emerald-800' },
+    subsidy: { label: 'Subsidy', className: 'bg-ocean-100 text-ocean-800' },
+    free_installation: { label: 'Free Install', className: 'bg-ocean-100 text-ocean-800' },
     permit_waiver: { label: 'Permit Waiver', className: 'bg-amber-100 text-amber-800' },
-    education: { label: 'Education', className: 'bg-cyan-100 text-cyan-800' },
-    various: { label: 'Various', className: 'bg-gray-100 text-gray-800' }
+    education: { label: 'Education', className: 'bg-ocean-100 text-ocean-800' },
+    various: { label: 'Various', className: 'bg-sand-100 text-sand-800' }
   }
   const { label, className } = config[type] || config.various
   return <span className={`px-2 py-0.5 rounded text-xs font-medium ${className}`}>{label}</span>
@@ -76,11 +76,11 @@ function ProgramTypeBadge({ type }: { type: ProgramType }) {
 function JurisdictionLevelBadge({ level }: { level?: string }) {
   if (!level) return null
   const config: Record<string, { label: string; className: string }> = {
-    city: { label: 'City', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-    county: { label: 'County', className: 'bg-amber-50 text-amber-700 border-amber-200' },
+    city: { label: 'City', className: 'bg-ocean-50 text-ocean-700 border-ocean-200' },
+    county: { label: 'County', className: 'bg-terra-50 text-terra-700 border-terra-200' },
     state: { label: 'State', className: 'bg-purple-50 text-purple-700 border-purple-200' }
   }
-  const { label, className } = config[level] || { label: level, className: 'bg-gray-50 text-gray-700 border-gray-200' }
+  const { label, className } = config[level] || { label: level, className: 'bg-sand-50 text-sand-700 border-sand-200' }
   return <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium border ${className}`}>{label}</span>
 }
 
@@ -121,7 +121,7 @@ interface IncentivesTableProps {
 
 export function IncentivesTable({
   incentives,
-  theme = 'emerald',
+  theme = 'ocean',
   title = 'Rebates & Incentives',
   subtitle,
   emptyMessage = 'No rebate programs found for this location.',
@@ -146,9 +146,9 @@ export function IncentivesTable({
 
   if (incentives.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
-        <DollarSign className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-        <p className="text-gray-600">{emptyMessage}</p>
+      <div className="bg-sand-50 border border-sand-200 rounded-xl p-6 text-center">
+        <DollarSign className="h-8 w-8 text-sand-400 mx-auto mb-2" />
+        <p className="text-sand-600">{emptyMessage}</p>
       </div>
     )
   }
@@ -156,7 +156,7 @@ export function IncentivesTable({
   const maxRebate = Math.max(...incentives.map(i => i.incentive_amount_max || 0), 0)
 
   return (
-    <div id="rebates" className={`bg-white border border-gray-200 rounded-2xl overflow-hidden ${className}`}>
+    <div id="rebates" className={`bg-white border border-sand-200 rounded-2xl overflow-hidden ${className}`}>
       {/* Header */}
       <div className={`${colors.bgGradient} border-b ${colors.border} px-5 py-4`}>
         <div className="flex items-center justify-between">
@@ -165,8 +165,8 @@ export function IncentivesTable({
               <DollarSign className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-              <p className="text-xs text-gray-500">
+              <h2 className="text-lg font-display font-semibold text-sand-900">{title}</h2>
+              <p className="text-xs text-sand-500">
                 {subtitle || (locationName
                   ? `Available programs in ${locationName}`
                   : `${incentives.length} programs • Up to $${maxRebate.toLocaleString()} available`
@@ -195,7 +195,7 @@ export function IncentivesTable({
           return (
             <div
               key={programId}
-              className="bg-gray-50 rounded-xl p-4 border border-gray-100"
+              className="bg-sand-50 rounded-xl p-4 border border-sand-100"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -208,17 +208,17 @@ export function IncentivesTable({
                 </div>
               </div>
 
-              <h3 className="font-semibold text-gray-900 mb-1">{program.program_name}</h3>
+              <h3 className="font-semibold text-sand-900 mb-1">{program.program_name}</h3>
 
               {program.water_utility && (
-                <p className="text-xs text-gray-500 mb-2">{program.water_utility}</p>
+                <p className="text-xs text-sand-500 mb-2">{program.water_utility}</p>
               )}
 
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-sand-200">
                 <div>
                   {program.incentive_amount_max ? (
                     <>
-                      <span className="text-lg font-bold text-emerald-600">
+                      <span className="text-lg font-bold text-ocean-600">
                         ${program.incentive_amount_max.toLocaleString()}
                       </span>
                       <span className="text-xs text-gray-400 ml-1">
@@ -226,14 +226,14 @@ export function IncentivesTable({
                       </span>
                     </>
                   ) : (
-                    <span className="text-sm text-gray-500">Varies</span>
+                    <span className="text-sm text-sand-500">Varies</span>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
                   {hasDetails && (
                     <button
                       onClick={() => toggleProgram(programId)}
-                      className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                      className="text-xs text-sand-500 hover:text-sand-700 flex items-center gap-1"
                     >
                       {isExpanded ? 'Less' : 'More'}
                       {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
@@ -264,13 +264,13 @@ export function IncentivesTable({
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-sand-50 border-b border-sand-200">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Program</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Eligible</th>
-              <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
-              <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Action</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Program</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Type</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Eligible</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold text-sand-600 uppercase tracking-wider">Amount</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold text-sand-600 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -286,10 +286,10 @@ export function IncentivesTable({
 
               return (
                 <React.Fragment key={programId}>
-                  <tr className="hover:bg-gray-50/50">
+                  <tr className="hover:bg-sand-50/50">
                     <td className="px-4 py-4">
                       <div className="flex flex-col gap-1">
-                        <span className="font-medium text-gray-900">{program.program_name}</span>
+                        <span className="font-medium text-sand-900">{program.program_name}</span>
                         {program.deadline_info && (
                           <span className="text-xs text-amber-600 font-medium">
                             <Clock className="h-3 w-3 inline mr-1" />
@@ -297,7 +297,7 @@ export function IncentivesTable({
                           </span>
                         )}
                         {program.water_utility && (
-                          <span className="text-xs text-gray-500">{program.water_utility}</span>
+                          <span className="text-xs text-sand-500">{program.water_utility}</span>
                         )}
                       </div>
                     </td>
@@ -316,7 +316,7 @@ export function IncentivesTable({
                     <td className="px-4 py-4 text-right">
                       {program.incentive_amount_max ? (
                         <div>
-                          <span className="font-semibold text-emerald-600">
+                          <span className="font-semibold text-ocean-600">
                             ${program.incentive_amount_max.toLocaleString()}
                           </span>
                           {program.incentive_per_unit && (
@@ -334,7 +334,7 @@ export function IncentivesTable({
                         {hasDetails && (
                           <button
                             onClick={() => toggleProgram(programId)}
-                            className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                            className="text-xs text-sand-500 hover:text-sand-700 flex items-center gap-1"
                           >
                             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                           </button>
@@ -355,7 +355,7 @@ export function IncentivesTable({
                   {/* Expanded Row */}
                   {isExpanded && hasDetails && (
                     <tr>
-                      <td colSpan={5} className="px-4 py-4 bg-gray-50/50">
+                      <td colSpan={5} className="px-4 py-4 bg-sand-50/50">
                         <ProgramDetails program={program} theme={theme} />
                       </td>
                     </tr>
@@ -374,61 +374,61 @@ export function IncentivesTable({
 // PROGRAM DETAILS - Expanded view for program details
 // ============================================================================
 
-function ProgramDetails({ program, theme = 'emerald' }: { program: IncentiveProgram; theme?: PageTheme }) {
+function ProgramDetails({ program, theme = 'ocean' }: { program: IncentiveProgram; theme?: PageTheme }) {
   const colors = getThemeColors(theme)
 
   return (
-    <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
+    <div className="mt-4 pt-4 border-t border-sand-200 space-y-4">
       {program.program_description && (
-        <p className="text-sm text-gray-600">{program.program_description}</p>
+        <p className="text-sm text-sand-600">{program.program_description}</p>
       )}
 
       <div className="grid sm:grid-cols-2 gap-4">
         {program.eligibility_details && (
           <div>
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+            <h4 className="text-xs font-semibold text-sand-700 mb-1 flex items-center gap-1">
               <BadgeCheck className="h-3 w-3" /> Eligibility
             </h4>
-            <p className="text-xs text-gray-600">{program.eligibility_details}</p>
+            <p className="text-xs text-sand-600">{program.eligibility_details}</p>
           </div>
         )}
         {program.how_to_apply && (
           <div>
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+            <h4 className="text-xs font-semibold text-sand-700 mb-1 flex items-center gap-1">
               <ClipboardList className="h-3 w-3" /> How to Apply
             </h4>
-            <p className="text-xs text-gray-600">{program.how_to_apply}</p>
+            <p className="text-xs text-sand-600">{program.how_to_apply}</p>
           </div>
         )}
         {program.documentation_required && (
           <div>
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+            <h4 className="text-xs font-semibold text-sand-700 mb-1 flex items-center gap-1">
               <FileText className="h-3 w-3" /> Documentation
             </h4>
-            <p className="text-xs text-gray-600">{program.documentation_required}</p>
+            <p className="text-xs text-sand-600">{program.documentation_required}</p>
           </div>
         )}
         {program.installation_requirements && (
           <div>
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+            <h4 className="text-xs font-semibold text-sand-700 mb-1 flex items-center gap-1">
               <Wrench className="h-3 w-3" /> Installation Requirements
             </h4>
-            <p className="text-xs text-gray-600">{program.installation_requirements}</p>
+            <p className="text-xs text-sand-600">{program.installation_requirements}</p>
           </div>
         )}
         {program.processing_time && (
           <div>
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+            <h4 className="text-xs font-semibold text-sand-700 mb-1 flex items-center gap-1">
               <Timer className="h-3 w-3" /> Processing Time
             </h4>
-            <p className="text-xs text-gray-600">{program.processing_time}</p>
+            <p className="text-xs text-sand-600">{program.processing_time}</p>
           </div>
         )}
       </div>
 
       {(program.contact_email || program.contact_phone) && (
-        <div className="pt-2 border-t border-gray-200">
-          <p className="text-xs text-gray-500">
+        <div className="pt-2 border-t border-sand-200">
+          <p className="text-xs text-sand-500">
             Contact: {program.contact_email && <a href={`mailto:${program.contact_email}`} className={`${colors.text} hover:underline`}>{program.contact_email}</a>}
             {program.contact_email && program.contact_phone && ' • '}
             {program.contact_phone && <a href={`tel:${program.contact_phone}`} className={`${colors.text} hover:underline`}>{program.contact_phone}</a>}

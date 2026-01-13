@@ -18,11 +18,11 @@ interface StatusCardProps {
 export function StatusCard({ icon: Icon, label, value, subValue, status = 'neutral' }: StatusCardProps) {
   const statusStyles = {
     success: {
-      bg: 'bg-emerald-50',
-      border: 'border-emerald-200',
-      icon: 'text-emerald-600',
-      value: 'text-emerald-700',
-      subValue: 'text-emerald-600'
+      bg: 'bg-ocean-50',
+      border: 'border-ocean-200',
+      icon: 'text-ocean-600',
+      value: 'text-ocean-700',
+      subValue: 'text-ocean-600'
     },
     warning: {
       bg: 'bg-amber-50',
@@ -39,11 +39,11 @@ export function StatusCard({ icon: Icon, label, value, subValue, status = 'neutr
       subValue: 'text-red-600'
     },
     neutral: {
-      bg: 'bg-gray-50',
-      border: 'border-gray-200',
-      icon: 'text-gray-500',
-      value: 'text-gray-700',
-      subValue: 'text-gray-600'
+      bg: 'bg-sand-50',
+      border: 'border-sand-200',
+      icon: 'text-sand-500',
+      value: 'text-sand-700',
+      subValue: 'text-sand-600'
     }
   }
 
@@ -53,7 +53,7 @@ export function StatusCard({ icon: Icon, label, value, subValue, status = 'neutr
     <div className={`rounded-xl p-4 border ${styles.bg} ${styles.border}`}>
       <div className="flex items-center gap-2 mb-1">
         <Icon className={`h-4 w-4 ${styles.icon}`} />
-        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">{label}</span>
+        <span className="text-xs font-medium text-sand-500 uppercase tracking-wide">{label}</span>
       </div>
       <p className={`font-bold ${styles.value}`}>{value}</p>
       {subValue && (
@@ -144,7 +144,7 @@ interface SingleStatusProps {
   icon: LucideIcon
   label: string
   status: string
-  theme?: 'emerald' | 'cyan'
+  theme?: 'ocean' | 'terra'
   details?: Array<{
     label: string
     value: string
@@ -152,21 +152,21 @@ interface SingleStatusProps {
   }>
 }
 
-export function SingleStatusCard({ icon: Icon, label, status, theme = 'emerald', details }: SingleStatusProps) {
+export function SingleStatusCard({ icon: Icon, label, status, theme = 'ocean', details }: SingleStatusProps) {
   const themeStyles = {
-    emerald: {
-      bg: 'bg-emerald-50',
-      border: 'border-emerald-200',
-      icon: 'bg-emerald-600 text-white',
-      statusBg: 'bg-emerald-100',
-      statusText: 'text-emerald-700'
+    ocean: {
+      bg: 'bg-ocean-50',
+      border: 'border-ocean-200',
+      icon: 'bg-ocean-600 text-white',
+      statusBg: 'bg-ocean-100',
+      statusText: 'text-ocean-700'
     },
-    cyan: {
-      bg: 'bg-cyan-50',
-      border: 'border-cyan-200',
-      icon: 'bg-cyan-600 text-white',
-      statusBg: 'bg-cyan-100',
-      statusText: 'text-cyan-700'
+    terra: {
+      bg: 'bg-terra-50',
+      border: 'border-terra-200',
+      icon: 'bg-terra-600 text-white',
+      statusBg: 'bg-terra-100',
+      statusText: 'text-terra-700'
     }
   }
 
@@ -180,8 +180,8 @@ export function SingleStatusCard({ icon: Icon, label, status, theme = 'emerald',
           <Icon className="h-5 w-5" />
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-500">{label}</p>
-          <p className={`text-lg font-bold ${isLegal ? styles.statusText : 'text-gray-700'}`}>
+          <p className="text-sm font-medium text-sand-500">{label}</p>
+          <p className={`text-lg font-bold ${isLegal ? styles.statusText : 'text-sand-700'}`}>
             {status}
           </p>
         </div>
@@ -190,8 +190,8 @@ export function SingleStatusCard({ icon: Icon, label, status, theme = 'emerald',
         <div className="grid grid-cols-2 gap-3">
           {details.map((detail, idx) => (
             <div key={idx} className="bg-white/60 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">{detail.label}</p>
-              <p className={`text-sm font-semibold ${detail.positive ? styles.statusText : 'text-gray-700'}`}>
+              <p className="text-xs text-sand-500 mb-1">{detail.label}</p>
+              <p className={`text-sm font-semibold ${detail.positive ? styles.statusText : 'text-sand-700'}`}>
                 {detail.value}
               </p>
             </div>

@@ -292,28 +292,28 @@ export default function LocationHubView({
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">
-          <Link href="/" className="text-gray-500 hover:text-emerald-600">Home</Link>
+          <Link href="/" className="text-sand-500 hover:text-ocean-600">Home</Link>
           {level === 'city' && (
             <>
-              <ChevronRight className="h-3 w-3 text-gray-300" />
-              <Link href={`/${stateCode.toLowerCase()}`} className="text-gray-500 hover:text-emerald-600">
+              <ChevronRight className="h-3 w-3 text-sand-300" />
+              <Link href={`/${stateCode.toLowerCase()}`} className="text-sand-500 hover:text-ocean-600">
                 {stateName}
               </Link>
             </>
           )}
-          <ChevronRight className="h-3 w-3 text-gray-300" />
-          <span className="text-gray-900 font-medium">{locationName}</span>
+          <ChevronRight className="h-3 w-3 text-sand-300" />
+          <span className="text-sand-900 font-medium">{locationName}</span>
         </nav>
 
         {/* Hero Header - Streamlined */}
         <div className="mb-6">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl lg:text-3xl font-bold text-sand-900 mb-2">
             {level === 'city'
               ? `${cityName}, ${stateCode} Water Conservation`
               : `${stateName} Water Regulations`
             }
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-sand-500 text-sm">
             {level === 'city'
               ? `Greywater & rainwater laws, permits, and rebates`
               : `State greywater laws, rainwater harvesting, and water conservation programs`
@@ -325,23 +325,23 @@ export default function LocationHubView({
         {/* Quick Summary Cards - Greywater and Rainwater */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
           {/* Greywater Summary Card */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-50 to-green-50 px-5 py-4 border-b border-emerald-100">
+          <div className="bg-white rounded-xl border border-sand-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-ocean-50 to-green-50 px-5 py-4 border-b border-ocean-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-ocean-600 rounded-xl flex items-center justify-center">
                     <Droplets className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="font-bold text-gray-900">Greywater Regulations</h2>
-                    <p className="text-sm text-gray-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
+                    <h2 className="font-bold text-sand-900">Greywater Regulations</h2>
+                    <p className="text-sm text-sand-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
                   </div>
                 </div>
                 {greywater?.legalStatus && (
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    greywater.legalStatus === 'Legal' ? 'bg-emerald-100 text-emerald-700' :
+                    greywater.legalStatus === 'Legal' ? 'bg-ocean-100 text-ocean-700' :
                     greywater.legalStatus === 'Regulated' ? 'bg-amber-100 text-amber-700' :
-                    'bg-gray-100 text-gray-700'
+                    'bg-sand-100 text-sand-700'
                   }`}>
                     {greywater.legalStatus}
                   </span>
@@ -352,20 +352,20 @@ export default function LocationHubView({
               {/* Key Stats Row */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 {greywater?.permitThresholdGpd ? (
-                  <div className="bg-emerald-50 rounded-lg p-3">
-                    <p className="text-xs text-emerald-600 font-medium uppercase tracking-wide">Permit-Free Under</p>
-                    <p className="text-2xl font-bold text-emerald-700">{greywater.permitThresholdGpd} <span className="text-sm font-medium">GPD</span></p>
+                  <div className="bg-ocean-50 rounded-lg p-3">
+                    <p className="text-xs text-ocean-600 font-medium uppercase tracking-wide">Permit-Free Under</p>
+                    <p className="text-2xl font-bold text-ocean-700">{greywater.permitThresholdGpd} <span className="text-sm font-medium">GPD</span></p>
                   </div>
                 ) : greywater?.permitRequired && (
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Permit</p>
-                    <p className="text-lg font-bold text-gray-900">{greywater.permitRequired}</p>
+                  <div className="bg-sand-50 rounded-lg p-3">
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide">Permit</p>
+                    <p className="text-lg font-bold text-sand-900">{greywater.permitRequired}</p>
                   </div>
                 )}
                 {(permitData?.diyAllowed !== undefined || greywater?.diyAllowed !== undefined) && (
-                  <div className={`rounded-lg p-3 ${(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'bg-emerald-50' : 'bg-amber-50'}`}>
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">DIY Installation</p>
-                    <p className={`text-lg font-bold ${(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'text-emerald-700' : 'text-amber-700'}`}>
+                  <div className={`rounded-lg p-3 ${(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'bg-ocean-50' : 'bg-amber-50'}`}>
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide">DIY Installation</p>
+                    <p className={`text-lg font-bold ${(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'text-ocean-700' : 'text-amber-700'}`}>
                       {(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'Allowed' : 'Professional Required'}
                     </p>
                   </div>
@@ -378,25 +378,25 @@ export default function LocationHubView({
                 permitData?.surgeTankAllowed !== undefined ||
                 greywater?.laundryToLandscapeAllowed !== undefined) && (
                 <div className="mb-4">
-                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Allowed System Types</p>
+                  <p className="text-xs text-sand-500 font-medium uppercase tracking-wide mb-2">Allowed System Types</p>
                   <div className="flex flex-wrap gap-2">
                     {(permitData?.laundryToLandscapeAllowed ?? greywater?.laundryToLandscapeAllowed) && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                         ✓ Laundry-to-Landscape
                       </span>
                     )}
                     {(permitData?.branchedDrainAllowed ?? greywater?.branchedDrainAllowed) && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                         ✓ Branched Drain
                       </span>
                     )}
                     {(permitData?.surgeTankAllowed ?? greywater?.surgeTankAllowed) && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                         ✓ Surge Tank
                       </span>
                     )}
                     {(permitData?.indoorReuseAllowed ?? greywater?.indoorReuseAllowed) && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                         ✓ Indoor Reuse
                       </span>
                     )}
@@ -418,10 +418,10 @@ export default function LocationHubView({
               {/* Key Rules */}
               {greywater?.keyRestrictions && greywater.keyRestrictions.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Key Rules</p>
+                  <p className="text-xs text-sand-500 font-medium uppercase tracking-wide mb-2">Key Rules</p>
                   <ul className="space-y-1">
                     {greywater.keyRestrictions.slice(0, 3).map((rule, idx) => (
-                      <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                      <li key={idx} className="text-sm text-sand-600 flex items-start gap-2">
                         <span className="text-amber-500 mt-0.5">•</span>
                         <span className="line-clamp-1">{rule}</span>
                       </li>
@@ -432,13 +432,13 @@ export default function LocationHubView({
 
               {/* Summary */}
               {greywater?.summary && (
-                <p className="text-sm text-gray-600 line-clamp-2 mb-4">{greywater.summary}</p>
+                <p className="text-sm text-sand-600 line-clamp-2 mb-4">{greywater.summary}</p>
               )}
 
               {/* CTA Link */}
               <Link
                 href={`${basePath}/greywater`}
-                className="group/link flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium text-sm"
+                className="group/link flex items-center gap-2 text-ocean-600 hover:text-ocean-700 font-medium text-sm"
               >
                 View Full Greywater Guide
                 <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
@@ -448,23 +448,23 @@ export default function LocationHubView({
 
           {/* Rainwater Summary Card */}
           {rainwater && (
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-cyan-50 to-blue-50 px-5 py-4 border-b border-cyan-100">
+            <div className="bg-white rounded-xl border border-sand-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-ocean-50 to-blue-50 px-5 py-4 border-b border-ocean-100">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-ocean-600 rounded-xl flex items-center justify-center">
                       <CloudRain className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="font-bold text-gray-900">Rainwater Harvesting</h2>
-                      <p className="text-sm text-gray-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
+                      <h2 className="font-bold text-sand-900">Rainwater Harvesting</h2>
+                      <p className="text-sm text-sand-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
                     </div>
                   </div>
                   {rainwater?.legalStatus && (
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      rainwater.legalStatus === 'Legal' ? 'bg-cyan-100 text-cyan-700' :
+                      rainwater.legalStatus === 'Legal' ? 'bg-ocean-100 text-ocean-700' :
                       rainwater.legalStatus === 'Regulated' ? 'bg-amber-100 text-amber-700' :
-                      'bg-gray-100 text-gray-700'
+                      'bg-sand-100 text-sand-700'
                     }`}>
                       {rainwater.legalStatus}
                     </span>
@@ -474,16 +474,16 @@ export default function LocationHubView({
               <div className="p-5">
                 {/* Key Stats Row */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="bg-cyan-50 rounded-lg p-3">
-                    <p className="text-xs text-cyan-600 font-medium uppercase tracking-wide">Collection Limit</p>
-                    <p className="text-2xl font-bold text-cyan-700">
+                  <div className="bg-ocean-50 rounded-lg p-3">
+                    <p className="text-xs text-ocean-600 font-medium uppercase tracking-wide">Collection Limit</p>
+                    <p className="text-2xl font-bold text-ocean-700">
                       {rainwater?.collectionLimitGallons ? `${rainwater.collectionLimitGallons.toLocaleString()}` : 'No Limit'}
                       {rainwater?.collectionLimitGallons && <span className="text-sm font-medium ml-1">gal</span>}
                     </p>
                   </div>
-                  <div className={`rounded-lg p-3 ${rainwater?.permitRequired === 'No' || !rainwater?.permitRequired ? 'bg-cyan-50' : 'bg-gray-50'}`}>
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Permit Required</p>
-                    <p className={`text-lg font-bold ${rainwater?.permitRequired === 'No' || !rainwater?.permitRequired ? 'text-cyan-700' : 'text-gray-900'}`}>
+                  <div className={`rounded-lg p-3 ${rainwater?.permitRequired === 'No' || !rainwater?.permitRequired ? 'bg-ocean-50' : 'bg-sand-50'}`}>
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide">Permit Required</p>
+                    <p className={`text-lg font-bold ${rainwater?.permitRequired === 'No' || !rainwater?.permitRequired ? 'text-ocean-700' : 'text-sand-900'}`}>
                       {rainwater?.permitRequired || 'No'}
                     </p>
                   </div>
@@ -494,20 +494,20 @@ export default function LocationHubView({
                   rainwater?.cisternAllowed !== undefined ||
                   rainwater?.undergroundAllowed !== undefined) && (
                   <div className="mb-4">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Collection Methods</p>
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide mb-2">Collection Methods</p>
                     <div className="flex flex-wrap gap-2">
                       {rainwater?.rainBarrelAllowed && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                           Rain Barrels
                         </span>
                       )}
                       {rainwater?.cisternAllowed && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                           Cisterns
                         </span>
                       )}
                       {rainwater?.undergroundAllowed && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                           Underground Storage
                         </span>
                       )}
@@ -520,15 +520,15 @@ export default function LocationHubView({
                   rainwater?.indoorUseAllowed !== undefined ||
                   rainwater?.potableUseAllowed !== undefined) && (
                   <div className="mb-4">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Permitted Uses</p>
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide mb-2">Permitted Uses</p>
                     <div className="flex flex-wrap gap-2">
                       {rainwater?.outdoorUseAllowed && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                           Outdoor Irrigation
                         </span>
                       )}
                       {rainwater?.indoorUseAllowed && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-ocean-100 text-ocean-700 text-xs font-medium rounded">
                           Indoor Non-Potable
                         </span>
                       )}
@@ -538,7 +538,7 @@ export default function LocationHubView({
                         </span>
                       )}
                       {rainwater?.potableUseAllowed === false && !rainwater?.indoorUseAllowed && !rainwater?.outdoorUseAllowed && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-sand-100 text-sand-600 text-xs font-medium rounded">
                           Non-Potable Only
                         </span>
                       )}
@@ -550,10 +550,10 @@ export default function LocationHubView({
                 {rainwater?.approvedUses && rainwater.approvedUses.length > 0 &&
                   (rainwater?.outdoorUseAllowed === undefined && rainwater?.indoorUseAllowed === undefined) && (
                   <div className="mb-4">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Approved Uses</p>
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide mb-2">Approved Uses</p>
                     <div className="flex flex-wrap gap-2">
                       {rainwater.approvedUses.slice(0, 4).map((use, idx) => (
-                        <span key={idx} className="inline-flex items-center px-2 py-1 bg-cyan-50 text-cyan-700 text-xs rounded">
+                        <span key={idx} className="inline-flex items-center px-2 py-1 bg-ocean-50 text-ocean-700 text-xs rounded">
                           {use}
                         </span>
                       ))}
@@ -583,10 +583,10 @@ export default function LocationHubView({
                 {/* Key Restrictions / Requirements */}
                 {rainwater?.keyRestrictions && rainwater.keyRestrictions.length > 0 && (
                   <div className="mb-4">
-                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Key Requirements</p>
+                    <p className="text-xs text-sand-500 font-medium uppercase tracking-wide mb-2">Key Requirements</p>
                     <ul className="space-y-1">
                       {rainwater.keyRestrictions.slice(0, 3).map((rule, idx) => (
-                        <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                        <li key={idx} className="text-sm text-sand-600 flex items-start gap-2">
                           <span className="text-amber-500 mt-0.5">*</span>
                           <span className="line-clamp-1">{rule}</span>
                         </li>
@@ -597,13 +597,13 @@ export default function LocationHubView({
 
                 {/* Summary */}
                 {rainwater?.summary && (
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-4">{rainwater.summary}</p>
+                  <p className="text-sm text-sand-600 line-clamp-2 mb-4">{rainwater.summary}</p>
                 )}
 
                 {/* CTA Link */}
                 <Link
                   href={`${basePath}/rainwater`}
-                  className="group/link flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm"
+                  className="group/link flex items-center gap-2 text-ocean-600 hover:text-ocean-700 font-medium text-sm"
                 >
                   View Full Rainwater Guide
                   <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
@@ -618,7 +618,7 @@ export default function LocationHubView({
         {relevantIncentives.length > 0 && (
           <IncentivesTable
             incentives={relevantIncentives as unknown as SharedIncentiveProgram[]}
-            theme="emerald"
+            theme="ocean"
             title="Available Rebates & Incentives"
             subtitle={level === 'city'
               ? `Programs available to ${locationName} residents from state, ${countyName ? 'county, ' : ''}and city governments`
@@ -633,29 +633,29 @@ export default function LocationHubView({
 
         {/* Water Utilities */}
         {waterUtilities && waterUtilities.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+          <div className="bg-white rounded-xl border border-sand-200 p-6 mb-8">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Droplet className="h-6 w-6 text-cyan-600" />
+              <div className="w-12 h-12 bg-ocean-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Droplet className="h-6 w-6 text-ocean-600" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">Water Utility</h3>
+                <h3 className="font-semibold text-sand-900 mb-1">Water Utility</h3>
                 <div className="space-y-3">
                   {waterUtilities.map((utility, idx) => (
-                    <div key={idx} className={idx > 0 ? 'pt-3 border-t border-gray-100' : ''}>
-                      <p className="text-gray-700 font-medium">{utility.name}</p>
+                    <div key={idx} className={idx > 0 ? 'pt-3 border-t border-sand-100' : ''}>
+                      <p className="text-sand-700 font-medium">{utility.name}</p>
                       {utility.serviceType && utility.serviceType !== 'primary' && (
-                        <span className="text-xs text-gray-500">(partial service area)</span>
+                        <span className="text-xs text-sand-500">(partial service area)</span>
                       )}
                       <div className="flex flex-wrap gap-4 mt-1">
                         {utility.phone && (
-                          <a href={`tel:${utility.phone}`} className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-700">
+                          <a href={`tel:${utility.phone}`} className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700">
                             <Phone className="h-4 w-4" />
                             {utility.phone}
                           </a>
                         )}
                         {utility.website && (
-                          <a href={utility.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-700">
+                          <a href={utility.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700">
                             <ExternalLink className="h-4 w-4" />
                             Website
                           </a>
@@ -671,23 +671,23 @@ export default function LocationHubView({
 
         {/* Agency Contact */}
         {agency?.name && (
-          <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+          <div className="bg-white rounded-xl border border-sand-200 p-6 mb-8">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Building2 className="h-6 w-6 text-gray-600" />
+              <div className="w-12 h-12 bg-sand-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Building2 className="h-6 w-6 text-sand-600" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">Regulatory Agency</h3>
-                <p className="text-gray-600 mb-3">{agency.name}</p>
+                <h3 className="font-semibold text-sand-900 mb-1">Regulatory Agency</h3>
+                <p className="text-sand-600 mb-3">{agency.name}</p>
                 <div className="flex flex-wrap gap-4">
                   {agency.phone && (
-                    <a href={`tel:${agency.phone}`} className="inline-flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700">
+                    <a href={`tel:${agency.phone}`} className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700">
                       <Phone className="h-4 w-4" />
                       {agency.phone}
                     </a>
                   )}
                   {agency.website && (
-                    <a href={agency.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700">
+                    <a href={agency.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700">
                       <ExternalLink className="h-4 w-4" />
                       Official Website
                     </a>
@@ -700,14 +700,14 @@ export default function LocationHubView({
 
         {/* Cities Browser (for state-level pages) */}
         {level === 'state' && cities.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-white rounded-2xl border border-sand-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-sand-200">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Browse by City</h2>
-                  <p className="text-sm text-gray-500 mt-1">Find regulations specific to your city</p>
+                  <h2 className="text-xl font-semibold text-sand-900">Browse by City</h2>
+                  <p className="text-sm text-sand-500 mt-1">Find regulations specific to your city</p>
                 </div>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-sand-500">
                   {filteredCities.length} {filteredCities.length === 1 ? 'city' : 'cities'}
                   {selectedCounty && ` in ${selectedCounty} County`}
                 </span>
@@ -721,8 +721,8 @@ export default function LocationHubView({
                       onClick={() => setSelectedCounty(null)}
                       className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
                         !selectedCounty
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          ? 'bg-ocean-600 text-white'
+                          : 'bg-sand-100 text-sand-600 hover:bg-sand-200'
                       }`}
                     >
                       All Counties
@@ -733,8 +733,8 @@ export default function LocationHubView({
                         onClick={() => setSelectedCounty(county === selectedCounty ? null : county)}
                         className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
                           selectedCounty === county
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-ocean-600 text-white'
+                            : 'bg-sand-100 text-sand-600 hover:bg-sand-200'
                         }`}
                       >
                         {county}
@@ -745,13 +745,13 @@ export default function LocationHubView({
               )}
 
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sand-400" />
                 <input
                   type="text"
                   placeholder="Search cities..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-colors text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 border border-sand-200 rounded-lg bg-white focus:outline-none focus:border-ocean-400 focus:ring-1 focus:ring-ocean-400 transition-colors text-sm"
                 />
               </div>
             </div>
@@ -760,14 +760,14 @@ export default function LocationHubView({
                 {(showAllCities || searchTerm || selectedCounty ? filteredCities : filteredCities.slice(0, INITIAL_CITIES)).map((city, idx) => (
                   <div
                     key={`${city.city_name}-${idx}`}
-                    className="p-3 bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-300 rounded-lg transition-colors group"
+                    className="p-3 bg-sand-50 hover:bg-ocean-50 border border-sand-200 hover:border-ocean-300 rounded-lg transition-colors group"
                   >
                     <Link
                       href={`/${stateCode.toLowerCase()}/${city.city_name?.toLowerCase().replace(/\s+/g, '-')}`}
                       className="flex items-center justify-between"
                     >
-                      <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
-                      <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-emerald-500" />
+                      <p className="font-medium text-sand-900 group-hover:text-ocean-700">{city.city_name}</p>
+                      <ChevronRight className="h-4 w-4 text-sand-300 group-hover:text-ocean-500" />
                     </Link>
                     {city.county_name && (
                       <button
@@ -775,7 +775,7 @@ export default function LocationHubView({
                           e.stopPropagation()
                           setSelectedCounty(city.county_name === selectedCounty ? null : city.county_name!)
                         }}
-                        className="text-xs text-gray-400 hover:text-emerald-600 hover:underline mt-0.5"
+                        className="text-xs text-sand-400 hover:text-ocean-600 hover:underline mt-0.5"
                       >
                         {city.county_name} County
                       </button>
@@ -786,13 +786,13 @@ export default function LocationHubView({
               {!showAllCities && !searchTerm && !selectedCounty && filteredCities.length > INITIAL_CITIES && (
                 <button
                   onClick={() => setShowAllCities(true)}
-                  className="w-full mt-4 py-3 text-center text-emerald-600 hover:text-emerald-700 text-sm font-medium border border-gray-200 rounded-lg hover:border-emerald-300 transition-colors"
+                  className="w-full mt-4 py-3 text-center text-ocean-600 hover:text-ocean-700 text-sm font-medium border border-sand-200 rounded-lg hover:border-ocean-300 transition-colors"
                 >
                   Show all {filteredCities.length} cities
                 </button>
               )}
               {filteredCities.length === 0 && (searchTerm || selectedCounty) && (
-                <p className="text-center text-gray-400 py-8 text-sm">
+                <p className="text-center text-sand-400 py-8 text-sm">
                   No cities found{searchTerm && ` matching "${searchTerm}"`}{selectedCounty && ` in ${selectedCounty} County`}
                 </p>
               )}
@@ -801,18 +801,18 @@ export default function LocationHubView({
         )}
 
         {/* CTA Section */}
-        <div className="mt-8 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-center">
+        <div className="mt-8 bg-gradient-to-br from-sand-900 to-sand-800 rounded-2xl p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-3">
             Ready to Start Your Water Conservation Project?
           </h3>
-          <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+          <p className="text-sand-300 mb-6 max-w-2xl mx-auto">
             Our greywater systems can help you save thousands of gallons of water per year.
             {maxRebate > 0 && ` Plus, you may qualify for up to $${maxRebate.toLocaleString()} in rebates.`}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-400 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-ocean-500 text-white font-medium rounded-lg hover:bg-ocean-400 transition-colors"
             >
               Browse Systems
               <ArrowRight className="h-4 w-4" />

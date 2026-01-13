@@ -78,17 +78,17 @@ export default function PermitSection({
   const themeColors = isRainwater ? {
     primary: 'cyan',
     headerBg: 'bg-gradient-to-r from-cyan-50 to-blue-50',
-    headerBorder: 'border-cyan-100',
-    iconBg: 'bg-cyan-600',
-    accent: 'bg-cyan-50 border-cyan-100 text-cyan-700',
-    button: 'bg-cyan-600 hover:bg-cyan-700'
+    headerBorder: 'border-ocean-100',
+    iconBg: 'bg-ocean-600',
+    accent: 'bg-ocean-50 border-ocean-100 text-ocean-700',
+    button: 'bg-ocean-600 hover:bg-ocean-700'
   } : {
     primary: 'emerald',
     headerBg: 'bg-gradient-to-r from-emerald-50 to-green-50',
-    headerBorder: 'border-emerald-100',
-    iconBg: 'bg-emerald-600',
-    accent: 'bg-emerald-50 border-emerald-100 text-emerald-700',
-    button: 'bg-emerald-600 hover:bg-emerald-700'
+    headerBorder: 'border-ocean-100',
+    iconBg: 'bg-ocean-600',
+    accent: 'bg-ocean-50 border-ocean-100 text-ocean-700',
+    button: 'bg-ocean-600 hover:bg-ocean-700'
   }
 
   const data = permitData || (stateBaseline ? {
@@ -111,19 +111,19 @@ export default function PermitSection({
     if (isRainwater) {
       const permitReq = typeof data.permitRequired === 'string' ? data.permitRequired.toLowerCase() : ''
       if (permitReq === 'no' || data.permitRequired === false) {
-        return { text: 'No Permit Required', color: 'text-cyan-700', bg: 'bg-cyan-100' }
+        return { text: 'No Permit Required', color: 'text-ocean-700', bg: 'bg-cyan-100' }
       }
       if (permitReq === 'conditional' || permitReq === 'tiered') {
         return { text: permitReq.charAt(0).toUpperCase() + permitReq.slice(1), color: 'text-amber-700', bg: 'bg-amber-100' }
       }
-      return { text: 'Check Requirements', color: 'text-gray-700', bg: 'bg-gray-100' }
+      return { text: 'Check Requirements', color: 'text-sand-700', bg: 'bg-sand-100' }
     }
 
     if (data.thresholdGpd) {
-      return { text: `Under ${data.thresholdGpd} GPD: No Permit`, color: 'text-emerald-700', bg: 'bg-emerald-100' }
+      return { text: `Under ${data.thresholdGpd} GPD: No Permit`, color: 'text-ocean-700', bg: 'bg-ocean-100' }
     }
     if (data.permitRequired === false) {
-      return { text: 'No Permit Required', color: 'text-emerald-700', bg: 'bg-emerald-100' }
+      return { text: 'No Permit Required', color: 'text-ocean-700', bg: 'bg-ocean-100' }
     }
     return { text: 'Permit Required', color: 'text-amber-700', bg: 'bg-amber-100' }
   }
@@ -131,7 +131,7 @@ export default function PermitSection({
   const permitStatus = getPermitStatus()
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-2xl border border-sand-200 overflow-hidden">
       {/* Header */}
       <div className={`${themeColors.headerBg} px-6 py-4 border-b ${themeColors.headerBorder}`}>
         <div className="flex items-center justify-between">
@@ -140,10 +140,10 @@ export default function PermitSection({
               <Icon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-sand-900">
                 {isRainwater ? 'Permit Requirements' : 'Permit Requirements'}
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-sand-600">
                 {level === 'state' ? displayLocation : `${displayLocation}, ${stateCode}`}
               </p>
             </div>
@@ -159,17 +159,17 @@ export default function PermitSection({
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Threshold / Collection Limit */}
           {!isRainwater && data.thresholdGpd && (
-            <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-              <p className="text-xs text-emerald-600 uppercase tracking-wide mb-1 font-medium">Permit-Free Threshold</p>
-              <p className="text-2xl font-bold text-emerald-700">{data.thresholdGpd} GPD</p>
+            <div className="bg-ocean-50 rounded-xl p-4 border border-ocean-100">
+              <p className="text-xs text-ocean-600 uppercase tracking-wide mb-1 font-medium">Permit-Free Threshold</p>
+              <p className="text-2xl font-bold text-ocean-700">{data.thresholdGpd} GPD</p>
             </div>
           )}
           {isRainwater && (
-            <div className={`rounded-xl p-4 border ${data.collectionLimitGallons ? 'bg-amber-50 border-amber-100' : 'bg-cyan-50 border-cyan-100'}`}>
-              <p className={`text-xs uppercase tracking-wide mb-1 font-medium ${data.collectionLimitGallons ? 'text-amber-600' : 'text-cyan-600'}`}>
+            <div className={`rounded-xl p-4 border ${data.collectionLimitGallons ? 'bg-amber-50 border-amber-100' : 'bg-ocean-50 border-ocean-100'}`}>
+              <p className={`text-xs uppercase tracking-wide mb-1 font-medium ${data.collectionLimitGallons ? 'text-amber-600' : 'text-ocean-600'}`}>
                 Collection Limit
               </p>
-              <p className={`text-2xl font-bold ${data.collectionLimitGallons ? 'text-amber-700' : 'text-cyan-700'}`}>
+              <p className={`text-2xl font-bold ${data.collectionLimitGallons ? 'text-amber-700' : 'text-ocean-700'}`}>
                 {data.collectionLimitGallons ? `${data.collectionLimitGallons.toLocaleString()} gal` : 'Unlimited'}
               </p>
             </div>
@@ -177,9 +177,9 @@ export default function PermitSection({
 
           {/* Fees */}
           {(data.typicalFees || data.feeMin !== undefined || data.feeMax !== undefined) && (
-            <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 font-medium">Typical Fees</p>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="bg-sand-50 rounded-xl p-4 border border-sand-100">
+              <p className="text-xs text-sand-500 uppercase tracking-wide mb-1 font-medium">Typical Fees</p>
+              <p className="text-2xl font-bold text-sand-900">
                 {data.typicalFees || (data.feeMin === 0 && data.feeMax === 0 ? 'Free' : `$${data.feeMin || 0}-$${data.feeMax || 0}`)}
               </p>
             </div>
@@ -187,9 +187,9 @@ export default function PermitSection({
 
           {/* Processing Time */}
           {data.processingDays && (
-            <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 font-medium">Processing</p>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="bg-sand-50 rounded-xl p-4 border border-sand-100">
+              <p className="text-xs text-sand-500 uppercase tracking-wide mb-1 font-medium">Processing</p>
+              <p className="text-2xl font-bold text-sand-900">
                 {typeof data.processingDays === 'number' ? `${data.processingDays} days` : data.processingDays}
               </p>
             </div>
@@ -197,11 +197,11 @@ export default function PermitSection({
 
           {/* DIY Status */}
           {data.diyAllowed !== undefined && (
-            <div className={`rounded-xl p-4 border ${data.diyAllowed ? 'bg-emerald-50 border-emerald-100' : 'bg-amber-50 border-amber-100'}`}>
-              <p className={`text-xs uppercase tracking-wide mb-1 font-medium ${data.diyAllowed ? 'text-emerald-600' : 'text-amber-600'}`}>
+            <div className={`rounded-xl p-4 border ${data.diyAllowed ? 'bg-ocean-50 border-ocean-100' : 'bg-amber-50 border-amber-100'}`}>
+              <p className={`text-xs uppercase tracking-wide mb-1 font-medium ${data.diyAllowed ? 'text-ocean-600' : 'text-amber-600'}`}>
                 DIY Installation
               </p>
-              <p className={`text-2xl font-bold ${data.diyAllowed ? 'text-emerald-700' : 'text-amber-700'}`}>
+              <p className={`text-2xl font-bold ${data.diyAllowed ? 'text-ocean-700' : 'text-amber-700'}`}>
                 {data.diyAllowed ? 'Allowed' : 'Pro Required'}
               </p>
             </div>
@@ -210,14 +210,14 @@ export default function PermitSection({
 
         {/* Exemptions */}
         {data.exemptions && data.exemptions.length > 0 && (
-          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-200 mb-6">
-            <h3 className="flex items-center gap-2 text-emerald-800 font-semibold mb-3">
+          <div className="bg-ocean-50 rounded-xl p-4 border border-ocean-200 mb-6">
+            <h3 className="flex items-center gap-2 text-ocean-800 font-semibold mb-3">
               <Check className="h-5 w-5" />
               When You DON'T Need a Permit
             </h3>
             <ul className="space-y-2">
               {data.exemptions.map((exemption, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-emerald-700 text-sm">
+                <li key={idx} className="flex items-start gap-2 text-ocean-700 text-sm">
                   <Check className="h-4 w-4 flex-shrink-0 mt-0.5" />
                   {exemption}
                 </li>
@@ -233,27 +233,27 @@ export default function PermitSection({
             {/* Allowed System Types - Greywater */}
             {!isRainwater && (data.laundryToLandscapeAllowed || data.branchedDrainAllowed || data.surgeTankAllowed || data.indoorReuseAllowed) && (
               <div>
-                <h3 className="flex items-center gap-2 text-gray-900 font-semibold mb-3">
-                  <Wrench className="h-4 w-4 text-emerald-600" />
+                <h3 className="flex items-center gap-2 text-sand-900 font-semibold mb-3">
+                  <Wrench className="h-4 w-4 text-ocean-600" />
                   Allowed System Types
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {data.laundryToLandscapeAllowed && (
-                    <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded-lg text-sm">
-                      <Check className="h-4 w-4 text-emerald-600" />
-                      <span className="text-emerald-800">Laundry-to-Landscape</span>
+                    <div className="flex items-center gap-2 p-2 bg-ocean-50 rounded-lg text-sm">
+                      <Check className="h-4 w-4 text-ocean-600" />
+                      <span className="text-ocean-800">Laundry-to-Landscape</span>
                     </div>
                   )}
                   {data.branchedDrainAllowed && (
-                    <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded-lg text-sm">
-                      <Check className="h-4 w-4 text-emerald-600" />
-                      <span className="text-emerald-800">Branched Drain</span>
+                    <div className="flex items-center gap-2 p-2 bg-ocean-50 rounded-lg text-sm">
+                      <Check className="h-4 w-4 text-ocean-600" />
+                      <span className="text-ocean-800">Branched Drain</span>
                     </div>
                   )}
                   {data.surgeTankAllowed && (
-                    <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded-lg text-sm">
-                      <Check className="h-4 w-4 text-emerald-600" />
-                      <span className="text-emerald-800">Surge Tank</span>
+                    <div className="flex items-center gap-2 p-2 bg-ocean-50 rounded-lg text-sm">
+                      <Check className="h-4 w-4 text-ocean-600" />
+                      <span className="text-ocean-800">Surge Tank</span>
                     </div>
                   )}
                   {data.indoorReuseAllowed && (
@@ -269,14 +269,14 @@ export default function PermitSection({
             {/* Required Documents */}
             {data.requiredDocuments && data.requiredDocuments.length > 0 && (
               <div>
-                <h3 className="flex items-center gap-2 text-gray-900 font-semibold mb-3">
-                  <FileText className="h-4 w-4 text-gray-600" />
+                <h3 className="flex items-center gap-2 text-sand-900 font-semibold mb-3">
+                  <FileText className="h-4 w-4 text-sand-600" />
                   Required Documents
                 </h3>
                 <ul className="space-y-1.5">
                   {data.requiredDocuments.map((doc, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                    <li key={idx} className="flex items-center gap-2 text-sm text-sand-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-sand-400" />
                       {doc}
                     </li>
                   ))}
@@ -288,8 +288,8 @@ export default function PermitSection({
           {/* Right: Installation Requirements */}
           <div className="space-y-4">
             <div>
-              <h3 className="flex items-center gap-2 text-gray-900 font-semibold mb-3">
-                <BadgeCheck className="h-4 w-4 text-gray-600" />
+              <h3 className="flex items-center gap-2 text-sand-900 font-semibold mb-3">
+                <BadgeCheck className="h-4 w-4 text-sand-600" />
                 Installation Requirements
               </h3>
               <div className="space-y-2">
@@ -298,12 +298,12 @@ export default function PermitSection({
                     {data.diyAllowed ? (
                       <>
                         <Check className="h-4 w-4 text-emerald-500" />
-                        <span className="text-gray-700">DIY installation allowed</span>
+                        <span className="text-sand-700">DIY installation allowed</span>
                       </>
                     ) : (
                       <>
                         <AlertTriangle className="h-4 w-4 text-amber-500" />
-                        <span className="text-gray-700">Professional installation required</span>
+                        <span className="text-sand-700">Professional installation required</span>
                       </>
                     )}
                   </div>
@@ -311,13 +311,13 @@ export default function PermitSection({
                 {data.licensedPlumberRequired && (
                   <div className="flex items-center gap-2 text-sm">
                     <AlertTriangle className="h-4 w-4 text-amber-500" />
-                    <span className="text-gray-700">Licensed plumber required</span>
+                    <span className="text-sand-700">Licensed plumber required</span>
                   </div>
                 )}
                 {data.licensedContractorRequired && (
                   <div className="flex items-center gap-2 text-sm">
                     <AlertTriangle className="h-4 w-4 text-amber-500" />
-                    <span className="text-gray-700">Licensed contractor required</span>
+                    <span className="text-sand-700">Licensed contractor required</span>
                   </div>
                 )}
               </div>
@@ -326,11 +326,11 @@ export default function PermitSection({
             {/* Inspections */}
             {data.inspectionsRequired && data.inspectionsRequired.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Required Inspections</h4>
+                <h4 className="text-sm font-medium text-sand-700 mb-2">Required Inspections</h4>
                 <ul className="space-y-1.5">
                   {data.inspectionsRequired.map((inspection, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                    <li key={idx} className="flex items-center gap-2 text-sm text-sand-600">
+                      <div className="w-1.5 h-1.5 rounded-full bg-sand-400" />
                       {inspection}
                     </li>
                   ))}
@@ -341,28 +341,28 @@ export default function PermitSection({
         </div>
 
         {/* Contact & Apply */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-sand-200">
           {data.departmentName ? (
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Building2 className="h-4 w-4 text-gray-500" />
-                <p className="font-medium text-gray-900">{data.departmentName}</p>
+                <Building2 className="h-4 w-4 text-sand-500" />
+                <p className="font-medium text-sand-900">{data.departmentName}</p>
               </div>
               {data.departmentAddress && (
-                <p className="text-sm text-gray-600 flex items-center gap-1 ml-6">
+                <p className="text-sm text-sand-600 flex items-center gap-1 ml-6">
                   <MapPin className="h-3 w-3" />
                   {data.departmentAddress}
                 </p>
               )}
               <div className="flex flex-wrap gap-4 mt-2 ml-6">
                 {data.departmentPhone && (
-                  <a href={`tel:${data.departmentPhone}`} className={`text-sm flex items-center gap-1 ${isRainwater ? 'text-cyan-600 hover:text-cyan-700' : 'text-emerald-600 hover:text-emerald-700'}`}>
+                  <a href={`tel:${data.departmentPhone}`} className={`text-sm flex items-center gap-1 ${isRainwater ? 'text-ocean-600 hover:text-ocean-700' : 'text-ocean-600 hover:text-ocean-700'}`}>
                     <Phone className="h-3 w-3" />
                     {data.departmentPhone}
                   </a>
                 )}
                 {data.departmentHours && (
-                  <span className="text-sm text-gray-500 flex items-center gap-1">
+                  <span className="text-sm text-sand-500 flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     {data.departmentHours}
                   </span>
@@ -371,7 +371,7 @@ export default function PermitSection({
             </div>
           ) : level === 'city' ? (
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-sand-600">
                 Based on {stateName || stateCode} state regulations
               </p>
             </div>
@@ -392,7 +392,7 @@ export default function PermitSection({
 
         {/* Note for cities without detailed data */}
         {!hasDetailedData && level === 'city' && (
-          <p className="text-xs text-gray-400 mt-4 text-center">
+          <p className="text-xs text-sand-400 mt-4 text-center">
             Showing {stateName || stateCode} state requirements. Contact {locationName} building department for local specifics.
           </p>
         )}

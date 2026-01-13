@@ -83,32 +83,32 @@ export default function RainwaterSpokeView({
   const hasLimit = rainwater?.collectionLimitGallons && rainwater.collectionLimitGallons > 0
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-sand-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">
-          <Link href="/" className="text-gray-500 hover:text-cyan-600">Home</Link>
-          <ChevronRight className="h-3 w-3 text-gray-300" />
-          <Link href={`/${stateCode.toLowerCase()}`} className="text-gray-500 hover:text-cyan-600">{stateName}</Link>
+          <Link href="/" className="text-sand-500 hover:text-ocean-600">Home</Link>
+          <ChevronRight className="h-3 w-3 text-sand-300" />
+          <Link href={`/${stateCode.toLowerCase()}`} className="text-sand-500 hover:text-ocean-600">{stateName}</Link>
           {level === 'city' && cityName && (
             <>
-              <ChevronRight className="h-3 w-3 text-gray-300" />
-              <Link href={basePath} className="text-gray-500 hover:text-cyan-600">{cityName}</Link>
+              <ChevronRight className="h-3 w-3 text-sand-300" />
+              <Link href={basePath} className="text-sand-500 hover:text-ocean-600">{cityName}</Link>
             </>
           )}
-          <ChevronRight className="h-3 w-3 text-gray-300" />
-          <span className="text-gray-900 font-medium">Rainwater</span>
+          <ChevronRight className="h-3 w-3 text-sand-300" />
+          <span className="text-sand-900 font-medium">Rainwater</span>
         </nav>
 
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-ocean-600 rounded-xl flex items-center justify-center">
               <CloudRain className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{locationName} Rainwater Harvesting</h1>
-              <p className="text-gray-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
+              <h1 className="text-2xl font-bold text-sand-900">{locationName} Rainwater Harvesting</h1>
+              <p className="text-sand-600">{level === 'city' ? `${cityName}, ${stateCode}` : stateName}</p>
             </div>
           </div>
 
@@ -116,16 +116,16 @@ export default function RainwaterSpokeView({
           <div className="flex flex-wrap gap-2 mt-4">
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${
               rainwater?.legalStatus?.toLowerCase().includes('legal') || rainwater?.legalStatus?.toLowerCase() === 'unrestricted'
-                ? 'bg-cyan-100 text-cyan-700'
-                : 'bg-gray-100 text-gray-700'
+                ? 'bg-ocean-100 text-ocean-700'
+                : 'bg-sand-100 text-sand-700'
             }`}>
               {rainwater?.legalStatus || 'Legal'}
             </span>
-            <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${hasLimit ? 'bg-amber-100 text-amber-700' : 'bg-cyan-100 text-cyan-700'}`}>
+            <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${hasLimit ? 'bg-amber-100 text-amber-700' : 'bg-ocean-100 text-ocean-700'}`}>
               {hasLimit ? `Limit: ${rainwater?.collectionLimitGallons?.toLocaleString()} gal` : 'No Limit'}
             </span>
             {rainwater?.potableUseAllowed && (
-              <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700">
+              <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-ocean-100 text-ocean-700">
                 Potable Use Allowed
               </span>
             )}
@@ -133,31 +133,31 @@ export default function RainwaterSpokeView({
         </div>
 
         {/* Main Content Card */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+        <div className="bg-white rounded-2xl border border-sand-200 overflow-hidden mb-6">
           {/* Summary */}
           {rainwater?.summary && (
-            <div className="px-6 py-5 border-b border-gray-100">
-              <p className="text-gray-700 leading-relaxed">{rainwater.summary}</p>
+            <div className="px-6 py-5 border-b border-sand-100">
+              <p className="text-sand-700 leading-relaxed">{rainwater.summary}</p>
             </div>
           )}
 
           {/* Key Info Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-sand-100">
             <div className="bg-white p-4">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Collection Limit</p>
-              <p className={`text-xl font-bold ${hasLimit ? 'text-amber-700' : 'text-cyan-700'}`}>
+              <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">Collection Limit</p>
+              <p className={`text-xl font-bold ${hasLimit ? 'text-amber-700' : 'text-ocean-700'}`}>
                 {hasLimit ? `${rainwater?.collectionLimitGallons?.toLocaleString()} gal` : 'Unlimited'}
               </p>
             </div>
             <div className="bg-white p-4">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Permit Required</p>
-              <p className="text-xl font-bold text-gray-900">
+              <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">Permit Required</p>
+              <p className="text-xl font-bold text-sand-900">
                 {rainwater?.permitRequired || 'No'}
               </p>
             </div>
             <div className="bg-white p-4">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Potable Use</p>
-              <p className={`text-xl font-bold ${rainwater?.potableUseAllowed ? 'text-emerald-700' : 'text-gray-500'}`}>
+              <p className="text-xs text-sand-500 uppercase tracking-wide mb-1">Potable Use</p>
+              <p className={`text-xl font-bold ${rainwater?.potableUseAllowed ? 'text-ocean-700' : 'text-sand-500'}`}>
                 {rainwater?.potableUseAllowed ? 'Allowed' : 'Non-potable Only'}
               </p>
             </div>
@@ -169,20 +169,20 @@ export default function RainwaterSpokeView({
               rainwater?.cisternAllowed !== undefined ||
               rainwater?.undergroundAllowed !== undefined) && (
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">Allowed Storage Types</h3>
+                <h3 className="text-sm font-semibold text-sand-900 mb-2">Allowed Storage Types</h3>
                 <div className="flex flex-wrap gap-2">
                   {rainwater?.rainBarrelAllowed && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm">
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-ocean-50 text-ocean-700 rounded-lg text-sm">
                       <Check className="h-3 w-3" /> Rain Barrels
                     </span>
                   )}
                   {rainwater?.cisternAllowed && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm">
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-ocean-50 text-ocean-700 rounded-lg text-sm">
                       <Check className="h-3 w-3" /> Cisterns
                     </span>
                   )}
                   {rainwater?.undergroundAllowed && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm">
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-ocean-50 text-ocean-700 rounded-lg text-sm">
                       <Check className="h-3 w-3" /> Underground Storage
                     </span>
                   )}
@@ -206,25 +206,25 @@ export default function RainwaterSpokeView({
             {/* Two columns: Approved Uses + Restrictions */}
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
-                  <Check className="h-4 w-4 text-cyan-600" /> Approved Uses
+                <h3 className="text-sm font-semibold text-sand-900 mb-2 flex items-center gap-1.5">
+                  <Check className="h-4 w-4 text-ocean-600" /> Approved Uses
                 </h3>
                 <ul className="space-y-1">
                   {approvedUses.map((use, idx) => (
-                    <li key={idx} className="text-sm text-gray-600 flex items-center gap-2">
-                      <span className="w-1 h-1 bg-cyan-500 rounded-full" /> {use}
+                    <li key={idx} className="text-sm text-sand-600 flex items-center gap-2">
+                      <span className="w-1 h-1 bg-ocean-500 rounded-full" /> {use}
                     </li>
                   ))}
                 </ul>
               </div>
               {rainwater?.keyRestrictions && rainwater.keyRestrictions.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold text-sand-900 mb-2 flex items-center gap-1.5">
                     <AlertTriangle className="h-4 w-4 text-amber-600" /> Restrictions
                   </h3>
                   <ul className="space-y-1">
                     {rainwater.keyRestrictions.map((r, idx) => (
-                      <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                      <li key={idx} className="text-sm text-sand-600 flex items-start gap-2">
                         <span className="w-1 h-1 bg-amber-500 rounded-full mt-1.5 flex-shrink-0" /> {r}
                       </li>
                     ))}
@@ -235,15 +235,15 @@ export default function RainwaterSpokeView({
 
             {/* Governing Code */}
             {rainwater?.governingCode && (
-              <div className="mt-6 pt-4 border-t border-gray-100">
-                <p className="text-xs text-gray-500">
+              <div className="mt-6 pt-4 border-t border-sand-100">
+                <p className="text-xs text-sand-500">
                   <span className="font-medium">Governing Code:</span>{' '}
                   {rainwater.governingCodeUrl ? (
                     <a
                       href={rainwater.governingCodeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-600 hover:text-cyan-700 hover:underline inline-flex items-center gap-1"
+                      className="text-ocean-600 hover:text-ocean-700 hover:underline inline-flex items-center gap-1"
                     >
                       {rainwater.governingCode}
                       <ExternalLink className="h-3 w-3" />
@@ -258,11 +258,11 @@ export default function RainwaterSpokeView({
 
           {/* Contact Footer */}
           {agency?.name && (
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+            <div className="px-6 py-4 bg-sand-50 border-t border-sand-100 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="font-medium text-gray-900 text-sm">{agency.name}</p>
+                <p className="font-medium text-sand-900 text-sm">{agency.name}</p>
                 {agency.phone && (
-                  <a href={`tel:${agency.phone}`} className="text-sm text-cyan-600 hover:text-cyan-700 flex items-center gap-1">
+                  <a href={`tel:${agency.phone}`} className="text-sm text-ocean-600 hover:text-ocean-700 flex items-center gap-1">
                     <Phone className="h-3 w-3" /> {agency.phone}
                   </a>
                 )}
@@ -272,7 +272,7 @@ export default function RainwaterSpokeView({
                   href={agency.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 text-white text-sm font-medium rounded-lg hover:bg-cyan-700"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-ocean-600 text-white text-sm font-medium rounded-lg hover:bg-ocean-700"
                 >
                   Official Website <ExternalLink className="h-4 w-4" />
                 </a>
@@ -285,7 +285,7 @@ export default function RainwaterSpokeView({
         {rainwaterIncentives.length > 0 && (
           <IncentivesTable
             incentives={rainwaterIncentives}
-            theme="cyan"
+            theme="ocean"
             title="Rebates & Incentives"
             showJurisdictionLevel={true}
             locationName={locationName || stateName}
@@ -297,7 +297,7 @@ export default function RainwaterSpokeView({
           title="Start Harvesting Rainwater Today"
           description={`From rain barrels to cisterns, we can help you collect rainwater in ${locationName}.`}
           primaryButton={{ label: 'View Products', href: '/products' }}
-          theme="cyan"
+          theme="ocean"
         />
       </div>
     </div>

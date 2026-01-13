@@ -66,7 +66,7 @@ function getLegalStatusConfig(status: LegalStatus) {
   const configs = {
     Legal: {
       icon: CheckCircle2,
-      className: 'bg-emerald-100 text-emerald-700',
+      className: 'bg-ocean-100 text-ocean-700',
       label: 'Legal'
     },
     Regulated: {
@@ -76,7 +76,7 @@ function getLegalStatusConfig(status: LegalStatus) {
     },
     Restricted: {
       icon: AlertCircle,
-      className: 'bg-orange-100 text-orange-700',
+      className: 'bg-terra-100 text-terra-700',
       label: 'Restricted'
     },
     Prohibited: {
@@ -86,7 +86,7 @@ function getLegalStatusConfig(status: LegalStatus) {
     },
     Unknown: {
       icon: HelpCircle,
-      className: 'bg-gray-100 text-gray-600',
+      className: 'bg-sand-100 text-sand-600',
       label: 'Varies'
     }
   }
@@ -107,7 +107,7 @@ export function DataConfidenceBadge({ confidence, showTooltip = true }: DataConf
   const config = {
     verified: {
       icon: CheckCircle2,
-      className: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      className: 'bg-ocean-50 text-ocean-700 border-ocean-200',
       label: 'Verified',
       tooltip: 'Regulation data confirmed with official sources'
     },
@@ -119,7 +119,7 @@ export function DataConfidenceBadge({ confidence, showTooltip = true }: DataConf
     },
     unknown: {
       icon: HelpCircle,
-      className: 'bg-gray-100 text-gray-600 border-gray-200',
+      className: 'bg-sand-100 text-sand-600 border-sand-200',
       label: 'Not Verified',
       tooltip: 'Regulation data pending verification - contact your local building department for current rules'
     }
@@ -151,17 +151,17 @@ export function ResourceTypeBadge({ type }: ResourceTypeBadgeProps) {
     greywater: {
       icon: Droplets,
       label: 'Greywater',
-      className: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      className: 'bg-ocean-50 text-ocean-700 border-ocean-200'
     },
     rainwater: {
       icon: CloudRain,
       label: 'Rainwater',
-      className: 'bg-cyan-50 text-cyan-700 border-cyan-200'
+      className: 'bg-ocean-50 text-ocean-700 border-ocean-200'
     },
     conservation: {
       icon: Leaf,
       label: 'Conservation',
-      className: 'bg-teal-50 text-teal-700 border-teal-200'
+      className: 'bg-terra-50 text-terra-700 border-terra-200'
     }
   }
 
@@ -209,7 +209,7 @@ export function PermitBadge({ required, compact = false }: PermitBadgeProps) {
 
   if (isNotRequired) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-ocean-50 text-ocean-700 rounded border border-ocean-200">
         <CheckCircle2 className="h-3 w-3" />
         {compact ? 'No Permit' : 'No Permit Needed'}
       </span>
@@ -233,14 +233,14 @@ export function IncentiveBadge({ count, maxAmount, compact = false }: IncentiveB
   if (count === 0) return null
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-green-50 text-green-700 rounded border border-green-200">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-ocean-50 text-ocean-700 rounded border border-ocean-200">
       {compact ? (
         `${count} rebates`
       ) : (
         <>
           {count} rebate{count !== 1 ? 's' : ''}
           {maxAmount && maxAmount > 0 && (
-            <span className="text-green-600">• Up to ${maxAmount.toLocaleString()}</span>
+            <span className="text-ocean-600">• Up to ${maxAmount.toLocaleString()}</span>
           )}
         </>
       )}

@@ -108,7 +108,7 @@ export default function DirectoryView({
   initialCounty,
   initialCity,
   level,
-  basePath = '/directory',
+  basePath = '/resources',
   stateData,
   showStateDetail = false,
   initialData = []
