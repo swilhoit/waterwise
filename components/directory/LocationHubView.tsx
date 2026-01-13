@@ -422,8 +422,8 @@ const getJurisdictionUrls = (stateCode: string, stateName: string, countyName?: 
     'Rincon del Diablo MWD': 'https://rinconwater.org/departments/conservation/',
 
     // Inland Empire / Riverside / San Bernardino
-    'Eastern MWD': 'https://www.emwd.org/post/rebates',
-    'EMWD': 'https://www.emwd.org/post/rebates',
+    'Eastern MWD': 'https://www.emwd.org/',
+    'EMWD': 'https://www.emwd.org/',
     'Inland Empire Utilities': 'https://www.ieua.org/water-use-efficiency/',
     'IEUA': 'https://www.ieua.org/water-use-efficiency/',
     'Western MWD': 'https://www.wmwd.com/288/Rebates-Incentives',
@@ -439,15 +439,15 @@ const getJurisdictionUrls = (stateCode: string, stateName: string, countyName?: 
     'East Bay MUD': 'https://www.ebmud.com/water/conservation-and-rebates/',
     'SFPUC': 'https://sfpuc.org/programs/rebates',
     'San Francisco PUC': 'https://sfpuc.org/programs/rebates',
-    'Santa Clara Valley Water': 'https://www.valleywater.org/saving-water',
-    'Valley Water': 'https://www.valleywater.org/saving-water',
+    'Santa Clara Valley Water': 'https://www.valleywater.org/rebates',
+    'Valley Water': 'https://www.valleywater.org/rebates',
     'Marin Water': 'https://www.marinwater.org/rebates',
     'MMWD': 'https://www.marinwater.org/rebates',
     'Marin Municipal Water District': 'https://www.marinwater.org/rebates',
     'Contra Costa Water': 'https://www.ccwater.com/290/Rebates-Programs',
     'Zone 7 Water Agency': 'https://www.zone7water.com/',
-    'ACWD': 'https://www.acwd.org/193/Rebates-Programs',
-    'Alameda County Water': 'https://www.acwd.org/193/Rebates-Programs',
+    'ACWD': 'https://www.acwd.org/rebates',
+    'Alameda County Water': 'https://www.acwd.org/rebates',
     'Sonoma County Water Agency': 'https://www.sonomawater.org/rebates',
 
     // Sacramento Area
