@@ -254,7 +254,56 @@ export default async function ProductsPage() {
 
   return (
     <div className="bg-sand-50">
-      {/* Hero Section */}
+      {/* Trust Bar */}
+      <section className="bg-white border-b border-sand-200 py-6">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
+            <div className="flex items-center gap-3 text-sand-700">
+              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
+                <Shield className="h-5 w-5 text-ocean-600" />
+              </div>
+              <span className="font-medium">12-Month Warranty</span>
+            </div>
+            <div className="flex items-center gap-3 text-sand-700">
+              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
+                <Truck className="h-5 w-5 text-ocean-600" />
+              </div>
+              <span className="font-medium">Free Shipping</span>
+            </div>
+            <div className="flex items-center gap-3 text-sand-700">
+              <div className="w-10 h-10 rounded-xl bg-terra-100 flex items-center justify-center">
+                <Star className="h-5 w-5 text-terra-600 fill-current" />
+              </div>
+              <span className="font-medium">5-Star Rated</span>
+            </div>
+            <div className="flex items-center gap-3 text-sand-700">
+              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
+                <Award className="h-5 w-5 text-ocean-600" />
+              </div>
+              <span className="font-medium">WaterMark Certified</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Products Section with Filters */}
+      <section id="products" className="section-padding bg-sand-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <div className="line-accent mx-auto mb-6" />
+            <h1 className="text-display-md font-display text-sand-900 mb-4">
+              Shop All Products
+            </h1>
+            <p className="text-xl text-sand-600">
+              Greywater systems, rainwater harvesting equipment, and accessories
+            </p>
+          </div>
+
+          <ProductCatalog products={allProducts} categories={categories} />
+        </div>
+      </section>
+
+      {/* Featured Product Section */}
       <section className="relative py-16 lg:py-24 bg-sand-50">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -265,10 +314,10 @@ export default async function ProductsPage() {
                 WaterMark Approved Systems
               </div>
 
-              <h1 className="text-display-lg lg:text-display-xl font-display text-sand-900 leading-none">
+              <h2 className="text-display-lg lg:text-display-xl font-display text-sand-900 leading-none">
                 Reclaim Your
                 <span className="block text-ocean-600">Water</span>
-              </h1>
+              </h2>
 
               <p className="text-xl text-sand-600 leading-relaxed max-w-lg">
                 Transform household greywater into a sustainable resource. Save up to 40% on water bills while nourishing your landscape.
@@ -292,8 +341,8 @@ export default async function ProductsPage() {
 
               {/* CTAs */}
               <div className="flex flex-wrap gap-4">
-                <Link href="#products" className="btn-primary text-lg px-8 py-4 group">
-                  View Systems
+                <Link href="/products/aqua2use" className="btn-primary text-lg px-8 py-4 group">
+                  View System
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link href="#comparison" className="btn-secondary px-8 py-4">
@@ -317,7 +366,6 @@ export default async function ProductsPage() {
                       alt="Aqua2use GWDD System"
                       fill
                       className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                      priority
                       unoptimized
                     />
                   </div>
@@ -425,55 +473,6 @@ export default async function ProductsPage() {
               </div>
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* Trust Bar */}
-      <section className="bg-white border-b border-sand-200 py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16">
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
-                <Shield className="h-5 w-5 text-ocean-600" />
-              </div>
-              <span className="font-medium">12-Month Warranty</span>
-            </div>
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
-                <Truck className="h-5 w-5 text-ocean-600" />
-              </div>
-              <span className="font-medium">Free Shipping</span>
-            </div>
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-terra-100 flex items-center justify-center">
-                <Star className="h-5 w-5 text-terra-600 fill-current" />
-              </div>
-              <span className="font-medium">5-Star Rated</span>
-            </div>
-            <div className="flex items-center gap-3 text-sand-700">
-              <div className="w-10 h-10 rounded-xl bg-ocean-100 flex items-center justify-center">
-                <Award className="h-5 w-5 text-ocean-600" />
-              </div>
-              <span className="font-medium">WaterMark Certified</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Section with Filters */}
-      <section id="products" className="section-padding bg-sand-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <div className="line-accent mx-auto mb-6" />
-            <h2 className="text-display-md font-display text-sand-900 mb-4">
-              Shop All Products
-            </h2>
-            <p className="text-xl text-sand-600">
-              Greywater systems, rainwater harvesting equipment, and accessories
-            </p>
-          </div>
-
-          <ProductCatalog products={allProducts} categories={categories} />
         </div>
       </section>
 
