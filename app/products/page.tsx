@@ -172,7 +172,7 @@ export default async function ProductsPage() {
             {/* Right: Featured Greywater System Card */}
             <div className="relative">
               <Link href="/products/aqua2use" className="group block">
-                <div className="bg-white rounded-3xl p-8 border border-sand-200 shadow-xl hover:shadow-2xl transition-shadow">
+                <div className="bg-white rounded-3xl p-8 border border-sand-200">
                   <div className="absolute -top-3 -right-3 badge-terra">
                     <Star className="h-3 w-3 fill-current" />
                     Best Seller
@@ -226,7 +226,7 @@ export default async function ProductsPage() {
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Drip Kit */}
             <Link href={`/products/${featuredAccessories.dripKit.handle}`} className="group">
-              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-ocean-200 hover:shadow-lg transition-all h-full flex items-center gap-4">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-ocean-200 transition-all h-full flex items-center gap-4">
                 <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
                   <Image
                     src={featuredAccessories.dripKit.image}
@@ -246,7 +246,7 @@ export default async function ProductsPage() {
 
             {/* Replacement Pump */}
             <Link href={`/products/${featuredAccessories.pump.handle}`} className="group">
-              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-terra-200 hover:shadow-lg transition-all h-full flex items-center gap-4">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-terra-200 transition-all h-full flex items-center gap-4">
                 <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
                   <Image
                     src={featuredAccessories.pump.image}
@@ -266,7 +266,7 @@ export default async function ProductsPage() {
 
             {/* Replacement Filters */}
             <Link href="/products/replacement-filters" className="group">
-              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-sand-300 hover:shadow-lg transition-all h-full flex items-center gap-4">
+              <div className="bg-white rounded-xl p-4 border border-sand-200 hover:border-sand-300 transition-all h-full flex items-center gap-4">
                 <div className="w-20 h-20 flex-shrink-0 bg-sand-100 rounded-lg overflow-hidden relative">
                   <Image
                     src="https://cdn.shopify.com/s/files/1/0637/5561/6462/files/aqua2use-replacement-filters.jpg?v=1719592368"
