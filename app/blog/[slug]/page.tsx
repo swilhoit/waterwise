@@ -1,10 +1,12 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, User, ArrowLeft, Clock } from "lucide-react"
 import { getBlogArticle, getBlogArticles } from "@/lib/shopify"
+import { ArticleSchema, BreadcrumbSchema } from "@/components/schema-markup"
 
 // Default blog post content for fallback
 const defaultBlogPosts: { [key: string]: any } = {
@@ -112,6 +114,94 @@ const defaultBlogPosts: { [key: string]: any } = {
   }
 }
 
+// Generate dynamic metadata for each blog post
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  let post = null
+
+  // Try to get post from Shopify first
+  try {
+    const article = await getBlogArticle(slug)
+    if (article) {
+      post = {
+        title: article.title,
+        excerpt: article.summary_html?.replace(/<[^>]*>/g, '') ||
+                 article.body_html?.replace(/<[^>]*>/g, '').substring(0, 160) || '',
+        image: article.image?.src || null,
+        author: article.author || "Water Wise Team",
+        publishedAt: article.published_at || new Date().toISOString(),
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch blog post for metadata:', error)
+  }
+
+  // Fall back to default content
+  if (!post && defaultBlogPosts[slug]) {
+    const defaultPost = defaultBlogPosts[slug]
+    post = {
+      title: defaultPost.title,
+      excerpt: defaultPost.excerpt,
+      image: defaultPost.mainImage,
+      author: defaultPost.author,
+      publishedAt: defaultPost.publishedAt,
+    }
+  }
+
+  // Return default metadata if post not found
+  if (!post) {
+    return {
+      title: 'Blog Post Not Found | Water Wise Group',
+      description: 'The requested blog post could not be found.',
+    }
+  }
+
+  const title = `${post.title} | Water Wise Group`
+  const description = post.excerpt || `Read about ${post.title} and learn more about greywater recycling and water conservation.`
+  const url = `https://waterwisegroup.com/blog/${slug}`
+  const imageUrl = post.image?.startsWith('http')
+    ? post.image
+    : post.image
+      ? `https://waterwisegroup.com${post.image}`
+      : 'https://waterwisegroup.com/images/gwdd-gravity.jpg'
+
+  return {
+    title,
+    description,
+    authors: [{ name: post.author }],
+    openGraph: {
+      title: post.title,
+      description,
+      url,
+      siteName: 'Water Wise Group',
+      type: 'article',
+      publishedTime: post.publishedAt,
+      authors: [post.author],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: [imageUrl],
+    },
+    alternates: {
+      canonical: url,
+    },
+  }
+}
+
 export default async function BlogPost({
   params,
 }: {
@@ -156,8 +246,33 @@ export default async function BlogPost({
     })
   }
 
+  const articleUrl = `https://waterwisegroup.com/blog/${slug}`
+  const imageUrl = typeof post.mainImage === 'string'
+    ? (post.mainImage.startsWith('http') ? post.mainImage : `https://waterwisegroup.com${post.mainImage}`)
+    : post.mainImage?.asset?.url || 'https://waterwisegroup.com/images/gwdd-gravity.jpg'
+
   return (
     <div>
+      {/* Schema.org structured data */}
+      <ArticleSchema
+        article={{
+          headline: post.title,
+          description: post.excerpt || `Learn about ${post.title} and greywater recycling.`,
+          image: imageUrl,
+          datePublished: post.publishedAt,
+          dateModified: post.publishedAt,
+          author: post.author || "Water Wise Team",
+          url: articleUrl,
+        }}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: 'https://waterwisegroup.com' },
+          { name: 'Blog', url: 'https://waterwisegroup.com/blog' },
+          { name: post.title, url: articleUrl },
+        ]}
+      />
+
       {/* Header */}
       <section className="relative py-12 lg:py-20">
         <div className="container mx-auto px-4">

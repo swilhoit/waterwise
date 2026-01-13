@@ -1,9 +1,50 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar, User, ArrowRight } from "lucide-react"
 import { getBlogArticles } from "@/lib/shopify"
+import { BreadcrumbSchema } from "@/components/schema-markup"
+
+export const metadata: Metadata = {
+  title: 'Greywater Education Blog | Water Conservation Tips & Guides | Water Wise Group',
+  description: 'Expert guides on greywater recycling, water conservation, and sustainable irrigation. Learn about greywater systems, installation tips, maintenance, and state regulations.',
+  keywords: [
+    'greywater blog',
+    'water conservation tips',
+    'greywater recycling guide',
+    'greywater system installation',
+    'water saving tips',
+    'sustainable irrigation',
+    'greywater laws',
+    'greywater maintenance',
+  ],
+  openGraph: {
+    title: 'Greywater Education Blog | Water Wise Group',
+    description: 'Expert guides on greywater recycling, water conservation, and sustainable irrigation. Learn how to save water and create a thriving landscape.',
+    url: 'https://waterwisegroup.com/blog',
+    siteName: 'Water Wise Group',
+    type: 'website',
+    images: [
+      {
+        url: 'https://waterwisegroup.com/images/gwdd-gravity.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Water Wise Group Greywater Education Blog',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Greywater Education Blog | Water Wise Group',
+    description: 'Expert guides on greywater recycling, water conservation, and sustainable irrigation.',
+    images: ['https://waterwisegroup.com/images/gwdd-gravity.jpg'],
+  },
+  alternates: {
+    canonical: 'https://waterwisegroup.com/blog',
+  },
+}
 
 export default async function Blog() {
   let blogPosts: any[] = []
@@ -35,6 +76,14 @@ export default async function Blog() {
   }
   return (
     <div>
+      {/* Schema.org structured data */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: 'https://waterwisegroup.com' },
+          { name: 'Blog', url: 'https://waterwisegroup.com/blog' },
+        ]}
+      />
+
       <section className="py-20 pt-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">

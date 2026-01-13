@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import {
   ChevronRight, Search, ExternalLink, Phone, Building2,
-  Droplets, CloudRain, ArrowRight
+  Droplets, CloudRain, ArrowRight, Droplet
 } from 'lucide-react'
 import {
   DataConfidenceBadge,
@@ -27,6 +27,7 @@ import {
 interface GreywaterData {
   legalStatus?: string
   governingCode?: string
+  governingCodeUrl?: string
   permitRequired?: string
   permitThresholdGpd?: number | null
   indoorUseAllowed?: boolean
@@ -35,11 +36,23 @@ interface GreywaterData {
   keyRestrictions?: string[]
   recentChanges?: string | null
   summary?: string
+  // System types allowed
+  laundryToLandscapeAllowed?: boolean
+  branchedDrainAllowed?: boolean
+  surgeTankAllowed?: boolean
+  indoorReuseAllowed?: boolean
+  // Professional requirements
+  diyAllowed?: boolean
+  licensedPlumberRequired?: boolean
+  // Stub-out/preplumbing
+  stubOutRequired?: boolean
+  stubOutDetails?: string
 }
 
 interface RainwaterData {
   legalStatus?: string
   governingCode?: string
+  governingCodeUrl?: string
   permitRequired?: string
   collectionLimitGallons?: number | null
   potableUseAllowed?: boolean
@@ -47,6 +60,16 @@ interface RainwaterData {
   approvedUses?: string[]
   keyRestrictions?: string[]
   summary?: string
+  // Use types
+  indoorUseAllowed?: boolean
+  outdoorUseAllowed?: boolean
+  // Storage types
+  cisternAllowed?: boolean
+  rainBarrelAllowed?: boolean
+  undergroundAllowed?: boolean
+  // Stub-out / preplumbing
+  stubOutRequired?: boolean
+  stubOutDetails?: string
 }
 
 interface AgencyData {
@@ -125,6 +148,7 @@ interface WaterUtilityData {
   website?: string
   phone?: string
   programCount?: number
+  serviceType?: string
 }
 
 interface PermitData {
@@ -222,7 +246,11 @@ export default function LocationHubView({
 }: LocationHubViewProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [showAllCities, setShowAllCities] = useState(false)
+  const [selectedCounty, setSelectedCounty] = useState<string | null>(null)
   const INITIAL_CITIES = 30
+
+  // Get unique counties for filtering
+  const uniqueCounties = Array.from(new Set(cities.map(c => c.county_name).filter(Boolean))).sort() as string[]
 
   const locationName = level === 'city' ? cityName : stateName
   const basePath = level === 'city'
@@ -232,10 +260,12 @@ export default function LocationHubView({
   // Get jurisdiction URLs for linking to official code documentation
   const jurisdictionUrls = getJurisdictionUrls(stateCode, stateName, countyName, cityName)
 
-  // Filter cities
-  const filteredCities = cities.filter(c =>
-    c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => (a.city_name || '').localeCompare(b.city_name || ''))
+  // Filter cities by search term and county
+  const filteredCities = cities.filter(c => {
+    const matchesSearch = c.city_name?.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCounty = !selectedCounty || c.county_name === selectedCounty
+    return matchesSearch && matchesCounty
+  }).sort((a, b) => (a.city_name || '').localeCompare(b.city_name || ''))
 
   // Filter function to exclude grants
   const isNotGrant = (i: IncentiveProgram) => {
@@ -295,10 +325,7 @@ export default function LocationHubView({
         {/* Quick Summary Cards - Greywater and Rainwater */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
           {/* Greywater Summary Card */}
-          <Link
-            href={`${basePath}/greywater`}
-            className="group bg-white rounded-xl border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all overflow-hidden"
-          >
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-emerald-50 to-green-50 px-5 py-4 border-b border-emerald-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -322,36 +349,106 @@ export default function LocationHubView({
               </div>
             </div>
             <div className="p-5">
-              <div className="flex flex-wrap gap-4 mb-4">
-                {greywater?.permitThresholdGpd && (
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Permit-Free Under</p>
-                    <p className="text-xl font-bold text-emerald-700">{greywater.permitThresholdGpd} GPD</p>
+              {/* Key Stats Row */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {greywater?.permitThresholdGpd ? (
+                  <div className="bg-emerald-50 rounded-lg p-3">
+                    <p className="text-xs text-emerald-600 font-medium uppercase tracking-wide">Permit-Free Under</p>
+                    <p className="text-2xl font-bold text-emerald-700">{greywater.permitThresholdGpd} <span className="text-sm font-medium">GPD</span></p>
+                  </div>
+                ) : greywater?.permitRequired && (
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Permit</p>
+                    <p className="text-lg font-bold text-gray-900">{greywater.permitRequired}</p>
                   </div>
                 )}
-                {greywater?.permitRequired && (
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Permit</p>
-                    <p className="text-xl font-bold text-gray-900">{greywater.permitRequired}</p>
+                {(permitData?.diyAllowed !== undefined || greywater?.diyAllowed !== undefined) && (
+                  <div className={`rounded-lg p-3 ${(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">DIY Installation</p>
+                    <p className={`text-lg font-bold ${(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {(permitData?.diyAllowed ?? greywater?.diyAllowed) ? 'Allowed' : 'Professional Required'}
+                    </p>
                   </div>
                 )}
               </div>
+
+              {/* System Types Allowed */}
+              {(permitData?.laundryToLandscapeAllowed !== undefined ||
+                permitData?.branchedDrainAllowed !== undefined ||
+                permitData?.surgeTankAllowed !== undefined ||
+                greywater?.laundryToLandscapeAllowed !== undefined) && (
+                <div className="mb-4">
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Allowed System Types</p>
+                  <div className="flex flex-wrap gap-2">
+                    {(permitData?.laundryToLandscapeAllowed ?? greywater?.laundryToLandscapeAllowed) && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                        ✓ Laundry-to-Landscape
+                      </span>
+                    )}
+                    {(permitData?.branchedDrainAllowed ?? greywater?.branchedDrainAllowed) && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                        ✓ Branched Drain
+                      </span>
+                    )}
+                    {(permitData?.surgeTankAllowed ?? greywater?.surgeTankAllowed) && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                        ✓ Surge Tank
+                      </span>
+                    )}
+                    {(permitData?.indoorReuseAllowed ?? greywater?.indoorReuseAllowed) && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                        ✓ Indoor Reuse
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Stub-out / Preplumbing Info */}
+              {(preplumbing?.hasMandate || greywater?.stubOutRequired) && (
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                  <p className="text-xs text-blue-600 font-medium uppercase tracking-wide mb-1">New Construction</p>
+                  <p className="text-sm text-blue-800 font-medium">Greywater stub-outs required</p>
+                  {(preplumbing?.details || greywater?.stubOutDetails) && (
+                    <p className="text-xs text-blue-600 mt-1">{preplumbing?.details || greywater?.stubOutDetails}</p>
+                  )}
+                </div>
+              )}
+
+              {/* Key Rules */}
+              {greywater?.keyRestrictions && greywater.keyRestrictions.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Key Rules</p>
+                  <ul className="space-y-1">
+                    {greywater.keyRestrictions.slice(0, 3).map((rule, idx) => (
+                      <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                        <span className="text-amber-500 mt-0.5">•</span>
+                        <span className="line-clamp-1">{rule}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Summary */}
               {greywater?.summary && (
                 <p className="text-sm text-gray-600 line-clamp-2 mb-4">{greywater.summary}</p>
               )}
-              <div className="flex items-center gap-2 text-emerald-600 group-hover:text-emerald-700 font-medium text-sm">
-                View Full Details
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
+
+              {/* CTA Link */}
+              <Link
+                href={`${basePath}/greywater`}
+                className="group/link flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium text-sm"
+              >
+                View Full Greywater Guide
+                <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+              </Link>
             </div>
-          </Link>
+          </div>
 
           {/* Rainwater Summary Card */}
           {rainwater && (
-            <Link
-              href={`${basePath}/rainwater`}
-              className="group bg-white rounded-xl border border-gray-200 hover:border-cyan-300 hover:shadow-md transition-all overflow-hidden"
-            >
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-cyan-50 to-blue-50 px-5 py-4 border-b border-cyan-100">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -375,31 +472,144 @@ export default function LocationHubView({
                 </div>
               </div>
               <div className="p-5">
-                <div className="flex flex-wrap gap-4 mb-4">
-                  {rainwater?.collectionLimitGallons !== undefined && (
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Collection Limit</p>
-                      <p className="text-xl font-bold text-cyan-700">
-                        {rainwater.collectionLimitGallons ? `${rainwater.collectionLimitGallons.toLocaleString()} gal` : 'No Limit'}
-                      </p>
-                    </div>
-                  )}
-                  {rainwater?.permitRequired && (
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Permit</p>
-                      <p className="text-xl font-bold text-gray-900">{rainwater.permitRequired}</p>
-                    </div>
-                  )}
+                {/* Key Stats Row */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="bg-cyan-50 rounded-lg p-3">
+                    <p className="text-xs text-cyan-600 font-medium uppercase tracking-wide">Collection Limit</p>
+                    <p className="text-2xl font-bold text-cyan-700">
+                      {rainwater?.collectionLimitGallons ? `${rainwater.collectionLimitGallons.toLocaleString()}` : 'No Limit'}
+                      {rainwater?.collectionLimitGallons && <span className="text-sm font-medium ml-1">gal</span>}
+                    </p>
+                  </div>
+                  <div className={`rounded-lg p-3 ${rainwater?.permitRequired === 'No' || !rainwater?.permitRequired ? 'bg-cyan-50' : 'bg-gray-50'}`}>
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Permit Required</p>
+                    <p className={`text-lg font-bold ${rainwater?.permitRequired === 'No' || !rainwater?.permitRequired ? 'text-cyan-700' : 'text-gray-900'}`}>
+                      {rainwater?.permitRequired || 'No'}
+                    </p>
+                  </div>
                 </div>
+
+                {/* Collection Methods / Storage Types Allowed */}
+                {(rainwater?.rainBarrelAllowed !== undefined ||
+                  rainwater?.cisternAllowed !== undefined ||
+                  rainwater?.undergroundAllowed !== undefined) && (
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Collection Methods</p>
+                    <div className="flex flex-wrap gap-2">
+                      {rainwater?.rainBarrelAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                          Rain Barrels
+                        </span>
+                      )}
+                      {rainwater?.cisternAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                          Cisterns
+                        </span>
+                      )}
+                      {rainwater?.undergroundAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                          Underground Storage
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Permitted Uses */}
+                {(rainwater?.outdoorUseAllowed !== undefined ||
+                  rainwater?.indoorUseAllowed !== undefined ||
+                  rainwater?.potableUseAllowed !== undefined) && (
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Permitted Uses</p>
+                    <div className="flex flex-wrap gap-2">
+                      {rainwater?.outdoorUseAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                          Outdoor Irrigation
+                        </span>
+                      )}
+                      {rainwater?.indoorUseAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded">
+                          Indoor Non-Potable
+                        </span>
+                      )}
+                      {rainwater?.potableUseAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                          Potable (with treatment)
+                        </span>
+                      )}
+                      {rainwater?.potableUseAllowed === false && !rainwater?.indoorUseAllowed && !rainwater?.outdoorUseAllowed && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">
+                          Non-Potable Only
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Approved Uses (from database array) - show if no boolean fields available */}
+                {rainwater?.approvedUses && rainwater.approvedUses.length > 0 &&
+                  (rainwater?.outdoorUseAllowed === undefined && rainwater?.indoorUseAllowed === undefined) && (
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Approved Uses</p>
+                    <div className="flex flex-wrap gap-2">
+                      {rainwater.approvedUses.slice(0, 4).map((use, idx) => (
+                        <span key={idx} className="inline-flex items-center px-2 py-1 bg-cyan-50 text-cyan-700 text-xs rounded">
+                          {use}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tax Incentives */}
+                {rainwater?.taxIncentives && (
+                  <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                    <p className="text-xs text-green-600 font-medium uppercase tracking-wide mb-1">Tax Incentives</p>
+                    <p className="text-sm text-green-800">{rainwater.taxIncentives}</p>
+                  </div>
+                )}
+
+                {/* Stub-out / Preplumbing Info (for rainwater) */}
+                {rainwater?.stubOutRequired && (
+                  <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                    <p className="text-xs text-blue-600 font-medium uppercase tracking-wide mb-1">New Construction</p>
+                    <p className="text-sm text-blue-800 font-medium">Rainwater stub-outs required</p>
+                    {rainwater?.stubOutDetails && (
+                      <p className="text-xs text-blue-600 mt-1">{rainwater.stubOutDetails}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Key Restrictions / Requirements */}
+                {rainwater?.keyRestrictions && rainwater.keyRestrictions.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-2">Key Requirements</p>
+                    <ul className="space-y-1">
+                      {rainwater.keyRestrictions.slice(0, 3).map((rule, idx) => (
+                        <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                          <span className="text-amber-500 mt-0.5">*</span>
+                          <span className="line-clamp-1">{rule}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Summary */}
                 {rainwater?.summary && (
                   <p className="text-sm text-gray-600 line-clamp-2 mb-4">{rainwater.summary}</p>
                 )}
-                <div className="flex items-center gap-2 text-cyan-600 group-hover:text-cyan-700 font-medium text-sm">
-                  View Full Details
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </div>
+
+                {/* CTA Link */}
+                <Link
+                  href={`${basePath}/rainwater`}
+                  className="group/link flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm"
+                >
+                  View Full Rainwater Guide
+                  <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                </Link>
               </div>
-            </Link>
+            </div>
           )}
         </div>
 
@@ -420,6 +630,44 @@ export default function LocationHubView({
           />
         )}
 
+
+        {/* Water Utilities */}
+        {waterUtilities && waterUtilities.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Droplet className="h-6 w-6 text-cyan-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 mb-1">Water Utility</h3>
+                <div className="space-y-3">
+                  {waterUtilities.map((utility, idx) => (
+                    <div key={idx} className={idx > 0 ? 'pt-3 border-t border-gray-100' : ''}>
+                      <p className="text-gray-700 font-medium">{utility.name}</p>
+                      {utility.serviceType && utility.serviceType !== 'primary' && (
+                        <span className="text-xs text-gray-500">(partial service area)</span>
+                      )}
+                      <div className="flex flex-wrap gap-4 mt-1">
+                        {utility.phone && (
+                          <a href={`tel:${utility.phone}`} className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-700">
+                            <Phone className="h-4 w-4" />
+                            {utility.phone}
+                          </a>
+                        )}
+                        {utility.website && (
+                          <a href={utility.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-cyan-600 hover:text-cyan-700">
+                            <ExternalLink className="h-4 w-4" />
+                            Website
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Agency Contact */}
         {agency?.name && (
@@ -459,8 +707,43 @@ export default function LocationHubView({
                   <h2 className="text-xl font-semibold text-gray-900">Browse by City</h2>
                   <p className="text-sm text-gray-500 mt-1">Find regulations specific to your city</p>
                 </div>
-                <span className="text-sm text-gray-500">{cities.length} cities</span>
+                <span className="text-sm text-gray-500">
+                  {filteredCities.length} {filteredCities.length === 1 ? 'city' : 'cities'}
+                  {selectedCounty && ` in ${selectedCounty} County`}
+                </span>
               </div>
+
+              {/* County Filter */}
+              {uniqueCounties.length > 1 && (
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setSelectedCounty(null)}
+                      className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+                        !selectedCounty
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      All Counties
+                    </button>
+                    {uniqueCounties.map(county => (
+                      <button
+                        key={county}
+                        onClick={() => setSelectedCounty(county === selectedCounty ? null : county)}
+                        className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+                          selectedCounty === county
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {county}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
@@ -474,23 +757,33 @@ export default function LocationHubView({
             </div>
             <div className="p-4">
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                {(showAllCities || searchTerm ? filteredCities : filteredCities.slice(0, INITIAL_CITIES)).map((city, idx) => (
-                  <Link
+                {(showAllCities || searchTerm || selectedCounty ? filteredCities : filteredCities.slice(0, INITIAL_CITIES)).map((city, idx) => (
+                  <div
                     key={`${city.city_name}-${idx}`}
-                    href={`/${stateCode.toLowerCase()}/${city.city_name?.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="flex items-center justify-between p-3 bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-300 rounded-lg transition-colors group"
+                    className="p-3 bg-gray-50 hover:bg-emerald-50 border border-gray-200 hover:border-emerald-300 rounded-lg transition-colors group"
                   >
-                    <div>
+                    <Link
+                      href={`/${stateCode.toLowerCase()}/${city.city_name?.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="flex items-center justify-between"
+                    >
                       <p className="font-medium text-gray-900 group-hover:text-emerald-700">{city.city_name}</p>
-                      {city.county_name && (
-                        <p className="text-xs text-gray-400">{city.county_name} County</p>
-                      )}
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-emerald-500" />
-                  </Link>
+                      <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-emerald-500" />
+                    </Link>
+                    {city.county_name && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedCounty(city.county_name === selectedCounty ? null : city.county_name!)
+                        }}
+                        className="text-xs text-gray-400 hover:text-emerald-600 hover:underline mt-0.5"
+                      >
+                        {city.county_name} County
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
-              {!showAllCities && !searchTerm && filteredCities.length > INITIAL_CITIES && (
+              {!showAllCities && !searchTerm && !selectedCounty && filteredCities.length > INITIAL_CITIES && (
                 <button
                   onClick={() => setShowAllCities(true)}
                   className="w-full mt-4 py-3 text-center text-emerald-600 hover:text-emerald-700 text-sm font-medium border border-gray-200 rounded-lg hover:border-emerald-300 transition-colors"
@@ -498,8 +791,10 @@ export default function LocationHubView({
                   Show all {filteredCities.length} cities
                 </button>
               )}
-              {filteredCities.length === 0 && searchTerm && (
-                <p className="text-center text-gray-400 py-8 text-sm">No cities found matching "{searchTerm}"</p>
+              {filteredCities.length === 0 && (searchTerm || selectedCounty) && (
+                <p className="text-center text-gray-400 py-8 text-sm">
+                  No cities found{searchTerm && ` matching "${searchTerm}"`}{selectedCounty && ` in ${selectedCounty} County`}
+                </p>
               )}
             </div>
           </div>

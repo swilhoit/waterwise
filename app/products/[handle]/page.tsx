@@ -1,13 +1,15 @@
 import { getProduct, getEnhancedProduct } from '@/lib/shopify'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-// Removed tabs import - using open layout instead
 import { Badge } from '@/components/ui/badge'
 import { notFound, redirect } from 'next/navigation'
 import { AddToCartButton } from './add-to-cart-button'
-import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText, Ruler, ArrowRight } from 'lucide-react'
+import { CheckCircle, Star, Shield, Truck, Users, Zap, Droplets, Settings, Calculator, Wrench, MessageSquare, FileText, Ruler, ArrowRight, ShieldCheck, Calendar, ImageIcon, Award, Leaf, ChevronRight } from 'lucide-react'
 import { formatPriceDisplay } from '@/lib/price-utils'
+import { ProductWithReviewsSchema } from '@/components/schema-markup'
+import { getReviewsByProduct, type Review } from '@/data/aqua2use-reviews'
 
 // Comprehensive fallback product data with correct Shopify variants and real images
 const fallbackProducts: { [key: string]: any } = {
@@ -1273,37 +1275,69 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     reviews: shopifyProduct.reviews || getProductContent(handle).reviews
   } : getProductContent(handle)
 
+  // Get reviews from imported data (includes images and proper dates for Google)
+  const productReviews = getReviewsByProduct(handle)
+  const hasImportedReviews = productReviews.length > 0
+
+  // Prepare product data for schema
+  const productSchemaData = {
+    name: product.title,
+    description: product.description?.replace(/<[^>]*>/g, '').slice(0, 200) || '',
+    image: product.images?.edges?.[0]?.node?.url || '',
+    sku: handle,
+    price: product.priceRange?.minVariantPrice?.amount || '599.99',
+    url: `https://waterwisegroup.com/products/${handle}`
+  }
+
   return (
-    <div className="bg-white">
+    <div className="bg-sand-50">
+      {/* Google Rich Snippets Schema */}
+      {hasImportedReviews && (
+        <ProductWithReviewsSchema
+          product={productSchemaData}
+          reviews={productReviews.map(r => ({
+            id: r.id,
+            name: r.name,
+            rating: r.rating,
+            review: r.review,
+            created_at: r.created_at,
+            images: r.images
+          }))}
+        />
+      )}
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-        <div className="container mx-auto px-4 py-10 lg:py-16">
+      <section className="relative bg-gradient-to-br from-sand-50 via-white to-ocean-50/30">
+        {/* Decorative background */}
+        <div className="absolute inset-0 bg-pattern-dots opacity-30" />
+
+        <div className="container mx-auto px-4 py-12 lg:py-20 relative">
           <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
               {/* Product Images - Sticky on desktop */}
               <div className="lg:sticky lg:top-24">
                 {product.images?.edges?.length > 0 ? (
                   <div className="space-y-4">
                     {/* Main Image */}
-                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm">
+                    <div className="relative aspect-square rounded-3xl overflow-hidden bg-white border border-sand-200 shadow-soft-lg">
+                      <div className="absolute -inset-1 bg-gradient-to-br from-ocean-100 to-terra-100 rounded-3xl opacity-50 blur-xl -z-10" />
                       <Image
                         src={product.images.edges[0].node.url}
                         alt={product.images.edges[0].node.altText || product.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                        className="object-contain p-4"
+                        className="object-contain p-6"
                         priority
                         unoptimized
                       />
                     </div>
-                    
+
                     {/* Thumbnail Gallery */}
                     {product.images.edges.length > 1 && (
                       <div className="grid grid-cols-4 gap-3">
                         {product.images.edges.slice(0, 4).map((image: any, index: number) => (
-                          <div 
-                            key={index} 
-                            className={`relative aspect-square rounded-lg overflow-hidden bg-white border-2 transition-all cursor-pointer hover:border-blue-400 ${index === 0 ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200'}`}
+                          <div
+                            key={index}
+                            className={`relative aspect-square rounded-xl overflow-hidden bg-white border-2 transition-all duration-300 cursor-pointer hover:border-ocean-400 hover:shadow-ocean ${index === 0 ? 'border-ocean-500 ring-2 ring-ocean-500/20' : 'border-sand-200'}`}
                           >
                             <Image
                               src={image.node.url}
@@ -1319,10 +1353,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                     )}
                   </div>
                 ) : (
-                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border">
-                    <div className="flex items-center justify-center h-full text-gray-400">
+                  <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-sand-100 to-sand-200 border border-sand-200">
+                    <div className="flex items-center justify-center h-full text-sand-500">
                       <div className="text-center">
-                        <Droplets className="h-16 w-16 mx-auto mb-4 text-blue-300" />
+                        <Droplets className="h-16 w-16 mx-auto mb-4 text-ocean-300" />
                         <span className="text-lg font-medium">Product Image Coming Soon</span>
                       </div>
                     </div>
@@ -1331,55 +1365,55 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
               </div>
 
               {/* Product Info */}
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {/* Breadcrumb */}
-                <nav className="text-sm text-gray-500">
-                  <a href="/products" className="hover:text-blue-600 transition-colors">Shop</a>
-                  <span className="mx-2">/</span>
-                  <span className="text-gray-900">{product.title}</span>
+                <nav className="flex items-center gap-2 text-sm text-sand-500">
+                  <Link href="/products" className="hover:text-ocean-600 transition-colors link-underline">Shop</Link>
+                  <ChevronRight className="h-4 w-4" />
+                  <span className="text-sand-900 font-medium">{product.title}</span>
                 </nav>
-                
+
                 {/* Badges */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 text-xs font-semibold">
-                    <Shield className="h-3.5 w-3.5 mr-1.5" />
+                  <span className="badge-ocean">
+                    <Award className="h-3.5 w-3.5" />
                     WaterMark Approved
-                  </Badge>
-                  <Badge className="bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100 px-3 py-1.5 text-xs font-semibold">
-                    <Zap className="h-3.5 w-3.5 mr-1.5" />
+                  </span>
+                  <span className="badge-sand">
+                    <Shield className="h-3.5 w-3.5" />
                     12 Month Warranty
-                  </Badge>
-                  <Badge className="bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-100 px-3 py-1.5 text-xs font-semibold">
-                    <Star className="h-3.5 w-3.5 mr-1.5 fill-current" />
+                  </span>
+                  <span className="badge-terra">
+                    <Star className="h-3.5 w-3.5 fill-current" />
                     5.0 Rating
-                  </Badge>
+                  </span>
                 </div>
-                
+
                 {/* Title */}
                 <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4">
+                  <h1 className="text-display-sm lg:text-display-md font-display text-sand-900 leading-tight mb-6">
                     {product.title}
                   </h1>
-                  
+
                   {/* Price Block */}
                   {product.priceRange?.minVariantPrice && (
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-sm text-gray-500">From</span>
-                        <span className="text-4xl font-bold text-gray-900">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-sm text-sand-500">Starting at</span>
+                        <span className="text-4xl font-bold text-sand-900">
                           {formatPriceDisplay(product.priceRange.minVariantPrice.amount)}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full">
-                        <Truck className="h-4 w-4 text-emerald-600" />
-                        <span className="text-sm font-medium text-emerald-700">Free Shipping</span>
+                      <div className="flex items-center gap-2 bg-ocean-50 px-4 py-2 rounded-full border border-ocean-100">
+                        <Truck className="h-4 w-4 text-ocean-600" />
+                        <span className="text-sm font-semibold text-ocean-700">Free Shipping</span>
                       </div>
                     </div>
                   )}
                 </div>
 
                 {/* Description */}
-                <div className="prose prose-lg text-gray-600 leading-relaxed max-w-none">
+                <div className="prose prose-lg text-sand-600 leading-relaxed max-w-none">
                   {product.descriptionHtml ? (
                     <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
                   ) : (
@@ -1388,43 +1422,43 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 </div>
 
                 {/* Key Features Grid */}
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Settings className="h-5 w-5 text-blue-600" />
+                <div className="bg-white rounded-2xl p-6 border border-sand-200 shadow-soft">
+                  <h3 className="text-lg font-display text-sand-900 mb-4 flex items-center gap-2">
+                    <Settings className="h-5 w-5 text-ocean-600" />
                     Key Features
                   </h3>
                   <div className="grid sm:grid-cols-2 gap-2">
                     {productContent.features.slice(0, 6).map((feature: string, index: number) => (
-                      <div key={index} className="flex items-start gap-3 p-2.5 rounded-lg bg-white border border-gray-100">
-                        <CheckCircle className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-700 leading-snug">{feature}</span>
+                      <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-sand-50 border border-sand-100 hover:border-ocean-200 transition-colors">
+                        <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm text-sand-700 leading-snug">{feature}</span>
                       </div>
                     ))}
                   </div>
                   {productContent.features.length > 6 && (
-                    <p className="text-xs text-gray-500 mt-4 text-center">
+                    <p className="text-xs text-sand-500 mt-4 text-center">
                       +{productContent.features.length - 6} more features below
                     </p>
                   )}
                 </div>
 
                 {/* CTA Button */}
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <AddToCartButton product={product} />
-                  
+
                   {/* Trust Signals */}
-                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
-                    <div className="flex flex-col items-center text-center p-3 rounded-lg bg-gray-50">
-                      <Shield className="h-5 w-5 text-emerald-600 mb-1" />
-                      <span className="text-xs font-medium text-gray-900">12 Month Warranty</span>
+                  <div className="grid grid-cols-3 gap-4 pt-6 border-t border-sand-200">
+                    <div className="flex flex-col items-center text-center p-4 rounded-xl bg-ocean-50 border border-ocean-100 hover:border-ocean-200 transition-colors group">
+                      <Shield className="h-6 w-6 text-ocean-600 mb-2 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold text-sand-900">12 Month Warranty</span>
                     </div>
-                    <div className="flex flex-col items-center text-center p-3 rounded-lg bg-gray-50">
-                      <Truck className="h-5 w-5 text-blue-600 mb-1" />
-                      <span className="text-xs font-medium text-gray-900">Free Shipping</span>
+                    <div className="flex flex-col items-center text-center p-4 rounded-xl bg-sand-100 border border-sand-200 hover:border-sand-300 transition-colors group">
+                      <Truck className="h-6 w-6 text-sand-700 mb-2 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold text-sand-900">Free Shipping</span>
                     </div>
-                    <div className="flex flex-col items-center text-center p-3 rounded-lg bg-gray-50">
-                      <Users className="h-5 w-5 text-purple-600 mb-1" />
-                      <span className="text-xs font-medium text-gray-900">Expert Support</span>
+                    <div className="flex flex-col items-center text-center p-4 rounded-xl bg-terra-50 border border-terra-100 hover:border-terra-200 transition-colors group">
+                      <Users className="h-6 w-6 text-terra-600 mb-2 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold text-sand-900">Expert Support</span>
                     </div>
                   </div>
                 </div>
@@ -1435,49 +1469,53 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       </section>
 
       {/* Water Savings Infographic Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-ocean-900 via-ocean-800 to-ocean-900 text-white relative overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }} />
-        
-        <div className="container mx-auto px-4 relative">
+        <div className="absolute inset-0 bg-pattern-waves opacity-20" />
+        <div className="absolute -top-20 -right-20 w-96 h-96 bg-terra-500/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-ocean-400/20 rounded-full blur-2xl" />
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+            <span className="badge-ocean bg-white/10 border-white/20 text-white mb-6">
+              <Leaf className="h-3 w-3" />
+              Water Conservation
+            </span>
+            <h2 className="text-display-sm lg:text-display-md font-display text-white mb-4">
               Why Greywater Makes Sense
             </h2>
-            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-ocean-100 mb-12 max-w-2xl mx-auto">
               Transform water waste into a sustainable resource for your landscape
             </p>
-            
-            <div className="grid md:grid-cols-3 gap-6 mb-10">
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Droplets className="h-7 w-7 text-white" />
+
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-500 group">
+                <div className="w-16 h-16 bg-ocean-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Droplets className="h-8 w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold mb-2">55%</div>
+                <div className="stat-number text-white mb-2">55%</div>
                 <div className="text-lg font-semibold mb-1">Outdoor Usage</div>
-                <p className="text-blue-200 text-sm">Household water used for landscape irrigation</p>
+                <p className="text-ocean-200 text-sm">Household water used for landscape irrigation</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Zap className="h-7 w-7 text-white" />
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-500 group">
+                <div className="w-16 h-16 bg-terra-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Zap className="h-8 w-8 text-terra-300" />
                 </div>
-                <div className="text-4xl font-bold mb-2">40%</div>
+                <div className="stat-number text-white mb-2">40%</div>
                 <div className="text-lg font-semibold mb-1">Bill Savings</div>
-                <p className="text-blue-200 text-sm">Typical reduction in monthly water costs</p>
+                <p className="text-ocean-200 text-sm">Typical reduction in monthly water costs</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Calculator className="h-7 w-7 text-white" />
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-500 group">
+                <div className="w-16 h-16 bg-ocean-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Calculator className="h-8 w-8 text-white" />
                 </div>
-                <div className="text-4xl font-bold mb-2">17K+</div>
+                <div className="stat-number text-white mb-2">17K+</div>
                 <div className="text-lg font-semibold mb-1">Gallons/Year</div>
-                <p className="text-blue-200 text-sm">Water recycled by average household system</p>
+                <p className="text-ocean-200 text-sm">Water recycled by average household system</p>
               </div>
             </div>
-            
-            <p className="text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
+
+            <p className="text-lg text-ocean-100 max-w-2xl mx-auto leading-relaxed">
               Reduce your environmental impact while nourishing your landscape with clean, filtered greywater.
             </p>
           </div>
@@ -2118,23 +2156,84 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
                 <CardHeader className="bg-gray-50 border-b border-gray-100 pb-6">
                   <CardTitle className="flex items-center gap-3 text-xl">
                     <Star className="h-5 w-5 text-gray-600" />
-                    Customer Reviews
+                    Customer Reviews ({hasImportedReviews ? productReviews.length : productContent.reviews?.length || 0})
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 p-8">
-                  {productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
-                    <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-6' : 'pb-2'}`}>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          ))}
+                  {/* Use imported reviews if available (includes images) */}
+                  {hasImportedReviews ? (
+                    productReviews.slice(0, 4).map((review: Review, index: number) => (
+                      <div key={review.id} className={`${index < Math.min(productReviews.length, 4) - 1 ? 'border-b pb-6' : 'pb-2'}`}>
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="flex">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star key={star} className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                              ))}
+                            </div>
+                            <span className="font-semibold text-gray-900">{review.name}</span>
+                            {review.verified_buyer && (
+                              <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200 text-xs">
+                                <ShieldCheck className="h-3 w-3 mr-1" />
+                                Verified
+                              </Badge>
+                            )}
+                          </div>
+                          {review.created_at && (
+                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                              <Calendar className="h-3 w-3" />
+                              {new Date(review.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </div>
+                          )}
                         </div>
-                        <span className="font-semibold text-gray-900">{review.name}</span>
+                        {review.title && (
+                          <p className="font-medium text-gray-900 mb-2">{review.title}</p>
+                        )}
+                        <p className="text-gray-600 leading-relaxed mb-3">"{review.review}"</p>
+                        {/* Review Images */}
+                        {review.images && review.images.length > 0 && (
+                          <div className="mt-3">
+                            <div className="flex flex-wrap gap-2">
+                              {review.images.slice(0, 4).map((image, imageIndex) => (
+                                <div key={imageIndex} className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                  <Image
+                                    src={image.url}
+                                    alt={image.alt}
+                                    fill
+                                    className="object-cover"
+                                    sizes="64px"
+                                  />
+                                </div>
+                              ))}
+                              {review.images.length > 4 && (
+                                <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 text-xs font-medium">
+                                  +{review.images.length - 4}
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                              <ImageIcon className="h-3 w-3" />
+                              {review.images.length} photo{review.images.length !== 1 ? 's' : ''} from customer
+                            </p>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-gray-600 leading-relaxed">"{review.review}"</p>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    productContent.reviews && productContent.reviews.slice(0, 3).map((review: any, index: number) => (
+                      <div key={index} className={`${index < productContent.reviews.length - 1 ? 'border-b pb-6' : 'pb-2'}`}>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="flex">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
+                          <span className="font-semibold text-gray-900">{review.name}</span>
+                        </div>
+                        <p className="text-gray-600 leading-relaxed">"{review.review}"</p>
+                      </div>
+                    ))
+                  )}
                 </CardContent>
               </Card>
 

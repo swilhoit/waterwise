@@ -7,21 +7,18 @@ export async function GET() {
       projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
     });
 
-    // Key tables for hierarchical structure
+    // Active tables used by the application
     const keyTables = [
-      { dataset: 'greywater_compliance', table: 'complete_jurisdiction_hierarchy' },
-      { dataset: 'greywater_compliance', table: 'jurisdiction_hierarchy_complete' },
-      { dataset: 'greywater_compliance', table: 'jurisdictions_master' },
-      { dataset: 'greywater_compliance', table: 'state_level_data' },
-      { dataset: 'greywater_compliance', table: 'county_level_data' },
-      { dataset: 'greywater_compliance', table: 'water_district_data' },
-      { dataset: 'geography', table: 'cities' },
-      { dataset: 'geography', table: 'counties' },
-      { dataset: 'geography', table: 'water_districts' },
-      { dataset: 'geography', table: 'city_county_mapping' },
-      { dataset: 'greywater_compliance', table: 'incentives_master' },
-      { dataset: 'greywater_compliance', table: 'permits_master' },
-      { dataset: 'greywater_compliance', table: 'regulations_master' }
+      // Primary data tables
+      { dataset: 'greywater_compliance', table: 'state_water_regulations' },
+      { dataset: 'greywater_compliance', table: 'city_county_mapping' },
+      { dataset: 'greywater_compliance', table: 'local_regulations' },
+      // Programs/incentives tables
+      { dataset: 'greywater_compliance', table: 'programs_master' },
+      { dataset: 'greywater_compliance', table: 'program_jurisdiction_link' },
+      // Permit details
+      { dataset: 'greywater_compliance', table: 'city_permit_details' },
+      { dataset: 'greywater_compliance', table: 'state_permit_details' }
     ];
 
     const tableInfo = await Promise.all(
@@ -69,18 +66,13 @@ export async function GET() {
       })
     );
 
-    // Analyze hierarchy relationships
+    // Analyze hierarchy relationships from active tables
     const hierarchyQuery = `
-      WITH hierarchy_check AS (
-        SELECT 
-          'complete_jurisdiction_hierarchy' as source_table,
-          COUNT(DISTINCT state_name) as states,
-          COUNT(DISTINCT county_name) as counties,
-          COUNT(DISTINCT city_name) as cities,
-          COUNT(DISTINCT water_district) as water_districts
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.complete_jurisdiction_hierarchy\`
-      )
-      SELECT * FROM hierarchy_check
+      SELECT
+        COUNT(DISTINCT state_code) as states,
+        COUNT(DISTINCT county_name) as counties,
+        COUNT(DISTINCT city_name) as cities
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
     `;
 
     let hierarchyStats;
@@ -97,18 +89,12 @@ export async function GET() {
       tables: tableInfo,
       hierarchyStats,
       recommendation: {
-        primaryHierarchyTable: 'greywater_compliance.complete_jurisdiction_hierarchy',
-        geographyTables: {
-          states: 'greywater_compliance.state_level_data',
-          counties: 'greywater_compliance.county_level_data', 
-          cities: 'geography.cities',
-          waterDistricts: 'greywater_compliance.water_district_data'
+        primaryTables: {
+          regulations: 'greywater_compliance.state_water_regulations',
+          geography: 'greywater_compliance.city_county_mapping',
+          programs: 'greywater_compliance.programs_master'
         },
-        complianceTables: {
-          regulations: 'greywater_compliance.regulations_master',
-          permits: 'greywater_compliance.permits_master',
-          incentives: 'greywater_compliance.incentives_master'
-        }
+        note: 'state_water_regulations contains both greywater and rainwater data (use resource_type filter)'
       },
       timestamp: new Date().toISOString()
     });

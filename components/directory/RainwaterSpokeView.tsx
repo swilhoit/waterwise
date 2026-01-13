@@ -22,6 +22,16 @@ interface RainwaterData {
   keyRestrictions?: string[]
   approvedUses?: string[]
   summary?: string
+  // Use types
+  indoorUseAllowed?: boolean
+  outdoorUseAllowed?: boolean
+  // Storage types
+  cisternAllowed?: boolean
+  rainBarrelAllowed?: boolean
+  undergroundAllowed?: boolean
+  // Stub-out requirements
+  stubOutRequired?: boolean
+  stubOutDetails?: string
 }
 
 interface AgencyData {
@@ -154,6 +164,45 @@ export default function RainwaterSpokeView({
           </div>
 
           <div className="p-6">
+            {/* Storage Types Allowed */}
+            {(rainwater?.rainBarrelAllowed !== undefined ||
+              rainwater?.cisternAllowed !== undefined ||
+              rainwater?.undergroundAllowed !== undefined) && (
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">Allowed Storage Types</h3>
+                <div className="flex flex-wrap gap-2">
+                  {rainwater?.rainBarrelAllowed && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm">
+                      <Check className="h-3 w-3" /> Rain Barrels
+                    </span>
+                  )}
+                  {rainwater?.cisternAllowed && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm">
+                      <Check className="h-3 w-3" /> Cisterns
+                    </span>
+                  )}
+                  {rainwater?.undergroundAllowed && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-lg text-sm">
+                      <Check className="h-3 w-3" /> Underground Storage
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Stub-out / Preplumbing Requirement */}
+            {rainwater?.stubOutRequired && (
+              <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                <p className="font-medium text-purple-800 flex items-center gap-2">
+                  <Droplet className="h-4 w-4" />
+                  New Construction Requirement
+                </p>
+                <p className="text-sm text-purple-700 mt-1">
+                  {rainwater.stubOutDetails || 'New construction must include rainwater-ready plumbing.'}
+                </p>
+              </div>
+            )}
+
             {/* Two columns: Approved Uses + Restrictions */}
             <div className="grid md:grid-cols-2 gap-6">
               <div>

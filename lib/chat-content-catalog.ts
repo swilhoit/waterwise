@@ -159,7 +159,7 @@ export const articles: ArticleCard[] = [
     name: 'Greywater Laws by State',
     description: 'Check regulations and permit requirements for greywater systems in your state.',
     image: `${BASE_URL}/images/architect.png`,
-    url: `${BASE_URL}/greywater-laws`,
+    url: `${BASE_URL}/directory`,
     keywords: ['law', 'legal', 'permit', 'regulation', 'code', 'state', 'allowed', 'rules']
   },
   {

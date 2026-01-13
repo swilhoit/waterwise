@@ -84,7 +84,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
   if (!selectedVariant) {
     return (
-      <Button size="lg" className="w-full bg-gray-400 cursor-not-allowed" disabled>
+      <Button size="lg" className="w-full bg-sand-400 cursor-not-allowed" disabled>
         Out of Stock
       </Button>
     )
@@ -98,13 +98,13 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
   const getVariantIcon = (variantType?: string) => {
     switch (variantType) {
       case 'gwdd-gravity':
-        return <Droplets className="h-5 w-5 text-blue-600" />
+        return <Droplets className="h-5 w-5 text-ocean-600" />
       case 'gwdd-pump':
-        return <Zap className="h-5 w-5 text-amber-600" />
+        return <Zap className="h-5 w-5 text-terra-600" />
       case 'pro':
-        return <Building className="h-5 w-5 text-purple-600" />
+        return <Building className="h-5 w-5 text-sand-700" />
       default:
-        return <Home className="h-5 w-5 text-gray-600" />
+        return <Home className="h-5 w-5 text-sand-600" />
     }
   }
 
@@ -112,11 +112,11 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
   const getVariantBadge = (variantType?: string) => {
     switch (variantType) {
       case 'gwdd-gravity':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">Entry Level</Badge>
+        return <span className="badge-ocean text-2xs">Entry Level</span>
       case 'gwdd-pump':
-        return <Badge className="bg-amber-100 text-amber-800 border-amber-200 text-xs">Most Popular</Badge>
+        return <span className="badge-terra text-2xs">Most Popular</span>
       case 'pro':
-        return <Badge className="bg-purple-100 text-purple-800 border-purple-200 text-xs">Commercial</Badge>
+        return <span className="badge-sand text-2xs">Commercial</span>
       default:
         return null
     }
@@ -126,7 +126,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
     <div>
       {product.variants?.edges && product.variants.edges.length > 1 && (
         <div className="mb-6">
-          <h4 className="font-semibold mb-3 text-lg">Select Configuration:</h4>
+          <h4 className="font-display text-lg text-sand-900 mb-4">Select Configuration:</h4>
           <div className="space-y-3">
             {product.variants.edges.map((edge) => {
               const variant = edge.node
@@ -136,10 +136,10 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
                 <button
                   key={variant.id}
                   onClick={() => setSelectedVariant(variant)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                  className={`w-full text-left p-4 rounded-2xl border-2 transition-all duration-300 ${
                     isSelected
-                      ? 'border-blue-600 bg-blue-50 shadow-md'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      ? 'border-ocean-500 bg-ocean-50 shadow-ocean'
+                      : 'border-sand-200 hover:border-sand-300 hover:bg-sand-50'
                   } ${!variant.availableForSale ? 'opacity-60' : ''}`}
                   disabled={!variant.availableForSale}
                 >
@@ -149,51 +149,51 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
                       {/* Header row */}
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                          <div className={`p-2.5 rounded-xl ${isSelected ? 'bg-ocean-100' : 'bg-sand-100'} transition-colors`}>
                             {getVariantIcon(variant.variantType)}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className={`font-semibold text-base ${variant.availableForSale ? 'text-gray-900' : 'text-gray-500'}`}>
+                              <span className={`font-semibold text-base ${variant.availableForSale ? 'text-sand-900' : 'text-sand-500'}`}>
                                 {variant.title}
                               </span>
                               {getVariantBadge(variant.variantType)}
                             </div>
                             {variant.subtitle && (
-                              <span className="text-sm text-gray-500">{variant.subtitle}</span>
+                              <span className="text-sm text-sand-500">{variant.subtitle}</span>
                             )}
                           </div>
                         </div>
-                        <span className={`text-xl font-bold ${variant.availableForSale ? 'text-gray-900' : 'text-gray-500'}`}>
+                        <span className={`text-xl font-bold ${variant.availableForSale ? 'text-sand-900' : 'text-sand-500'}`}>
                           ${formatPrice(variant.priceV2.amount)}
                         </span>
                       </div>
 
                       {/* Specs grid */}
                       {variant.specs && (
-                        <div className="grid grid-cols-4 gap-2 pt-2 border-t border-gray-100">
+                        <div className="grid grid-cols-4 gap-2 pt-3 border-t border-sand-100">
                           {variant.specs.capacity && (
                             <div className="text-center">
-                              <div className="text-xs text-gray-500">Capacity</div>
-                              <div className="text-sm font-medium">{variant.specs.capacity}</div>
+                              <div className="text-xs text-sand-500">Capacity</div>
+                              <div className="text-sm font-semibold text-sand-800">{variant.specs.capacity}</div>
                             </div>
                           )}
                           {variant.specs.flow && (
                             <div className="text-center">
-                              <div className="text-xs text-gray-500">Flow Rate</div>
-                              <div className="text-sm font-medium">{variant.specs.flow}</div>
+                              <div className="text-xs text-sand-500">Flow Rate</div>
+                              <div className="text-sm font-semibold text-sand-800">{variant.specs.flow}</div>
                             </div>
                           )}
                           {variant.specs.solidRemoval && (
                             <div className="text-center">
-                              <div className="text-xs text-gray-500">Filtration</div>
-                              <div className="text-sm font-medium">{variant.specs.solidRemoval}</div>
+                              <div className="text-xs text-sand-500">Filtration</div>
+                              <div className="text-sm font-semibold text-sand-800">{variant.specs.solidRemoval}</div>
                             </div>
                           )}
                           {variant.specs.power && (
                             <div className="text-center">
-                              <div className="text-xs text-gray-500">Power</div>
-                              <div className="text-sm font-medium">{variant.specs.power}</div>
+                              <div className="text-xs text-sand-500">Power</div>
+                              <div className="text-sm font-semibold text-sand-800">{variant.specs.power}</div>
                             </div>
                           )}
                         </div>
@@ -201,25 +201,25 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
                       {/* Best for */}
                       {variant.bestFor && (
-                        <div className="flex items-start gap-2 pt-2 border-t border-gray-100">
-                          <CheckCircle className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-600">
-                            <span className="font-medium text-gray-700">Best for:</span> {variant.bestFor}
+                        <div className="flex items-start gap-2 pt-3 border-t border-sand-100">
+                          <CheckCircle className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm text-sand-600">
+                            <span className="font-medium text-sand-700">Best for:</span> {variant.bestFor}
                           </span>
                         </div>
                       )}
 
                       {!variant.availableForSale && (
-                        <span className="text-sm text-red-500 font-medium">Currently Out of Stock</span>
+                        <span className="text-sm text-terra-600 font-medium">Currently Out of Stock</span>
                       )}
                     </div>
                   ) : (
                     /* Simple variant display for non-aqua2use products */
                     <div className="flex justify-between items-center">
-                      <span className={variant.availableForSale ? '' : 'text-gray-500'}>
+                      <span className={variant.availableForSale ? 'text-sand-900' : 'text-sand-500'}>
                         {variant.title}
                       </span>
-                      <span className={`font-semibold ${variant.availableForSale ? '' : 'text-gray-500'}`}>
+                      <span className={`font-semibold ${variant.availableForSale ? 'text-sand-900' : 'text-sand-500'}`}>
                         ${formatPrice(variant.priceV2.amount)}
                       </span>
                     </div>
@@ -233,7 +233,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
       <Button
         size="lg"
-        className="w-full bg-green-600 hover:bg-green-700 text-white h-14 text-lg"
+        className="w-full bg-terra-500 hover:bg-terra-600 text-white h-14 text-lg rounded-xl shadow-terra transition-all duration-300 hover:-translate-y-0.5"
         onClick={handleAddToCart}
         disabled={!selectedVariant?.availableForSale || isAdded}
       >

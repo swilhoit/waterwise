@@ -2,7 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllStates } from '@/lib/directory-data'
 import { STATE_NAMES } from '@/lib/state-utils'
-import { MapPin, Droplets, ChevronRight, Search, DollarSign, CheckCircle2, AlertCircle } from 'lucide-react'
+import { MapPin, Droplets, ChevronRight, Search, DollarSign } from 'lucide-react'
+import { LegalStatusBadge } from '@/components/directory/badges'
 
 export const metadata: Metadata = {
   title: 'Water Conservation Directory | Greywater & Rainwater Laws by State',
@@ -11,32 +12,6 @@ export const metadata: Metadata = {
 }
 
 export const revalidate = 3600
-
-function getLegalStatusBadge(status?: string) {
-  if (!status) return null
-  const lower = status.toLowerCase()
-  if (lower.includes('legal') || lower === 'l') {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700 rounded-full">
-        <CheckCircle2 className="h-3 w-3" />
-        Legal
-      </span>
-    )
-  }
-  if (lower.includes('regulated') || lower === 'r') {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded-full">
-        <AlertCircle className="h-3 w-3" />
-        Regulated
-      </span>
-    )
-  }
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
-      Varies
-    </span>
-  )
-}
 
 export default async function DirectoryPage() {
   const states = await getAllStates()
@@ -131,7 +106,7 @@ export default async function DirectoryPage() {
                           <span className="text-xs text-gray-400">{state.stateCode}</span>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          {getLegalStatusBadge(state.legalStatus)}
+                          <LegalStatusBadge status={state.legalStatus} />
                           {state.incentiveCount > 0 && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full">
                               <DollarSign className="h-3 w-3" />

@@ -11,7 +11,6 @@ const EXCLUDED_PATHS = [
   '/products',        // Shopify product pages
   '/blog',            // Shopify blog
   '/directory',       // BigQuery directory
-  '/greywater-laws',  // BigQuery laws data
   '/contact',         // Form handling
   '/shipping',        // Policy pages
   '/returns',

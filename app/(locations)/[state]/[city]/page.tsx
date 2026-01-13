@@ -243,6 +243,46 @@ async function getCityIncentives(stateCode: string, cityName: string, countyName
   }
 }
 
+// Fetch water utilities serving this city
+async function getCityWaterUtilities(stateCode: string, cityName: string) {
+  try {
+    const bigquery = getBigQueryClient()
+    const cityJurisdictionId = `${stateCode.toUpperCase()}_CITY_${cityName.toUpperCase().replace(/\s+/g, '_')}`
+
+    const query = `
+      SELECT
+        u.utility_id,
+        u.utility_name,
+        u.utility_type,
+        u.website,
+        u.phone,
+        usa.service_type
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.utility_service_areas\` usa
+      JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.water_utilities\` u
+        ON usa.utility_id = u.utility_id
+      WHERE usa.jurisdiction_id = @jurisdictionId
+      ORDER BY
+        CASE WHEN usa.service_type = 'primary' THEN 0 ELSE 1 END,
+        u.utility_name
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: { jurisdictionId: cityJurisdictionId }
+    }) as any
+
+    return (rows || []).map((row: any) => ({
+      name: row.utility_name,
+      website: row.website,
+      phone: row.phone,
+      serviceType: row.service_type
+    }))
+  } catch (error) {
+    console.error('Error fetching water utilities:', error)
+    return []
+  }
+}
+
 // Fetch city-specific permit details
 async function getCityPermitDetails(stateCode: string, cityName: string) {
   try {
@@ -436,11 +476,12 @@ export default async function CityHubPage({ params }: PageProps) {
   if (!cityData) {
     // Create page anyway with formatted city name
     const cityName = formatCityName(city)
-    const [regulations, incentives, localRegs, permitDetails] = await Promise.all([
+    const [regulations, incentives, localRegs, permitDetails, waterUtilities] = await Promise.all([
       getStateRegulations(stateCode),
       getCityIncentives(stateCode, cityName, ''),
       getLocalRegulations(stateCode, cityName),
-      getCityPermitDetails(stateCode, cityName)
+      getCityPermitDetails(stateCode, cityName),
+      getCityWaterUtilities(stateCode, cityName)
     ])
 
     const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
@@ -464,6 +505,7 @@ export default async function CityHubPage({ params }: PageProps) {
             permitRequired: localRegs.permitRequired
           } : null}
           permitData={permitDetails}
+          waterUtilities={waterUtilities}
         />
       </>
     )
@@ -472,11 +514,12 @@ export default async function CityHubPage({ params }: PageProps) {
   const cityName = cityData.city_name
   const countyName = cityData.county_name
 
-  const [regulations, incentives, localRegs, permitDetails] = await Promise.all([
+  const [regulations, incentives, localRegs, permitDetails, waterUtilities] = await Promise.all([
     getStateRegulations(stateCode),
     getCityIncentives(stateCode, cityName, countyName),
     getLocalRegulations(stateCode, cityName, countyName),
-    getCityPermitDetails(stateCode, cityName)
+    getCityPermitDetails(stateCode, cityName),
+    getCityWaterUtilities(stateCode, cityName)
   ])
 
   const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
@@ -501,6 +544,7 @@ export default async function CityHubPage({ params }: PageProps) {
           permitRequired: localRegs.permitRequired
         } : null}
         permitData={permitDetails}
+        waterUtilities={waterUtilities}
       />
     </>
   )

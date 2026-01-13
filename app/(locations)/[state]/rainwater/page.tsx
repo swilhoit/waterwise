@@ -38,6 +38,17 @@ async function getRainwaterData(stateCode: string) {
         governing_code_url,
         tax_incentives,
         key_restrictions,
+        approved_uses,
+        indoor_use_allowed,
+        outdoor_use_allowed,
+        -- Storage types
+        cistern_allowed,
+        rain_barrel_allowed,
+        underground_storage_allowed,
+        -- Stub-out requirements
+        stub_out_required,
+        stub_out_details,
+        -- Agency
         primary_agency,
         agency_phone,
         government_website
@@ -66,7 +77,17 @@ async function getRainwaterData(stateCode: string) {
           governingCode: row.governing_code,
           governingCodeUrl: row.governing_code_url,
           taxIncentives: row.tax_incentives,
-          keyRestrictions: row.key_restrictions || []
+          keyRestrictions: row.key_restrictions || [],
+          approvedUses: row.approved_uses || [],
+          indoorUseAllowed: row.indoor_use_allowed,
+          outdoorUseAllowed: row.outdoor_use_allowed,
+          // Storage types
+          cisternAllowed: row.cistern_allowed,
+          rainBarrelAllowed: row.rain_barrel_allowed,
+          undergroundAllowed: row.underground_storage_allowed,
+          // Stub-out requirements
+          stubOutRequired: row.stub_out_required,
+          stubOutDetails: row.stub_out_details
         },
         agency: {
           name: row.primary_agency,

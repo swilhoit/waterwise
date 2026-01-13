@@ -201,6 +201,130 @@ export function ArticleSchema({ article }: { article: {
   )
 }
 
+// Individual review schema for Google rich snippets
+export interface ReviewSchemaData {
+  id: string
+  name: string
+  rating: number
+  review: string
+  created_at: string
+  images?: { url: string; alt: string }[]
+}
+
+export function ReviewSchema({ review, productName }: {
+  review: ReviewSchemaData
+  productName: string
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "itemReviewed": {
+      "@type": "Product",
+      "name": productName
+    },
+    "author": {
+      "@type": "Person",
+      "name": review.name
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": review.rating,
+      "bestRating": 5,
+      "worstRating": 1
+    },
+    "reviewBody": review.review,
+    "datePublished": review.created_at,
+    ...(review.images && review.images.length > 0 ? {
+      "image": review.images.map(img => `https://waterwisegroup.com${img.url}`)
+    } : {})
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
+// Product schema with embedded reviews for Google rich snippets
+export function ProductWithReviewsSchema({ product, reviews }: {
+  product: {
+    name: string
+    description: string
+    image: string
+    sku?: string
+    price: string
+    priceCurrency?: string
+    availability?: string
+    url: string
+    brand?: string
+  }
+  reviews: ReviewSchemaData[]
+}) {
+  // Calculate aggregate rating
+  const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0)
+  const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "description": product.description,
+    "image": product.image,
+    "sku": product.sku,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand || "Aqua2use"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": product.url,
+      "priceCurrency": product.priceCurrency || "USD",
+      "price": product.price,
+      "availability": product.availability || "https://schema.org/InStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Water Wise Group"
+      }
+    },
+    ...(reviews.length > 0 ? {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": Math.round(averageRating * 10) / 10,
+        "reviewCount": reviews.length,
+        "bestRating": 5,
+        "worstRating": 1
+      },
+      "review": reviews.map(review => ({
+        "@type": "Review",
+        "author": {
+          "@type": "Person",
+          "name": review.name
+        },
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": review.rating,
+          "bestRating": 5,
+          "worstRating": 1
+        },
+        "reviewBody": review.review,
+        "datePublished": review.created_at,
+        ...(review.images && review.images.length > 0 ? {
+          "image": review.images.map(img => `https://waterwisegroup.com${img.url}`)
+        } : {})
+      }))
+    } : {})
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
 export function LocalBusinessSchema() {
   const schema = {
     "@context": "https://schema.org",

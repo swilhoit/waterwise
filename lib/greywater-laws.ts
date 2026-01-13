@@ -57,7 +57,8 @@ async function fetchAllStates(): Promise<Map<string, StateInfo>> {
       government_website as governmentWebsite,
       regulatory_classification as regulatoryClassification,
       summary
-    FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
+    FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+    WHERE resource_type = 'greywater'
     ORDER BY state_name
   `
 
@@ -117,7 +118,7 @@ export function getMetadata(): StateMetadata {
   return {
     title: "US Greywater Regulations Directory",
     lastUpdated: new Date().toISOString().split('T')[0],
-    dataSource: "BigQuery greywater_compliance.greywater_laws",
+    dataSource: "BigQuery greywater_compliance.state_water_regulations",
     totalStates: 50,
     summary: "Comprehensive database of greywater regulations across all 50 US states"
   }

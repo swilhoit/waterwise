@@ -33,6 +33,16 @@ export interface RainwaterData {
   approvedUses?: string[]
   keyRestrictions?: string[]
   summary?: string
+  // Use types
+  indoorUseAllowed?: boolean
+  outdoorUseAllowed?: boolean
+  // Storage types
+  cisternAllowed?: boolean
+  rainBarrelAllowed?: boolean
+  undergroundAllowed?: boolean
+  // Stub-out / preplumbing
+  stubOutRequired?: boolean
+  stubOutDetails?: string
 }
 
 export interface PreplumbingData {
@@ -182,61 +192,13 @@ export function normalizeLegalStatus(status: string | null | undefined): string 
 }
 
 /**
- * Fetch rainwater data from the rainwater_laws table
- */
-async function getRainwaterData(bigquery: any, stateCode: string): Promise<RainwaterData | null> {
-  try {
-    const query = `
-      SELECT
-        legal_status,
-        permit_required,
-        governing_code,
-        potable_use_allowed,
-        approved_uses,
-        key_restrictions,
-        summary,
-        tax_incentives_available
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.rainwater_laws\`
-      WHERE state_code = @stateCode
-      LIMIT 1
-    `
-
-    const [rows] = await bigquery.query({
-      query,
-      params: { stateCode: stateCode.toUpperCase() }
-    }) as any
-
-    if (rows && rows.length > 0) {
-      const row = rows[0]
-      return {
-        legalStatus: normalizeLegalStatus(row.legal_status),
-        permitRequired: row.permit_required || undefined,
-        governingCode: row.governing_code || undefined,
-        potableUseAllowed: row.potable_use_allowed || false,
-        collectionLimitGallons: null, // Not in this table schema
-        approvedUses: row.approved_uses || [],
-        keyRestrictions: row.key_restrictions || [],
-        summary: row.summary || undefined,
-        taxIncentives: row.tax_incentives_available ? 'Available' : undefined
-      }
-    }
-
-    return null
-  } catch (error) {
-    // Table might not exist or have data - this is expected
-    console.log('No rainwater_laws data for state:', stateCode)
-    return null
-  }
-}
-
-/**
- * Fetch state-level regulations from BigQuery
+ * Fetch state-level regulations from BigQuery (unified table)
  */
 export async function getStateData(stateCode: string): Promise<StateData | null> {
   try {
     const bigquery = getBigQueryClient()
 
-    // Join greywater and rainwater rows from state_water_regulations table
+    // Query unified state_water_regulations table (greywater + rainwater in one query)
     const query = `
       SELECT
         g.state_code,
@@ -254,6 +216,7 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
         g.primary_agency,
         g.agency_phone,
         g.government_website,
+        g.updated_at,
         -- Rainwater fields (from joined row)
         r.legal_status as rainwater_legal_status,
         r.collection_limit_gallons as rainwater_collection_limit_gallons,
@@ -261,7 +224,10 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
         r.permit_required as rainwater_permit_required,
         r.governing_code as rainwater_governing_code,
         r.tax_incentives as rainwater_tax_incentives,
-        r.key_restrictions as rainwater_key_restrictions
+        r.key_restrictions as rainwater_key_restrictions,
+        r.approved_uses as rainwater_approved_uses,
+        r.indoor_use_allowed as rainwater_indoor_allowed,
+        r.outdoor_use_allowed as rainwater_outdoor_allowed
       FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` g
       LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` r
         ON g.state_code = r.state_code AND r.resource_type = 'rainwater'
@@ -277,15 +243,7 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
 
     if (rows && rows.length > 0) {
       const row = rows[0]
-
-      // Check if we have rainwater data in the unified table
       const hasRainwaterData = row.rainwater_legal_status != null
-
-      // If no rainwater data in unified table, try the separate rainwater_laws table
-      let rainwaterData: RainwaterData | null = null
-      if (!hasRainwaterData) {
-        rainwaterData = await getRainwaterData(bigquery, stateCode)
-      }
 
       return {
         stateCode: row.state_code,
@@ -297,8 +255,9 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
           indoorUseAllowed: row.greywater_indoor_allowed,
           outdoorUseAllowed: row.greywater_outdoor_allowed,
           governingCode: row.greywater_governing_code,
-          approvedUses: row.greywater_approved_uses ? row.greywater_approved_uses.split(',').map((s: string) => s.trim()) : [],
-          keyRestrictions: row.greywater_key_restrictions ? row.greywater_key_restrictions.split(',').map((s: string) => s.trim()) : [],
+          // Data is now ARRAY<STRING> - no need to split
+          approvedUses: row.greywater_approved_uses || [],
+          keyRestrictions: row.greywater_key_restrictions || [],
           recentChanges: row.greywater_recent_changes
         },
         rainwater: hasRainwaterData ? {
@@ -308,71 +267,17 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
           permitRequired: row.rainwater_permit_required || undefined,
           governingCode: row.rainwater_governing_code,
           taxIncentives: row.rainwater_tax_incentives,
-          keyRestrictions: row.rainwater_key_restrictions || []
-        } : rainwaterData, // Use data from rainwater_laws table if available
+          keyRestrictions: row.rainwater_key_restrictions || [],
+          approvedUses: row.rainwater_approved_uses || [],
+          indoorUseAllowed: row.rainwater_indoor_allowed,
+          outdoorUseAllowed: row.rainwater_outdoor_allowed
+        } : null,
         agency: {
           name: row.primary_agency,
           phone: row.agency_phone,
           website: row.government_website
         },
-        lastUpdated: row.last_updated
-      }
-    }
-
-    // Fallback to greywater_laws table for greywater data
-    const fallbackQuery = `
-      SELECT
-        state_code,
-        state_name,
-        legal_status,
-        permit_required,
-        permit_threshold_gpd,
-        indoor_use_allowed,
-        outdoor_use_allowed,
-        governing_code,
-        approved_uses,
-        key_restrictions,
-        recent_changes,
-        primary_agency,
-        agency_phone,
-        government_website
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
-      WHERE state_code = @stateCode
-      LIMIT 1
-    `
-
-    const [fallbackRows] = await bigquery.query({
-      query: fallbackQuery,
-      params: { stateCode: stateCode.toUpperCase() }
-    }) as any
-
-    if (fallbackRows && fallbackRows.length > 0) {
-      const row = fallbackRows[0]
-
-      // Try to get rainwater data from the separate table
-      const rainwaterData = await getRainwaterData(bigquery, stateCode)
-
-      return {
-        stateCode: row.state_code,
-        stateName: row.state_name || STATE_NAMES[stateCode.toUpperCase()],
-        greywater: {
-          legalStatus: normalizeLegalStatus(row.legal_status),
-          permitRequired: row.permit_required,
-          permitThresholdGpd: row.permit_threshold_gpd,
-          indoorUseAllowed: row.indoor_use_allowed,
-          outdoorUseAllowed: row.outdoor_use_allowed,
-          governingCode: row.governing_code,
-          approvedUses: row.approved_uses ? row.approved_uses.split(',').map((s: string) => s.trim()) : [],
-          keyRestrictions: row.key_restrictions ? row.key_restrictions.split(',').map((s: string) => s.trim()) : [],
-          recentChanges: row.recent_changes
-        },
-        rainwater: rainwaterData, // null if no data - no more false 'Legal' default
-        agency: {
-          name: row.primary_agency,
-          phone: row.agency_phone,
-          website: row.government_website
-        },
-        lastUpdated: undefined
+        lastUpdated: row.updated_at
       }
     }
 
@@ -608,8 +513,8 @@ export async function getAllStates(): Promise<Array<{
           state_code,
           state_name,
           legal_status
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
-        WHERE state_code IS NOT NULL
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+        WHERE state_code IS NOT NULL AND resource_type = 'greywater'
       )
       SELECT
         g.state_code,

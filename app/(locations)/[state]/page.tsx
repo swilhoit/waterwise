@@ -47,6 +47,7 @@ async function getStateData(stateCode: string) {
         g.indoor_use_allowed as greywater_indoor_allowed,
         g.outdoor_use_allowed as greywater_outdoor_allowed,
         g.governing_code as greywater_governing_code,
+        g.governing_code_url as greywater_governing_code_url,
         g.approved_uses as greywater_approved_uses,
         g.key_restrictions as greywater_key_restrictions,
         g.recent_changes as greywater_recent_changes,
@@ -60,8 +61,19 @@ async function getStateData(stateCode: string) {
         r.potable_use_allowed as rainwater_potable_allowed,
         r.permit_required as rainwater_permit_required,
         r.governing_code as rainwater_governing_code,
+        r.governing_code_url as rainwater_governing_code_url,
         r.tax_incentives as rainwater_tax_incentives,
-        r.key_restrictions as rainwater_key_restrictions
+        r.key_restrictions as rainwater_key_restrictions,
+        r.approved_uses as rainwater_approved_uses,
+        r.indoor_use_allowed as rainwater_indoor_allowed,
+        r.outdoor_use_allowed as rainwater_outdoor_allowed,
+        -- Storage types
+        r.cistern_allowed as rainwater_cistern_allowed,
+        r.rain_barrel_allowed as rainwater_rain_barrel_allowed,
+        r.underground_storage_allowed as rainwater_underground_allowed,
+        -- Stub-out requirements
+        r.stub_out_required as rainwater_stub_out_required,
+        r.stub_out_details as rainwater_stub_out_details
       FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` g
       LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` r
         ON g.state_code = r.state_code AND r.resource_type = 'rainwater'
@@ -76,67 +88,10 @@ async function getStateData(stateCode: string) {
     }) as any
 
     if (!stateRows || stateRows.length === 0) {
-      // Fallback to greywater_laws table
-      const fallbackQuery = `
-        SELECT
-          state_code,
-          state_name,
-          legal_status,
-          permit_required,
-          permit_threshold_gpd,
-          indoor_use_allowed,
-          outdoor_use_allowed,
-          governing_code,
-          approved_uses,
-          key_restrictions,
-          recent_changes,
-          summary,
-          primary_agency,
-          agency_phone,
-          government_website
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
-        WHERE state_code = @stateCode
-        LIMIT 1
-      `
-      const [fallbackRows] = await bigquery.query({
-        query: fallbackQuery,
-        params: { stateCode: stateCode.toUpperCase() }
-      }) as any
-
-      if (!fallbackRows || fallbackRows.length === 0) {
-        return null
-      }
-
-      const row = fallbackRows[0]
-
-      return {
-        stateCode: row.state_code,
-        stateName: row.state_name,
-        greywater: {
-          legalStatus: normalizeLegalStatus(row.legal_status),
-          permitRequired: row.permit_required,
-          permitThresholdGpd: row.permit_threshold_gpd,
-          indoorUseAllowed: row.indoor_use_allowed,
-          outdoorUseAllowed: row.outdoor_use_allowed,
-          governingCode: row.governing_code,
-          approvedUses: row.approved_uses ? (Array.isArray(row.approved_uses) ? row.approved_uses : row.approved_uses.split(',').map((s: string) => s.trim())) : [],
-          keyRestrictions: row.key_restrictions ? (Array.isArray(row.key_restrictions) ? row.key_restrictions : row.key_restrictions.split(',').map((s: string) => s.trim())) : [],
-          recentChanges: row.recent_changes,
-          summary: row.summary
-        },
-        rainwater: null, // No rainwater data in legacy table
-        agency: {
-          name: row.primary_agency,
-          phone: row.agency_phone,
-          website: row.government_website
-        },
-        lastUpdated: null
-      }
+      return null
     }
 
     const row = stateRows[0]
-
-    // Check if we have rainwater data in the unified table
     const hasRainwaterData = row.rainwater_legal_status != null
 
     return {
@@ -149,8 +104,10 @@ async function getStateData(stateCode: string) {
         indoorUseAllowed: row.greywater_indoor_allowed,
         outdoorUseAllowed: row.greywater_outdoor_allowed,
         governingCode: row.greywater_governing_code,
-        approvedUses: row.greywater_approved_uses ? (Array.isArray(row.greywater_approved_uses) ? row.greywater_approved_uses : row.greywater_approved_uses.split(',').map((s: string) => s.trim())) : [],
-        keyRestrictions: row.greywater_key_restrictions ? (Array.isArray(row.greywater_key_restrictions) ? row.greywater_key_restrictions : row.greywater_key_restrictions.split(',').map((s: string) => s.trim())) : [],
+        governingCodeUrl: row.greywater_governing_code_url,
+        // Data is now ARRAY<STRING> from BigQuery
+        approvedUses: row.greywater_approved_uses || [],
+        keyRestrictions: row.greywater_key_restrictions || [],
         recentChanges: row.greywater_recent_changes,
         summary: row.greywater_summary
       },
@@ -160,9 +117,20 @@ async function getStateData(stateCode: string) {
         potableUseAllowed: row.rainwater_potable_allowed,
         permitRequired: row.rainwater_permit_required || undefined,
         governingCode: row.rainwater_governing_code,
+        governingCodeUrl: row.rainwater_governing_code_url,
         taxIncentives: row.rainwater_tax_incentives,
-        keyRestrictions: row.rainwater_key_restrictions || []
-      } : null, // null if no rainwater data - no more false 'Legal' default
+        keyRestrictions: row.rainwater_key_restrictions || [],
+        approvedUses: row.rainwater_approved_uses || [],
+        indoorUseAllowed: row.rainwater_indoor_allowed,
+        outdoorUseAllowed: row.rainwater_outdoor_allowed,
+        // Storage types
+        cisternAllowed: row.rainwater_cistern_allowed,
+        rainBarrelAllowed: row.rainwater_rain_barrel_allowed,
+        undergroundAllowed: row.rainwater_underground_allowed,
+        // Stub-out requirements
+        stubOutRequired: row.rainwater_stub_out_required,
+        stubOutDetails: row.rainwater_stub_out_details
+      } : null,
       agency: {
         name: row.primary_agency,
         phone: row.agency_phone,

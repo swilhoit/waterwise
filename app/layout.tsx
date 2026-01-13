@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/header";
@@ -7,11 +7,20 @@ import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart-context";
 import { TopBanner } from "@/components/top-banner";
 
-const inter = Inter({
+// Primary body font - clean, modern, excellent readability
+const dmSans = DM_Sans({
   subsets: ["latin"],
   display: 'swap',
-  preload: true,
-  adjustFontFallback: true
+  variable: '--font-body',
+  weight: ['400', '500', '600', '700'],
+});
+
+// Display font - clean, geometric sans-serif for headlines
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800'],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`} style={{backgroundColor: 'white'}} suppressHydrationWarning>
+      <body className={`${dmSans.variable} ${plusJakarta.variable} font-sans antialiased`} style={{backgroundColor: 'white'}} suppressHydrationWarning>
         <CartProvider>
           <TopBanner />
           <Header />

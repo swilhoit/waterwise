@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
             COALESCE(c.county_count, 0) as county_count,
             COALESCE(c.city_count, 0) as city_count,
             COALESCE(p.program_count, 0) as program_count
-          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` s
+          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` s
           LEFT JOIN (
             SELECT
               state_code,
