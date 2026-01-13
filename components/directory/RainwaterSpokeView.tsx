@@ -8,6 +8,7 @@ import {
   FileText, Gauge, ArrowRight, Droplet, MapPin, Users, ClipboardList,
   Wrench, Timer, BadgeCheck, AlertCircle, Leaf
 } from 'lucide-react'
+import LocationContextCard from './LocationContextCard'
 
 interface RainwaterData {
   legalStatus?: string
@@ -284,65 +285,19 @@ export default function RainwaterSpokeView({
           </div>
         )}
 
-        {/* Local Regulation Summary */}
-        {localRegulation?.regulationSummary && (
-          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4 mb-8">
-            <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-cyan-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-cyan-800">Local Rainwater Regulations</p>
-                <p className="text-sm text-cyan-700 mt-1">{localRegulation.regulationSummary}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Water Utilities */}
-        {(() => {
-          const utilitiesFromIncentives = Array.from(
-            rainwaterIncentives.reduce((acc, i) => {
-              if (i.water_utility && i.water_utility.trim()) {
-                const name = i.water_utility.trim()
-                if (!acc.has(name)) {
-                  acc.set(name, { name, programCount: 1 })
-                } else {
-                  acc.get(name)!.programCount = (acc.get(name)!.programCount || 0) + 1
-                }
-              }
-              return acc
-            }, new Map<string, WaterUtilityData>())
-          ).map(([, v]) => v).sort((a, b) => (b.programCount || 0) - (a.programCount || 0))
-
-          if (utilitiesFromIncentives.length === 0) return null
-
-          return (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
-              <div className="flex items-start gap-3">
-                <Droplet className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium text-blue-800 mb-2">
-                    Water {utilitiesFromIncentives.length === 1 ? 'Utility' : 'Utilities'} with Rainwater Programs
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {utilitiesFromIncentives.map((utility, idx) => (
-                      <div
-                        key={idx}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-blue-200"
-                      >
-                        <span className="text-sm font-medium text-blue-800">{utility.name}</span>
-                        {utility.programCount && utility.programCount > 0 && (
-                          <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">
-                            {utility.programCount} program{utility.programCount !== 1 ? 's' : ''}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        })()}
+        {/* Location Context Card - Local Regulations, Hierarchy, Utilities */}
+        <div className="mb-8">
+          <LocationContextCard
+            level={level}
+            stateName={stateName}
+            stateCode={stateCode}
+            cityName={cityName}
+            countyName={countyName}
+            incentives={rainwaterIncentives}
+            localRegulation={localRegulation}
+            showRebateBanner={false}
+          />
+        </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}

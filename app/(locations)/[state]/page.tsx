@@ -204,6 +204,68 @@ async function getStateIncentives(stateCode: string) {
   }
 }
 
+// Fetch state permit details
+async function getStatePermitDetails(stateCode: string) {
+  try {
+    const bigquery = getBigQueryClient()
+
+    const query = `
+      SELECT
+        permit_authority,
+        permit_framework,
+        statewide_threshold_gpd,
+        laundry_to_landscape_allowed,
+        branched_drain_allowed,
+        surge_tank_allowed,
+        indoor_reuse_allowed,
+        permit_exemptions,
+        statewide_requirements,
+        typical_permit_type,
+        typical_fee_range,
+        typical_processing_days,
+        diy_generally_allowed,
+        state_guidance_url,
+        state_code_url,
+        notes,
+        tips_for_residents
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_permit_details\`
+      WHERE state_code = @stateCode
+      LIMIT 1
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: { stateCode: stateCode.toUpperCase() }
+    }) as any
+
+    if (!rows || rows.length === 0) return null
+
+    const row = rows[0]
+
+    return {
+      permitAuthority: row.permit_authority,
+      permitFramework: row.permit_framework,
+      thresholdGpd: row.statewide_threshold_gpd,
+      laundryToLandscapeAllowed: row.laundry_to_landscape_allowed,
+      branchedDrainAllowed: row.branched_drain_allowed,
+      surgeTankAllowed: row.surge_tank_allowed,
+      indoorReuseAllowed: row.indoor_reuse_allowed,
+      exemptions: row.permit_exemptions || [],
+      requirements: row.statewide_requirements || [],
+      permitType: row.typical_permit_type,
+      typicalFees: row.typical_fee_range,
+      processingDays: row.typical_processing_days,
+      diyAllowed: row.diy_generally_allowed,
+      applicationUrl: row.state_guidance_url,
+      notes: row.notes,
+      tips: row.tips_for_residents
+    }
+  } catch (error) {
+    console.error('Error fetching state permit details:', error)
+    return null
+  }
+}
+
 // Fetch cities for the state
 async function getStateCities(stateCode: string) {
   try {
@@ -292,10 +354,11 @@ export default async function StateHubPage({ params }: PageProps) {
   const stateName = STATE_NAMES[stateCode]
 
   // Fetch all data in parallel
-  const [stateData, incentives, cities] = await Promise.all([
+  const [stateData, incentives, cities, permitDetails] = await Promise.all([
     getStateData(stateCode),
     getStateIncentives(stateCode),
-    getStateCities(stateCode)
+    getStateCities(stateCode),
+    getStatePermitDetails(stateCode)
   ])
 
   return (
@@ -309,6 +372,7 @@ export default async function StateHubPage({ params }: PageProps) {
       incentives={incentives}
       cities={cities}
       lastUpdated={stateData?.lastUpdated}
+      permitData={permitDetails}
     />
   )
 }

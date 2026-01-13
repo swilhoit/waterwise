@@ -243,6 +243,105 @@ async function getCityIncentives(stateCode: string, cityName: string, countyName
   }
 }
 
+// Fetch city-specific permit details
+async function getCityPermitDetails(stateCode: string, cityName: string) {
+  try {
+    const bigquery = getBigQueryClient()
+
+    const query = `
+      SELECT
+        permit_type,
+        permit_required,
+        permit_required_threshold_gpd,
+        laundry_to_landscape_allowed,
+        branched_drain_allowed,
+        surge_tank_system_allowed,
+        indoor_reuse_allowed,
+        application_url,
+        application_method,
+        required_documents,
+        pre_approval_required,
+        permit_fee_min,
+        permit_fee_max,
+        plan_check_fee,
+        inspection_fee,
+        fee_notes,
+        inspections_required,
+        inspection_scheduling_url,
+        inspection_scheduling_phone,
+        licensed_plumber_required,
+        licensed_contractor_required,
+        diy_allowed,
+        professional_requirements_notes,
+        typical_processing_days,
+        expedited_available,
+        expedited_fee,
+        department_name,
+        department_address,
+        department_phone,
+        department_email,
+        department_hours,
+        department_url,
+        hoa_approval_note,
+        special_requirements,
+        exemptions,
+        data_source,
+        data_verified_date,
+        data_confidence,
+        notes,
+        tips_for_residents
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_permit_details\`
+      WHERE state_code = @stateCode
+        AND LOWER(city_name) = @cityName
+      LIMIT 1
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: {
+        stateCode: stateCode.toUpperCase(),
+        cityName: cityName.toLowerCase()
+      }
+    }) as any
+
+    if (!rows || rows.length === 0) return null
+
+    const row = rows[0]
+
+    return {
+      permitType: row.permit_type,
+      permitRequired: row.permit_required,
+      thresholdGpd: row.permit_required_threshold_gpd,
+      laundryToLandscapeAllowed: row.laundry_to_landscape_allowed,
+      branchedDrainAllowed: row.branched_drain_allowed,
+      surgeTankAllowed: row.surge_tank_system_allowed,
+      indoorReuseAllowed: row.indoor_reuse_allowed,
+      applicationUrl: row.application_url,
+      applicationMethod: row.application_method,
+      requiredDocuments: row.required_documents || [],
+      feeMin: row.permit_fee_min,
+      feeMax: row.permit_fee_max,
+      processingDays: row.typical_processing_days,
+      diyAllowed: row.diy_allowed,
+      licensedPlumberRequired: row.licensed_plumber_required,
+      licensedContractorRequired: row.licensed_contractor_required,
+      inspectionsRequired: row.inspections_required || [],
+      departmentName: row.department_name,
+      departmentPhone: row.department_phone,
+      departmentAddress: row.department_address,
+      departmentHours: row.department_hours,
+      departmentUrl: row.department_url,
+      exemptions: row.exemptions || [],
+      specialRequirements: row.special_requirements || [],
+      tips: row.tips_for_residents,
+      notes: row.notes
+    }
+  } catch (error) {
+    console.error('Error fetching city permit details:', error)
+    return null
+  }
+}
+
 function generateCityFAQs(cityName: string, stateName: string, stateCode: string, regulations: any, incentives: any[]) {
   const greywater = regulations?.greywater
   const rainwater = regulations?.rainwater
@@ -337,10 +436,11 @@ export default async function CityHubPage({ params }: PageProps) {
   if (!cityData) {
     // Create page anyway with formatted city name
     const cityName = formatCityName(city)
-    const [regulations, incentives, localRegs] = await Promise.all([
+    const [regulations, incentives, localRegs, permitDetails] = await Promise.all([
       getStateRegulations(stateCode),
       getCityIncentives(stateCode, cityName, ''),
-      getLocalRegulations(stateCode, cityName)
+      getLocalRegulations(stateCode, cityName),
+      getCityPermitDetails(stateCode, cityName)
     ])
 
     const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
@@ -363,6 +463,7 @@ export default async function CityHubPage({ params }: PageProps) {
             regulationSummary: localRegs.regulationSummary,
             permitRequired: localRegs.permitRequired
           } : null}
+          permitData={permitDetails}
         />
       </>
     )
@@ -371,10 +472,11 @@ export default async function CityHubPage({ params }: PageProps) {
   const cityName = cityData.city_name
   const countyName = cityData.county_name
 
-  const [regulations, incentives, localRegs] = await Promise.all([
+  const [regulations, incentives, localRegs, permitDetails] = await Promise.all([
     getStateRegulations(stateCode),
     getCityIncentives(stateCode, cityName, countyName),
-    getLocalRegulations(stateCode, cityName, countyName)
+    getLocalRegulations(stateCode, cityName, countyName),
+    getCityPermitDetails(stateCode, cityName)
   ])
 
   const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
@@ -398,6 +500,7 @@ export default async function CityHubPage({ params }: PageProps) {
           regulationSummary: localRegs.regulationSummary,
           permitRequired: localRegs.permitRequired
         } : null}
+        permitData={permitDetails}
       />
     </>
   )
