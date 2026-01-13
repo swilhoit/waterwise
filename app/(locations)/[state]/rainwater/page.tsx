@@ -35,6 +35,7 @@ async function getRainwaterData(stateCode: string) {
         potable_use_allowed,
         permit_required,
         governing_code,
+        governing_code_url,
         tax_incentives,
         key_restrictions,
         primary_agency,
@@ -63,6 +64,7 @@ async function getRainwaterData(stateCode: string) {
           potableUseAllowed: row.potable_use_allowed,
           permitRequired: row.permit_required || undefined,
           governingCode: row.governing_code,
+          governingCodeUrl: row.governing_code_url,
           taxIncentives: row.tax_incentives,
           keyRestrictions: row.key_restrictions || []
         },

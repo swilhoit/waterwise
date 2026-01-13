@@ -76,6 +76,7 @@ async function getGreywaterData(stateCode: string) {
         indoor_use_allowed,
         outdoor_use_allowed,
         governing_code,
+        governing_code_url,
         approved_uses,
         key_restrictions,
         recent_changes,
@@ -111,6 +112,7 @@ async function getGreywaterData(stateCode: string) {
         indoorUseAllowed: row.indoor_use_allowed,
         outdoorUseAllowed: row.outdoor_use_allowed,
         governingCode: row.governing_code,
+        governingCodeUrl: row.governing_code_url,
         approvedUses: parseArrayField(row.approved_uses),
         keyRestrictions: parseArrayField(row.key_restrictions),
         recentChanges: row.recent_changes,
@@ -124,6 +126,81 @@ async function getGreywaterData(stateCode: string) {
     }
   } catch (error) {
     console.error('Error fetching greywater data:', error)
+    return null
+  }
+}
+
+// Fetch city-specific permit details
+async function getCityPermitDetails(stateCode: string, cityName: string) {
+  try {
+    const bigquery = getBigQueryClient()
+
+    const query = `
+      SELECT
+        permit_type,
+        permit_required,
+        permit_required_threshold_gpd,
+        laundry_to_landscape_allowed,
+        branched_drain_allowed,
+        surge_tank_system_allowed,
+        indoor_reuse_allowed,
+        application_url,
+        application_method,
+        required_documents,
+        pre_approval_required,
+        permit_fee_min,
+        permit_fee_max,
+        plan_check_fee,
+        inspection_fee,
+        fee_notes,
+        inspections_required,
+        inspection_scheduling_url,
+        inspection_scheduling_phone,
+        licensed_plumber_required,
+        licensed_contractor_required,
+        diy_allowed,
+        professional_requirements_notes,
+        typical_processing_days,
+        expedited_available,
+        expedited_fee,
+        department_name,
+        department_address,
+        department_phone,
+        department_email,
+        department_hours,
+        department_url,
+        hoa_approval_note,
+        special_requirements,
+        exemptions,
+        data_source,
+        data_verified_date,
+        data_confidence,
+        notes,
+        tips_for_residents
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_permit_details\`
+      WHERE state_code = @stateCode
+        AND LOWER(city_name) = @cityName
+      LIMIT 1
+    `
+
+    const [rows] = await bigquery.query({
+      query,
+      params: {
+        stateCode: stateCode.toUpperCase(),
+        cityName: cityName.toLowerCase()
+      }
+    }) as any
+
+    if (!rows || rows.length === 0) return null
+
+    const row = rows[0]
+    // Serialize BigQuery date objects to strings for client component compatibility
+    if (row.data_verified_date?.value) {
+      row.data_verified_date = row.data_verified_date.value
+    }
+    return row
+  } catch (error) {
+    console.error('Error fetching city permit details:', error)
     return null
   }
 }
@@ -268,10 +345,11 @@ export default async function CityGreywaterPage({ params }: PageProps) {
   const cityInfo = await getCityInfo(stateCode, city)
   const cityName = cityInfo.city_name
 
-  const [data, incentives, localRegs] = await Promise.all([
+  const [data, incentives, localRegs, permitDetails] = await Promise.all([
     getGreywaterData(stateCode),
     getGreywaterIncentives(stateCode, cityName, cityInfo.county_name),
-    getLocalRegulations(stateCode, cityName, cityInfo.county_name)
+    getLocalRegulations(stateCode, cityName, cityInfo.county_name),
+    getCityPermitDetails(stateCode, cityName)
   ])
 
   return (
@@ -285,10 +363,7 @@ export default async function CityGreywaterPage({ params }: PageProps) {
       agency={data?.agency || null}
       incentives={incentives}
       preplumbing={localRegs?.preplumbing || null}
-      localRegulation={localRegs ? {
-        regulationSummary: localRegs.regulationSummary,
-        permitRequired: localRegs.permitRequired
-      } : null}
+      permitDetails={permitDetails}
     />
   )
 }
