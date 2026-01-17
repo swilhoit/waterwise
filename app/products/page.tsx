@@ -210,25 +210,23 @@ const allProducts = [
   },
 ]
 
-// Featured accessories for hero section
-const featuredAccessories = {
-  dripKit: {
-    title: "Drip Irrigation Kit",
-    description: "Complete subsurface drip system for greywater distribution",
-    image: "https://waterwisegroup.com/cdn/shop/files/Irrigation_Kit_Hero.png?v=1758930026",
-    price: "$199",
-    handle: "drip-irrigation-kit",
-    badge: "Essential",
-    features: ["250 ft tubing", "Pressure regulated", "Easy install"]
+// Featured categories for hero section
+const featuredCategories = {
+  rainwater: {
+    title: "Rainwater Harvesting",
+    description: "Capture and store rainwater for irrigation and outdoor use",
+    image: "https://cdn11.bigcommerce.com/s-j602wc6a/images/stencil/1280x1280/products/7595/30513/2QokdHh11uSe3TvhtuL0JQxF4z6J9GukP6rdFTinp5glbwI1KDS7fwrQPQs8zTZw__92598.1712267672.jpg?c=2",
+    badge: "Popular",
+    href: "#products",
+    features: ["Rain barrels", "First flush diverters", "IBC totes"]
   },
-  pump: {
-    title: "Replacement Pump",
-    description: "OEM pump with controller & dry run protection",
-    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/Pump_Pack_GWDD.jpg?v=1742748645",
-    price: "$399",
-    handle: "replacement-greywater-pump",
-    badge: "Parts",
-    features: ["12-mo warranty", "110V power", "Auto sensing"]
+  greywater: {
+    title: "Greywater Systems",
+    description: "Recycle water from showers, sinks & laundry for irrigation",
+    image: "https://cdn.shopify.com/s/files/1/0637/5561/6462/files/gwdd-gravity.jpg?v=1719242223",
+    badge: "Best Seller",
+    href: "/products/aqua2use",
+    features: ["Aqua2use GWDD", "4-stage filtration", "DIY install"]
   }
 }
 
@@ -319,38 +317,37 @@ export default async function ProductsPage() {
               </div>
             </div>
 
-            {/* Right: Featured Products - Drip Kit & Pump */}
+            {/* Right: Product Categories - Rainwater & Greywater */}
             <div className="space-y-4">
-              {/* Featured: Drip Irrigation Kit */}
-              <Link href={`/products/${featuredAccessories.dripKit.handle}`} className="group block">
-                <div className="bg-white rounded-2xl p-6 border border-sand-200 hover:border-ocean-300 transition-all relative overflow-hidden">
-                  <div className="absolute -top-3 -right-3 badge-ocean">
-                    <Leaf className="h-3 w-3" />
-                    Essential
+              {/* Category: Rainwater Harvesting */}
+              <Link href={featuredCategories.rainwater.href} className="group block">
+                <div className="bg-white rounded-2xl p-6 border border-sand-200 hover:border-ocean-300 transition-all relative">
+                  <div className="absolute top-4 right-4 badge-ocean">
+                    <CloudRain className="h-3 w-3" />
+                    {featuredCategories.rainwater.badge}
                   </div>
 
                   <div className="flex gap-5 items-center">
-                    <div className="w-32 h-32 flex-shrink-0 bg-sand-50 rounded-xl overflow-hidden relative">
+                    <div className="w-32 h-32 flex-shrink-0 bg-ocean-50 rounded-xl overflow-hidden relative">
                       <Image
-                        src={featuredAccessories.dripKit.image}
-                        alt={featuredAccessories.dripKit.title}
+                        src={featuredCategories.rainwater.image}
+                        alt={featuredCategories.rainwater.title}
                         fill
                         className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
                         unoptimized
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-display text-sand-900 mb-1 group-hover:text-ocean-600 transition-colors">{featuredAccessories.dripKit.title}</h3>
-                      <p className="text-sand-600 text-sm mb-3">{featuredAccessories.dripKit.description}</p>
+                      <h3 className="text-xl font-display text-sand-900 mb-1 group-hover:text-ocean-600 transition-colors">{featuredCategories.rainwater.title}</h3>
+                      <p className="text-sand-600 text-sm mb-3">{featuredCategories.rainwater.description}</p>
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {featuredAccessories.dripKit.features.map((f, i) => (
+                        {featuredCategories.rainwater.features.map((f, i) => (
                           <span key={i} className="text-xs bg-ocean-50 text-ocean-700 px-2 py-1 rounded-full">{f}</span>
                         ))}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-ocean-600">{featuredAccessories.dripKit.price}</div>
+                      <div className="flex items-center justify-end">
                         <span className="text-ocean-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all text-sm">
-                          View <ArrowRight className="h-4 w-4" />
+                          Shop Category <ArrowRight className="h-4 w-4" />
                         </span>
                       </div>
                     </div>
@@ -358,36 +355,35 @@ export default async function ProductsPage() {
                 </div>
               </Link>
 
-              {/* Featured: Replacement Pump */}
-              <Link href={`/products/${featuredAccessories.pump.handle}`} className="group block">
-                <div className="bg-white rounded-2xl p-6 border border-sand-200 hover:border-terra-300 transition-all relative overflow-hidden">
-                  <div className="absolute -top-3 -right-3 badge-terra">
-                    <Settings className="h-3 w-3" />
-                    Parts
+              {/* Category: Greywater Systems */}
+              <Link href={featuredCategories.greywater.href} className="group block">
+                <div className="bg-white rounded-2xl p-6 border border-sand-200 hover:border-terra-300 transition-all relative">
+                  <div className="absolute top-4 right-4 badge-terra">
+                    <Droplets className="h-3 w-3" />
+                    {featuredCategories.greywater.badge}
                   </div>
 
                   <div className="flex gap-5 items-center">
-                    <div className="w-32 h-32 flex-shrink-0 bg-sand-50 rounded-xl overflow-hidden relative">
+                    <div className="w-32 h-32 flex-shrink-0 bg-terra-50 rounded-xl overflow-hidden relative">
                       <Image
-                        src={featuredAccessories.pump.image}
-                        alt={featuredAccessories.pump.title}
+                        src={featuredCategories.greywater.image}
+                        alt={featuredCategories.greywater.title}
                         fill
                         className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
                         unoptimized
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-display text-sand-900 mb-1 group-hover:text-terra-600 transition-colors">{featuredAccessories.pump.title}</h3>
-                      <p className="text-sand-600 text-sm mb-3">{featuredAccessories.pump.description}</p>
+                      <h3 className="text-xl font-display text-sand-900 mb-1 group-hover:text-terra-600 transition-colors">{featuredCategories.greywater.title}</h3>
+                      <p className="text-sand-600 text-sm mb-3">{featuredCategories.greywater.description}</p>
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {featuredAccessories.pump.features.map((f, i) => (
+                        {featuredCategories.greywater.features.map((f, i) => (
                           <span key={i} className="text-xs bg-terra-50 text-terra-700 px-2 py-1 rounded-full">{f}</span>
                         ))}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-terra-600">{featuredAccessories.pump.price}</div>
+                      <div className="flex items-center justify-end">
                         <span className="text-terra-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all text-sm">
-                          View <ArrowRight className="h-4 w-4" />
+                          Shop Category <ArrowRight className="h-4 w-4" />
                         </span>
                       </div>
                     </div>

@@ -36,9 +36,10 @@ export function Header() {
       ]
     },
     {
-      label: "Products",
+      label: "Shop",
       dropdown: [
         { title: "Aqua2use Systems", href: "/products/aqua2use", description: "Residential to commercial solutions" },
+        { title: "Rainwater Harvesting", href: "/products?category=rainwater", description: "Rain barrels & collection systems" },
         { title: "Replacement Filters", href: "/products/replacement-filters", description: "Keep your system running" },
         { title: "Replacement Pumps", href: "/products/replacement-pumps", description: "Pumps and parts" },
         { title: "View All Products", href: "/products" }
@@ -139,7 +140,7 @@ export function Header() {
                     const iconMap: Record<string, React.ElementType> = {
                       "Learn": BookOpen,
                       "Laws & Rebates": Scale,
-                      "Products": Droplets,
+                      "Shop": Droplets,
                       "Solutions": Home,
                       "Customer Stories": Sparkles,
                       "Blog": BookOpen,
