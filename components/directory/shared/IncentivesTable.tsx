@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   DollarSign, ExternalLink, ChevronDown, ChevronUp,
   Home, Building2, Clock, FileText, ClipboardList,
-  Wrench, Timer, BadgeCheck
+  Wrench, Timer, BadgeCheck, AlertCircle, CalendarCheck, Pause
 } from 'lucide-react'
 import { PageTheme, getThemeColors } from './PageLayout'
 
@@ -49,6 +49,9 @@ export interface IncentiveProgram {
   deadline_info?: string
   program_end_date?: string
   jurisdiction_level?: string
+  // Status and verification fields
+  program_status?: 'active' | 'inactive' | 'seasonal' | 'waitlist' | 'on-hold' | 'unverified' | string
+  verified_date?: string | { value: string }
 }
 
 type ProgramType = 'rebate' | 'loan' | 'tax_credit' | 'tax_exemption' | 'subsidy' | 'free_installation' | 'permit_waiver' | 'education' | 'various'
@@ -99,6 +102,112 @@ function EligibilityBadges({ residential, commercial }: { residential?: boolean;
       )}
     </div>
   )
+}
+
+type ProgramStatus = 'active' | 'inactive' | 'seasonal' | 'waitlist' | 'on-hold' | 'unverified' | string
+
+function ProgramStatusBadge({ status }: { status?: ProgramStatus }) {
+  if (!status || status === 'active') return null // Don't show badge for active programs
+
+  const config: Record<string, { label: string; className: string; icon: React.ReactNode }> = {
+    seasonal: {
+      label: 'Seasonal',
+      className: 'bg-amber-50 text-amber-700 border-amber-200',
+      icon: <Clock className="h-2.5 w-2.5" />
+    },
+    waitlist: {
+      label: 'Waitlist',
+      className: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+      icon: <Pause className="h-2.5 w-2.5" />
+    },
+    'on-hold': {
+      label: 'On Hold',
+      className: 'bg-orange-50 text-orange-700 border-orange-200',
+      icon: <Pause className="h-2.5 w-2.5" />
+    },
+    inactive: {
+      label: 'Inactive',
+      className: 'bg-red-50 text-red-700 border-red-200',
+      icon: <AlertCircle className="h-2.5 w-2.5" />
+    },
+    unverified: {
+      label: 'Unverified',
+      className: 'bg-gray-50 text-gray-600 border-gray-200',
+      icon: <AlertCircle className="h-2.5 w-2.5" />
+    }
+  }
+
+  const statusLower = status.toLowerCase()
+  const { label, className, icon } = config[statusLower] || {
+    label: status,
+    className: 'bg-gray-50 text-gray-600 border-gray-200',
+    icon: null
+  }
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border ${className}`}>
+      {icon} {label}
+    </span>
+  )
+}
+
+function VerificationBadge({ verifiedDate }: { verifiedDate?: string | { value: string } }) {
+  // Extract date string from BigQuery date object if needed
+  const dateStr = typeof verifiedDate === 'object' && verifiedDate?.value
+    ? verifiedDate.value
+    : verifiedDate as string | undefined
+
+  if (!dateStr) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-50 text-gray-500 rounded text-[10px] border border-gray-200"
+        title="This program has not been verified recently"
+      >
+        <AlertCircle className="h-2.5 w-2.5" /> Not verified
+      </span>
+    )
+  }
+
+  const verifiedDateObj = new Date(dateStr)
+  const now = new Date()
+  const monthsAgo = (now.getTime() - verifiedDateObj.getTime()) / (1000 * 60 * 60 * 24 * 30)
+
+  // Format the date for display
+  const formattedDate = verifiedDateObj.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+
+  // Fresh = less than 3 months, Stale = more than 6 months
+  if (monthsAgo <= 3) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-[10px] border border-green-200"
+        title={`Verified ${formattedDate}`}
+      >
+        <CalendarCheck className="h-2.5 w-2.5" /> Verified {formattedDate}
+      </span>
+    )
+  } else if (monthsAgo <= 6) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded text-[10px] border border-blue-200"
+        title={`Verified ${formattedDate}`}
+      >
+        <CalendarCheck className="h-2.5 w-2.5" /> {formattedDate}
+      </span>
+    )
+  } else {
+    return (
+      <span
+        className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded text-[10px] border border-amber-200"
+        title={`Last verified ${formattedDate} - may be outdated`}
+      >
+        <AlertCircle className="h-2.5 w-2.5" /> Verify: {formattedDate}
+      </span>
+    )
+  }
 }
 
 // ============================================================================
@@ -201,6 +310,7 @@ export function IncentivesTable({
                 <div className="flex items-center gap-2 flex-wrap">
                   <ProgramTypeBadge type={(program.incentive_type as ProgramType) || 'rebate'} />
                   {showJurisdictionLevel && <JurisdictionLevelBadge level={program.jurisdiction_level} />}
+                  <ProgramStatusBadge status={program.program_status} />
                   <EligibilityBadges
                     residential={program.residential_eligible}
                     commercial={program.commercial_eligible}
@@ -211,8 +321,12 @@ export function IncentivesTable({
               <h3 className="font-semibold text-sand-900 mb-1">{program.program_name}</h3>
 
               {program.water_utility && (
-                <p className="text-xs text-sand-500 mb-2">{program.water_utility}</p>
+                <p className="text-xs text-sand-500 mb-1">{program.water_utility}</p>
               )}
+
+              <div className="mb-2">
+                <VerificationBadge verifiedDate={program.verified_date} />
+              </div>
 
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-sand-200">
                 <div>
@@ -269,6 +383,7 @@ export function IncentivesTable({
               <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Program</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Type</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Eligible</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-sand-600 uppercase tracking-wider">Status</th>
               <th className="px-4 py-3 text-right text-xs font-semibold text-sand-600 uppercase tracking-wider">Amount</th>
               <th className="px-4 py-3 text-right text-xs font-semibold text-sand-600 uppercase tracking-wider">Action</th>
             </tr>
@@ -313,6 +428,12 @@ export function IncentivesTable({
                         commercial={program.commercial_eligible}
                       />
                     </td>
+                    <td className="px-4 py-4">
+                      <div className="flex flex-col gap-1">
+                        <ProgramStatusBadge status={program.program_status} />
+                        <VerificationBadge verifiedDate={program.verified_date} />
+                      </div>
+                    </td>
                     <td className="px-4 py-4 text-right">
                       {program.incentive_amount_max ? (
                         <div>
@@ -355,7 +476,7 @@ export function IncentivesTable({
                   {/* Expanded Row */}
                   {isExpanded && hasDetails && (
                     <tr>
-                      <td colSpan={5} className="px-4 py-4 bg-sand-50/50">
+                      <td colSpan={6} className="px-4 py-4 bg-sand-50/50">
                         <ProgramDetails program={program} theme={theme} />
                       </td>
                     </tr>

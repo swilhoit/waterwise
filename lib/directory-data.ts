@@ -45,12 +45,160 @@ export interface RainwaterData {
   stubOutDetails?: string
 }
 
+// =============================================================================
+// PREPLUMBING TYPES
+// =============================================================================
+
+/**
+ * Valid threshold types for preplumbing mandates
+ */
+export type PreplumbingThresholdType = 
+  | 'sqft'                  // Square footage threshold
+  | 'value'                 // Project value threshold (USD)
+  | 'gpd'                   // Gallons per day capacity
+  | 'all_new_construction'  // Applies to all new construction
+  | 'none'                  // No threshold (encouraged only)
+
+/**
+ * Valid mandate types indicating strength of requirement
+ */
+export type PreplumbingMandateType = 
+  | 'required'    // Mandatory compliance
+  | 'encouraged'  // Recommended but not mandatory
+  | 'reach_code'  // Local code exceeding state baseline
+  | 'baseline'    // State-level baseline (e.g., CALGreen)
+
+/**
+ * Standard building type classifications
+ */
+export type PreplumbingBuildingType = 
+  | 'single_family'
+  | 'duplex'
+  | 'multi_family'
+  | 'commercial'
+  | 'mixed_use'
+  | 'industrial'
+  | 'institutional'
+  | 'all_residential'
+
+/**
+ * Standard fixture type classifications
+ */
+export type PreplumbingFixtureType = 
+  | 'clothes_washer'
+  | 'shower'
+  | 'bathtub'
+  | 'bathroom_sink'
+  | 'kitchen_sink'
+  | 'all'
+
+/**
+ * Data confidence levels for verification status
+ */
+export type DataConfidence = 'verified' | 'partial' | 'unverified'
+
+/**
+ * Enhanced preplumbing mandate data structure
+ * Supports both legacy fields and new structured fields
+ */
 export interface PreplumbingData {
+  // Core mandate info
   hasMandate: boolean
   details?: string
-  buildingTypes?: string
-  thresholdSqft?: number
   codeReference?: string
+  
+  // Resource-specific flags (solves conflation issue)
+  greywaterRequired?: boolean
+  rainwaterRequired?: boolean
+  
+  // Threshold information
+  thresholdType?: PreplumbingThresholdType
+  thresholdValue?: number
+  thresholdUnit?: string  // 'sqft', 'USD', 'GPD'
+  /** @deprecated Use thresholdValue with thresholdType='sqft' instead */
+  thresholdSqft?: number
+  
+  // Mandate classification
+  mandateType?: PreplumbingMandateType
+  
+  // Building scope
+  buildingTypesArray?: PreplumbingBuildingType[]
+  /** @deprecated Use buildingTypesArray instead */
+  buildingTypes?: string
+  appliesToRenovations?: boolean
+  
+  // Specific requirements
+  requiredFixtures?: PreplumbingFixtureType[]
+  dualPlumbingRequired?: boolean
+  stubOutRequired?: boolean
+  stubOutLocation?: string
+  
+  // Timeline
+  effectiveDate?: string
+  
+  // Verification
+  dataConfidence?: DataConfidence
+  lastVerified?: string
+  sourceUrl?: string
+}
+
+/**
+ * Helper to get human-readable threshold description
+ */
+export function formatThreshold(preplumbing: PreplumbingData): string | null {
+  if (!preplumbing.thresholdType || preplumbing.thresholdType === 'all_new_construction') {
+    return 'All new construction'
+  }
+  if (preplumbing.thresholdType === 'none') {
+    return null // Encouraged, no threshold
+  }
+  if (!preplumbing.thresholdValue) {
+    return null
+  }
+  
+  switch (preplumbing.thresholdType) {
+    case 'sqft':
+      return `Buildings ${preplumbing.thresholdValue.toLocaleString()}+ sqft`
+    case 'value':
+      return `Projects $${preplumbing.thresholdValue.toLocaleString()}+`
+    case 'gpd':
+      return `Systems ${preplumbing.thresholdValue.toLocaleString()}+ GPD`
+    default:
+      return null
+  }
+}
+
+/**
+ * Helper to get human-readable mandate type label
+ */
+export function getMandateTypeLabel(type?: PreplumbingMandateType): string {
+  switch (type) {
+    case 'required': return 'Required'
+    case 'encouraged': return 'Encouraged'
+    case 'reach_code': return 'Reach Code'
+    case 'baseline': return 'State Baseline'
+    default: return 'Required'
+  }
+}
+
+/**
+ * Helper to format building types for display
+ */
+export function formatBuildingTypes(types?: PreplumbingBuildingType[]): string {
+  if (!types || types.length === 0) return 'New construction'
+  
+  const labels: Record<PreplumbingBuildingType, string> = {
+    single_family: 'Single-family',
+    duplex: 'Duplex',
+    multi_family: 'Multi-family',
+    commercial: 'Commercial',
+    mixed_use: 'Mixed-use',
+    industrial: 'Industrial',
+    institutional: 'Institutional',
+    all_residential: 'All residential'
+  }
+  
+  return types.map(t => labels[t] || t).join(', ')
 }
 
 export interface AgencyData {
@@ -71,6 +219,9 @@ export interface IncentiveProgram {
   water_utility?: string
   residential_eligible?: boolean
   commercial_eligible?: boolean
+  // Status and verification fields
+  program_status?: 'active' | 'inactive' | 'seasonal' | 'waitlist' | 'on-hold' | 'unverified'
+  verified_date?: string
 }
 
 export interface CityInfo {
@@ -325,6 +476,7 @@ export async function getCityInfo(stateCode: string, citySlug: string): Promise<
 
 /**
  * Fetch local regulations for a specific jurisdiction
+ * Returns enhanced preplumbing data with structured fields when available
  */
 export async function getLocalRegulations(
   stateCode: string,
@@ -353,11 +505,29 @@ export async function getLocalRegulations(
         allowed_uses,
         restrictions,
         website as documentation_url,
+        -- Legacy preplumbing fields
         has_preplumbing_mandate,
         preplumbing_threshold_sqft,
         preplumbing_building_types,
         preplumbing_details,
-        preplumbing_code_reference
+        preplumbing_code_reference,
+        -- Enhanced preplumbing fields (new schema)
+        greywater_preplumbing_required,
+        rainwater_preplumbing_required,
+        preplumbing_threshold_type,
+        preplumbing_threshold_value,
+        preplumbing_threshold_unit,
+        preplumbing_mandate_type,
+        preplumbing_building_types_array,
+        preplumbing_required_fixtures,
+        preplumbing_applies_to_renovations,
+        preplumbing_dual_plumbing_required,
+        preplumbing_stub_out_required,
+        preplumbing_stub_out_location,
+        preplumbing_effective_date,
+        preplumbing_data_confidence,
+        preplumbing_last_verified,
+        preplumbing_source_url
       FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.local_regulations\`
       WHERE jurisdiction_id = @jurisdictionId
       LIMIT 1
@@ -370,6 +540,52 @@ export async function getLocalRegulations(
 
     if (rows && rows.length > 0) {
       const row = rows[0]
+      
+      // Build enhanced preplumbing data, preferring new fields with fallback to legacy
+      const preplumbing: PreplumbingData = {
+        // Core fields
+        hasMandate: row.has_preplumbing_mandate || 
+                    row.greywater_preplumbing_required || 
+                    row.rainwater_preplumbing_required || 
+                    false,
+        details: row.preplumbing_details,
+        codeReference: row.preplumbing_code_reference,
+        
+        // Resource-specific flags
+        greywaterRequired: row.greywater_preplumbing_required ?? undefined,
+        rainwaterRequired: row.rainwater_preplumbing_required ?? undefined,
+        
+        // Threshold info (prefer new fields, fall back to legacy)
+        thresholdType: row.preplumbing_threshold_type ?? 
+                      (row.preplumbing_threshold_sqft ? 'sqft' : 'all_new_construction'),
+        thresholdValue: row.preplumbing_threshold_value ?? row.preplumbing_threshold_sqft ?? undefined,
+        thresholdUnit: row.preplumbing_threshold_unit ?? 
+                      (row.preplumbing_threshold_sqft ? 'sqft' : undefined),
+        thresholdSqft: row.preplumbing_threshold_sqft ?? undefined, // Legacy field
+        
+        // Mandate classification
+        mandateType: row.preplumbing_mandate_type ?? undefined,
+        
+        // Building scope (prefer array, fall back to string)
+        buildingTypesArray: row.preplumbing_building_types_array ?? undefined,
+        buildingTypes: row.preplumbing_building_types ?? undefined, // Legacy field
+        appliesToRenovations: row.preplumbing_applies_to_renovations ?? undefined,
+        
+        // Specific requirements
+        requiredFixtures: row.preplumbing_required_fixtures ?? undefined,
+        dualPlumbingRequired: row.preplumbing_dual_plumbing_required ?? undefined,
+        stubOutRequired: row.preplumbing_stub_out_required ?? true, // Default to true if mandate exists
+        stubOutLocation: row.preplumbing_stub_out_location ?? undefined,
+        
+        // Timeline
+        effectiveDate: row.preplumbing_effective_date?.value ?? undefined,
+        
+        // Verification
+        dataConfidence: row.preplumbing_data_confidence ?? 'unverified',
+        lastVerified: row.preplumbing_last_verified?.value ?? undefined,
+        sourceUrl: row.preplumbing_source_url ?? undefined
+      }
+      
       return {
         jurisdictionId: row.jurisdiction_id,
         jurisdictionName: row.jurisdiction_name,
@@ -378,13 +594,7 @@ export async function getLocalRegulations(
         allowedSources: row.allowed_uses,
         restrictions: row.restrictions,
         documentationUrl: row.documentation_url,
-        preplumbing: {
-          hasMandate: row.has_preplumbing_mandate || false,
-          details: row.preplumbing_details,
-          buildingTypes: row.preplumbing_building_types,
-          thresholdSqft: row.preplumbing_threshold_sqft,
-          codeReference: row.preplumbing_code_reference
-        }
+        preplumbing
       }
     }
 
@@ -432,11 +642,13 @@ export async function getIncentives(
         p.program_description,
         p.water_utility,
         p.residential_eligible,
-        p.commercial_eligible
+        p.commercial_eligible,
+        p.program_status,
+        p.verified_date
       FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\` p
       JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` pjl
         ON p.program_id = pjl.program_id
-      WHERE LOWER(p.program_status) = 'active'
+      WHERE LOWER(p.program_status) IN ('active', 'seasonal', 'waitlist')
         AND pjl.jurisdiction_id IN UNNEST(@jurisdictionIds)
         ${resourceFilter}
       ORDER BY p.incentive_amount_max DESC NULLS LAST

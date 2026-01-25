@@ -32,11 +32,41 @@ interface AgencyData {
 }
 
 interface PreplumbingData {
+  // Core mandate info
   hasMandate?: boolean
   details?: string
-  buildingTypes?: string
-  thresholdSqft?: number
   codeReference?: string
+  
+  // Resource-specific flags
+  greywaterRequired?: boolean
+  rainwaterRequired?: boolean
+  
+  // Threshold information
+  thresholdType?: 'sqft' | 'value' | 'gpd' | 'all_new_construction' | 'none'
+  thresholdValue?: number
+  thresholdUnit?: string
+  thresholdSqft?: number // Legacy
+  
+  // Mandate classification
+  mandateType?: 'required' | 'encouraged' | 'reach_code' | 'baseline'
+  
+  // Building scope
+  buildingTypesArray?: string[]
+  buildingTypes?: string // Legacy
+  appliesToRenovations?: boolean
+  
+  // Specific requirements
+  requiredFixtures?: string[]
+  dualPlumbingRequired?: boolean
+  stubOutRequired?: boolean
+  stubOutLocation?: string
+  
+  // Timeline
+  effectiveDate?: string
+  
+  // Verification
+  dataConfidence?: 'verified' | 'partial' | 'unverified'
+  sourceUrl?: string
 }
 
 interface PermitDetails {
@@ -150,16 +180,105 @@ export default function GreywaterSpokeView({
           </div>
         </div>
 
-        {/* Pre-Plumbing Mandate */}
-        {preplumbing?.hasMandate && (
+        {/* Pre-Plumbing Mandate - Enhanced */}
+        {(preplumbing?.hasMandate || preplumbing?.greywaterRequired) && (
           <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6">
-            <p className="font-medium text-purple-800 flex items-center gap-2">
-              <Building2 className="h-4 w-4" />
-              Pre-Plumbing Mandate
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-medium text-purple-800 flex items-center gap-2">
+                <Building2 className="h-4 w-4" />
+                Pre-Plumbing {preplumbing?.mandateType === 'encouraged' ? 'Recommendation' : 'Mandate'}
+              </p>
+              {preplumbing?.mandateType && (
+                <span className={`px-2 py-0.5 text-xs rounded-full ${
+                  preplumbing.mandateType === 'required' ? 'bg-purple-200 text-purple-800' :
+                  preplumbing.mandateType === 'reach_code' ? 'bg-blue-200 text-blue-800' :
+                  preplumbing.mandateType === 'encouraged' ? 'bg-green-200 text-green-800' :
+                  'bg-sand-200 text-sand-700'
+                }`}>
+                  {preplumbing.mandateType === 'required' ? 'Required' :
+                   preplumbing.mandateType === 'reach_code' ? 'Reach Code' :
+                   preplumbing.mandateType === 'encouraged' ? 'Encouraged' :
+                   preplumbing.mandateType === 'baseline' ? 'State Baseline' : ''}
+                </span>
+              )}
+            </div>
+            
+            <p className="text-sm text-purple-700">
+              {preplumbing?.details || 'New construction must include greywater-ready plumbing.'}
             </p>
-            <p className="text-sm text-purple-700 mt-1">
-              {preplumbing.details || 'New construction must include greywater-ready plumbing.'}
-            </p>
+            
+            {/* Threshold info */}
+            {preplumbing?.thresholdType && preplumbing.thresholdType !== 'all_new_construction' && preplumbing.thresholdType !== 'none' && preplumbing.thresholdValue && (
+              <p className="text-xs text-purple-600 mt-2">
+                <strong>Applies to:</strong> {preplumbing.thresholdType === 'sqft' 
+                  ? `Buildings ${preplumbing.thresholdValue.toLocaleString()}+ sqft` 
+                  : preplumbing.thresholdType === 'value'
+                  ? `Projects $${preplumbing.thresholdValue.toLocaleString()}+`
+                  : `Systems ${preplumbing.thresholdValue.toLocaleString()}+ GPD`}
+              </p>
+            )}
+            
+            {/* Building types */}
+            {(preplumbing?.buildingTypesArray || preplumbing?.buildingTypes) && (
+              <p className="text-xs text-purple-600 mt-1">
+                <strong>Building types:</strong> {preplumbing.buildingTypesArray 
+                  ? preplumbing.buildingTypesArray.map(t => 
+                      t.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                    ).join(', ')
+                  : preplumbing.buildingTypes}
+              </p>
+            )}
+            
+            {/* Applies to renovations */}
+            {preplumbing?.appliesToRenovations && (
+              <p className="text-xs text-purple-600 mt-1">
+                <strong>Note:</strong> Also applies to major renovations
+              </p>
+            )}
+            
+            {/* Required fixtures */}
+            {preplumbing?.requiredFixtures && preplumbing.requiredFixtures.length > 0 && (
+              <p className="text-xs text-purple-600 mt-1">
+                <strong>Required fixtures:</strong> {preplumbing.requiredFixtures.map(f => 
+                  f.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                ).join(', ')}
+              </p>
+            )}
+            
+            {/* Code reference */}
+            {preplumbing?.codeReference && (
+              <p className="text-xs text-purple-500 mt-2 italic">
+                Reference: {preplumbing.codeReference}
+              </p>
+            )}
+            
+            {/* Effective date */}
+            {preplumbing?.effectiveDate && (
+              <p className="text-xs text-purple-500 mt-1">
+                Effective: {preplumbing.effectiveDate}
+              </p>
+            )}
+            
+            {/* Source link */}
+            {preplumbing?.sourceUrl && (
+              <a 
+                href={preplumbing.sourceUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs text-purple-600 hover:text-purple-800 underline mt-2 inline-block"
+              >
+                View official source →
+              </a>
+            )}
+            
+            {/* Verification badge */}
+            {preplumbing?.dataConfidence && preplumbing.dataConfidence !== 'unverified' && (
+              <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${
+                preplumbing.dataConfidence === 'verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+              }`}>
+                {preplumbing.dataConfidence === 'verified' ? '✓ Verified' : '~ Partially Verified'}
+              </span>
+            )}
           </div>
         )}
 

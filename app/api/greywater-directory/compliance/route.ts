@@ -4,6 +4,55 @@ import { getBigQueryClient } from '@/lib/bigquery';
 // Valid resource types
 const VALID_RESOURCE_TYPES = ['greywater', 'rainwater', 'conservation', 'all'];
 
+/**
+ * Build structured preplumbing response from database row
+ * Combines legacy fields with new enhanced fields
+ */
+function buildPreplumbingResponse(regs: any) {
+  const hasMandate = regs.has_preplumbing_mandate || 
+                     regs.greywater_preplumbing_required || 
+                     regs.rainwater_preplumbing_required || 
+                     false;
+  
+  if (!hasMandate) {
+    return {
+      has_mandate: false
+    };
+  }
+
+  return {
+    has_mandate: true,
+    // Resource-specific flags
+    greywater_required: regs.greywater_preplumbing_required ?? 
+                        (regs.has_preplumbing_mandate && !regs.rainwater_preplumbing_required),
+    rainwater_required: regs.rainwater_preplumbing_required ?? false,
+    // Threshold info
+    threshold_type: regs.preplumbing_threshold_type ?? 
+                   (regs.preplumbing_threshold_sqft ? 'sqft' : 'all_new_construction'),
+    threshold_value: regs.preplumbing_threshold_value ?? regs.preplumbing_threshold_sqft ?? null,
+    threshold_unit: regs.preplumbing_threshold_unit ?? 
+                   (regs.preplumbing_threshold_sqft ? 'sqft' : null),
+    // Mandate type
+    mandate_type: regs.preplumbing_mandate_type ?? 'required',
+    // Building scope
+    building_types: regs.preplumbing_building_types_array ?? null,
+    building_types_text: regs.preplumbing_building_types ?? null, // Legacy field
+    applies_to_renovations: regs.preplumbing_applies_to_renovations ?? false,
+    // Requirements
+    required_fixtures: regs.preplumbing_required_fixtures ?? null,
+    dual_plumbing_required: regs.preplumbing_dual_plumbing_required ?? false,
+    stub_out_required: regs.preplumbing_stub_out_required ?? true,
+    stub_out_location: regs.preplumbing_stub_out_location ?? null,
+    // Details and references
+    details: regs.preplumbing_details ?? null,
+    code_reference: regs.preplumbing_code_reference ?? null,
+    effective_date: regs.preplumbing_effective_date?.value ?? null,
+    // Verification
+    data_confidence: regs.preplumbing_data_confidence ?? 'unverified',
+    source_url: regs.preplumbing_source_url ?? null
+  };
+}
+
 // GET compliance data with bulletproof jurisdiction-based program matching
 export async function GET(request: NextRequest) {
   try {
@@ -61,11 +110,28 @@ export async function GET(request: NextRequest) {
           NULL as permit_fee,
           NULL as annual_fee,
           NULL as processing_time_days,
+          -- Legacy preplumbing fields
           has_preplumbing_mandate,
           preplumbing_threshold_sqft,
           preplumbing_building_types,
           preplumbing_details,
-          preplumbing_code_reference
+          preplumbing_code_reference,
+          -- Enhanced preplumbing fields (new schema)
+          greywater_preplumbing_required,
+          rainwater_preplumbing_required,
+          preplumbing_threshold_type,
+          preplumbing_threshold_value,
+          preplumbing_threshold_unit,
+          preplumbing_mandate_type,
+          preplumbing_building_types_array,
+          preplumbing_required_fixtures,
+          preplumbing_applies_to_renovations,
+          preplumbing_dual_plumbing_required,
+          preplumbing_stub_out_required,
+          preplumbing_stub_out_location,
+          preplumbing_effective_date,
+          preplumbing_data_confidence,
+          preplumbing_source_url
         FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.local_regulations\`
         WHERE jurisdiction_id IN (?, ?, ?)
       `;
@@ -173,12 +239,8 @@ export async function GET(request: NextRequest) {
       annual_fee: stateRegs.annual_fee,
       regulation_summary: stateRegs.regulation_summary || 'State greywater regulations apply. Check local jurisdictions for additional requirements.',
       ...stateRegs,
-      // Pre-plumbing data
-      has_preplumbing_mandate: stateRegs.has_preplumbing_mandate || false,
-      preplumbing_threshold_sqft: stateRegs.preplumbing_threshold_sqft,
-      preplumbing_building_types: stateRegs.preplumbing_building_types,
-      preplumbing_details: stateRegs.preplumbing_details,
-      preplumbing_code_reference: stateRegs.preplumbing_code_reference,
+      // Pre-plumbing data (legacy + enhanced)
+      preplumbing: buildPreplumbingResponse(stateRegs),
       incentives: [],
       incentive_count: 0,
       max_incentive: null
@@ -201,12 +263,8 @@ export async function GET(request: NextRequest) {
         annual_fee: countyRegs.annual_fee,
         regulation_summary: countyRegs.regulation_summary || `${county} County defers to state regulations.`,
         ...countyRegs,
-        // Pre-plumbing data
-        has_preplumbing_mandate: countyRegs.has_preplumbing_mandate || false,
-        preplumbing_threshold_sqft: countyRegs.preplumbing_threshold_sqft,
-        preplumbing_building_types: countyRegs.preplumbing_building_types,
-        preplumbing_details: countyRegs.preplumbing_details,
-        preplumbing_code_reference: countyRegs.preplumbing_code_reference,
+        // Pre-plumbing data (legacy + enhanced)
+        preplumbing: buildPreplumbingResponse(countyRegs),
         incentives: [],
         incentive_count: 0,
         max_incentive: null
@@ -230,12 +288,8 @@ export async function GET(request: NextRequest) {
         annual_fee: cityRegs.annual_fee,
         regulation_summary: cityRegs.regulation_summary || `${city} defers to county and state regulations.`,
         ...cityRegs,
-        // Pre-plumbing data
-        has_preplumbing_mandate: cityRegs.has_preplumbing_mandate || false,
-        preplumbing_threshold_sqft: cityRegs.preplumbing_threshold_sqft,
-        preplumbing_building_types: cityRegs.preplumbing_building_types,
-        preplumbing_details: cityRegs.preplumbing_details,
-        preplumbing_code_reference: cityRegs.preplumbing_code_reference,
+        // Pre-plumbing data (legacy + enhanced)
+        preplumbing: buildPreplumbingResponse(cityRegs),
         incentives: [],
         incentive_count: 0,
         max_incentive: null
