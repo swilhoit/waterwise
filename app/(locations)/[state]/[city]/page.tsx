@@ -1,391 +1,32 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import LocationHubView from '@/components/directory/LocationHubView'
-import { getBigQueryClient } from '@/lib/bigquery'
-import { STATE_NAMES, STATE_CODES } from '@/lib/state-utils'
 import { FAQSchema } from '@/components/schema-markup'
-import { getLocalRegulations } from '@/lib/directory-data'
+import { STATE_NAMES, getStateCodeFromSlug } from '@/lib/state-utils'
+import {
+  getCityInfo,
+  getStateData,
+  getCityIncentives,
+  getLocalRegulations,
+  getCityPermitDetails,
+  getCityWaterUtilities,
+  formatCityName,
+  getMaxRebate
+} from '@/lib/directory-queries'
+import type { FAQ, IncentiveProgram, GreywaterData, RainwaterData } from '@/lib/directory-types'
 
 interface PageProps {
   params: Promise<{ state: string; city: string }>
 }
 
-function getStateCodeFromSlug(slug: string): string | null {
-  const normalized = slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
-
-  if (STATE_CODES[normalized]) return STATE_CODES[normalized]
-  const upperSlug = slug.toUpperCase()
-  if (STATE_NAMES[upperSlug]) return upperSlug
-  return null
-}
-
-function formatCityName(slug: string): string {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
-}
-
-async function getCityData(stateCode: string, citySlug: string) {
-  try {
-    const bigquery = getBigQueryClient()
-    const cityName = formatCityName(citySlug)
-
-    // Get city info and county
-    const cityQuery = `
-      SELECT
-        city_name,
-        county_name,
-        city_jurisdiction_id
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
-      WHERE state_code = @stateCode
-        AND LOWER(REPLACE(city_name, ' ', '-')) = @citySlug
-      LIMIT 1
-    `
-
-    const [cityRows] = await bigquery.query({
-      query: cityQuery,
-      params: { stateCode: stateCode.toUpperCase(), citySlug: citySlug.toLowerCase() }
-    }) as any
-
-    if (!cityRows || cityRows.length === 0) {
-      // Try fuzzy match
-      const fuzzyQuery = `
-        SELECT city_name, county_name, city_jurisdiction_id
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\`
-        WHERE state_code = @stateCode
-          AND LOWER(city_name) = @cityName
-        LIMIT 1
-      `
-      const [fuzzyRows] = await bigquery.query({
-        query: fuzzyQuery,
-        params: { stateCode: stateCode.toUpperCase(), cityName: cityName.toLowerCase() }
-      }) as any
-
-      if (!fuzzyRows || fuzzyRows.length === 0) return null
-      return fuzzyRows[0]
-    }
-
-    return cityRows[0]
-  } catch (error) {
-    console.error('Error fetching city data:', error)
-    return null
-  }
-}
-
-async function getStateRegulations(stateCode: string) {
-  try {
-    const bigquery = getBigQueryClient()
-
-    // Query greywater_laws table (primary source)
-    const query = `
-      SELECT
-        state_code,
-        state_name,
-        legal_status,
-        permit_required,
-        permit_threshold_gpd,
-        indoor_use_allowed,
-        outdoor_use_allowed,
-        governing_code,
-        approved_uses,
-        key_restrictions,
-        summary,
-        primary_agency,
-        agency_phone,
-        government_website
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
-      WHERE state_code = @stateCode
-      LIMIT 1
-    `
-
-    const [rows] = await bigquery.query({
-      query,
-      params: { stateCode: stateCode.toUpperCase() }
-    }) as any
-
-    if (rows && rows.length > 0) {
-      const row = rows[0]
-
-      return {
-        greywater: {
-          legalStatus: row.legal_status === 'L' ? 'Legal' : row.legal_status === 'R' ? 'Regulated' : row.legal_status || 'Varies',
-          permitRequired: row.permit_required,
-          permitThresholdGpd: row.permit_threshold_gpd,
-          indoorUseAllowed: row.indoor_use_allowed,
-          outdoorUseAllowed: row.outdoor_use_allowed,
-          governingCode: row.governing_code,
-          approvedUses: row.approved_uses ? (typeof row.approved_uses === 'string' ? row.approved_uses.split(',').map((s: string) => s.trim()) : row.approved_uses) : [],
-          keyRestrictions: row.key_restrictions ? (typeof row.key_restrictions === 'string' ? row.key_restrictions.split(',').map((s: string) => s.trim()) : row.key_restrictions) : [],
-          summary: row.summary
-        },
-        rainwater: {
-          legalStatus: 'Legal',
-          collectionLimitGallons: null,
-          potableUseAllowed: false,
-          permitRequired: 'No'
-        },
-        agency: {
-          name: row.primary_agency,
-          phone: row.agency_phone,
-          website: row.government_website
-        },
-        lastUpdated: null
-      }
-    }
-
-    return null
-  } catch (error) {
-    console.error('Error fetching state regulations:', error)
-    return null
-  }
-}
-
-async function getCityIncentives(stateCode: string, cityName: string, countyName: string) {
-  try {
-    const bigquery = getBigQueryClient()
-
-    const stateJurisdictionId = `${stateCode.toUpperCase()}_STATE`
-    const countyJurisdictionId = countyName
-      ? `${stateCode.toUpperCase()}_COUNTY_${countyName.toUpperCase().replace(/\s+/g, '_')}`
-      : ''
-    const cityJurisdictionId = `${stateCode.toUpperCase()}_CITY_${cityName.toUpperCase().replace(/\s+/g, '_')}`
-
-    const jurisdictionIds = [stateJurisdictionId]
-    if (countyJurisdictionId) jurisdictionIds.push(countyJurisdictionId)
-    jurisdictionIds.push(cityJurisdictionId)
-
-    // Query with jurisdiction level tracking - prioritize most specific level
-    const query = `
-      WITH ranked_programs AS (
-        SELECT
-          p.program_id,
-          p.program_name,
-          p.program_type as incentive_type,
-          p.resource_type,
-          p.program_subtype,
-          p.incentive_amount_min,
-          p.incentive_amount_max,
-          p.incentive_per_unit,
-          p.application_url as incentive_url,
-          p.program_description,
-          p.water_utility,
-          p.residential_eligible,
-          p.commercial_eligible,
-          p.eligibility_details,
-          p.how_to_apply,
-          p.documentation_required,
-          p.installation_requirements,
-          p.property_requirements,
-          p.income_requirements,
-          p.pre_approval_required,
-          p.inspection_required,
-          p.contractor_requirements,
-          p.product_requirements,
-          p.timeline_to_complete,
-          p.reimbursement_process,
-          p.restrictions,
-          p.steps_to_apply,
-          p.processing_time,
-          p.stacking_allowed,
-          p.stacking_details,
-          p.contact_email,
-          p.contact_phone,
-          p.coverage_area,
-          p.deadline_info,
-          p.program_end_date,
-          pjl.jurisdiction_id,
-          CASE
-            WHEN pjl.jurisdiction_id LIKE '%_CITY_%' THEN 'city'
-            WHEN pjl.jurisdiction_id LIKE '%_COUNTY_%' THEN 'county'
-            WHEN pjl.jurisdiction_id LIKE '%_STATE' THEN 'state'
-            ELSE 'other'
-          END as jurisdiction_level,
-          CASE
-            WHEN pjl.jurisdiction_id LIKE '%_CITY_%' THEN 3
-            WHEN pjl.jurisdiction_id LIKE '%_COUNTY_%' THEN 2
-            WHEN pjl.jurisdiction_id LIKE '%_STATE' THEN 1
-            ELSE 0
-          END as level_priority,
-          ROW_NUMBER() OVER (PARTITION BY p.program_id ORDER BY
-            CASE
-              WHEN pjl.jurisdiction_id LIKE '%_CITY_%' THEN 3
-              WHEN pjl.jurisdiction_id LIKE '%_COUNTY_%' THEN 2
-              WHEN pjl.jurisdiction_id LIKE '%_STATE' THEN 1
-              ELSE 0
-            END DESC
-          ) as rn
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.programs_master\` p
-        JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\` pjl
-          ON p.program_id = pjl.program_id
-        WHERE LOWER(p.program_status) = 'active'
-          AND pjl.jurisdiction_id IN UNNEST(@jurisdictionIds)
-      )
-      SELECT * EXCEPT(rn, level_priority, program_id)
-      FROM ranked_programs
-      WHERE rn = 1
-      ORDER BY incentive_amount_max DESC NULLS LAST
-    `
-
-    const [rows] = await bigquery.query({
-      query,
-      params: { jurisdictionIds },
-      types: { jurisdictionIds: ['STRING'] }
-    }) as any
-
-    return rows || []
-  } catch (error) {
-    console.error('Error fetching incentives:', error)
-    return []
-  }
-}
-
-// Fetch water utilities serving this city
-async function getCityWaterUtilities(stateCode: string, cityName: string) {
-  try {
-    const bigquery = getBigQueryClient()
-    const cityJurisdictionId = `${stateCode.toUpperCase()}_CITY_${cityName.toUpperCase().replace(/\s+/g, '_')}`
-
-    const query = `
-      SELECT
-        u.utility_id,
-        u.utility_name,
-        u.utility_type,
-        u.website,
-        u.phone,
-        usa.service_type
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.utility_service_areas\` usa
-      JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.water_utilities\` u
-        ON usa.utility_id = u.utility_id
-      WHERE usa.jurisdiction_id = @jurisdictionId
-      ORDER BY
-        CASE WHEN usa.service_type = 'primary' THEN 0 ELSE 1 END,
-        u.utility_name
-    `
-
-    const [rows] = await bigquery.query({
-      query,
-      params: { jurisdictionId: cityJurisdictionId }
-    }) as any
-
-    return (rows || []).map((row: any) => ({
-      name: row.utility_name,
-      website: row.website,
-      phone: row.phone,
-      serviceType: row.service_type
-    }))
-  } catch (error) {
-    console.error('Error fetching water utilities:', error)
-    return []
-  }
-}
-
-// Fetch city-specific permit details
-async function getCityPermitDetails(stateCode: string, cityName: string) {
-  try {
-    const bigquery = getBigQueryClient()
-
-    const query = `
-      SELECT
-        permit_type,
-        permit_required,
-        permit_required_threshold_gpd,
-        laundry_to_landscape_allowed,
-        branched_drain_allowed,
-        surge_tank_system_allowed,
-        indoor_reuse_allowed,
-        application_url,
-        application_method,
-        required_documents,
-        pre_approval_required,
-        permit_fee_min,
-        permit_fee_max,
-        plan_check_fee,
-        inspection_fee,
-        fee_notes,
-        inspections_required,
-        inspection_scheduling_url,
-        inspection_scheduling_phone,
-        licensed_plumber_required,
-        licensed_contractor_required,
-        diy_allowed,
-        professional_requirements_notes,
-        typical_processing_days,
-        expedited_available,
-        expedited_fee,
-        department_name,
-        department_address,
-        department_phone,
-        department_email,
-        department_hours,
-        department_url,
-        hoa_approval_note,
-        special_requirements,
-        exemptions,
-        data_source,
-        data_verified_date,
-        data_confidence,
-        notes,
-        tips_for_residents
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_permit_details\`
-      WHERE state_code = @stateCode
-        AND LOWER(city_name) = @cityName
-      LIMIT 1
-    `
-
-    const [rows] = await bigquery.query({
-      query,
-      params: {
-        stateCode: stateCode.toUpperCase(),
-        cityName: cityName.toLowerCase()
-      }
-    }) as any
-
-    if (!rows || rows.length === 0) return null
-
-    const row = rows[0]
-
-    return {
-      permitType: row.permit_type,
-      permitRequired: row.permit_required,
-      thresholdGpd: row.permit_required_threshold_gpd,
-      laundryToLandscapeAllowed: row.laundry_to_landscape_allowed,
-      branchedDrainAllowed: row.branched_drain_allowed,
-      surgeTankAllowed: row.surge_tank_system_allowed,
-      indoorReuseAllowed: row.indoor_reuse_allowed,
-      applicationUrl: row.application_url,
-      applicationMethod: row.application_method,
-      requiredDocuments: row.required_documents || [],
-      feeMin: row.permit_fee_min,
-      feeMax: row.permit_fee_max,
-      processingDays: row.typical_processing_days,
-      diyAllowed: row.diy_allowed,
-      licensedPlumberRequired: row.licensed_plumber_required,
-      licensedContractorRequired: row.licensed_contractor_required,
-      inspectionsRequired: row.inspections_required || [],
-      departmentName: row.department_name,
-      departmentPhone: row.department_phone,
-      departmentAddress: row.department_address,
-      departmentHours: row.department_hours,
-      departmentUrl: row.department_url,
-      exemptions: row.exemptions || [],
-      specialRequirements: row.special_requirements || [],
-      tips: row.tips_for_residents,
-      notes: row.notes
-    }
-  } catch (error) {
-    console.error('Error fetching city permit details:', error)
-    return null
-  }
-}
-
-function generateCityFAQs(cityName: string, stateName: string, stateCode: string, regulations: any, incentives: any[]) {
-  const greywater = regulations?.greywater
-  const rainwater = regulations?.rainwater
-
+function generateCityFAQs(
+  cityName: string,
+  stateName: string,
+  stateCode: string,
+  greywater: GreywaterData | null,
+  rainwater: RainwaterData | null,
+  incentives: IncentiveProgram[]
+): FAQ[] {
   const greywaterStatus = greywater?.legalStatus || 'varies by jurisdiction'
   const rainwaterStatus = rainwater?.legalStatus || 'legal'
   const rebateCount = incentives.length
@@ -431,16 +72,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!stateCode) return { title: 'Location Not Found' }
 
   const stateName = STATE_NAMES[stateCode]
-  const cityData = await getCityData(stateCode, city)
-  const cityName = cityData?.city_name || formatCityName(city)
+  const cityInfo = await getCityInfo(stateCode, city)
+  const cityName = cityInfo?.city_name || formatCityName(city)
 
-  const regulations = await getStateRegulations(stateCode)
-  const incentives = await getCityIncentives(stateCode, cityName, cityData?.county_name || '')
+  const [stateData, incentives] = await Promise.all([
+    getStateData(stateCode),
+    getCityIncentives(stateCode, cityName, cityInfo?.county_name)
+  ])
 
-  const greyStatus = regulations?.greywater?.legalStatus || 'varies'
-  const rainStatus = regulations?.rainwater?.legalStatus || 'legal'
+  const greyStatus = stateData?.greywater?.legalStatus || 'varies'
+  const rainStatus = stateData?.rainwater?.legalStatus || 'legal'
   const rebateCount = incentives.length
-  const maxRebate = Math.max(...incentives.map((i: { incentive_amount_max?: number }) => i.incentive_amount_max || 0), 0)
+  const maxRebate = getMaxRebate(incentives)
 
   return {
     title: `${cityName}, ${stateCode} Water Conservation | Greywater, Rainwater & Rebates`,
@@ -471,58 +114,27 @@ export default async function CityHubPage({ params }: PageProps) {
   if (!stateCode) notFound()
 
   const stateName = STATE_NAMES[stateCode]
-  const cityData = await getCityData(stateCode, city)
+  const cityInfo = await getCityInfo(stateCode, city)
+  const cityName = cityInfo?.city_name || formatCityName(city)
+  const countyName = cityInfo?.county_name
 
-  if (!cityData) {
-    // Create page anyway with formatted city name
-    const cityName = formatCityName(city)
-    const [regulations, incentives, localRegs, permitDetails, waterUtilities] = await Promise.all([
-      getStateRegulations(stateCode),
-      getCityIncentives(stateCode, cityName, ''),
-      getLocalRegulations(stateCode, cityName),
-      getCityPermitDetails(stateCode, cityName),
-      getCityWaterUtilities(stateCode, cityName)
-    ])
-
-    const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
-
-    return (
-      <>
-        <FAQSchema faqs={faqs} />
-        <LocationHubView
-          level="city"
-          stateName={stateName}
-          stateCode={stateCode}
-          cityName={cityName}
-          greywater={regulations?.greywater || null}
-          rainwater={regulations?.rainwater || null}
-          agency={regulations?.agency || null}
-          incentives={incentives}
-          lastUpdated={regulations?.lastUpdated || undefined}
-          preplumbing={localRegs?.preplumbing || null}
-          localRegulation={localRegs ? {
-            regulationSummary: localRegs.regulationSummary,
-            permitRequired: localRegs.permitRequired
-          } : null}
-          permitData={permitDetails}
-          waterUtilities={waterUtilities}
-        />
-      </>
-    )
-  }
-
-  const cityName = cityData.city_name
-  const countyName = cityData.county_name
-
-  const [regulations, incentives, localRegs, permitDetails, waterUtilities] = await Promise.all([
-    getStateRegulations(stateCode),
+  // Fetch all data in parallel
+  const [stateData, incentives, localRegs, permitDetails, waterUtilities] = await Promise.all([
+    getStateData(stateCode),
     getCityIncentives(stateCode, cityName, countyName),
     getLocalRegulations(stateCode, cityName, countyName),
     getCityPermitDetails(stateCode, cityName),
     getCityWaterUtilities(stateCode, cityName)
   ])
 
-  const faqs = generateCityFAQs(cityName, stateName, stateCode, regulations, incentives)
+  const faqs = generateCityFAQs(
+    cityName,
+    stateName,
+    stateCode,
+    stateData?.greywater || null,
+    stateData?.rainwater || null,
+    incentives
+  )
 
   return (
     <>
@@ -533,11 +145,11 @@ export default async function CityHubPage({ params }: PageProps) {
         stateCode={stateCode}
         cityName={cityName}
         countyName={countyName}
-        greywater={regulations?.greywater || null}
-        rainwater={regulations?.rainwater || null}
-        agency={regulations?.agency || null}
+        greywater={stateData?.greywater || null}
+        rainwater={stateData?.rainwater || null}
+        agency={stateData?.agency || null}
         incentives={incentives}
-        lastUpdated={regulations?.lastUpdated || undefined}
+        lastUpdated={stateData?.lastUpdated || undefined}
         preplumbing={localRegs?.preplumbing || null}
         localRegulation={localRegs ? {
           regulationSummary: localRegs.regulationSummary,
