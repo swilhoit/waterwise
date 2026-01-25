@@ -801,7 +801,7 @@ export default function LocationHubView({
         )}
 
         {/* CTA Section */}
-        <div className="mt-8 bg-gradient-to-br from-sand-900 to-sand-800 rounded-2xl p-8 text-center">
+        <div className="mt-8 bg-gradient-to-br from-ocean-800 to-ocean-900 rounded-2xl p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-3">
             Ready to Start Your Water Conservation Project?
           </h3>
