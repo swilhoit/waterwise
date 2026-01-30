@@ -67,13 +67,7 @@ async function getStateData(stateCode: string) {
         r.approved_uses as rainwater_approved_uses,
         r.indoor_use_allowed as rainwater_indoor_allowed,
         r.outdoor_use_allowed as rainwater_outdoor_allowed,
-        -- Storage types
-        r.cistern_allowed as rainwater_cistern_allowed,
-        r.rain_barrel_allowed as rainwater_rain_barrel_allowed,
-        r.underground_storage_allowed as rainwater_underground_allowed,
-        -- Stub-out requirements
-        r.stub_out_required as rainwater_stub_out_required,
-        r.stub_out_details as rainwater_stub_out_details
+        r.summary as rainwater_summary
       FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` g
       LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` r
         ON g.state_code = r.state_code AND r.resource_type = 'rainwater'
@@ -123,13 +117,7 @@ async function getStateData(stateCode: string) {
         approvedUses: row.rainwater_approved_uses || [],
         indoorUseAllowed: row.rainwater_indoor_allowed,
         outdoorUseAllowed: row.rainwater_outdoor_allowed,
-        // Storage types
-        cisternAllowed: row.rainwater_cistern_allowed,
-        rainBarrelAllowed: row.rainwater_rain_barrel_allowed,
-        undergroundAllowed: row.rainwater_underground_allowed,
-        // Stub-out requirements
-        stubOutRequired: row.rainwater_stub_out_required,
-        stubOutDetails: row.rainwater_stub_out_details
+        summary: row.rainwater_summary
       } : null,
       agency: {
         name: row.primary_agency,
