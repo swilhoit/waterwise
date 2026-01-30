@@ -400,9 +400,9 @@ Type 1 Reclaimed Water General Permit allows private residential direct reuse wi
 - Cannot discharge to surface waters
 - Must have overflow to sewer/septic
 
-TAX INCENTIVE: Arizona offers a 25% tax credit (maximum $1,000) for installing residential greywater conservation systems - this can significantly offset your Aqua2use purchase!
+NOTE: Arizona previously offered a 25% tax credit (up to $1,000) for greywater systems under ARS 43-1090.01, but this credit EXPIRED around 2017 and is no longer available.
 
-Arizona is one of the most greywater-friendly states in the country.`,
+Arizona is one of the most greywater-friendly states in the country with its permit-free Type 1 system allowing residential greywater reuse without bureaucratic hurdles.`,
     keywords: ["arizona", "az", "law", "permit", "legal", "tax credit", "400 gallons"]
   },
   {

@@ -173,11 +173,11 @@ const NEW_PROGRAMS = [
     incentive_amount_min: 50,
     incentive_amount_max: 100,
     incentive_per_unit: 'Up to $100',
-    application_url: 'https://www.auroragov.org/residents/water/rebates',
+    application_url: 'https://waterrebates.aurorawater.org/',
     program_status: 'active',
     water_utility: 'Aurora Water',
     coverage_area: 'Aurora, CO',
-    program_description: 'Rebate for ultra-high-efficiency WaterSense toilets.',
+    program_description: 'Rebate for ultra-high-efficiency WaterSense toilets (0.8 gpf). Up to $100 for replacing 1.6 gpf or more toilets. Up to 2 toilets per household every 10 years.',
     residential_eligible: true,
     commercial_eligible: true,
     verified_date: '2025-01-30'

@@ -153,13 +153,14 @@
       "state_code": "HI",
       "state_name": "Hawaii",
       "agency": "Hawaii Department of Health",
-      "greywater_url": "https://health.hawaii.gov/wastewater/home/graywater/",
+      "greywater_url": "https://health.hawaii.gov/wastewater/home/reuse/",
+      "greywater_guidelines_pdf": "https://health.hawaii.gov/wastewater/files/2016/03/14_Gray_Water_GL.pdf",
       "rainwater_url": null,
       "plumbing_code_url": null,
       "last_scraped": null,
       "data_quality": "medium",
       "completeness": "partial",
-      "notes": "Hawaii allows greywater for irrigation. Systems under 400 GPD may be exempt from permit."
+      "notes": "Hawaii allows greywater for irrigation. Systems under 400 GPD may be exempt from permit. Previous URL /graywater/ now 404 - use /reuse/ page."
     },
     {
       "state_code": "ID",
