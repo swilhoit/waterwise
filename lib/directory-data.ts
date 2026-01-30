@@ -379,8 +379,8 @@ export async function getStateData(stateCode: string): Promise<StateData | null>
         r.approved_uses as rainwater_approved_uses,
         r.indoor_use_allowed as rainwater_indoor_allowed,
         r.outdoor_use_allowed as rainwater_outdoor_allowed
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` g
-      LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` r
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` g
+      LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` r
         ON g.state_code = r.state_code AND r.resource_type = 'rainwater'
       WHERE g.state_code = @stateCode
         AND g.resource_type = 'greywater'
@@ -725,7 +725,7 @@ export async function getAllStates(): Promise<Array<{
           state_code,
           state_name,
           legal_status
-        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+        FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
         WHERE state_code IS NOT NULL AND resource_type = 'greywater'
       )
       SELECT

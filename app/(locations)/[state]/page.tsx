@@ -74,8 +74,8 @@ async function getStateData(stateCode: string) {
         -- Stub-out requirements
         r.stub_out_required as rainwater_stub_out_required,
         r.stub_out_details as rainwater_stub_out_details
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` g
-      LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\` r
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` g
+      LEFT JOIN \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\` r
         ON g.state_code = r.state_code AND r.resource_type = 'rainwater'
       WHERE g.state_code = @stateCode
         AND g.resource_type = 'greywater'

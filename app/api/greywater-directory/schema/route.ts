@@ -10,7 +10,7 @@ export async function GET() {
     // Active tables used by the application
     const keyTables = [
       // Primary data tables
-      { dataset: 'greywater_compliance', table: 'state_water_regulations' },
+      { dataset: 'greywater_compliance', table: 'greywater_laws' },
       { dataset: 'greywater_compliance', table: 'city_county_mapping' },
       { dataset: 'greywater_compliance', table: 'local_regulations' },
       // Programs/incentives tables
@@ -90,11 +90,11 @@ export async function GET() {
       hierarchyStats,
       recommendation: {
         primaryTables: {
-          regulations: 'greywater_compliance.state_water_regulations',
+          regulations: 'greywater_compliance.greywater_laws',
           geography: 'greywater_compliance.city_county_mapping',
           programs: 'greywater_compliance.programs_master'
         },
-        note: 'state_water_regulations contains both greywater and rainwater data (use resource_type filter)'
+        note: 'greywater_laws contains both greywater and rainwater data (use resource_type filter)'
       },
       timestamp: new Date().toISOString()
     });

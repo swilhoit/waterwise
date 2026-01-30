@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
         regulatory_classification,
         tax_incentives,
         summary
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
       WHERE state_code = @stateCode
       ORDER BY resource_type
     `

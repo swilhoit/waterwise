@@ -57,7 +57,7 @@ async function fetchAllStates(): Promise<Map<string, StateInfo>> {
       government_website as governmentWebsite,
       regulatory_classification as regulatoryClassification,
       summary
-    FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+    FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
     WHERE resource_type = 'greywater'
     ORDER BY state_name
   `

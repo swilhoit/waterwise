@@ -74,7 +74,7 @@ async function getRainwaterData(stateCode: string) {
         primary_agency,
         agency_phone,
         government_website
-      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.state_water_regulations\`
+      FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.greywater_laws\`
       WHERE state_code = @stateCode
         AND resource_type = 'rainwater'
       LIMIT 1
