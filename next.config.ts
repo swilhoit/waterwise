@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Allow Builder.io to embed the site in iframes for visual editing
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' https://*.builder.io https://builder.io",
+          },
+        ],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
