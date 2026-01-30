@@ -24,19 +24,35 @@ The following greywater/laundry-to-landscape rebate programs have been manually 
 |---------|---------|---------------|--------------|
 | SNWA | Water Smart Landscapes | $5/sq ft (up to 10k sq ft) | https://www.snwa.com/rebates/wsl/index.html |
 
+### Texas (Verified January 2026)
+
+| Utility | Program | Rebate Amount | Verified URL |
+|---------|---------|---------------|--------------|
+| Austin Water | Laundry-to-Landscape Rebate | Up to $150 | https://www.austintexas.gov/department/water-conservation-rebates |
+| Austin Water | Rainwater Harvesting Rebate | Up to $5,000 | https://www.austintexas.gov/department/water-conservation-rebates |
+
+### Arizona (Verified January 2026)
+
+| Utility | Program | Rebate Amount | Verified URL |
+|---------|---------|---------------|--------------|
+| Tucson Water | Greywater Harvesting Rebate | Up to $1,000 | https://www.tucsonaz.gov/water/rebates |
+| Tucson Water | Rainwater Harvesting Rebate | Up to $2,000 | https://www.tucsonaz.gov/Departments/Water/Conservation/Residential-Customer-Rebates |
+
 ## Programs That Do NOT Exist
 
 The following utilities were verified to NOT have greywater rebate programs (as of January 2026):
 
 - **Denver Water** - Offers toilet and sprinkler rebates only, NO greywater
 - **LADWP** - Offers turf replacement, NO greywater rebate
-- **San Diego** - Rain barrels, turf, NO greywater rebate
-- **Austin Water** - NO greywater rebate found
+- **San Diego** - Rain barrels, turf, NO greywater rebate (incorrectly listed in database - REMOVED)
 - **Phoenix Water** - NO greywater rebate found
-- **Tucson Water** - Has rainwater program, NO greywater rebate confirmed
-- **Portland Water** - NO greywater rebate found
+- **Portland Water** - NO greywater rebate found (has stormwater programs)
 - **Tampa Water** - NO greywater rebate found
-- **SAWS (San Antonio)** - NO greywater rebate found
+- **SAWS (San Antonio)** - Has rainwater program, NO greywater rebate
+
+## IMPORTANT: Expired Tax Credits
+
+- **Arizona State Tax Credit (ARS 43-1090.01)** - This 25% tax credit (up to $1,000) EXPIRED around 2017 and is NO LONGER AVAILABLE. Do NOT promote this to users.
 
 ## Requirements for Adding New Programs
 

@@ -46,10 +46,12 @@
         "Subsurface distribution only"
       ],
       "recentChanges": "Updated regulations October 1, 2023",
-      "primaryAgency": "Alaska Department of Labor and Alaska DEC",
-      "agencyContact": "907-269-4925 (Labor), 907-269-7635 (DEC)",
-      "agencyPhone": "907-269-4925",
-      "governmentWebsite": "https://labor.alaska.gov/lss/forms/Plumbing_Code.pdf",
+      "primaryAgency": "Alaska Department of Environmental Conservation (DEC)",
+      "secondaryAgency": "Alaska Department of Labor (plumbing permits)",
+      "agencyContact": "907-269-7635 (DEC Water Division), 907-269-4925 (Labor/plumbing)",
+      "agencyPhone": "907-269-7635",
+      "governmentWebsite": "https://dec.alaska.gov/water/",
+      "plumbingCodeUrl": "https://labor.alaska.gov/lss/forms/Plumbing_Code.pdf",
       "regulatoryClassification": "Comprehensive Regulated",
       "summary": "Alaska maintains a clear regulatory framework for residential greywater systems under the 2018 Uniform Plumbing Code, updated as recently as October 2023. The state permits subsurface greywater irrigation for single-family homes with affordable plumbing permits ranging from $1.50 to $10.00. Systems must exclude kitchen and dishwasher water and use only subsurface distribution methods. Alaska's approach balances environmental protection with practical water conservation needs, particularly important given the state's unique climate and infrastructure challenges in many remote communities.",
       "permitExplanation": "Alaska requires plumbing permits for all greywater systems, regardless of size. The good news: permit fees are very affordable ($1.50-$10.00). Your system must be installed by a licensed plumber and inspected before use. Only subsurface irrigation is allowed - no surface application or indoor reuse.",
@@ -74,14 +76,14 @@
         "No surface application for food plants",
         "No spray irrigation"
       ],
-      "recentChanges": "25% tax credit up to $1,000 for installation",
+      "recentChanges": "Note: The 25% tax credit (ARS 43-1090.01) expired around 2017 and is no longer available",
       "primaryAgency": "Arizona Department of Environmental Quality",
       "agencyContact": "602-771-2300",
       "agencyPhone": "602-771-2300",
       "governmentWebsite": "https://azdeq.gov/recycled-water",
       "regulatoryClassification": "Progressive Three-Tier System",
-      "summary": "Arizona pioneered the most progressive greywater regulations in the United States with its innovative three-tiered permit system that has become a model for other water-scarce states. Type 1 systems under 400 gallons per day require no permits when following 13 best management practices, Type 2 systems (400-3,000 gpd) require general permits, and Type 3 systems over 3,000 gpd need individual permits. The state incentivizes adoption with a 25% tax credit up to $1,000 and allows diverse uses including household gardening, composting, and landscape irrigation, reflecting Arizona's leadership in water conservation driven by chronic water scarcity in the Sonoran Desert.",
-      "permitExplanation": "Arizona has the most homeowner-friendly permit system in the country. Simple systems under 400 gallons per day (typical for 1-2 washing machines) require NO permit - just follow the 13 best management practices. This means most residential laundry-to-landscape systems can be installed immediately without paperwork. Larger systems (400-3,000 gpd) need a general permit, and very large systems (3,000+ gpd) require individual permits. You may also qualify for a 25% tax credit up to $1,000.",
+      "summary": "Arizona pioneered the most progressive greywater regulations in the United States with its innovative three-tiered permit system that has become a model for other water-scarce states. Type 1 systems under 400 gallons per day require no permits when following 13 best management practices, Type 2 systems (400-3,000 gpd) require general permits, and Type 3 systems over 3,000 gpd need individual permits. The state allows diverse uses including household gardening, composting, and landscape irrigation, reflecting Arizona's leadership in water conservation driven by chronic water scarcity in the Sonoran Desert. Note: The state's 25% tax credit for greywater systems (ARS 43-1090.01) expired around 2017.",
+      "permitExplanation": "Arizona has the most homeowner-friendly permit system in the country. Simple systems under 400 gallons per day (typical for 1-2 washing machines) require NO permit - just follow the 13 best management practices. This means most residential laundry-to-landscape systems can be installed immediately without paperwork. Larger systems (400-3,000 gpd) need a general permit, and very large systems (3,000+ gpd) require individual permits.",
       "permitProcess": "For systems under 400 gpd: No permit needed - just follow the state's 13 best management practices. For larger systems: Apply through Arizona DEQ with system design plans and site evaluation."
     },
     "Arkansas": {
@@ -274,7 +276,8 @@
       "primaryAgency": "Hawaii Department of Health Wastewater Branch",
       "agencyContact": "808-586-4400",
       "agencyPhone": "808-586-4400",
-      "governmentWebsite": "https://health.hawaii.gov/",
+      "governmentWebsite": "https://health.hawaii.gov/wastewater/home/reuse/",
+      "greywaterGuidelinesUrl": "https://health.hawaii.gov/wastewater/files/2016/03/14_Gray_Water_GL.pdf",
       "regulatoryClassification": "Comprehensive Guidelines",
       "summary": "Hawaii maintains detailed greywater guidelines that recognize the islands' unique water scarcity challenges and environmental sensitivities, requiring permits for all residential systems through either the Department of Health (non-sewer areas) or county authorities (sewer areas). The state recently achieved a milestone with the first residential condominium greywater system approval in April 2024, demonstrating growing acceptance of water reuse in multi-family settings. Hawaii's regulations focus exclusively on subsurface landscape irrigation, excluding kitchen and dishwasher water, with requirements designed to protect the islands' fragile groundwater and marine ecosystems from contamination.",
       "permitExplanation": "Hawaii requires permits for all greywater systems, with the permit authority depending on your location. If you're NOT connected to municipal sewer, apply through the Department of Health. If you ARE connected to sewer, apply through your county authority. Only subsurface landscape irrigation is allowed - no surface application or indoor reuse. Kitchen and dishwasher water cannot be used. Hawaii recently approved its first condo greywater system (2024), showing increasing acceptance.",
@@ -327,27 +330,31 @@
       "permitProcess": "No permit pathway available. All greywater must be treated as wastewater and routed to sewer or septic systems."
     },
     "Indiana": {
-      "legalStatus": "Effectively Prohibited",
-      "governingCode": "Indiana Administrative Code Title 410",
+      "legalStatus": "Partial - Indoor Reuse Only",
+      "governingCode": "Indiana Plumbing Code (IPC 2006 with 2012 amendments), Appendix C",
+      "governingCodeUrl": "https://up.codes/viewer/indiana/ipc-2006/chapter/C/gray-water-recycling-systems",
       "permitThresholdGpd": null,
-      "permitRequired": "Not Available",
-      "indoorUseAllowed": false,
+      "permitRequired": "Yes for indoor reuse",
+      "indoorUseAllowed": true,
       "outdoorUseAllowed": false,
       "approvedUses": [
-        "None - all greywater must go to septic systems"
+        "Toilet and urinal flushing (with treatment and permit)",
+        "Indoor non-potable applications with treatment"
       ],
       "keyRestrictions": [
-        "No standalone greywater systems permitted"
+        "Outdoor/landscape irrigation NOT permitted (Section C103 deleted)",
+        "All outdoor greywater must go to septic system",
+        "Treatment and disinfection required for indoor use"
       ],
-      "recentChanges": null,
-      "primaryAgency": "Indiana Department of Environmental Management",
+      "recentChanges": "Indiana code based on IPC 2006 with 2012 amendments; Section C103 (landscape irrigation) deliberately excluded",
+      "primaryAgency": "Indiana Department of Environmental Management / Local Building Departments",
       "agencyContact": "Indiana Department of Environmental Management",
       "agencyPhone": null,
       "governmentWebsite": "https://www.in.gov/idem/",
-      "regulatoryClassification": "Prohibited",
-      "summary": "Indiana prohibits standalone greywater systems, requiring all household wastewater including greywater to flow through conventional septic systems or connect to municipal sewer systems. This policy eliminates the water conservation benefits that greywater reuse could provide and reflects Indiana's conservative approach to alternative wastewater management. The prohibition is enforced through the Indiana Department of Environmental Management and applies statewide regardless of local conditions or water scarcity concerns. Indiana residents seeking water conservation must rely on rainwater harvesting and other non-greywater approaches.",
-      "permitExplanation": "Indiana PROHIBITS standalone greywater systems. All household wastewater, including greywater from washing machines and showers, must flow to conventional septic systems or municipal sewer connections. There is no variance or permit process available for residential greywater reuse.",
-      "permitProcess": "No permit pathway available. Greywater diversion is not permitted under Indiana regulations."
+      "regulatoryClassification": "Partial - Indoor Only",
+      "summary": "Indiana has partial greywater allowances under its adoption of IPC Appendix C. Indoor greywater reuse for toilet and urinal flushing IS permitted with proper treatment, permits, and inspections. However, Indiana specifically deleted Section C103 from its code adoption, meaning subsurface landscape irrigation with greywater is NOT allowed. All greywater destined for outdoor use must be disposed through the septic system. This makes Indiana unusual - it permits indoor reuse but prohibits the outdoor irrigation that many other states allow.",
+      "permitExplanation": "Indiana allows indoor greywater reuse for toilet and urinal flushing under IPC Appendix C adoption. Treatment and disinfection are required. However, outdoor landscape irrigation with greywater is NOT permitted - Indiana deleted Section C103 (Subsurface Landscape Irrigation) from its code. All outdoor-bound greywater must go through the septic system.",
+      "permitProcess": "For indoor toilet/urinal flushing systems: Apply for permit through local building department with system design showing compliance with IPC Appendix C. Treatment and disinfection required. Outdoor irrigation with greywater is not permitted in Indiana."
     },
     "Iowa": {
       "legalStatus": "No Formal Regulations",
@@ -494,28 +501,35 @@
       "permitProcess": "Regulations pending development. Contact Maryland Department of Environment at 410-537-3000 for current status and timeline for permit availability."
     },
     "Massachusetts": {
-      "legalStatus": "Legal with Proposed Expansion",
-      "governingCode": "Title 5 (310 CMR 15.000), Proposed H.280 and H.774",
+      "legalStatus": "Legal with Special Permission",
+      "governingCode": "Board of Plumbers Policy Statement; Title 5 (310 CMR 15.262)",
+      "governingCodeUrl": "https://www.mass.gov/policy-statement/installation-of-water-recycling-systems",
       "permitThresholdGpd": null,
-      "permitRequired": "Currently requires composting toilets",
-      "indoorUseAllowed": false,
+      "permitRequired": "Special permission from Board of Plumbers",
+      "indoorUseAllowed": true,
       "outdoorUseAllowed": true,
       "approvedUses": [
-        "Limited currently",
-        "Proposed expansion to irrigation and toilet flushing"
+        "External irrigation",
+        "Internal irrigation (houseplants)",
+        "Toilet and urinal flushing (with blue dye)",
+        "Composting",
+        "Liquid cooling systems"
       ],
       "keyRestrictions": [
-        "Currently requires composting toilets for greywater use"
+        "Purple piping required for all greywater lines",
+        "Blue dye required for toilet/urinal flushing",
+        "Backflow protection required",
+        "Professional design certification required (PE for residential)"
       ],
-      "recentChanges": "Active legislation in 2024 for major expansion",
-      "primaryAgency": "Massachusetts Department of Environmental Protection",
-      "agencyContact": "mass.gov/dep",
+      "recentChanges": "H.922 filed January 2025 proposing tiered residential greywater system permits",
+      "primaryAgency": "Board of State Examiners of Plumbers and Gas Fitters",
+      "agencyContact": "mass.gov/policy-statement/installation-of-water-recycling-systems",
       "agencyPhone": null,
-      "governmentWebsite": "https://www.mass.gov/orgs/department-of-environmental-protection",
-      "regulatoryClassification": "Currently Restrictive, Expansion Pending",
-      "summary": "Massachusetts currently requires composting toilets for greywater systems under Title 5 regulations, but active 2024 legislation (H.280 and H.774) proposes major expansion to allow irrigation and toilet flushing applications similar to other progressive states. The current restrictive framework reflects Massachusetts' traditionally conservative approach to wastewater management and protection of groundwater resources. Proposed legislation would create a more accessible regulatory framework while maintaining environmental protections, potentially making Massachusetts a leader in Northeast greywater policy. The expansion would be particularly valuable given the state's water supply challenges and environmental justice goals for water access.",
-      "permitExplanation": "Massachusetts requires permits for all greywater systems through Title 5 (310 CMR 15.000), administered by local boards of health. Only subsurface irrigation is allowed - no surface application. Systems must be designed by certified professionals, adding cost but ensuring proper installation. Your local board of health issues permits and conducts inspections.",
-      "permitProcess": "Hire a Title 5 designer to create system plans. Apply through your local board of health. Schedule required inspections during and after installation."
+      "governmentWebsite": "https://www.mass.gov/orgs/board-of-state-examiners-of-plumbers-and-gas-fitters",
+      "regulatoryClassification": "Permitted with Special Approval",
+      "summary": "Massachusetts allows greywater systems through a special permission process from the Board of State Examiners of Plumbers and Gas Fitters. Permitted uses include external irrigation, internal irrigation (houseplants), toilet and urinal flushing (with blue dye), composting, and liquid cooling systems. Acceptable greywater sources include clothes washer, shower, bathtub, bathroom sink, condensation, and natural precipitation. All systems require backflow protection and purple piping. Professional design certification is required. Under Title 5 (310 CMR 15.262), absorption area may be reduced by up to 50% when using composting toilets with greywater-only discharge. New legislation (H.922) was filed in January 2025 proposing tiered residential greywater permits to simplify the process.",
+      "permitExplanation": "Massachusetts allows greywater systems through special permission from the Board of State Examiners of Plumbers and Gas Fitters. Permitted uses include external and internal irrigation, toilet flushing (with blue dye), and composting. All systems require backflow protection, purple piping, and professional design (PE certification for residential, required for commercial). Contact the Board of Plumbers for the application process.",
+      "permitProcess": "Apply for special permission through the Board of State Examiners of Plumbers and Gas Fitters. Submit system design prepared by a licensed professional engineer. Purple piping required for all greywater lines. Blue dye required for toilet/urinal flushing applications. Inspection required."
     },
     "Michigan": {
       "legalStatus": "Limited Allowance",
@@ -827,26 +841,32 @@
     "Ohio": {
       "legalStatus": "Legal and Regulated",
       "governingCode": "Ohio Administrative Code 3701-29-17",
+      "governingCodeUrl": "https://codes.ohio.gov/ohio-administrative-code/rule-3701-29-17",
       "permitThresholdGpd": 60,
       "permitRequired": "Based on system type",
-      "indoorUseAllowed": false,
+      "indoorUseAllowed": true,
       "outdoorUseAllowed": true,
       "approvedUses": [
-        "Subsurface irrigation",
-        "Surface with Type 4 treatment"
+        "Subsurface irrigation (Type 1, 2)",
+        "Surface irrigation with Type 4 treatment",
+        "Indoor toilet flushing (Type 4)",
+        "Indoor houseplant watering (Type 4)",
+        "Hand-carried to leach field (Type 3)"
       ],
       "keyRestrictions": [
-        "Four-tier system: Type 1 (≤60 gpd), Type 2 (60-1,000 gpd), Type 3 (hand-carried), Type 4 (treated)"
+        "Four-tier system: Type 1 (≤60 gpd), Type 2 (60-1,000 gpd), Type 3 (hand-carried), Type 4 (treated/disinfected)",
+        "Type 4 required for indoor use and year-round outdoor",
+        "Permit from local health department required"
       ],
-      "recentChanges": null,
+      "recentChanges": "Ohio WateReuse section established March 2024 to advance water recycling programs",
       "primaryAgency": "Ohio Department of Health and Local Health Departments",
       "agencyContact": "Ohio Department of Health",
       "agencyPhone": null,
       "governmentWebsite": "https://odh.ohio.gov/",
       "regulatoryClassification": "Most Comprehensive Midwest Framework",
-      "summary": "Ohio operates the most comprehensive greywater regulations in the Midwest with an innovative four-tier system that accommodates everything from simple hand-carried systems (Type 3) to sophisticated treated systems allowing surface irrigation (Type 4). The framework includes Type 1 systems under 60 gallons per day and Type 2 systems up to 1,000 gallons per day, providing options for different household sizes and conservation goals. Ohio's detailed approach reflects the state's technical expertise and commitment to both water conservation and public health protection, serving as a model for other Midwest states considering greywater policy development in regions with adequate rainfall but growing interest in sustainable water management practices.",
-      "permitExplanation": "Ohio permits greywater systems for subsurface irrigation under local health department jurisdiction. The state's household sewage treatment regulations provide a framework for approval, but specific requirements vary by county. Kitchen wastewater is typically excluded. Contact your local health department for area-specific requirements.",
-      "permitProcess": "Apply through your local health department. System must meet Ohio's household sewage treatment standards. Requirements may vary by county."
+      "summary": "Ohio has comprehensive greywater regulations under OAC 3701-29-17, effective since January 2015. The state offers four system types: Type 1 (under 60 GPD for subsurface lawn/garden irrigation), Type 2 (60-1,000 GPD), Type 3 (hand-carried greywater through screen to leach field - common in Amish communities), and Type 4 (treated/disinfected for indoor use including toilet flushing and houseplants, plus year-round outdoor irrigation). Importantly, greywater systems are allowed even where sanitary sewer is available. Permits are obtained through local health departments. Ohio WateReuse section was established in March 2024 to advance water recycling programs statewide.",
+      "permitExplanation": "Ohio allows greywater systems with a permit from your local health department. Four system types are available: Type 1 (under 60 GPD for subsurface irrigation), Type 2 (60-1,000 GPD), Type 3 (hand-carried greywater), and Type 4 (treated/disinfected for indoor use and year-round outdoor irrigation). Greywater systems are permitted even where municipal sewer is available.",
+      "permitProcess": "Contact your local health department to apply for a greywater system permit. Submit system design plans showing compliance with OAC 3701-29-17. Type 1 systems (under 60 GPD) have simpler requirements. Inspection required before system operation."
     },
     "Oklahoma": {
       "legalStatus": "Legal",

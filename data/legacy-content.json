@@ -357,7 +357,7 @@
       "content": {
         "stateRegulations": "This state follows standard plumbing codes. Check with local jurisdictions for specific requirements.",
         "noPermitRequired": "No permit needed for systems under 400 gallons daily flow.",
-        "taxIncentive": "Residents receive 25% of the cost of installing a water conservation system not to exceed $1000.",
+        "taxIncentive": "EXPIRED: Arizona's 25% tax credit (ARS 43-1090.01) for water conservation systems expired around 2017 and is no longer available.",
         "type1Requirements": [
           "Human contact must be avoided",
           "Greywater stays within property boundaries for gardening and landscape use",
@@ -727,7 +727,7 @@
         "states": {
           "arizona": {
             "permitThreshold": "No permit needed for systems under 400 gallons daily flow",
-            "taxIncentive": "25% of the cost of installing a water conservation system not to exceed $1000",
+            "taxIncentive": "EXPIRED: The 25% tax credit (ARS 43-1090.01) expired around 2017",
             "requirements": [
               "Human contact must be avoided",
               "Greywater stays within property boundaries",
