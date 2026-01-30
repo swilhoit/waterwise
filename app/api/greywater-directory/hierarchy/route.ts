@@ -131,24 +131,33 @@ export async function GET(request: NextRequest) {
         const stateCode = parentId.replace('_STATE', '');
 
         // Query for ALL counties in a state from the city_county_mapping table
+        // Generate county_jurisdiction_id dynamically from state_code and county_name
         // Also join with program_jurisdiction_link to get program counts
         const countyQuery = `
+          WITH county_data AS (
+            SELECT
+              m.state_code,
+              m.county_name,
+              CONCAT(m.state_code, '_COUNTY_', UPPER(REPLACE(m.county_name, ' ', '_'))) as county_jurisdiction_id,
+              m.city_jurisdiction_id
+            FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
+            WHERE m.state_code = '${stateCode}'
+          )
           SELECT
-            m.county_jurisdiction_id,
-            m.county_name,
-            COUNT(DISTINCT m.city_jurisdiction_id) as city_count,
+            cd.county_jurisdiction_id,
+            cd.county_name,
+            COUNT(DISTINCT cd.city_jurisdiction_id) as city_count,
             COALESCE(p.program_count, 0) as program_count
-          FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
+          FROM county_data cd
           LEFT JOIN (
             SELECT
               jurisdiction_id,
               COUNT(DISTINCT program_id) as program_count
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.program_jurisdiction_link\`
             GROUP BY jurisdiction_id
-          ) p ON m.county_jurisdiction_id = p.jurisdiction_id
-          WHERE m.state_code = '${stateCode}'
-          GROUP BY m.county_jurisdiction_id, m.county_name, p.program_count
-          ORDER BY m.county_name
+          ) p ON cd.county_jurisdiction_id = p.jurisdiction_id
+          GROUP BY cd.county_jurisdiction_id, cd.county_name, p.program_count
+          ORDER BY cd.county_name
         `;
 
         try {
@@ -193,6 +202,7 @@ export async function GET(request: NextRequest) {
 
         if (isCountyParent) {
           // Query cities for a specific county using the mapping table
+          // Generate county_jurisdiction_id dynamically to match against parentId
           // Show ALL cities in the county
           cityQuery = `
             SELECT DISTINCT
@@ -201,7 +211,7 @@ export async function GET(request: NextRequest) {
               m.county_name,
               m.state_code
             FROM \`${process.env.GOOGLE_CLOUD_PROJECT_ID}.greywater_compliance.city_county_mapping\` m
-            WHERE m.county_jurisdiction_id = '${parentId}'
+            WHERE CONCAT(m.state_code, '_COUNTY_', UPPER(REPLACE(m.county_name, ' ', '_'))) = '${parentId}'
             ORDER BY m.city_name
           `;
         } else if (isStateParent) {
