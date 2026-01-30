@@ -36,7 +36,7 @@ export function LocationCTA({
           </Link>
         ))}
         <Link
-          href="/ca"
+          href="/resources"
           className="text-gray-500 hover:text-emerald-600"
         >
           All States →
@@ -69,7 +69,7 @@ export function LocationCTA({
               </Link>
             ))}
             <Link
-              href="/ca"
+              href="/resources"
               className="px-3 py-1.5 bg-emerald-600 text-white rounded-full text-sm font-medium hover:bg-emerald-700 transition-colors"
             >
               All States
@@ -116,7 +116,7 @@ export function LocationCTA({
       </div>
 
       <Link
-        href="/ca"
+        href="/resources"
         className="block mt-4 text-center text-sm text-emerald-600 hover:text-emerald-700 font-medium"
       >
         Browse all 50 states →
